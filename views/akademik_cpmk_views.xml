@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_cpmk_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.cpmk.search</field>
+        <field name="model">erpobe.akademik.cpmk</field>
+        <field name="arch" type="xml">
+            <search string="CPMK">
+                <field name="kode_cpmk"/>
+                <field name="name"/>
+                <field name="mk_id"/>
+                <field name="prodi_id"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_mk" string="Mata Kuliah" context="{'group_by': 'mk_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_cpmk_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.cpmk.list</field>
+        <field name="model">erpobe.akademik.cpmk</field>
+        <field name="arch" type="xml">
+            <list string="CPMK">
+                <field name="kode_cpmk"/>
+                <field name="name"/>
+                <field name="mk_id"/>
+                <field name="prodi_id"/>
+                <field name="cpl_ids" widget="many2many_tags" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_cpmk_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.cpmk.form</field>
+        <field name="model">erpobe.akademik.cpmk</field>
+        <field name="arch" type="xml">
+            <form string="CPMK">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="kode_cpmk"/>
+                        <h1>
+                            <field name="kode_cpmk"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="mk_id"/>
+                        <field name="prodi_id" readonly="1"/>
+                    </group>
+                    <group string="Deskripsi">
+                        <field name="name" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Pemetaan CPL">
+                            <field name="cpl_mapping_ids">
+                                <list editable="bottom">
+                                    <field name="cpl_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                                    <field name="mk_id" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_cpmk" model="ir.actions.act_window">
+        <field name="name">CPMK</field>
+        <field name="res_model">erpobe.akademik.cpmk</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_cpmk_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_krs_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.krs.search</field>
+        <field name="model">erpobe.akademik.krs</field>
+        <field name="arch" type="xml">
+            <search string="Kartu Rencana Studi">
+                <field name="mahasiswa_id"/>
+                <field name="penawaran_id"/>
+                <field name="rombel_id"/>
+                <field name="tahun_ajaran"/>
+                <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
+                <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_krs_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.krs.list</field>
+        <field name="model">erpobe.akademik.krs</field>
+        <field name="arch" type="xml">
+            <list string="Kartu Rencana Studi">
+                <field name="mahasiswa_id"/>
+                <field name="rombel_id"/>
+                <field name="penawaran_id"/>
+                <field name="tahun_ajaran"/>
+                <field name="total_sks"/>
+                <field name="max_sks_allowed"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_krs_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.krs.form</field>
+        <field name="model">erpobe.akademik.krs</field>
+        <field name="arch" type="xml">
+            <form string="Kartu Rencana Studi">
+                <header>
+                    <button name="action_ambil_paket" type="object" string="Ambil Paket Rombel" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="mahasiswa_id"/>
+                        <h1>
+                            <field name="mahasiswa_id"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="rombel_id" readonly="1"/>
+                        <field name="penawaran_id"/>
+                        <field name="tahun_ajaran" readonly="1"/>
+                        <field name="semester_akademik" readonly="1"/>
+                        <field name="total_sks" readonly="1"/>
+                        <field name="max_sks_allowed"/>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="penawaran_line_id"/>
+                            <field name="matakuliah_id" readonly="1"/>
+                            <field name="rombel_kelas" widget="many2many_tags" readonly="1"/>
+                            <field name="sks" readonly="1"/>
+                            <field name="status_pengambilan"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_krs" model="ir.actions.act_window">
+        <field name="name">Kartu Rencana Studi</field>
+        <field name="res_model">erpobe.akademik.krs</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_krs_search"/>
+    </record>
+</odoo>

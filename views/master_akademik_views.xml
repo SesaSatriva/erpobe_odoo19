@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_master_rombel_search" model="ir.ui.view">
+        <field name="name">erpobe.master.rombel.search</field>
+        <field name="model">erpobe.master.rombel</field>
+        <field name="arch" type="xml">
+            <search string="Rombel">
+                <field name="name"/>
+                <field name="angkatan"/>
+                <field name="prodi_id"/>
+                <filter name="this_year" string="Angkatan Tahun Ini" domain="[('angkatan', '=', context_today().year)]"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_rombel_list" model="ir.ui.view">
+        <field name="name">erpobe.master.rombel.list</field>
+        <field name="model">erpobe.master.rombel</field>
+        <field name="arch" type="xml">
+            <list string="Rombel" default_order="angkatan desc, name">
+                <field name="name"/>
+                <field name="prodi_id"/>
+                <field name="angkatan"/>
+                <field name="mahasiswa_ids" widget="many2many_tags" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_rombel_form" model="ir.ui.view">
+        <field name="name">erpobe.master.rombel.form</field>
+        <field name="model">erpobe.master.rombel</field>
+        <field name="arch" type="xml">
+            <form string="Rombel">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Nama rombel"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="prodi_id"/>
+                        <field name="angkatan"/>
+                    </group>
+                    <notebook>
+                        <page string="Mahasiswa">
+                            <field name="mahasiswa_ids">
+                                <list editable="bottom">
+                                    <field name="nim"/>
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="user_id" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Paket Mata Kuliah">
+                            <field name="matakuliah_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_erpobe_master_matakuliah_search" model="ir.ui.view">
+        <field name="name">erpobe.master.matakuliah.search</field>
+        <field name="model">erpobe.master.matakuliah</field>
+        <field name="arch" type="xml">
+            <search string="Mata Kuliah">
+                <field name="kode_mk"/>
+                <field name="name"/>
+                <field name="prodi_id"/>
+                <field name="semester"/>
+                <field name="koordinator_id"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_semester" string="Semester" context="{'group_by': 'semester'}"/>
+                <filter name="group_jenis" string="Jenis Mata Kuliah" context="{'group_by': 'jenis_mk'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_matakuliah_list" model="ir.ui.view">
+        <field name="name">erpobe.master.matakuliah.list</field>
+        <field name="model">erpobe.master.matakuliah</field>
+        <field name="arch" type="xml">
+            <list string="Mata Kuliah">
+                <field name="kode_mk"/>
+                <field name="name"/>
+                <field name="prodi_id"/>
+                <field name="sks"/>
+                <field name="semester"/>
+                <field name="koordinator_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_matakuliah_form" model="ir.ui.view">
+        <field name="name">erpobe.master.matakuliah.form</field>
+        <field name="model">erpobe.master.matakuliah</field>
+        <field name="arch" type="xml">
+            <form string="Mata Kuliah">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Nama mata kuliah"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identitas">
+                            <field name="kode_mk"/>
+                            <field name="prodi_id"/>
+                            <field name="sks"/>
+                            <field name="semester"/>
+                        </group>
+                        <group string="Pengelolaan">
+                            <field name="tipe_mk"/>
+                            <field name="jenis_mk"/>
+                            <field name="bahasa"/>
+                            <field name="koordinator_id" domain="[('prodi_ids', 'in', prodi_id)]"/>
+                            <field name="tim_pengampu_ids" widget="many2many_tags" domain="[('prodi_ids', 'in', prodi_id)]"/>
+                        </group>
+                    </group>
+                    <group string="Deskripsi">
+                        <field name="deskripsi_mk" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="CPMK">
+                            <field name="cpmk_ids">
+                                <list editable="bottom">
+                                    <field name="kode_cpmk"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Rombel">
+                            <field name="rombel_ids" widget="many2many_tags" domain="[('prodi_id', '=', prodi_id)]"/>
+                        </page>
+                        <page string="Prasyarat">
+                            <field name="mk_prasyarat_ids" widget="many2many_tags" domain="[('prodi_id', '=', prodi_id)]"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_master_rombel" model="ir.actions.act_window">
+        <field name="name">Rombel</field>
+        <field name="res_model">erpobe.master.rombel</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_rombel_search"/>
+    </record>
+    <record id="action_erpobe_master_matakuliah" model="ir.actions.act_window">
+        <field name="name">Mata Kuliah</field>
+        <field name="res_model">erpobe.master.matakuliah</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_matakuliah_search"/>
+    </record>
+</odoo>

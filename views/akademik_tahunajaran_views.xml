@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_tahunajaran_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.tahunajaran.search</field>
+        <field name="model">erpobe.akademik.tahunajaran</field>
+        <field name="arch" type="xml">
+            <search string="Tahun Ajaran">
+                <field name="tahun_ajaran"/>
+                <field name="semester"/>
+                <filter name="aktif" string="Sedang Berjalan" domain="[('aktif', '=', True)]"/>
+                <filter name="group_tahun" string="Tahun" context="{'group_by': 'tahun_ajaran'}"/>
+                <filter name="group_semester" string="Semester" context="{'group_by': 'semester'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_tahunajaran_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.tahunajaran.list</field>
+        <field name="model">erpobe.akademik.tahunajaran</field>
+        <field name="arch" type="xml">
+            <list string="Tahun Ajaran">
+                <field name="tahun_ajaran"/>
+                <field name="semester"/>
+                <field name="aktif"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_tahunajaran_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.tahunajaran.form</field>
+        <field name="model">erpobe.akademik.tahunajaran</field>
+        <field name="arch" type="xml">
+            <form string="Tahun Ajaran">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="tahun_ajaran"/>
+                        <h1>
+                            <field name="tahun_ajaran"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="semester"/>
+                        <field name="aktif"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_tahunajaran" model="ir.actions.act_window">
+        <field name="name">Tahun Ajaran</field>
+        <field name="res_model">erpobe.akademik.tahunajaran</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_tahunajaran_search"/>
+    </record>
+</odoo>

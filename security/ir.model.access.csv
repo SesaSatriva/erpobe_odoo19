@@ -1,0 +1,185 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_partner_admin,access.partner.admin,base.model_res_partner,erpobe.group_admin,1,1,1,1
+access_partner_dosen,access.partner.dosen,base.model_res_partner,erpobe.group_dosen,1,1,1,1
+access_partner_mahasiswa,access.partner.mahasiswa,base.model_res_partner,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_cpl_settings,erpobe.akademik.cpl settings,model_erpobe_akademik_cpl,base.group_system,1,1,1,1
+access_cpl_admin,access.cpl.admin,model_erpobe_akademik_cpl,erpobe.group_admin,1,1,1,1
+access_cpl_dosen,access.cpl.dosen,model_erpobe_akademik_cpl,erpobe.group_dosen,1,1,1,1
+access_cpl_mahasiswa,access.cpl.mahasiswa,model_erpobe_akademik_cpl,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_cpl_mk_cpmk_settings,erpobe.akademik.cpl.mk.cpmk settings,model_erpobe_akademik_cpl_mk_cpmk,base.group_system,1,1,1,1
+access_cpl_mk_cpmk_admin,access.cpl.mk.cpmk.admin,model_erpobe_akademik_cpl_mk_cpmk,erpobe.group_admin,1,1,1,1
+access_cpl_mk_cpmk_dosen,access.cpl.mk.cpmk.dosen,model_erpobe_akademik_cpl_mk_cpmk,erpobe.group_dosen,1,1,1,1
+access_cpl_mk_cpmk_mahasiswa,access.cpl.mk.cpmk.mahasiswa,model_erpobe_akademik_cpl_mk_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_cpmk_settings,erpobe.akademik.cpmk settings,model_erpobe_akademik_cpmk,base.group_system,1,1,1,1
+access_cpmk_admin,access.cpmk.admin,model_erpobe_akademik_cpmk,erpobe.group_admin,1,1,1,1
+access_cpmk_dosen,access.cpmk.dosen,model_erpobe_akademik_cpmk,erpobe.group_dosen,1,1,1,1
+access_cpmk_mahasiswa,access.cpmk.mahasiswa,model_erpobe_akademik_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_kegiatan_perkuliahan_settings,erpobe.akademik.kegiatan.perkuliahan settings,model_erpobe_akademik_kegiatan_perkuliahan,base.group_system,1,1,1,1
+access_kegiatan_admin,access.kegiatan.admin,model_erpobe_akademik_kegiatan_perkuliahan,erpobe.group_admin,1,1,1,1
+access_kegiatan_dosen,access.kegiatan.dosen,model_erpobe_akademik_kegiatan_perkuliahan,erpobe.group_dosen,1,1,1,1
+access_kegiatan_mahasiswa,access.kegiatan.mahasiswa,model_erpobe_akademik_kegiatan_perkuliahan,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_komponen_settings,erpobe.akademik.komponen settings,model_erpobe_akademik_komponen,base.group_system,1,1,1,1
+access_komponen_admin,access.komponen.admin,model_erpobe_akademik_komponen,erpobe.group_admin,1,1,1,1
+access_komponen_dosen,access.komponen.dosen,model_erpobe_akademik_komponen,erpobe.group_dosen,1,1,1,1
+access_komponen_mahasiswa,access.komponen.mahasiswa,model_erpobe_akademik_komponen,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_kriteria_settings,erpobe.akademik.kriteria settings,model_erpobe_akademik_kriteria,base.group_system,1,1,1,1
+access_kriteria_admin,access.kriteria.admin,model_erpobe_akademik_kriteria,erpobe.group_admin,1,1,1,1
+access_kriteria_dosen,access.kriteria.dosen,model_erpobe_akademik_kriteria,erpobe.group_dosen,1,1,1,1
+access_kriteria_mahasiswa,access.kriteria.mahasiswa,model_erpobe_akademik_kriteria,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_krs_settings,erpobe.akademik.krs settings,model_erpobe_akademik_krs,base.group_system,1,1,1,1
+access_krs_admin,access.krs.admin,model_erpobe_akademik_krs,erpobe.group_admin,1,1,1,1
+access_krs_dosen,access.krs.dosen,model_erpobe_akademik_krs,erpobe.group_dosen,1,0,0,0
+access_krs_mahasiswa,access.krs.mahasiswa,model_erpobe_akademik_krs,erpobe.group_mahasiswa,1,1,1,0
+access_erpobe_akademik_krs_line_settings,erpobe.akademik.krs.line settings,model_erpobe_akademik_krs_line,base.group_system,1,1,1,1
+access_erpobe_akademik_krs_line_admin,access.erpobe.akademik.krs.line.admin,model_erpobe_akademik_krs_line,erpobe.group_admin,1,1,1,1
+access_erpobe_akademik_krs_line_dosen,access.erpobe.akademik.krs.line.dosen,model_erpobe_akademik_krs_line,erpobe.group_dosen,1,0,0,0
+access_erpobe_akademik_krs_line_mahasiswa,access.erpobe.akademik.krs.line.mahasiswa,model_erpobe_akademik_krs_line,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_metode_pembelajaran_settings,erpobe.akademik.metode.pembelajaran settings,model_erpobe_akademik_metode_pembelajaran,base.group_system,1,1,1,1
+access_metode_admin,access.metode.admin,model_erpobe_akademik_metode_pembelajaran,erpobe.group_admin,1,1,1,1
+access_metode_dosen,access.metode.dosen,model_erpobe_akademik_metode_pembelajaran,erpobe.group_dosen,1,1,1,1
+access_metode_mahasiswa,access.metode.mahasiswa,model_erpobe_akademik_metode_pembelajaran,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_penawaran_settings,erpobe.akademik.penawaran settings,model_erpobe_akademik_penawaran,base.group_system,1,1,1,1
+access_erpobe_akademik_penawaran_admin,access.erpobe.akademik.penawaran.admin,model_erpobe_akademik_penawaran,erpobe.group_admin,1,1,1,1
+access_erpobe_akademik_penawaran_dosen,access.erpobe.akademik.penawaran.dosen,model_erpobe_akademik_penawaran,erpobe.group_dosen,1,0,0,0
+access_erpobe_akademik_penawaran_mahasiswa,access.erpobe.akademik.penawaran.mahasiswa,model_erpobe_akademik_penawaran,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_penawaran_line_settings,erpobe.akademik.penawaran.line settings,model_erpobe_akademik_penawaran_line,base.group_system,1,1,1,1
+access_erpobe_akademik_penawaran_line_admin,access.erpobe.akademik.penawaran.line.admin,model_erpobe_akademik_penawaran_line,erpobe.group_admin,1,1,1,1
+access_erpobe_akademik_penawaran_line_dosen,access.erpobe.akademik.penawaran.line.dosen,model_erpobe_akademik_penawaran_line,erpobe.group_dosen,1,0,0,0
+access_erpobe_akademik_penawaran_line_mahasiswa,access.erpobe.akademik.penawaran.line.mahasiswa,model_erpobe_akademik_penawaran_line,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_referensi_settings,erpobe.akademik.referensi settings,model_erpobe_akademik_referensi,base.group_system,1,1,1,1
+access_referensi_admin,access.referensi.admin,model_erpobe_akademik_referensi,erpobe.group_admin,1,1,1,1
+access_referensi_dosen,access.referensi.dosen,model_erpobe_akademik_referensi,erpobe.group_dosen,1,1,1,1
+access_referensi_mahasiswa,access.referensi.mahasiswa,model_erpobe_akademik_referensi,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_rps_settings,erpobe.akademik.rps settings,model_erpobe_akademik_rps,base.group_system,1,1,1,1
+access_rps_admin,access.rps.admin,model_erpobe_akademik_rps,erpobe.group_admin,1,1,1,1
+access_rps_dosen,access.rps.dosen,model_erpobe_akademik_rps,erpobe.group_dosen,1,1,1,0
+access_rps_mahasiswa,access.rps.mahasiswa,model_erpobe_akademik_rps,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_rubrik_penilaian_settings,erpobe.akademik.rubrik.penilaian settings,model_erpobe_akademik_rubrik_penilaian,base.group_system,1,1,1,1
+access_rubrik_admin,access.rubrik.admin,model_erpobe_akademik_rubrik_penilaian,erpobe.group_admin,1,1,1,1
+access_rubrik_dosen,access.rubrik.dosen,model_erpobe_akademik_rubrik_penilaian,erpobe.group_dosen,1,1,1,1
+access_rubrik_mahasiswa,access.rubrik.mahasiswa,model_erpobe_akademik_rubrik_penilaian,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_tahunajaran_settings,erpobe.akademik.tahunajaran settings,model_erpobe_akademik_tahunajaran,base.group_system,1,1,1,1
+access_erpobe_tahunajaran_admin,erpobe.tahunajaran admin,model_erpobe_akademik_tahunajaran,erpobe.group_admin,1,1,1,1
+access_erpobe_tahunajaran_dosen,erpobe.tahunajaran dosen,model_erpobe_akademik_tahunajaran,erpobe.group_dosen,1,0,0,0
+access_erpobe_tahunajaran_mahasiswa,erpobe.tahunajaran mahasiswa,model_erpobe_akademik_tahunajaran,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_bobot_cpmk_cpl_settings,erpobe.bobot.cpmk.cpl settings,model_erpobe_bobot_cpmk_cpl,base.group_system,1,1,1,1
+access_bobot_cpmk_cpl_admin,access.bobot.cpmk.cpl.admin,model_erpobe_bobot_cpmk_cpl,erpobe.group_admin,1,1,1,1
+access_bobot_cpmk_cpl_dosen,access.bobot.cpmk.cpl.dosen,model_erpobe_bobot_cpmk_cpl,erpobe.group_dosen,1,1,1,1
+access_bobot_cpmk_cpl_mahasiswa,access.bobot.cpmk.cpl.mahasiswa,model_erpobe_bobot_cpmk_cpl,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_bobot_cpmk_mk_settings,erpobe.bobot.cpmk.mk settings,model_erpobe_bobot_cpmk_mk,base.group_system,1,1,1,1
+access_bobot_cpmk_mk_admin,access.bobot.cpmk.mk.admin,model_erpobe_bobot_cpmk_mk,erpobe.group_admin,1,1,1,1
+access_bobot_cpmk_mk_dosen,access.bobot.cpmk.mk.dosen,model_erpobe_bobot_cpmk_mk,erpobe.group_dosen,1,1,1,1
+access_bobot_cpmk_mk_mahasiswa,access.bobot.cpmk.mk.mahasiswa,model_erpobe_bobot_cpmk_mk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_bobot_komponen_cpmk_settings,erpobe.bobot.komponen.cpmk settings,model_erpobe_bobot_komponen_cpmk,base.group_system,1,1,1,1
+access_bobot_komponen_cpmk_admin,access.bobot.komponen.cpmk.admin,model_erpobe_bobot_komponen_cpmk,erpobe.group_admin,1,1,1,1
+access_bobot_komponen_cpmk_dosen,access.bobot.komponen.cpmk.dosen,model_erpobe_bobot_komponen_cpmk,erpobe.group_dosen,1,1,1,1
+access_bobot_komponen_cpmk_mahasiswa,access.bobot.komponen.cpmk.mahasiswa,model_erpobe_bobot_komponen_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_cpmk_angkatan_settings,erpobe.cpmk.angkatan settings,model_erpobe_cpmk_angkatan,base.group_system,1,1,1,1
+access_erpobe_cpmk_angkatan_admin,access.erpobe.cpmk.angkatan.admin,model_erpobe_cpmk_angkatan,erpobe.group_admin,1,1,1,1
+access_erpobe_cpmk_angkatan_dosen,access.erpobe.cpmk.angkatan.dosen,model_erpobe_cpmk_angkatan,erpobe.group_dosen,1,1,1,1
+access_erpobe_cpmk_angkatan_mahasiswa,access.erpobe.cpmk.angkatan.mahasiswa,model_erpobe_cpmk_angkatan,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_cpmk_rombel_settings,erpobe.cpmk.rombel settings,model_erpobe_cpmk_rombel,base.group_system,1,1,1,1
+access_erpobe_cpmk_rombel_admin,access.erpobe.cpmk.rombel.admin,model_erpobe_cpmk_rombel,erpobe.group_admin,1,1,1,1
+access_erpobe_cpmk_rombel_dosen,access.erpobe.cpmk.rombel.dosen,model_erpobe_cpmk_rombel,erpobe.group_dosen,1,1,1,1
+access_erpobe_cpmk_rombel_mahasiswa,access.erpobe.cpmk.rombel.mahasiswa,model_erpobe_cpmk_rombel,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_cpl_settings,erpobe.grade.cpl settings,model_erpobe_grade_cpl,base.group_system,1,1,1,1
+access_erpobe_grade_cpl_admin,access.erpobe.grade.cpl.admin,model_erpobe_grade_cpl,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_cpl_dosen,access.erpobe.grade.cpl.dosen,model_erpobe_grade_cpl,erpobe.group_dosen,1,0,0,0
+access_erpobe_grade_cpl_mahasiswa,access.erpobe.grade.cpl.mahasiswa,model_erpobe_grade_cpl,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_cpl_angkatan_settings,erpobe.grade.cpl.angkatan settings,model_erpobe_grade_cpl_angkatan,base.group_system,1,1,1,1
+access_erpobe_grade_cpl_angkatan_admin,access.erpobe.grade.cpl.angkatan.admin,model_erpobe_grade_cpl_angkatan,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_cpl_angkatan_dosen,access.erpobe.grade.cpl.angkatan.dosen,model_erpobe_grade_cpl_angkatan,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_cpl_angkatan_mahasiswa,access.erpobe.grade.cpl.angkatan.mahasiswa,model_erpobe_grade_cpl_angkatan,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_cpl_rombel_settings,erpobe.grade.cpl.rombel settings,model_erpobe_grade_cpl_rombel,base.group_system,1,1,1,1
+access_erpobe_grade_cpl_rombel_admin,access.erpobe.grade.cpl.rombel.admin,model_erpobe_grade_cpl_rombel,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_cpl_rombel_dosen,access.erpobe.grade.cpl.rombel.dosen,model_erpobe_grade_cpl_rombel,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_cpl_rombel_mahasiswa,access.erpobe.grade.cpl.rombel.mahasiswa,model_erpobe_grade_cpl_rombel,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_cpmk_settings,erpobe.grade.cpmk settings,model_erpobe_grade_cpmk,base.group_system,1,1,1,1
+access_erpobe_grade_cpmk_admin,access.erpobe.grade.cpmk.admin,model_erpobe_grade_cpmk,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_cpmk_dosen,access.erpobe.grade.cpmk.dosen,model_erpobe_grade_cpmk,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_cpmk_mahasiswa,access.erpobe.grade.cpmk.mahasiswa,model_erpobe_grade_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_komponen_settings,erpobe.grade.komponen settings,model_erpobe_grade_komponen,base.group_system,1,1,1,1
+access_erpobe_grade_komponen_admin,access.erpobe.grade.komponen.admin,model_erpobe_grade_komponen,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_komponen_dosen,access.erpobe.grade.komponen.dosen,model_erpobe_grade_komponen,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_mk_settings,erpobe.grade.mk settings,model_erpobe_grade_mk,base.group_system,1,1,1,1
+access_erpobe_grade_mk_admin,access.erpobe.grade.mk.admin,model_erpobe_grade_mk,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_mk_dosen,access.erpobe.grade.mk.dosen,model_erpobe_grade_mk,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_mk_mahasiswa,access.erpobe.grade.mk.mahasiswa,model_erpobe_grade_mk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_mk_angkatan_settings,erpobe.grade.mk.angkatan settings,model_erpobe_grade_mk_angkatan,base.group_system,1,1,1,1
+access_erpobe_grade_mk_angkatan_admin,access.erpobe.grade.mk.angkatan.admin,model_erpobe_grade_mk_angkatan,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_mk_angkatan_dosen,access.erpobe.grade.mk.angkatan.dosen,model_erpobe_grade_mk_angkatan,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_mk_angkatan_mahasiswa,access.erpobe.grade.mk.angkatan.mahasiswa,model_erpobe_grade_mk_angkatan,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_grade_mk_rombel_settings,erpobe.grade.mk.rombel settings,model_erpobe_grade_mk_rombel,base.group_system,1,1,1,1
+access_erpobe_grade_mk_rombel_admin,access.erpobe.grade.mk.rombel.admin,model_erpobe_grade_mk_rombel,erpobe.group_admin,1,1,1,1
+access_erpobe_grade_mk_rombel_dosen,access.erpobe.grade.mk.rombel.dosen,model_erpobe_grade_mk_rombel,erpobe.group_dosen,1,1,1,1
+access_erpobe_grade_mk_rombel_mahasiswa,access.erpobe.grade.mk.rombel.mahasiswa,model_erpobe_grade_mk_rombel,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_input_nilai_settings,erpobe.input.nilai settings,model_erpobe_input_nilai,base.group_system,1,1,1,1
+access_erpobe_input_nilai_admin,access.erpobe.input.nilai.admin,model_erpobe_input_nilai,erpobe.group_admin,1,1,1,1
+access_erpobe_input_nilai_dosen,access.erpobe.input.nilai.dosen,model_erpobe_input_nilai,erpobe.group_dosen,1,1,1,1
+access_erpobe_master_angkatan_view_settings,erpobe.master.angkatan.view settings,model_erpobe_master_angkatan_view,base.group_system,1,1,1,1
+access_master_angkatan_admin,access.master.angkatan.admin,model_erpobe_master_angkatan_view,erpobe.group_admin,1,1,1,1
+access_master_angkatan_dosen,access.master.angkatan.dosen,model_erpobe_master_angkatan_view,erpobe.group_dosen,1,1,1,1
+access_erpobe_master_dosen_settings,erpobe.master.dosen settings,model_erpobe_master_dosen,base.group_system,1,1,1,1
+access_dosen_admin,access.dosen.admin,model_erpobe_master_dosen,erpobe.group_admin,1,1,1,1
+access_dosen_dosen,access.dosen.dosen,model_erpobe_master_dosen,erpobe.group_dosen,1,1,1,1
+access_dosen_mahasiswa,access.dosen.mahasiswa,model_erpobe_master_dosen,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_master_fakultas_settings,erpobe.master.fakultas settings,model_erpobe_master_fakultas,base.group_system,1,1,1,1
+access_erpobe_master_fakultas_admin,erpobe.master.fakultas admin,model_erpobe_master_fakultas,erpobe.group_admin,1,1,1,1
+access_erpobe_master_fakultas_dosen,erpobe.master.fakultas dosen,model_erpobe_master_fakultas,erpobe.group_dosen,1,0,0,0
+access_erpobe_master_fakultas_mahasiswa,erpobe.master.fakultas mahasiswa,model_erpobe_master_fakultas,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_master_fakultas_superadmin,erpobe.master.fakultas superadmin,model_erpobe_master_fakultas,erpobe.group_superadmin,1,1,1,1
+access_erpobe_master_prodi_settings,erpobe.master.prodi settings,model_erpobe_master_prodi,base.group_system,1,1,1,1
+access_erpobe_master_prodi_admin,erpobe.master.prodi admin,model_erpobe_master_prodi,erpobe.group_admin,1,1,1,1
+access_erpobe_master_prodi_dosen,erpobe.master.prodi dosen,model_erpobe_master_prodi,erpobe.group_dosen,1,0,0,0
+access_erpobe_master_prodi_mahasiswa,erpobe.master.prodi mahasiswa,model_erpobe_master_prodi,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_master_prodi_superadmin,erpobe.master.prodi superadmin,model_erpobe_master_prodi,erpobe.group_superadmin,1,1,1,1
+access_erpobe_master_grade_settings,erpobe.master.grade settings,model_erpobe_master_grade,base.group_system,1,1,1,1
+access_erpobe_master_grade_admin,access.erpobe.master.grade.admin,model_erpobe_master_grade,erpobe.group_admin,1,1,1,1
+access_erpobe_master_grade_dosen,access.erpobe.master.grade.dosen,model_erpobe_master_grade,erpobe.group_dosen,1,0,0,0
+access_erpobe_master_grade_mahasiswa,access.erpobe.master.grade.mahasiswa,model_erpobe_master_grade,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_master_mahasiswa_settings,erpobe.master.mahasiswa settings,model_erpobe_master_mahasiswa,base.group_system,1,1,1,1
+access_mahasiswa_admin,access.mahasiswa.admin,model_erpobe_master_mahasiswa,erpobe.group_admin,1,1,1,1
+access_mahasiswa_dosen,access.mahasiswa.dosen,model_erpobe_master_mahasiswa,erpobe.group_dosen,1,0,0,0
+access_mahasiswa_mahasiswa,access.mahasiswa.mahasiswa,model_erpobe_master_mahasiswa,erpobe.group_mahasiswa,1,1,0,0
+access_erpobe_master_matakuliah_settings,erpobe.master.matakuliah settings,model_erpobe_master_matakuliah,base.group_system,1,1,1,1
+access_mk_admin,access.mk.admin,model_erpobe_master_matakuliah,erpobe.group_admin,1,1,1,1
+access_mk_dosen,access.mk.dosen,model_erpobe_master_matakuliah,erpobe.group_dosen,1,1,0,0
+access_mk_mahasiswa,access.mk.mahasiswa,model_erpobe_master_matakuliah,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_master_rombel_settings,erpobe.master.rombel settings,model_erpobe_master_rombel,base.group_system,1,1,1,1
+access_rombel_admin,access.rombel.admin,model_erpobe_master_rombel,erpobe.group_admin,1,1,1,1
+access_rombel_dosen,access.rombel.dosen,model_erpobe_master_rombel,erpobe.group_dosen,1,0,0,0
+access_rombel_mahasiswa,access.rombel.mahasiswa,model_erpobe_master_rombel,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_report_khs_settings,erpobe.report.khs settings,model_erpobe_report_khs,base.group_system,1,1,1,1
+access_erpobe_report_khs_admin,access.erpobe.report.khs.admin,model_erpobe_report_khs,erpobe.group_admin,1,1,1,1
+access_erpobe_report_khs_dosen,access.erpobe.report.khs.dosen,model_erpobe_report_khs,erpobe.group_dosen,1,0,0,0
+access_erpobe_report_khs_mahasiswa,access.erpobe.report.khs.mahasiswa,model_erpobe_report_khs,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_report_khs_cpl_settings,erpobe.report.khs.cpl settings,model_erpobe_report_khs_cpl,base.group_system,1,1,1,1
+access_erpobe_report_khs_cpl_admin,access.erpobe.report.khs.cpl.admin,model_erpobe_report_khs_cpl,erpobe.group_admin,1,1,1,1
+access_erpobe_report_khs_cpl_dosen,access.erpobe.report.khs.cpl.dosen,model_erpobe_report_khs_cpl,erpobe.group_dosen,1,1,1,1
+access_erpobe_report_khs_cpl_mahasiswa,access.erpobe.report.khs.cpl.mahasiswa,model_erpobe_report_khs_cpl,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_report_khs_cpmk_settings,erpobe.report.khs.cpmk settings,model_erpobe_report_khs_cpmk,base.group_system,1,1,1,1
+access_erpobe_report_khs_cpmk_admin,access.erpobe.report.khs.cpmk.admin,model_erpobe_report_khs_cpmk,erpobe.group_admin,1,1,1,1
+access_erpobe_report_khs_cpmk_dosen,access.erpobe.report.khs.cpmk.dosen,model_erpobe_report_khs_cpmk,erpobe.group_dosen,1,1,1,1
+access_erpobe_report_khs_cpmk_mahasiswa,access.erpobe.report.khs.cpmk.mahasiswa,model_erpobe_report_khs_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_report_khs_mk_settings,erpobe.report.khs.mk settings,model_erpobe_report_khs_mk,base.group_system,1,1,1,1
+access_erpobe_report_khs_mk_admin,access.erpobe.report.khs.mk.admin,model_erpobe_report_khs_mk,erpobe.group_admin,1,1,1,1
+access_erpobe_report_khs_mk_dosen,access.erpobe.report.khs.mk.dosen,model_erpobe_report_khs_mk,erpobe.group_dosen,1,1,1,1
+access_erpobe_report_khs_mk_mahasiswa,access.erpobe.report.khs.mk.mahasiswa,model_erpobe_report_khs_mk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_summary_cpl_settings,erpobe.summary.cpl settings,model_erpobe_summary_cpl,base.group_system,1,1,1,1
+access_erpobe_summary_cpl_admin,erpobe.summary.cpl.admin,model_erpobe_summary_cpl,erpobe.group_admin,1,1,1,1
+access_erpobe_summary_cpl_dosen,erpobe.summary.cpl.dosen,model_erpobe_summary_cpl,erpobe.group_dosen,1,0,0,0
+access_erpobe_summary_cpl_mahasiswa,erpobe.summary.cpl.mahasiswa,model_erpobe_summary_cpl,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_summary_cpmk_settings,erpobe.summary.cpmk settings,model_erpobe_summary_cpmk,base.group_system,1,1,1,1
+access_erpobe_summary_cpmk_admin,erpobe.summary.cpmk.admin,model_erpobe_summary_cpmk,erpobe.group_admin,1,1,1,1
+access_erpobe_summary_cpmk_dosen,erpobe.summary.cpmk.dosen,model_erpobe_summary_cpmk,erpobe.group_dosen,1,0,0,0
+access_erpobe_summary_cpmk_mahasiswa,erpobe.summary.cpmk.mahasiswa,model_erpobe_summary_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_summary_komponen_settings,erpobe.summary.komponen settings,model_erpobe_summary_komponen,base.group_system,1,1,1,1
+access_erpobe_summary_komponen_admin,erpobe.summary.komponen.admin,model_erpobe_summary_komponen,erpobe.group_admin,1,1,1,1
+access_erpobe_summary_komponen_dosen,erpobe.summary.komponen.dosen,model_erpobe_summary_komponen,erpobe.group_dosen,1,0,0,0
+access_erpobe_summary_komponen_mahasiswa,erpobe.summary.komponen.mahasiswa,model_erpobe_summary_komponen,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_summary_mk_settings,erpobe.summary.mk settings,model_erpobe_summary_mk,base.group_system,1,1,1,1
+access_erpobe_summary_mk_admin,erpobe.summary.mk.admin,model_erpobe_summary_mk,erpobe.group_admin,1,1,1,1
+access_erpobe_summary_mk_dosen,erpobe.summary.mk.dosen,model_erpobe_summary_mk,erpobe.group_dosen,1,0,0,0
+access_erpobe_summary_mk_mahasiswa,erpobe.summary.mk.mahasiswa,model_erpobe_summary_mk,erpobe.group_mahasiswa,1,0,0,0
+access_res_users_superadmin_faculties,res.users program scope,base.model_res_users,erpobe.group_superadmin,1,1,0,0
+access_res_users_admin_faculties,res.users program scope,base.model_res_users,erpobe.group_admin,1,1,1,0

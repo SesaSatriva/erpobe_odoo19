@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_angkatan_search" model="ir.ui.view">
+        <field name="name">erpobe.master.angkatan.view.search</field>
+        <field name="model">erpobe.master.angkatan.view</field>
+        <field name="arch" type="xml">
+            <search string="Angkatan">
+                <field name="angkatan"/>
+                <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_angkatan_list" model="ir.ui.view">
+        <field name="name">erpobe.master.angkatan.view.list</field>
+        <field name="model">erpobe.master.angkatan.view</field>
+        <field name="arch" type="xml">
+            <list string="Angkatan">
+                <field name="angkatan"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_erpobe_master_angkatan" model="ir.actions.act_window">
+        <field name="name">Angkatan</field>
+        <field name="res_model">erpobe.master.angkatan.view</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_erpobe_angkatan_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_users_form_erpobe_faculties" model="ir.ui.view">
+        <field name="name">res.users.form.erpobe.faculties</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Program Studi ERP OBE" groups="erpobe.group_superadmin">
+                    <field name="erpobe_prodi_ids" widget="many2many_tags"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_master_dosen_search" model="ir.ui.view">
+        <field name="name">erpobe.master.dosen.search</field>
+        <field name="model">erpobe.master.dosen</field>
+        <field name="arch" type="xml">
+            <search string="Dosen">
+                <field name="nip"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="prodi_ids"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_dosen_list" model="ir.ui.view">
+        <field name="name">erpobe.master.dosen.list</field>
+        <field name="model">erpobe.master.dosen</field>
+        <field name="arch" type="xml">
+            <list string="Dosen">
+                <field name="nip"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="prodi_ids" widget="many2many_tags" optional="show"/>
+                <field name="user_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_dosen_form" model="ir.ui.view">
+        <field name="name">erpobe.master.dosen.form</field>
+        <field name="model">erpobe.master.dosen</field>
+        <field name="arch" type="xml">
+            <form string="Dosen">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Nama dosen"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identitas">
+                            <field name="nip"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                        <group string="Program Studi">
+                            <field name="prodi_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_erpobe_master_mahasiswa_search" model="ir.ui.view">
+        <field name="name">erpobe.master.mahasiswa.search</field>
+        <field name="model">erpobe.master.mahasiswa</field>
+        <field name="arch" type="xml">
+            <search string="Mahasiswa">
+                <field name="nim"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="rombel_id"/>
+                <field name="prodi_id"/>
+                <filter name="has_user" string="Memiliki Akun" domain="[('user_id', '!=', False)]"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+                <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_mahasiswa_list" model="ir.ui.view">
+        <field name="name">erpobe.master.mahasiswa.list</field>
+        <field name="model">erpobe.master.mahasiswa</field>
+        <field name="arch" type="xml">
+            <list string="Mahasiswa">
+                <field name="nim"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="prodi_id"/>
+                <field name="rombel_id"/>
+                <field name="angkatan" optional="show"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_mahasiswa_form" model="ir.ui.view">
+        <field name="name">erpobe.master.mahasiswa.form</field>
+        <field name="model">erpobe.master.mahasiswa</field>
+        <field name="arch" type="xml">
+            <form string="Mahasiswa">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Nama mahasiswa"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identitas">
+                            <field name="nim"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                        <group string="Akademik">
+                            <field name="prodi_id" readonly="1"/>
+                            <field name="rombel_id"/>
+                            <field name="angkatan" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Nilai Komponen">
+                            <field name="grade_komponen_ids" readonly="1">
+                                <list>
+                                    <field name="krs_line_id"/>
+                                    <field name="komponen_id"/>
+                                    <field name="nilai"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Capaian CPMK">
+                            <field name="grade_cpmk_ids" readonly="1">
+                                <list>
+                                    <field name="cpmk_id"/>
+                                    <field name="mk_id"/>
+                                    <field name="nilai_cpmk"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_master_dosen" model="ir.actions.act_window">
+        <field name="name">Dosen</field>
+        <field name="res_model">erpobe.master.dosen</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_dosen_search"/>
+    </record>
+    <record id="action_erpobe_master_mahasiswa" model="ir.actions.act_window">
+        <field name="name">Mahasiswa</field>
+        <field name="res_model">erpobe.master.mahasiswa</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_mahasiswa_search"/>
+    </record>
+</odoo>

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_input_nilai_search" model="ir.ui.view">
+        <field name="name">erpobe.input.nilai.search</field>
+        <field name="model">erpobe.input.nilai</field>
+        <field name="arch" type="xml">
+            <search string="Input Nilai">
+                <field name="penawaran_id"/>
+                <field name="penawaran_line_id"/>
+                <field name="matakuliah_id"/>
+                <field name="tahun_ajaran"/>
+                <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
+                <filter name="group_mk" string="Mata Kuliah" context="{'group_by': 'matakuliah_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_input_nilai_list" model="ir.ui.view">
+        <field name="name">erpobe.input.nilai.list</field>
+        <field name="model">erpobe.input.nilai</field>
+        <field name="arch" type="xml">
+            <list string="Input Nilai">
+                <field name="tahun_ajaran"/>
+                <field name="penawaran_id"/>
+                <field name="penawaran_line_id"/>
+                <field name="matakuliah_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_input_nilai_form" model="ir.ui.view">
+        <field name="name">erpobe.input.nilai.form</field>
+        <field name="model">erpobe.input.nilai</field>
+        <field name="arch" type="xml">
+            <form string="Input Nilai">
+                <header>
+                    <button name="action_calculate_grades_and_khs" type="object" string="Hitung Nilai dan Perbarui KHS" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="penawaran_id"/>
+                        <field name="penawaran_line_id"/>
+                        <field name="tahun_ajaran" readonly="1"/>
+                        <field name="matakuliah_id" readonly="1"/>
+                    </group>
+                    <field name="grade_komponen_ids">
+                        <list editable="bottom">
+                            <field name="krs_line_id"/>
+                            <field name="mahasiswa_id" readonly="1"/>
+                            <field name="komponen_id"/>
+                            <field name="nilai"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_input_nilai" model="ir.actions.act_window">
+        <field name="name">Input Nilai</field>
+        <field name="res_model">erpobe.input.nilai</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_input_nilai_search"/>
+    </record>
+</odoo>

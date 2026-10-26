@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_summary_mk_list" model="ir.ui.view">
+        <field name="name">erpobe.summary.mk.list</field>
+        <field name="model">erpobe.summary.mk</field>
+        <field name="arch" type="xml">
+            <list string="Analisis Mata Kuliah">
+                <field name="fakultas_id"/>
+                <field name="prodi_id"/>
+                <field name="angkatan"/>
+                <field name="rombel_id"/>
+                <field name="mk_id"/>
+                <field name="semester_mk"/>
+                <field name="nilai_angka"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_mk_pivot" model="ir.ui.view">
+        <field name="name">erpobe.summary.mk.pivot</field>
+        <field name="model">erpobe.summary.mk</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis Mata Kuliah">
+                <field name="prodi_id" type="row"/>
+                <field name="mk_id" type="row"/>
+                <field name="angkatan" type="col"/>
+                <field name="nilai_angka" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_mk_graph" model="ir.ui.view">
+        <field name="name">erpobe.summary.mk.graph</field>
+        <field name="model">erpobe.summary.mk</field>
+        <field name="arch" type="xml">
+            <graph string="Rata-rata Nilai Mata Kuliah" type="bar">
+                <field name="mk_id"/>
+                <field name="nilai_angka" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpmk_list" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpmk.list</field>
+        <field name="model">erpobe.summary.cpmk</field>
+        <field name="arch" type="xml">
+            <list string="Analisis CPMK">
+                <field name="fakultas_id"/>
+                <field name="prodi_id"/>
+                <field name="angkatan"/>
+                <field name="rombel_id"/>
+                <field name="mk_id"/>
+                <field name="cpmk_id"/>
+                <field name="nilai_cpmk"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpmk_pivot" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpmk.pivot</field>
+        <field name="model">erpobe.summary.cpmk</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis CPMK">
+                <field name="prodi_id" type="row"/>
+                <field name="mk_id" type="row"/>
+                <field name="cpmk_id" type="row"/>
+                <field name="angkatan" type="col"/>
+                <field name="nilai_cpmk" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpmk_graph" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpmk.graph</field>
+        <field name="model">erpobe.summary.cpmk</field>
+        <field name="arch" type="xml">
+            <graph string="Rata-rata Skor CPMK" type="bar">
+                <field name="cpmk_id"/>
+                <field name="nilai_cpmk" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpl_list" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpl.list</field>
+        <field name="model">erpobe.summary.cpl</field>
+        <field name="arch" type="xml">
+            <list string="Analisis CPL">
+                <field name="fakultas_id"/>
+                <field name="prodi_id"/>
+                <field name="angkatan"/>
+                <field name="rombel_id"/>
+                <field name="mahasiswa_id"/>
+                <field name="cpl_id"/>
+                <field name="nilai_cpl"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpl_pivot" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpl.pivot</field>
+        <field name="model">erpobe.summary.cpl</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis CPL">
+                <field name="prodi_id" type="row"/>
+                <field name="cpl_id" type="row"/>
+                <field name="angkatan" type="col"/>
+                <field name="nilai_cpl" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpl_graph" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpl.graph</field>
+        <field name="model">erpobe.summary.cpl</field>
+        <field name="arch" type="xml">
+            <graph string="Rata-rata Skor CPL" type="bar">
+                <field name="cpl_id"/>
+                <field name="nilai_cpl" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_komponen_list" model="ir.ui.view">
+        <field name="name">erpobe.summary.komponen.list</field>
+        <field name="model">erpobe.summary.komponen</field>
+        <field name="arch" type="xml">
+            <list string="Analisis Komponen Penilaian">
+                <field name="fakultas_id"/>
+                <field name="prodi_id"/>
+                <field name="angkatan"/>
+                <field name="rombel_id"/>
+                <field name="mk_id"/>
+                <field name="komponen_id"/>
+                <field name="nilai_komponen"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_komponen_pivot" model="ir.ui.view">
+        <field name="name">erpobe.summary.komponen.pivot</field>
+        <field name="model">erpobe.summary.komponen</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis Komponen">
+                <field name="prodi_id" type="row"/>
+                <field name="mk_id" type="row"/>
+                <field name="komponen_id" type="row"/>
+                <field name="angkatan" type="col"/>
+                <field name="nilai_komponen" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_komponen_graph" model="ir.ui.view">
+        <field name="name">erpobe.summary.komponen.graph</field>
+        <field name="model">erpobe.summary.komponen</field>
+        <field name="arch" type="xml">
+            <graph string="Rata-rata Nilai Komponen" type="bar">
+                <field name="komponen_id"/>
+                <field name="nilai_komponen" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="action_erpobe_summary_mk" model="ir.actions.act_window">
+        <field name="name">Analisis Mata Kuliah</field>
+        <field name="res_model">erpobe.summary.mk</field>
+        <field name="view_mode">list,pivot,graph</field>
+    </record>
+    <record id="action_erpobe_summary_cpmk" model="ir.actions.act_window">
+        <field name="name">Analisis CPMK</field>
+        <field name="res_model">erpobe.summary.cpmk</field>
+        <field name="view_mode">list,pivot,graph</field>
+    </record>
+    <record id="action_erpobe_summary_cpl" model="ir.actions.act_window">
+        <field name="name">Analisis CPL</field>
+        <field name="res_model">erpobe.summary.cpl</field>
+        <field name="view_mode">list,pivot,graph</field>
+    </record>
+    <record id="action_erpobe_summary_komponen" model="ir.actions.act_window">
+        <field name="name">Analisis Komponen</field>
+        <field name="res_model">erpobe.summary.komponen</field>
+        <field name="view_mode">list,pivot,graph</field>
+    </record>
+</odoo>

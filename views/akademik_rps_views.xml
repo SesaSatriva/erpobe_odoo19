@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_rps_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.rps.search</field>
+        <field name="model">erpobe.akademik.rps</field>
+        <field name="arch" type="xml">
+            <search string="Rencana Pembelajaran Semester">
+                <field name="matakuliah_id"/>
+                <field name="kode_mk"/>
+                <field name="prodi_id"/>
+                <field name="koordinator_id"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_mk" string="Mata Kuliah" context="{'group_by': 'matakuliah_id'}"/>
+                <filter name="group_semester" string="Semester" context="{'group_by': 'semester'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_rps_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.rps.list</field>
+        <field name="model">erpobe.akademik.rps</field>
+        <field name="arch" type="xml">
+            <list string="Rencana Pembelajaran Semester">
+                <field name="kode_mk"/>
+                <field name="matakuliah_id"/>
+                <field name="prodi_id"/>
+                <field name="sks"/>
+                <field name="semester"/>
+                <field name="koordinator_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_rps_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.rps.form</field>
+        <field name="model">erpobe.akademik.rps</field>
+        <field name="arch" type="xml">
+            <form string="Rencana Pembelajaran Semester">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="matakuliah_id"/>
+                        <h1>
+                            <field name="matakuliah_id"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Mata Kuliah">
+                            <field name="kode_mk" readonly="1"/>
+                            <field name="prodi_id" readonly="1"/>
+                            <field name="sks" readonly="1"/>
+                            <field name="semester" readonly="1"/>
+                            <field name="tipe_mk" readonly="1"/>
+                            <field name="jenis_mk" readonly="1"/>
+                            <field name="bahasa" readonly="1"/>
+                        </group>
+                        <group string="Pengampu">
+                            <field name="koordinator_id" readonly="1"/>
+                            <field name="tim_pengampu_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="mk_prasyarat_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="media_software"/>
+                            <field name="media_hardware"/>
+                        </group>
+                    </group>
+                    <group string="Deskripsi Mata Kuliah">
+                        <field name="deskripsi_mk" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Capaian Pembelajaran">
+                            <group>
+                                <field name="cpmk_ids" widget="many2many_tags"/>
+                                <field name="cpl_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Komponen Penilaian">
+                            <field name="komponen_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Kegiatan Mingguan">
+                            <field name="kegiatan_perkuliahan_ids">
+                                <list editable="bottom">
+                                    <field name="minggu"/>
+                                    <field name="cpmk_id"/>
+                                    <field name="bahan_kajian"/>
+                                    <field name="metode_pembelajaran_id"/>
+                                    <field name="estimasi_waktu"/>
+                                    <field name="teknik_penilaian"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="minggu"/>
+                                            <field name="cpmk_id"/>
+                                            <field name="metode_pembelajaran_id"/>
+                                            <field name="estimasi_waktu"/>
+                                        </group>
+                                        <group>
+                                            <field name="teknik_penilaian"/>
+                                            <field name="referensi_ids" widget="many2many_tags"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <field name="bahan_kajian"/>
+                                        <field name="pengalaman_belajar"/>
+                                        <field name="indikator_penilaian"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Rubrik dan Kriteria">
+                            <field name="rubrik_penilaian_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="materi_soal"/>
+                                    <field name="komponen_id"/>
+                                    <field name="cpmk_id"/>
+                                    <field name="bobot"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="sequence"/>
+                                        <field name="materi_soal"/>
+                                        <field name="komponen_id"/>
+                                        <field name="cpmk_id"/>
+                                        <field name="bobot"/>
+                                    </group>
+                                    <field name="kriteria_ids">
+                                        <list editable="bottom">
+                                            <field name="grade_id"/>
+                                            <field name="nilai_min" readonly="1"/>
+                                            <field name="nilai_max" readonly="1"/>
+                                            <field name="deskripsi"/>
+                                        </list>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Bobot CPMK-Mata Kuliah">
+                            <field name="bobot_cpmk_mk_ids">
+                                <list editable="bottom">
+                                    <field name="cpmk_id"/>
+                                    <field name="mk_id" readonly="1"/>
+                                    <field name="bobot_cpmk_mk"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Bobot CPMK-CPL">
+                            <field name="bobot_cpmk_cpl_ids">
+                                <list editable="bottom">
+                                    <field name="cpl_id"/>
+                                    <field name="cpmk_id"/>
+                                    <field name="bobot_cpmk_cpl"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Bobot Komponen-CPMK">
+                            <field name="bobot_komponen_cpmk_ids">
+                                <list editable="bottom">
+                                    <field name="cpmk_id"/>
+                                    <field name="komponen_penilaian"/>
+                                    <field name="bobot_komponen_cpmk"/>
+                                    <field name="valid_cpmk" optional="hide"/>
+                                    <field name="valid_komponen" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_erpobe_metode_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.metode.pembelajaran.search</field>
+        <field name="model">erpobe.akademik.metode.pembelajaran</field>
+        <field name="arch" type="xml">
+            <search string="Metode Pembelajaran">
+                <field name="kode"/>
+                <field name="name"/>
+                <filter name="archived" string="Diarsipkan" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_metode_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.metode.pembelajaran.list</field>
+        <field name="model">erpobe.akademik.metode.pembelajaran</field>
+        <field name="arch" type="xml">
+            <list string="Metode Pembelajaran">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_metode_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.metode.pembelajaran.form</field>
+        <field name="model">erpobe.akademik.metode.pembelajaran</field>
+        <field name="arch" type="xml">
+            <form string="Metode Pembelajaran">
+                <sheet>
+                    <group>
+                        <field name="active"/>
+                        <field name="kode"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_erpobe_referensi_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.referensi.search</field>
+        <field name="model">erpobe.akademik.referensi</field>
+        <field name="arch" type="xml">
+            <search string="Referensi">
+                <field name="kode"/>
+                <field name="judul"/>
+                <field name="penulis"/>
+                <field name="tahun"/>
+                <filter name="utama" string="Referensi Utama" domain="[('jenis', '=', 'utama')]"/>
+                <filter name="group_jenis" string="Jenis" context="{'group_by': 'jenis'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_referensi_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.referensi.list</field>
+        <field name="model">erpobe.akademik.referensi</field>
+        <field name="arch" type="xml">
+            <list string="Referensi">
+                <field name="kode"/>
+                <field name="judul"/>
+                <field name="penulis"/>
+                <field name="tahun"/>
+                <field name="jenis"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_referensi_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.referensi.form</field>
+        <field name="model">erpobe.akademik.referensi</field>
+        <field name="arch" type="xml">
+            <form string="Referensi">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="judul"/>
+                        <h1>
+                            <field name="judul"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="kode"/>
+                        <field name="jenis"/>
+                        <field name="penulis"/>
+                        <field name="tahun"/>
+                        <field name="link" widget="url"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_rps" model="ir.actions.act_window">
+        <field name="name">Rencana Pembelajaran Semester</field>
+        <field name="res_model">erpobe.akademik.rps</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_rps_search"/>
+    </record>
+    <record id="action_erpobe_metode" model="ir.actions.act_window">
+        <field name="name">Metode Pembelajaran</field>
+        <field name="res_model">erpobe.akademik.metode.pembelajaran</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_metode_search"/>
+    </record>
+    <record id="action_erpobe_referensi" model="ir.actions.act_window">
+        <field name="name">Referensi Akademik</field>
+        <field name="res_model">erpobe.akademik.referensi</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_referensi_search"/>
+    </record>
+</odoo>

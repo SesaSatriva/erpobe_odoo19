@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_cpmk_rombel_list" model="ir.ui.view">
+        <field name="name">erpobe.cpmk.rombel.list</field>
+        <field name="model">erpobe.cpmk.rombel</field>
+        <field name="arch" type="xml">
+            <list string="Rata-rata CPMK per Rombel">
+                <field name="fakultas_id"/>
+                <field name="prodi_id"/>
+                <field name="rombel_id"/>
+                <field name="cpmk_id"/>
+                <field name="nilai_rata_cpmk"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_cpmk_angkatan_list" model="ir.ui.view">
+        <field name="name">erpobe.cpmk.angkatan.list</field>
+        <field name="model">erpobe.cpmk.angkatan</field>
+        <field name="arch" type="xml">
+            <list string="Rata-rata CPMK per Angkatan">
+                <field name="angkatan"/>
+                <field name="cpmk_id"/>
+                <field name="nilai_rata_cpmk"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_erpobe_cpmk_rombel" model="ir.actions.act_window">
+        <field name="name">CPMK per Rombel</field>
+        <field name="res_model">erpobe.cpmk.rombel</field>
+        <field name="view_mode">list</field>
+    </record>
+    <record id="action_erpobe_cpmk_angkatan" model="ir.actions.act_window">
+        <field name="name">CPMK per Angkatan</field>
+        <field name="res_model">erpobe.cpmk.angkatan</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

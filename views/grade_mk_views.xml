@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_grade_mk_rombel_list" model="ir.ui.view">
+        <field name="name">erpobe.grade.mk.rombel.list</field>
+        <field name="model">erpobe.grade.mk.rombel</field>
+        <field name="arch" type="xml">
+            <list string="Rata-rata Nilai Mata Kuliah per Rombel">
+                <field name="fakultas_id"/>
+                <field name="prodi_id"/>
+                <field name="rombel_id"/>
+                <field name="mk_id"/>
+                <field name="nilai_rata_mk"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_grade_mk_angkatan_list" model="ir.ui.view">
+        <field name="name">erpobe.grade.mk.angkatan.list</field>
+        <field name="model">erpobe.grade.mk.angkatan</field>
+        <field name="arch" type="xml">
+            <list string="Rata-rata Nilai Mata Kuliah per Angkatan">
+                <field name="angkatan"/>
+                <field name="mk_id"/>
+                <field name="nilai_rata_mk"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_erpobe_grade_mk_rombel" model="ir.actions.act_window">
+        <field name="name">Nilai Mata Kuliah per Rombel</field>
+        <field name="res_model">erpobe.grade.mk.rombel</field>
+        <field name="view_mode">list</field>
+    </record>
+    <record id="action_erpobe_grade_mk_angkatan" model="ir.actions.act_window">
+        <field name="name">Nilai Mata Kuliah per Angkatan</field>
+        <field name="res_model">erpobe.grade.mk.angkatan</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

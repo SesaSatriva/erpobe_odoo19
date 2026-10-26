@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_komponen_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.komponen.search</field>
+        <field name="model">erpobe.akademik.komponen</field>
+        <field name="arch" type="xml">
+            <search string="Komponen Penilaian">
+                <field name="name"/>
+                <field name="tipe"/>
+                <filter name="active" string="Aktif" domain="[('aktif', '=', True)]"/>
+                <filter name="group_tipe" string="Tipe" context="{'group_by': 'tipe'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_komponen_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.komponen.list</field>
+        <field name="model">erpobe.akademik.komponen</field>
+        <field name="arch" type="xml">
+            <list string="Komponen Penilaian">
+                <field name="name"/>
+                <field name="tipe"/>
+                <field name="aktif"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_komponen_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.komponen.form</field>
+        <field name="model">erpobe.akademik.komponen</field>
+        <field name="arch" type="xml">
+            <form string="Komponen Penilaian">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="tipe"/>
+                        <field name="aktif"/>
+                        <field name="color"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_komponen" model="ir.actions.act_window">
+        <field name="name">Komponen Penilaian</field>
+        <field name="res_model">erpobe.akademik.komponen</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_komponen_search"/>
+    </record>
+</odoo>

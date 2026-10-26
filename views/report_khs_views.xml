@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_khs_search" model="ir.ui.view">
+        <field name="name">erpobe.report.khs.search</field>
+        <field name="model">erpobe.report.khs</field>
+        <field name="arch" type="xml">
+            <search string="Hasil Studi Mahasiswa">
+                <field name="mahasiswa_id"/>
+                <field name="nim"/>
+                <field name="rombel_id"/>
+                <field name="angkatan"/>
+                <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+                <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_khs_list" model="ir.ui.view">
+        <field name="name">erpobe.report.khs.list</field>
+        <field name="model">erpobe.report.khs</field>
+        <field name="arch" type="xml">
+            <list string="Hasil Studi Mahasiswa">
+                <field name="nim"/>
+                <field name="mahasiswa_id"/>
+                <field name="rombel_id"/>
+                <field name="angkatan"/>
+                <field name="total_sks_lulus"/>
+                <field name="ipk"/>
+                <field name="tanggal_cetak"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_khs_form" model="ir.ui.view">
+        <field name="name">erpobe.report.khs.form</field>
+        <field name="model">erpobe.report.khs</field>
+        <field name="arch" type="xml">
+            <form string="Hasil Studi Mahasiswa">
+                <header>
+                    <button name="action_fetch_nilai" type="object" string="Perbarui Nilai" class="oe_highlight" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="mahasiswa_id"/>
+                        <h1>
+                            <field name="mahasiswa_id"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="nim" readonly="1"/>
+                        <field name="rombel_id" readonly="1"/>
+                        <field name="angkatan" readonly="1"/>
+                        <field name="tahun_ajaran_id"/>
+                        <field name="tanggal_cetak" readonly="1"/>
+                        <field name="total_sks_lulus" readonly="1"/>
+                        <field name="ipk" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Nilai Mata Kuliah">
+                            <field name="mk_line_ids">
+                                <list>
+                                    <field name="semester_mk"/>
+                                    <field name="kode_mk"/>
+                                    <field name="mk_id"/>
+                                    <field name="sks"/>
+                                    <field name="nilai_angka"/>
+                                    <field name="nilai_huruf"/>
+                                    <field name="bobot"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Capaian CPMK">
+                            <field name="cpmk_line_ids">
+                                <list>
+                                    <field name="mk_id"/>
+                                    <field name="cpmk_id"/>
+                                    <field name="nilai_angka"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Capaian CPL">
+                            <field name="cpl_line_ids">
+                                <list>
+                                    <field name="cpl_id"/>
+                                    <field name="nilai_angka"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_khs" model="ir.actions.act_window">
+        <field name="name">Hasil Studi Mahasiswa</field>
+        <field name="res_model">erpobe.report.khs</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_khs_search"/>
+    </record>
+</odoo>

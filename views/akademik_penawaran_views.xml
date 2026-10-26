@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_penawaran_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.penawaran.search</field>
+        <field name="model">erpobe.akademik.penawaran</field>
+        <field name="arch" type="xml">
+            <search string="Penawaran Mata Kuliah">
+                <field name="name"/>
+                <field name="tahun_ajaran"/>
+                <field name="rombel_ids"/>
+                <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
+                <filter name="group_semester" string="Semester" context="{'group_by': 'semester_akademik'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_penawaran_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.penawaran.list</field>
+        <field name="model">erpobe.akademik.penawaran</field>
+        <field name="arch" type="xml">
+            <list string="Penawaran Mata Kuliah">
+                <field name="name"/>
+                <field name="tahun_ajaran"/>
+                <field name="semester_akademik"/>
+                <field name="rombel_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_penawaran_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.penawaran.form</field>
+        <field name="model">erpobe.akademik.penawaran</field>
+        <field name="arch" type="xml">
+            <form string="Penawaran Mata Kuliah">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="tahun_ajaran"/>
+                        <field name="semester_akademik" readonly="1"/>
+                        <field name="filter_angkatan_ids" widget="many2many_tags"/>
+                        <field name="rombel_ids" widget="many2many_tags"/>
+                        <field name="temp_matakuliah_ids" widget="many2many_tags"/>
+                    </group>
+                    <notebook>
+                        <page string="Kelas dan Mata Kuliah">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="matakuliah_id"/>
+                                    <field name="semester_kurikulum"/>
+                                    <field name="dosen_id"/>
+                                    <field name="pengampu_ids" widget="many2many_tags"/>
+                                    <field name="rombel_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_penawaran" model="ir.actions.act_window">
+        <field name="name">Penawaran Mata Kuliah</field>
+        <field name="res_model">erpobe.akademik.penawaran</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_penawaran_search"/>
+    </record>
+</odoo>

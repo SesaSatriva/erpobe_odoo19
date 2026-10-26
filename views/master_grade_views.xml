@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_master_grade_search" model="ir.ui.view">
+        <field name="name">erpobe.master.grade.search</field>
+        <field name="model">erpobe.master.grade</field>
+        <field name="arch" type="xml">
+            <search string="Skala Nilai">
+                <field name="name"/>
+                <filter name="group_grade" string="Grade" context="{'group_by': 'name'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_grade_list" model="ir.ui.view">
+        <field name="name">erpobe.master.grade.list</field>
+        <field name="model">erpobe.master.grade</field>
+        <field name="arch" type="xml">
+            <list string="Skala Nilai">
+                <field name="name"/>
+                <field name="nilai_min"/>
+                <field name="nilai_max"/>
+                <field name="bobot"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_grade_form" model="ir.ui.view">
+        <field name="name">erpobe.master.grade.form</field>
+        <field name="model">erpobe.master.grade</field>
+        <field name="arch" type="xml">
+            <form string="Skala Nilai">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="nilai_min"/>
+                        <field name="nilai_max"/>
+                        <field name="bobot"/>
+                    </group>
+                    <field name="keterangan_standar"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_master_grade" model="ir.actions.act_window">
+        <field name="name">Skala Nilai</field>
+        <field name="res_model">erpobe.master.grade</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_grade_search"/>
+    </record>
+</odoo>

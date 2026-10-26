@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_erpobe_master_prodi_search" model="ir.ui.view">
+        <field name="name">erpobe.master.prodi.search</field>
+        <field name="model">erpobe.master.prodi</field>
+        <field name="arch" type="xml">
+            <search string="Program Studi">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="fakultas_id"/>
+                <filter name="archived" string="Diarsipkan" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_prodi_list" model="ir.ui.view">
+        <field name="name">erpobe.master.prodi.list</field>
+        <field name="model">erpobe.master.prodi</field>
+        <field name="arch" type="xml">
+            <list string="Program Studi">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="fakultas_id"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_prodi_form" model="ir.ui.view">
+        <field name="name">erpobe.master.prodi.form</field>
+        <field name="model">erpobe.master.prodi</field>
+        <field name="arch" type="xml">
+            <form string="Program Studi">
+                <sheet>
+                    <group>
+                        <field name="active"/>
+                        <field name="kode"/>
+                        <field name="name"/>
+                        <field name="fakultas_id"/>
+                    </group>
+                    <notebook>
+                        <page string="CPL">
+                            <field name="cpl_ids">
+                                <list editable="bottom">
+                                    <field name="kode_cpl"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Dosen">
+                            <field name="dosen_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Mahasiswa">
+                            <field name="mahasiswa_ids" readonly="1">
+                                <list>
+                                    <field name="nim"/>
+                                    <field name="name"/>
+                                    <field name="rombel_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mata Kuliah">
+                            <field name="matakuliah_ids">
+                                <list editable="bottom">
+                                    <field name="kode_mk"/>
+                                    <field name="name"/>
+                                    <field name="sks"/>
+                                    <field name="semester"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Rombel">
+                            <field name="rombel_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="angkatan"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_master_prodi" model="ir.actions.act_window">
+        <field name="name">Program Studi</field>
+        <field name="res_model">erpobe.master.prodi</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_prodi_search"/>
+    </record>
+</odoo>

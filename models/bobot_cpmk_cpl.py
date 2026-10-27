@@ -33,6 +33,14 @@ class ErpObeBobotCpmkCpl(models.Model):
     _uniq_rps_cpmk_cpl_constraint = models.Constraint('unique(rps_id, cpl_id, cpmk_id)', 'Relasi CPMK dan CPL ini sudah ada di RPS ini.')
     _bobot_range_constraint = models.Constraint('CHECK(bobot_cpmk_cpl >= 0 AND bobot_cpmk_cpl <= 100)', 'Bobot harus di antara 0 dan 100 persen.')
 
+    prodi_id = fields.Many2one(
+        related="rps_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.constrains("bobot_cpmk_cpl", "cpl_id")
     def _check_total_bobot_per_cpl_global(self):
         for rec in self:
@@ -57,3 +65,12 @@ class ErpObeBobotCpmkCpl(models.Model):
                     f"'{rec.cpl_id.kode_cpl}' harus berjumlah 100%.\n"
                     f"Total saat ini di seluruh mata kuliah: {total_bobot:.2f}%."
                 )
+
+    @api.constrains("rps_id", "cpmk_id")
+    def _check_cpmk_faculty(self):
+        for record in self:
+            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+                raise ValidationError(
+                    "Bobot CPMK harus berada di prodi mata kuliah RPS."
+                )
+

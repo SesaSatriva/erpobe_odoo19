@@ -1,4 +1,5 @@
 from odoo import models, fields, api, tools
+from odoo.exceptions import ValidationError
 
 
 class ErpObeGradeCpmk(models.Model):
@@ -17,6 +18,14 @@ class ErpObeGradeCpmk(models.Model):
     )
 
     _uniq_mhs_cpmk_constraint = models.Constraint('unique(mahasiswa_id, cpmk_id)', 'Grade CPMK exist.')
+
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
 
     @api.depends(
         "mahasiswa_id.grade_komponen_ids.nilai",
@@ -82,6 +91,19 @@ class ErpObeGradeCpmk(models.Model):
 
             rec.nilai_cpmk = total_score
 
+    @api.constrains("mahasiswa_id", "cpmk_id")
+    def _check_grade_faculty(self):
+        for record in self:
+            if (
+                record.mahasiswa_id
+                and record.cpmk_id
+                and record.mahasiswa_id.prodi_id != record.cpmk_id.prodi_id
+            ):
+                raise ValidationError(
+                    "Nilai CPMK dan mahasiswa harus berada di fakultas yang sama."
+                )
+
+
 
 class ErpObeCpmkRombel(models.Model):
     _name = "erpobe.cpmk.rombel"
@@ -91,7 +113,7 @@ class ErpObeCpmkRombel(models.Model):
     rombel_id = fields.Many2one("erpobe.master.rombel", string="Rombel", readonly=True)
     prodi_id = fields.Many2one("erpobe.master.prodi", readonly=True, index=True)
     fakultas_id = fields.Many2one(
-        "erpobe.master.fakultas", readonly=True, index=True
+        related="prodi_id.fakultas_id", readonly=True, index=True
     )
     cpmk_id = fields.Many2one("erpobe.akademik.cpmk", string="CPMK", readonly=True)
     nilai_rata_cpmk = fields.Float(
@@ -127,6 +149,14 @@ class ErpObeCpmkAngkatan(models.Model):
     cpmk_id = fields.Many2one("erpobe.akademik.cpmk", string="CPMK", readonly=True)
     nilai_rata_cpmk = fields.Float(
         string="Rata-rata CPMK Angkatan", readonly=True, digits=(16, 2)
+    )
+
+    prodi_id = fields.Many2one(
+        related="cpmk_id.prodi_id", readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", readonly=True, index=True
     )
 
     def init(self):

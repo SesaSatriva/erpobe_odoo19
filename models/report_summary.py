@@ -19,7 +19,10 @@ class ErpObeSummaryAnalytics(models.AbstractModel):
         "erpobe.master.prodi", string="Program Studi", readonly=True, index=True
     )
     fakultas_id = fields.Many2one(
-        "erpobe.master.fakultas", string="Fakultas", readonly=True, index=True
+        related="prodi_id.fakultas_id",
+        string="Fakultas",
+        readonly=True,
+        index=True,
     )
 
     # PERBAIKAN: Tambahkan aggregator="max" agar tidak dijumlahkan (2023+2023)

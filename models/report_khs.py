@@ -59,6 +59,14 @@ class ErpObeReportKhs(models.Model):
 
     # === CORE METHODS ===
 
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.model_create_multi
     def create(self, vals_list):
         """Override create untuk otomatis fetch nilai saat record dibuat."""
@@ -221,6 +229,14 @@ class ErpObeReportKhsMk(models.Model):
     nilai_huruf = fields.Char(compute="_compute_grade", store=True)
     bobot = fields.Float(compute="_compute_grade", store=True, digits=(3, 2))
 
+    prodi_id = fields.Many2one(
+        related="khs_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.depends("nilai_angka")
     def _compute_grade(self):
         # Optimasi: Fetch Master Grade hanya sekali di luar loop record
@@ -251,6 +267,15 @@ class ErpObeReportKhsCpmk(models.Model):
     mk_id = fields.Many2one(related="grade_id.mk_id", store=True)
     nilai_angka = fields.Float(related="grade_id.nilai_cpmk", store=True)
 
+    prodi_id = fields.Many2one(
+        related="khs_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+
 
 class ErpObeReportKhsCpl(models.Model):
     _name = "erpobe.report.khs.cpl"
@@ -261,3 +286,11 @@ class ErpObeReportKhsCpl(models.Model):
 
     cpl_id = fields.Many2one(related="grade_id.cpl_id", store=True)
     nilai_angka = fields.Float(related="grade_id.nilai_cpl", store=True)
+    prodi_id = fields.Many2one(
+        related="khs_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+

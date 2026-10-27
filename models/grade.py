@@ -29,6 +29,14 @@ class ErpObeInputNilai(models.Model):
 
     _uniq_input_penawaran_constraint = models.Constraint('unique(penawaran_line_id)', 'Input nilai untuk kelas ini sudah ada.')
 
+    prodi_id = fields.Many2one(
+        related="penawaran_line_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     def action_calculate_grades_and_khs(self, krs_lines=None):
         """
         Orchestrator: Memastikan record Grade tersedia & MEMAKSA hitung ulang (Recompute).
@@ -129,6 +137,17 @@ class ErpObeInputNilai(models.Model):
             else:
                 _logger.warning("Modul erpobe.report.khs belum terinstall.")
 
+    @api.constrains("penawaran_id", "penawaran_line_id")
+    def _check_input_faculty(self):
+        for record in self:
+            if (
+                record.penawaran_line_id
+                and record.penawaran_line_id.penawaran_id != record.penawaran_id
+            ):
+                raise ValidationError(
+                    "Baris nilai harus berasal dari penawaran yang dipilih."
+                )
+
     @api.onchange("penawaran_line_id")
     def _onchange_generate_students(self):
         """
@@ -188,7 +207,6 @@ class ErpObeInputNilai(models.Model):
 
         self.grade_komponen_ids = new_lines
 
-
 class ErpObeGradeKomponen(models.Model):
     _name = "erpobe.grade.komponen"
     _description = "Nilai Komponen Mahasiswa"
@@ -209,3 +227,11 @@ class ErpObeGradeKomponen(models.Model):
     nilai = fields.Float(string="Nilai Angka", default=0.0, digits=(16, 2))
 
     _uniq_nilai_komp_constraint = models.Constraint('unique(krs_line_id, komponen_id)', 'Nilai komponen duplikat untuk mahasiswa ini.')
+
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )

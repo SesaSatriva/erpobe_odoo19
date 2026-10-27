@@ -2,6 +2,8 @@ from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 
+from .faculty_access import _check_prodi_write_access
+
 
 def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_field):
     partner = profile.partner_id
@@ -175,7 +177,44 @@ class ErpobeDosen(models.Model):
 
     _nip_unique = models.Constraint("UNIQUE (nip)", "NIP tidak boleh duplikat.")
 
+    prodi_ids = fields.Many2many(
+        "erpobe.master.prodi",
+        "erpobe_prodi_dosen_rel",
+        "dosen_id",
+        "prodi_id",
+        string="Program Studi",
+    )
+
+    @api.constrains("prodi_ids")
+    def _check_prodi_required(self):
+        for record in self:
+            if not record.prodi_ids:
+                raise ValidationError("Dosen harus terdaftar pada minimal satu prodi.")
+            faculties = record.prodi_ids.mapped("fakultas_id")
+            dean_faculties = self.env["erpobe.master.fakultas"].sudo().search(
+                [("dekan_id", "=", record.id)]
+            )
+            if any(faculty not in faculties for faculty in dean_faculties):
+                raise ValidationError(
+                    "Prodi dosen dekan harus berada di fakultas yang dipimpin."
+                )
+            courses = self.env["erpobe.master.matakuliah"].sudo().search(
+                [
+                    "|",
+                    ("koordinator_id", "=", record.id),
+                    ("tim_pengampu_ids", "in", record.id),
+                ]
+            )
+            if any(course.prodi_id not in record.prodi_ids for course in courses):
+                raise ValidationError(
+                    "Dosen tidak dapat dilepas dari prodi mata kuliah yang diampu."
+                )
+
     def write(self, vals):
+
+        # Validasi cakupan ekstensi berjalan sebelum logika utama.
+        _check_prodi_write_access(self, vals)
+
         res = super().write(vals)
         for dosen in self:
             if not dosen.user_id:
@@ -230,6 +269,12 @@ class ErpobeDosen(models.Model):
             dosen.partner_id.write({"ref": dosen.nip})
             dosen._create_or_update_user()
 
+        # Validasi cakupan ekstensi berjalan setelah logika utama.
+        _check_prodi_write_access(
+            records,
+            {"prodi_ids": [(6, 0, records.mapped("prodi_ids").ids)]},
+        )
+
         return records
 
     def _create_or_update_user(self):
@@ -256,6 +301,13 @@ class ErpobeMahasiswa(models.Model):
     grade_cpmk_ids = fields.One2many("erpobe.grade.cpmk", "mahasiswa_id")
 
     _nim_unique = models.Constraint("UNIQUE (nim)", "NIM tidak boleh duplikat.")
+
+    prodi_id = fields.Many2one(
+        related="rombel_id.prodi_id", store=True, readonly=True, index=True
+    )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
 
     def write(self, vals):
         res = super().write(vals)

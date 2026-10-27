@@ -1,4 +1,5 @@
 from odoo import models, fields, api, tools
+from odoo.exceptions import ValidationError
 
 
 class ErpObeGradeCpl(models.Model):
@@ -11,6 +12,14 @@ class ErpObeGradeCpl(models.Model):
     nilai_cpl = fields.Float(compute="_compute_nilai_cpl", store=True, digits=(16, 2))
 
     _uniq_mhs_cpl_constraint = models.Constraint('unique(mahasiswa_id, cpl_id)', 'Nilai CPL exist.')
+
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
 
     @api.depends("mahasiswa_id.grade_cpmk_ids.nilai_cpmk")
     def _compute_nilai_cpl(self):
@@ -81,6 +90,21 @@ class ErpObeGradeCpl(models.Model):
             # Rumus: (Total Score * Bobot) / (Total Seluruh Bobot yang Ada)
             rec.nilai_cpl = total_score_tertimbang / total_bobot_pembagi
 
+    @api.constrains("mahasiswa_id", "cpl_id")
+    def _check_grade_faculty(self):
+        for record in self:
+            if record.cpl_id and (
+                record.cpl_id.prodi_id != record.prodi_id
+                or any(
+                    mapping.prodi_id != record.prodi_id
+                    for mapping in record.cpl_id.cpmk_mapping_ids
+                )
+            ):
+                raise ValidationError(
+                    "Nilai CPL dan mahasiswa harus berasal dari prodi yang sama."
+                )
+
+
 
 class ErpObeGradeCplRombel(models.Model):
     _name = "erpobe.grade.cpl.rombel"
@@ -90,7 +114,7 @@ class ErpObeGradeCplRombel(models.Model):
     rombel_id = fields.Many2one("erpobe.master.rombel", string="Rombel", readonly=True)
     prodi_id = fields.Many2one("erpobe.master.prodi", readonly=True, index=True)
     fakultas_id = fields.Many2one(
-        "erpobe.master.fakultas", readonly=True, index=True
+        related="prodi_id.fakultas_id", readonly=True, index=True
     )
     cpl_id = fields.Many2one("erpobe.akademik.cpl", string="CPL", readonly=True)
     nilai_rata_cpl = fields.Float(string="Rata-rata Nilai CPL", readonly=True)
@@ -122,6 +146,9 @@ class ErpObeGradeCplAngkatan(models.Model):
 
     angkatan = fields.Integer(string="Angkatan", readonly=True)
     prodi_id = fields.Many2one("erpobe.master.prodi", readonly=True, index=True)
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", readonly=True, index=True
+    )
     cpl_id = fields.Many2one("erpobe.akademik.cpl", string="CPL", readonly=True)
     nilai_rata_cpl = fields.Float(string="Rata-rata Nilai CPL Angkatan", readonly=True)
 

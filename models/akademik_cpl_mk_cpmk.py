@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import api, models, fields
+from odoo.exceptions import ValidationError
 
 class ErpObeAkademikCplMkCpmk(models.Model):
     _name = "erpobe.akademik.cpl.mk.cpmk"
@@ -15,3 +16,19 @@ class ErpObeAkademikCplMkCpmk(models.Model):
     )
 
     _uniq_mapping_constraint = models.Constraint('unique(cpl_id, cpmk_id)', 'Relasi CPL dan CPMK ini sudah didefinisikan.')
+
+    prodi_id = fields.Many2one(
+        related="mk_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+    @api.constrains("cpl_id", "cpmk_id")
+    def _check_cpl_prodi(self):
+        for record in self:
+            if record.cpl_id.prodi_id != record.prodi_id:
+                raise ValidationError(
+                    "CPL dan CPMK harus berasal dari prodi yang sama."
+                )

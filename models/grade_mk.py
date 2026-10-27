@@ -1,4 +1,5 @@
 from odoo import models, fields, api, tools
+from odoo.exceptions import ValidationError
 
 
 class ErpObeGradeMk(models.Model):
@@ -14,6 +15,28 @@ class ErpObeGradeMk(models.Model):
     _uniq_mhs_mk_constraint = models.Constraint('unique(mahasiswa_id, mk_id)', 'Nilai MK exist.')
 
     # === UPDATE TRIGGER (PENTING: Agar Transkrip Realtime) ===
+
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+    @api.constrains("mahasiswa_id", "mk_id")
+    def _check_grade_faculty(self):
+        for record in self:
+            if (
+                record.mahasiswa_id
+                and record.mk_id
+                and record.mahasiswa_id.prodi_id != record.mk_id.prodi_id
+            ):
+                raise ValidationError(
+                    "Nilai mata kuliah dan mahasiswa harus berada di fakultas "
+                    "yang sama."
+                )
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
@@ -119,7 +142,7 @@ class ErpObeGradeMkRombel(models.Model):
     )
     prodi_id = fields.Many2one("erpobe.master.prodi", readonly=True, index=True)
     fakultas_id = fields.Many2one(
-        "erpobe.master.fakultas", readonly=True, index=True
+        related="prodi_id.fakultas_id", readonly=True, index=True
     )
 
     nilai_rata_mk = fields.Float(
@@ -168,6 +191,14 @@ class ErpObeGradeMkAngkatan(models.Model):
     nilai_rata_mk = fields.Float(
         string="Rata-rata Nilai MK Angkatan",
         readonly=True,
+    )
+
+    prodi_id = fields.Many2one(
+        related="mk_id.prodi_id", readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", readonly=True, index=True
     )
 
     def init(self):

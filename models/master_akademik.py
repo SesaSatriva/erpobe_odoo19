@@ -1,6 +1,10 @@
+import datetime
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-import datetime
+
+from .faculty_access import _check_prodi_write_access
+
 
 class ErpObeMasterMataKuliah(models.Model):
     _name = "erpobe.master.matakuliah"
@@ -44,6 +48,16 @@ class ErpObeMasterMataKuliah(models.Model):
         string="Rombel",
     )
 
+    prodi_id = fields.Many2one(
+        "erpobe.master.prodi",
+        required=True,
+        ondelete="restrict",
+        index=True,
+    )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.constrains(
         "prodi_id",
         "koordinator_id",
@@ -80,6 +94,12 @@ class ErpObeMasterMataKuliah(models.Model):
                 raise ValidationError(
                     "Mata kuliah prasyarat harus berasal dari prodi yang sama."
                 )
+
+    def write(self, vals):
+
+        _check_prodi_write_access(self, vals)
+
+        return super().write(vals)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -131,12 +151,30 @@ class ErpObeMasterRombel(models.Model):
         "Kelas ini sudah ada di angkatan tersebut pada prodi ini!",
     )
 
+    prodi_id = fields.Many2one(
+        "erpobe.master.prodi",
+        required=True,
+        ondelete="restrict",
+        index=True,
+    )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.constrains("angkatan")
     def _check_angkatan(self):
         for rec in self:
             if rec.angkatan < 2000 or rec.angkatan > 2100:
                 raise ValidationError(
                     "Tahun angkatan tidak valid (harus antara 2000-2100)."
+                )
+
+    @api.constrains("prodi_id", "matakuliah_ids")
+    def _check_matakuliah_faculty(self):
+        for record in self:
+            if any(mk.prodi_id != record.prodi_id for mk in record.matakuliah_ids):
+                raise ValidationError(
+                    "Rombel dan mata kuliah harus berada di prodi yang sama."
                 )
 
     @api.model_create_multi
@@ -167,18 +205,13 @@ class ErpObeMasterRombel(models.Model):
         mahasiswa_no_user._create_or_update_user()
 
     def write(self, vals):
+        # Validasi cakupan ekstensi berjalan sebelum logika utama.
+        _check_prodi_write_access(self, vals)
+
         result = super().write(vals)
         if "prodi_id" in vals:
             self.mapped("mahasiswa_ids.user_id")._sync_user_type()
         return result
-
-    @api.constrains("prodi_id", "matakuliah_ids")
-    def _check_matakuliah_faculty(self):
-        for record in self:
-            if any(mk.prodi_id != record.prodi_id for mk in record.matakuliah_ids):
-                raise ValidationError(
-                    "Rombel dan mata kuliah harus berada di prodi yang sama."
-                )
 
     @api.depends("name", "angkatan")
     def _compute_display_name(self):

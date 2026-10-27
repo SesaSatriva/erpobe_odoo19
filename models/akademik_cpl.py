@@ -10,6 +10,9 @@ class ErpObeAkademikCpl(models.Model):
     prodi_id = fields.Many2one(
         "erpobe.master.prodi", required=True, ondelete="restrict", index=True
     )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
 
     # Relasi balik untuk kemudahan tracing
     cpmk_mapping_ids = fields.One2many(

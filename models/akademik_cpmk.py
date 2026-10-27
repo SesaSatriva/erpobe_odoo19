@@ -23,6 +23,14 @@ class ErpObeAkademikCpmk(models.Model):
         store=False
     )
 
+    prodi_id = fields.Many2one(
+        related="mk_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.depends('cpl_mapping_ids.cpl_id')
     def _compute_cpl_ids(self):
         for rec in self:

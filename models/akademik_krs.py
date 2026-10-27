@@ -39,6 +39,14 @@ class ErpObeAkademikKrs(models.Model):
     total_sks = fields.Integer(compute="_compute_total_sks", store=True)
     max_sks_allowed = fields.Integer(default=24, string="Max SKS", tracking=True)
 
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.depends("line_ids.sks")
     def _compute_total_sks(self):
         for rec in self:
@@ -50,6 +58,20 @@ class ErpObeAkademikKrs(models.Model):
             if rec.total_sks > rec.max_sks_allowed:
                 raise ValidationError(
                     f"Total SKS ({rec.total_sks}) melebihi batas ({rec.max_sks_allowed})."
+                )
+
+    @api.constrains("mahasiswa_id", "penawaran_id")
+    def _check_krs_faculty(self):
+        for record in self:
+            if not record.mahasiswa_id or not record.penawaran_id:
+                continue
+            rombels = record.penawaran_id.rombel_ids
+            if (
+                record.mahasiswa_id.rombel_id not in rombels
+                or any(rombel.prodi_id != record.prodi_id for rombel in rombels)
+            ):
+                raise ValidationError(
+                    "Penawaran KRS harus mencakup rombel dan prodi mahasiswa."
                 )
 
     _uniq_mhs_penawaran_constraint = models.Constraint('unique(mahasiswa_id, penawaran_id)', 'Mahasiswa ini sudah memiliki KRS untuk Penawaran tersebut!')
@@ -89,6 +111,7 @@ class ErpObeAkademikKrs(models.Model):
             self.line_ids = new_lines  # Assignment langsung list of commands
 
         return True
+
 class ErpObeAkademikKrsLine(models.Model):
     _name = "erpobe.akademik.krs.line"
     _description = "Detail Mata Kuliah KRS"
@@ -122,6 +145,26 @@ class ErpObeAkademikKrsLine(models.Model):
     _unique_krs_mk_constraint = models.Constraint('unique(krs_id, matakuliah_id)', 'Mata kuliah ini sudah diambil! Tidak boleh mengambil MK yang sama.')
 
     # SYNC MAHASISWA KE KELAS (Insert/Delete/Update)
+
+    prodi_id = fields.Many2one(
+        related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+    @api.constrains("krs_id", "penawaran_line_id")
+    def _check_krs_line_faculty(self):
+        for record in self:
+            if (
+                record.penawaran_line_id
+                and record.penawaran_line_id.prodi_id != record.prodi_id
+            ):
+                raise ValidationError(
+                    "Mata kuliah KRS dan mahasiswa harus berada di prodi yang sama."
+                )
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)

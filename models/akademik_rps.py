@@ -1,4 +1,5 @@
 from odoo import models, fields, api, Command
+from odoo.exceptions import ValidationError
 
 class ErpObeAkademikRps(models.Model):
     _name = "erpobe.akademik.rps"
@@ -50,6 +51,14 @@ class ErpObeAkademikRps(models.Model):
         store=True,
         readonly=False,
         precompute=True, 
+    )
+
+    prodi_id = fields.Many2one(
+        related="matakuliah_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
     @api.depends("matakuliah_id")
@@ -246,6 +255,23 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
         string="teknik penilaian"
     )
 
+    prodi_id = fields.Many2one(
+        related="rps_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+    @api.constrains("rps_id", "cpmk_id")
+    def _check_activity_faculty(self):
+        for record in self:
+            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+                raise ValidationError(
+                    "CPMK kegiatan harus berasal dari prodi mata kuliah RPS."
+                )
+
+
 
 class ErpObeAkademikMetodePembelajaran(models.Model):
     _name = "erpobe.akademik.metode.pembelajaran"
@@ -291,6 +317,23 @@ class ErpObeAkademikRubrikPenilaian(models.Model):
     kriteria_ids = fields.One2many(
         "erpobe.akademik.kriteria", "rubrik_id", string="Detail Kriteria"
     )
+
+    prodi_id = fields.Many2one(
+        related="rps_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+    @api.constrains("rps_id", "cpmk_id")
+    def _check_rubric_faculty(self):
+        for record in self:
+            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+                raise ValidationError(
+                    "CPMK rubrik harus berasal dari prodi mata kuliah RPS."
+                )
+
     def action_open_kriteria(self):
         """ Membuka form view rubrik untuk mengedit kriteria secara detail """
         self.ensure_one()
@@ -302,7 +345,8 @@ class ErpObeAkademikRubrikPenilaian(models.Model):
             'res_id': self.id,
             'target': 'new',
         }
-    
+
+
 class ErpObeAkademikKriteria(models.Model):
     _name = "erpobe.akademik.kriteria"
     _description = "Kriteria Penilaian RPS"
@@ -323,6 +367,14 @@ class ErpObeAkademikKriteria(models.Model):
     deskripsi = fields.Text(string="Deskripsi Spesifik", required=True)
 
     _uniq_grade_item_constraint = models.Constraint('unique(rubrik_id, grade_id)', 'Grade duplikat dalam satu item soal')
+
+    prodi_id = fields.Many2one(
+        related="rubrik_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
 
     @api.onchange("grade_id")
     def _onchange_grade(self):

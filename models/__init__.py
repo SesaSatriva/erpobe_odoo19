@@ -1,5 +1,6 @@
+from . import faculty_access
 from . import res_partner
-from . import master_fakultas
+from . import akademik_fakultas
 from . import master_prodi
 from . import master_akademik
 from . import master_user
@@ -26,4 +27,3 @@ from . import grade_cpl
 
 from . import report_khs
 from . import report_summary
-from . import faculty_scope

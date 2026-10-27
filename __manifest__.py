@@ -9,7 +9,7 @@
         "security/groups.xml",
         "security/ir.model.access.csv",
         "security/rules.xml",
-        "views/master_fakultas_views.xml",
+        "views/akademik_fakultas_views.xml",
         "views/master_prodi_views.xml",
         "views/master_user_views.xml",
         "views/master_akademik_views.xml",

@@ -249,11 +249,21 @@ class TestErpObeFacultyScope(TransactionCase):
 
     def test_prodi_relations_and_delete_restrict(self):
         self.assertEqual(self.faculty_a.prodi_ids, self.prodi_a)
+        self.assertEqual(self.faculty_a.dosen_ids, self.dosen_a)
+        self.assertEqual(self.faculty_a.mahasiswa_ids, self.mahasiswa_a)
+        self.assertEqual(self.faculty_a.matakuliah_ids, self.mk_a)
+        self.assertEqual(self.faculty_a.rombel_ids, self.rombel_a)
         self.assertEqual(self.prodi_a.dosen_ids, self.dosen_a)
         self.assertEqual(self.prodi_a.mahasiswa_ids, self.mahasiswa_a)
         self.assertEqual(self.prodi_a.matakuliah_ids, self.mk_a)
         self.assertEqual(self.prodi_a.rombel_ids, self.rombel_a)
         self.assertIn(self.admin, self.prodi_a.user_ids)
+        faculty_for_admin = self.Faculty.with_user(self.admin).browse(
+            self.faculty_a.id
+        )
+        self.assertEqual(faculty_for_admin.dosen_ids, self.dosen_a)
+        self.assertEqual(faculty_for_admin.matakuliah_ids, self.mk_a)
+        self.assertEqual(faculty_for_admin.rombel_ids, self.rombel_a)
 
         cpl = self.env["erpobe.akademik.cpl"].create(
             {
@@ -445,3 +455,103 @@ class TestErpObeFacultyScope(TransactionCase):
         )
         dosen.write({"prodi_ids": [Command.set([self.prodi_b.id])]})
         self.assertEqual(dosen.user_id.erpobe_prodi_ids, self.prodi_b)
+
+    def test_models_are_consolidated_and_faculty_relations_are_consistent(self):
+        faculty_relations = {}
+        for field in self.Faculty._fields.values():
+            if field.type != "one2many":
+                continue
+            self.assertEqual(field.inverse_name, "fakultas_id")
+            inverse = self.env[field.comodel_name]._fields[field.inverse_name]
+            self.assertEqual(inverse.type, "many2one")
+            faculty_relations[field.comodel_name] = field
+            self.faculty_a[field.name]
+
+        for model_name in sorted(self.env.registry.models):
+            if not model_name.startswith("erpobe."):
+                continue
+            model = self.env[model_name]
+            if not model._abstract and "fakultas_id" in model._fields:
+                self.assertIn(
+                    model_name,
+                    faculty_relations,
+                    f"{model_name} belum memiliki relasi balik pada fakultas.",
+                )
+            if not model._abstract:
+                defining_classes = [
+                    cls
+                    for cls in type(model).__mro__
+                    if cls.__module__.startswith("odoo.addons.erpobe.")
+                    if cls.__dict__.get("_name") == model_name
+                    and not getattr(cls, "_abstract", False)
+                ]
+                self.assertLessEqual(
+                    len(defining_classes),
+                    1,
+                    f"{model_name} didefinisikan oleh lebih dari satu class.",
+                )
+            if "prodi_id" in model._fields:
+                self.assertIn("fakultas_id", model._fields, model_name)
+                self.assertEqual(
+                    model._fields["fakultas_id"].related,
+                    "prodi_id.fakultas_id",
+                    model_name,
+                )
+
+    def test_consolidated_faculty_constraints_keep_accepting_and_rejecting(self):
+        Cpmk = self.env["erpobe.akademik.cpmk"]
+        cpmk_a = Cpmk.create(
+            {"mk_id": self.mk_a.id, "kode_cpmk": "CPMK-A", "name": "CPMK A"}
+        )
+        cpmk_b = Cpmk.create(
+            {"mk_id": self.mk_b.id, "kode_cpmk": "CPMK-B", "name": "CPMK B"}
+        )
+        Cpl = self.env["erpobe.akademik.cpl"]
+        cpl_a = Cpl.create(
+            {
+                "name": "CPL Uji A",
+                "kode_cpl": "CPL-UJI-A",
+                "prodi_id": self.prodi_a.id,
+            }
+        )
+        cpl_b = Cpl.create(
+            {
+                "name": "CPL Uji B",
+                "kode_cpl": "CPL-UJI-B",
+                "prodi_id": self.prodi_b.id,
+            }
+        )
+        Mapping = self.env["erpobe.akademik.cpl.mk.cpmk"]
+        with self.assertRaises(ValidationError):
+            Mapping.create({"cpl_id": cpl_b.id, "cpmk_id": cpmk_a.id})
+        Mapping.create({"cpl_id": cpl_a.id, "cpmk_id": cpmk_a.id})
+
+        rps = self.env["erpobe.akademik.rps"].create(
+            {"matakuliah_id": self.mk_a.id}
+        )
+        metode = self.env["erpobe.akademik.metode.pembelajaran"].create(
+            {"name": "Metode Uji"}
+        )
+        Kegiatan = self.env["erpobe.akademik.kegiatan.perkuliahan"]
+        kegiatan_values = {
+            "rps_id": rps.id,
+            "minggu": 1,
+            "bahan_kajian": "Bahan uji",
+            "metode_pembelajaran_id": metode.id,
+        }
+        with self.assertRaises(ValidationError):
+            Kegiatan.create({**kegiatan_values, "cpmk_id": cpmk_b.id})
+        Kegiatan.create({**kegiatan_values, "cpmk_id": cpmk_a.id})
+
+        komponen = self.env["erpobe.akademik.komponen"].create(
+            {"name": "Komponen Uji", "tipe": "kognitif"}
+        )
+        Bobot = self.env["erpobe.bobot.komponen.cpmk"]
+        bobot_values = {
+            "rps_id": rps.id,
+            "komponen_penilaian": komponen.id,
+            "bobot_komponen_cpmk": 0.0,
+        }
+        with self.assertRaises(ValidationError):
+            Bobot.create({**bobot_values, "cpmk_id": cpmk_b.id})
+        Bobot.create({**bobot_values, "cpmk_id": cpmk_a.id})

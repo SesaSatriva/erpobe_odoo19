@@ -44,6 +44,14 @@ class ErpObeBobotKomponenCpmk(models.Model):
     _bobot_range_constraint = models.Constraint('CHECK(bobot_komponen_cpmk >= 0 AND bobot_komponen_cpmk <= 100)', 'Bobot harus 0–100%')
     _uniq_matrix_constraint = models.Constraint('UNIQUE(rps_id, komponen_penilaian, cpmk_id)', 'Kombinasi Komponen–CPMK tidak boleh duplikat.')
 
+    prodi_id = fields.Many2one(
+        related="rps_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     def _compute_validitas(self):
         for rec in self:
             lines_cpmk = self.search(
@@ -98,3 +106,12 @@ class ErpObeBobotKomponenCpmk(models.Model):
                     f"Total distribusi komponen {rec.komponen_penilaian.name} "
                     f"melebihi 100% ({total_komp:.2f}%)."
                 )
+
+    @api.constrains("rps_id", "cpmk_id")
+    def _check_cpmk_faculty(self):
+        for record in self:
+            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+                raise ValidationError(
+                    "Bobot CPMK harus berada di prodi mata kuliah RPS."
+                )
+

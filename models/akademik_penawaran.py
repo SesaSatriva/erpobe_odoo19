@@ -1,4 +1,5 @@
 from odoo import models, fields, api, Command
+from odoo.exceptions import ValidationError
 
 
 class ErpObeAkademikPenawaran(models.Model):
@@ -195,6 +196,42 @@ class ErpObeAkademikPenawaranLine(models.Model):
         string="Mahasiswa",
         readonly=True,
     )
+
+    prodi_id = fields.Many2one(
+        related="matakuliah_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+    @api.constrains(
+        "matakuliah_id", "rombel_ids", "dosen_id", "pengampu_ids", "mahasiswa_ids"
+    )
+    def _check_penawaran_faculty(self):
+        for record in self:
+            if any(
+                rombel.prodi_id != record.prodi_id
+                for rombel in record.rombel_ids
+            ):
+                raise ValidationError(
+                    "Rombel penawaran harus berasal dari prodi mata kuliah."
+                )
+            dosen = record.pengampu_ids | record.dosen_id
+            if any(
+                record.prodi_id not in teacher.prodi_ids for teacher in dosen
+            ):
+                raise ValidationError(
+                    "Dosen pengampu harus terdaftar pada prodi mata kuliah."
+                )
+            if any(
+                student.prodi_id != record.prodi_id
+                for student in record.mahasiswa_ids
+            ):
+                raise ValidationError(
+                    "Mahasiswa penawaran harus berasal dari prodi mata kuliah."
+                )
+
     def write(self, vals):
         # 1. SNAPSHOT: Simpan kondisi ID Rombel sebelum perubahan
         old_rombel_map = {}

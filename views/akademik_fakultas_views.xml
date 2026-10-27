@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_erpobe_master_fakultas_search" model="ir.ui.view">
+        <field name="name">erpobe.master.fakultas.search</field>
+        <field name="model">erpobe.master.fakultas</field>
+        <field name="arch" type="xml">
+            <search string="Fakultas">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="dekan_id" domain="[('prodi_ids.fakultas_id', '=', id)]"/>
+                <filter name="archived" string="Diarsipkan" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_master_fakultas_list" model="ir.ui.view">
+        <field name="name">erpobe.master.fakultas.list</field>
+        <field name="model">erpobe.master.fakultas</field>
+        <field name="arch" type="xml">
+            <list string="Fakultas">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="dekan_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_master_fakultas_form" model="ir.ui.view">
+        <field name="name">erpobe.master.fakultas.form</field>
+        <field name="model">erpobe.master.fakultas</field>
+        <field name="arch" type="xml">
+            <form string="Fakultas">
+                <sheet>
+                    <group>
+                        <field name="active"/>
+                        <field name="kode"/>
+                        <field name="name"/>
+                        <field name="dekan_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Program Studi">
+                            <field name="prodi_ids">
+                                <list>
+                                    <field name="kode"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Master Akademik">
+                            <group>
+                                <field name="dosen_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                        <field name="nip"/>
+                                    </list>
+                                </field>
+                                <field name="mahasiswa_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="matakuliah_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="rombel_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Data Akademik">
+                            <group>
+                                <field name="akademik_cpl_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="cpl_cpmk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="cpmk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="krs_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="krs_line_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="penawaran_line_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="rps_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="kegiatan_perkuliahan_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="rubrik_penilaian_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="kriteria_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Bobot">
+                            <group>
+                                <field name="bobot_cpmk_cpl_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="bobot_cpmk_mk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="bobot_komponen_cpmk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Penilaian">
+                            <group>
+                                <field name="input_nilai_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_komponen_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_cpmk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="cpmk_rombel_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="cpmk_angkatan_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_cpl_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_cpl_rombel_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_cpl_angkatan_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_mk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_mk_rombel_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="grade_mk_angkatan_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Laporan &amp; Analisis">
+                            <group>
+                                <field name="report_khs_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="report_khs_mk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="report_khs_cpmk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="report_khs_cpl_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="summary_mk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="summary_cpmk_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="summary_cpl_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                                <field name="summary_komponen_ids" readonly="1">
+                                    <list create="0" edit="0" delete="0">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_master_fakultas" model="ir.actions.act_window">
+        <field name="name">Fakultas</field>
+        <field name="res_model">erpobe.master.fakultas</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_master_fakultas_search"/>
+    </record>
+</odoo>

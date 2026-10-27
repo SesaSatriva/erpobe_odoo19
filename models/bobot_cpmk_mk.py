@@ -31,6 +31,14 @@ class ErpObeBobotCpmkMk(models.Model):
     _bobot_range_constraint = models.Constraint('CHECK(bobot_cpmk_mk >= 0 AND bobot_cpmk_mk <= 100)', 'Bobot harus di antara 0 dan 100 persen.')
 
 
+    prodi_id = fields.Many2one(
+        related="rps_id.prodi_id", store=True, readonly=True, index=True
+    )
+
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
     @api.constrains("bobot_cpmk_mk", "rps_id")
     def _check_total_bobot_cpmk_per_mk(self):
         for rec in self:
@@ -53,3 +61,12 @@ class ErpObeBobotCpmkMk(models.Model):
                     f"'{rps.matakuliah_id.display_name}' harus 100%. "
                     f"Saat ini {total:.2f}%."
                 )
+
+    @api.constrains("rps_id", "cpmk_id")
+    def _check_cpmk_faculty(self):
+        for record in self:
+            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+                raise ValidationError(
+                    "Bobot CPMK harus berada di prodi mata kuliah RPS."
+                )
+

@@ -133,6 +133,26 @@ access_erpobe_master_prodi_admin,erpobe.master.prodi admin,model_erpobe_master_p
 access_erpobe_master_prodi_dosen,erpobe.master.prodi dosen,model_erpobe_master_prodi,erpobe.group_dosen,1,0,0,0
 access_erpobe_master_prodi_mahasiswa,erpobe.master.prodi mahasiswa,model_erpobe_master_prodi,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_master_prodi_superadmin,erpobe.master.prodi superadmin,model_erpobe_master_prodi,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_fakultas_admin,erpobe.wizard.import.fakultas admin,model_erpobe_wizard_import_fakultas,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_fakultas_superadmin,erpobe.wizard.import.fakultas superadmin,model_erpobe_wizard_import_fakultas,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_prodi_admin,erpobe.wizard.import.prodi admin,model_erpobe_wizard_import_prodi,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_prodi_superadmin,erpobe.wizard.import.prodi superadmin,model_erpobe_wizard_import_prodi,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_dosen_admin,erpobe.wizard.import.dosen admin,model_erpobe_wizard_import_dosen,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_dosen_superadmin,erpobe.wizard.import.dosen superadmin,model_erpobe_wizard_import_dosen,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_mahasiswa_admin,erpobe.wizard.import.mahasiswa admin,model_erpobe_wizard_import_mahasiswa,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_mahasiswa_superadmin,erpobe.wizard.import.mahasiswa superadmin,model_erpobe_wizard_import_mahasiswa,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_rombel_admin,erpobe.wizard.import.rombel admin,model_erpobe_wizard_import_rombel,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_rombel_superadmin,erpobe.wizard.import.rombel superadmin,model_erpobe_wizard_import_rombel,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_matakuliah_admin,erpobe.wizard.import.matakuliah admin,model_erpobe_wizard_import_matakuliah,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_matakuliah_superadmin,erpobe.wizard.import.matakuliah superadmin,model_erpobe_wizard_import_matakuliah,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_cpl_admin,erpobe.wizard.import.cpl admin,model_erpobe_wizard_import_cpl,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_cpl_superadmin,erpobe.wizard.import.cpl superadmin,model_erpobe_wizard_import_cpl,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_cpmk_admin,erpobe.wizard.import.cpmk admin,model_erpobe_wizard_import_cpmk,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_cpmk_superadmin,erpobe.wizard.import.cpmk superadmin,model_erpobe_wizard_import_cpmk,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_tahunajaran_admin,erpobe.wizard.import.tahunajaran admin,model_erpobe_wizard_import_tahunajaran,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_tahunajaran_superadmin,erpobe.wizard.import.tahunajaran superadmin,model_erpobe_wizard_import_tahunajaran,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_import_komponen_admin,erpobe.wizard.import.komponen admin,model_erpobe_wizard_import_komponen,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_import_komponen_superadmin,erpobe.wizard.import.komponen superadmin,model_erpobe_wizard_import_komponen,erpobe.group_superadmin,1,1,1,1
 access_erpobe_master_grade_settings,erpobe.master.grade settings,model_erpobe_master_grade,base.group_system,1,1,1,1
 access_erpobe_master_grade_admin,access.erpobe.master.grade.admin,model_erpobe_master_grade,erpobe.group_admin,1,1,1,1
 access_erpobe_master_grade_dosen,access.erpobe.master.grade.dosen,model_erpobe_master_grade,erpobe.group_dosen,1,0,0,0

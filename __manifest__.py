@@ -5,6 +5,7 @@
     "author": "Sesa Nugroho Satriva",
     "license": "LGPL-3",
     "depends": ["base", "web", "website", "portal", "contacts", "mail"],
+    "external_dependencies": {"python": ["openpyxl", "xlsxwriter"]},
     "data": [
         "security/groups.xml",
         "security/ir.model.access.csv",
@@ -29,6 +30,7 @@
         "views/report_khs_views.xml",
         "views/report_summary_views.xml",
         "views/menus.xml",
+        "views/import_export_views.xml",
     ],
     "installable": True,
     "application": True,

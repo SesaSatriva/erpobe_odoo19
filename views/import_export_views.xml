@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_erpobe_wizard_import_fakultas_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.fakultas.form</field>
+        <field name="model">erpobe.wizard.import.fakultas</field>
+        <field name="arch" type="xml">
+            <form string="Import / Export Fakultas">
+                <group>
+                    <field name="mode" widget="radio"/>
+                </group>
+                <notebook>
+                    <page string="Impor" invisible="mode != 'import'">
+                        <group>
+                            <field name="format"/>
+                            <field name="file" filename="filename"/>
+                            <field name="filename" invisible="1"/>
+                            <field name="dry_run"/>
+                            <field name="update_existing"/>
+                            <field name="stop_on_error"/>
+                        </group>
+                        <button
+                            name="action_download_template"
+                            type="object"
+                            string="Unduh Template"
+                            class="btn-secondary"
+                        />
+                        <field
+                            name="template_file"
+                            filename="template_filename"
+                            readonly="1"
+                        />
+                        <field name="template_filename" invisible="1"/>
+                        <button
+                            name="action_validate"
+                            type="object"
+                            string="Validasi"
+                            class="btn-secondary"
+                        />
+                        <button
+                            name="action_import"
+                            type="object"
+                            string="Impor"
+                            class="btn-primary"
+                            invisible="dry_run"
+                        />
+                    </page>
+                    <page string="Ekspor" invisible="mode != 'export'">
+                        <group>
+                            <field name="format"/>
+                            <field name="export_selected"/>
+                            <field
+                                name="filter_fakultas_id"
+                                invisible="not filter_fakultas_available"
+                            />
+                            <field
+                                name="filter_prodi_id"
+                                invisible="not filter_prodi_available"
+                            />
+                        </group>
+                        <button
+                            name="action_export"
+                            type="object"
+                            string="Ekspor"
+                            class="btn-primary"
+                        />
+                        <field
+                            name="export_file"
+                            filename="export_filename"
+                            readonly="1"
+                        />
+                        <field name="export_filename" invisible="1"/>
+                    </page>
+                    <page string="Panduan">
+                        <field name="guide" nolabel="1" readonly="1"/>
+                    </page>
+                    <page string="Hasil" invisible="not result_summary">
+                        <field name="state"/>
+                        <field name="result_summary" nolabel="1" readonly="1"/>
+                        <button
+                            name="action_download_error_report"
+                            type="object"
+                            string="Unduh Laporan Kesalahan"
+                            class="btn-secondary"
+                            invisible="not error_file"
+                        />
+                        <field
+                            name="error_file"
+                            filename="error_filename"
+                            readonly="1"
+                            invisible="not error_file"
+                        />
+                        <field name="error_filename" invisible="1"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Tutup" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_erpobe_wizard_import_fakultas" model="ir.actions.act_window">
+        <field name="name">Fakultas</field>
+        <field name="res_model">erpobe.wizard.import.fakultas</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="view_erpobe_wizard_import_prodi_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.prodi.form</field>
+        <field name="model">erpobe.wizard.import.prodi</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Program Studi</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_dosen_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.dosen.form</field>
+        <field name="model">erpobe.wizard.import.dosen</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Dosen</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_mahasiswa_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.mahasiswa.form</field>
+        <field name="model">erpobe.wizard.import.mahasiswa</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Mahasiswa</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_rombel_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.rombel.form</field>
+        <field name="model">erpobe.wizard.import.rombel</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Rombel</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_matakuliah_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.matakuliah.form</field>
+        <field name="model">erpobe.wizard.import.matakuliah</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Mata Kuliah</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_cpl_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.cpl.form</field>
+        <field name="model">erpobe.wizard.import.cpl</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export CPL</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_cpmk_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.cpmk.form</field>
+        <field name="model">erpobe.wizard.import.cpmk</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export CPMK</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_tahunajaran_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.tahunajaran.form</field>
+        <field name="model">erpobe.wizard.import.tahunajaran</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Tahun Ajaran</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_erpobe_wizard_import_komponen_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.import.komponen.form</field>
+        <field name="model">erpobe.wizard.import.komponen</field>
+        <field name="inherit_id" ref="view_erpobe_wizard_import_fakultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Import / Export Komponen Penilaian</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_erpobe_wizard_import_prodi" model="ir.actions.act_window">
+        <field name="name">Program Studi</field>
+        <field name="res_model">erpobe.wizard.import.prodi</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_dosen" model="ir.actions.act_window">
+        <field name="name">Dosen</field>
+        <field name="res_model">erpobe.wizard.import.dosen</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_mahasiswa" model="ir.actions.act_window">
+        <field name="name">Mahasiswa</field>
+        <field name="res_model">erpobe.wizard.import.mahasiswa</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_rombel" model="ir.actions.act_window">
+        <field name="name">Rombel</field>
+        <field name="res_model">erpobe.wizard.import.rombel</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_matakuliah" model="ir.actions.act_window">
+        <field name="name">Mata Kuliah</field>
+        <field name="res_model">erpobe.wizard.import.matakuliah</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_cpl" model="ir.actions.act_window">
+        <field name="name">CPL</field>
+        <field name="res_model">erpobe.wizard.import.cpl</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_cpmk" model="ir.actions.act_window">
+        <field name="name">CPMK</field>
+        <field name="res_model">erpobe.wizard.import.cpmk</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_tahunajaran" model="ir.actions.act_window">
+        <field name="name">Tahun Ajaran</field>
+        <field name="res_model">erpobe.wizard.import.tahunajaran</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="action_erpobe_wizard_import_komponen" model="ir.actions.act_window">
+        <field name="name">Komponen Penilaian</field>
+        <field name="res_model">erpobe.wizard.import.komponen</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem
+        id="menu_erpobe_import_export"
+        name="Import / Export"
+        parent="menu_erpobe_root"
+        sequence="70"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_fakultas"
+        name="Fakultas"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_fakultas"
+        sequence="10"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_prodi"
+        name="Program Studi"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_prodi"
+        sequence="20"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_dosen"
+        name="Dosen"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_dosen"
+        sequence="30"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_mahasiswa"
+        name="Mahasiswa"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_mahasiswa"
+        sequence="40"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_rombel"
+        name="Rombel"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_rombel"
+        sequence="50"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_matakuliah"
+        name="Mata Kuliah"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_matakuliah"
+        sequence="60"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_tahunajaran"
+        name="Tahun Ajaran"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_tahunajaran"
+        sequence="70"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_komponen"
+        name="Komponen Penilaian"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_komponen"
+        sequence="80"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_cpl"
+        name="CPL"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_cpl"
+        sequence="90"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+    <menuitem
+        id="menu_erpobe_import_export_cpmk"
+        name="CPMK"
+        parent="menu_erpobe_import_export"
+        action="action_erpobe_wizard_import_cpmk"
+        sequence="100"
+        groups="erpobe.group_admin,erpobe.group_superadmin"
+    />
+</odoo>

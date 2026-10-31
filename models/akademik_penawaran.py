@@ -19,6 +19,12 @@ class ErpObeAkademikPenawaran(models.Model):
         required=True,
         default=lambda self: self._default_tahun_ajaran(),
     )
+    prodi_id = fields.Many2one(
+        "erpobe.master.prodi",
+        string="Program Studi",
+        index=True,
+        default=lambda self: self.env.context.get("default_prodi_id"),
+    )
     semester_akademik = fields.Selection(
         related="tahun_ajaran.semester",
         store=True,
@@ -35,6 +41,9 @@ class ErpObeAkademikPenawaran(models.Model):
         "erpobe.akademik.penawaran.line",
         "penawaran_id",
         string="Detail Penawaran",
+    )
+    rps_pending_count = fields.Integer(
+        string="RPS Belum Final", compute="_compute_rps_pending_count"
     )
     filter_angkatan_ids = fields.Many2many(
         "erpobe.master.angkatan.view",
@@ -68,6 +77,34 @@ class ErpObeAkademikPenawaran(models.Model):
                 suffix = f" - Angkatan {angkatan_str}"
 
             rec.name = f"Penawaran {ta} ({smt}){suffix}"
+
+    @api.depends("line_ids.rps_status")
+    def _compute_rps_pending_count(self):
+        for record in self:
+            record.rps_pending_count = len(
+                record.line_ids.filtered(lambda line: line.rps_status != "final")
+            )
+
+    def action_open_bulk_rps_copy(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Salin RPS dari Tahun Sebelumnya",
+            "res_model": "erpobe.wizard.rps.bulk.copy",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_penawaran_id": self.id},
+        }
+
+    @api.constrains("prodi_id", "line_ids")
+    def _check_offer_prodi(self):
+        for offer in self:
+            if offer.prodi_id and any(
+                line.prodi_id != offer.prodi_id for line in offer.line_ids
+            ):
+                raise ValidationError(
+                    "Semua mata kuliah dalam penawaran harus berasal dari prodi yang sama."
+                )
 
     @api.onchange("filter_angkatan_ids")
     def _onchange_filter_angkatan_ids(self):
@@ -177,6 +214,41 @@ class ErpObeAkademikPenawaranLine(models.Model):
         string="Smt. Kurikulum",
         store=True,
     )
+    tahun_ajaran_id = fields.Many2one(
+        related="penawaran_id.tahun_ajaran",
+        string="Tahun Ajaran",
+        store=True,
+        readonly=True,
+        index=True,
+    )
+    rps_ids = fields.One2many(
+        "erpobe.akademik.rps",
+        "penawaran_line_id",
+        string="Versi RPS",
+    )
+    latest_rps_id = fields.Many2one(
+        "erpobe.akademik.rps",
+        string="RPS Aktif",
+        compute="_compute_rps_status",
+    )
+    rps_status = fields.Selection(
+        [
+            ("missing", "Belum Ada"),
+            ("draft", "Draft"),
+            ("review", "Perlu Ditinjau"),
+            ("final", "Final"),
+        ],
+        string="Status RPS",
+        compute="_compute_rps_status",
+    )
+    rps_weight_status = fields.Selection(
+        [
+            ("complete", "Bobot Lengkap"),
+            ("incomplete", "Bobot Belum Lengkap"),
+        ],
+        string="Kelengkapan Bobot",
+        related="latest_rps_id.weight_status",
+    )
     dosen_id = fields.Many2one(
         "erpobe.master.dosen",
         related="matakuliah_id.koordinator_id",
@@ -205,6 +277,45 @@ class ErpObeAkademikPenawaranLine(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
+    @api.depends("rps_ids.version", "rps_ids.status", "rps_ids.write_date")
+    def _compute_rps_status(self):
+        for line in self:
+            latest = line.rps_ids.sorted(
+                key=lambda record: (record.version, record.id), reverse=True
+            )[:1]
+            line.latest_rps_id = latest
+            line.rps_status = latest.status if latest else "missing"
+
+    def action_create_rps(self):
+        self.ensure_one()
+        rps = self.env["erpobe.akademik.rps"].create(
+            {
+                "matakuliah_id": self.matakuliah_id.id,
+                "penawaran_line_id": self.id,
+                "version": max(self.rps_ids.mapped("version"), default=0) + 1,
+                "status": "draft",
+            }
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "name": "RPS Baru",
+            "res_model": "erpobe.akademik.rps",
+            "res_id": rps.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_copy_previous_rps(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Salin RPS Tahun Sebelumnya",
+            "res_model": "erpobe.wizard.rps.copy",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_penawaran_line_id": self.id},
+        }
+
     @api.constrains(
         "matakuliah_id", "rombel_ids", "dosen_id", "pengampu_ids", "mahasiswa_ids"
     )
@@ -231,6 +342,27 @@ class ErpObeAkademikPenawaranLine(models.Model):
                 raise ValidationError(
                     "Mahasiswa penawaran harus berasal dari prodi mata kuliah."
                 )
+
+    @api.constrains("penawaran_id", "matakuliah_id")
+    def _check_offer_prodi(self):
+        for record in self:
+            if (
+                record.penawaran_id.prodi_id
+                and record.penawaran_id.prodi_id != record.prodi_id
+            ):
+                raise ValidationError(
+                    "Mata kuliah penawaran harus berasal dari prodi penawaran."
+                )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        offers = records.mapped("penawaran_id")
+        for offer in offers.filtered(lambda record: not record.prodi_id):
+            prodis = offer.line_ids.mapped("prodi_id")
+            if len(prodis) == 1:
+                offer.prodi_id = prodis.id
+        return records
 
     def write(self, vals):
         # 1. SNAPSHOT: Simpan kondisi ID Rombel sebelum perubahan

@@ -1,10 +1,11 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
 
+from .weight_validation import _weight_status
 
 class ErpObeBobotCpmkCpl(models.Model):
     _name = "erpobe.bobot.cpmk.cpl"
+    _inherit = ["erpobe.rps.lock.mixin"]
     _description = "Bobot CPMK terhadap CPL"
     _rec_name = "cpmk_id"
 
@@ -29,6 +30,38 @@ class ErpObeBobotCpmkCpl(models.Model):
     bobot_cpmk_cpl = fields.Float(
         string="Bobot CPMK terhadap CPL (%)",
     )
+    total_cpmk = fields.Float(
+        string="Total CPMK → CPL (%)", compute="_compute_group_totals", digits=(5, 2)
+    )
+    remaining_cpmk = fields.Float(
+        string="Sisa CPMK → CPL (%)",
+        compute="_compute_group_totals",
+        digits=(5, 2),
+    )
+    total_cpl = fields.Float(
+        string="Total CPL ← CPMK (%)", compute="_compute_group_totals", digits=(5, 2)
+    )
+    remaining_cpl = fields.Float(
+        string="Sisa CPL ← CPMK (%)",
+        compute="_compute_group_totals",
+        digits=(5, 2),
+    )
+    weight_status_cpmk = fields.Selection(
+        [
+            ("complete", "Lengkap"),
+            ("under", "Kurang"),
+            ("over", "Melebihi"),
+        ],
+        compute="_compute_group_totals",
+    )
+    weight_status_cpl = fields.Selection(
+        [
+            ("complete", "Lengkap"),
+            ("under", "Kurang"),
+            ("over", "Melebihi"),
+        ],
+        compute="_compute_group_totals",
+    )
 
     _uniq_rps_cpmk_cpl_constraint = models.Constraint('unique(rps_id, cpl_id, cpmk_id)', 'Relasi CPMK dan CPL ini sudah ada di RPS ini.')
     _bobot_range_constraint = models.Constraint('CHECK(bobot_cpmk_cpl >= 0 AND bobot_cpmk_cpl <= 100)', 'Bobot harus di antara 0 dan 100 persen.')
@@ -41,36 +74,33 @@ class ErpObeBobotCpmkCpl(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.constrains("bobot_cpmk_cpl", "cpl_id")
-    def _check_total_bobot_per_cpl_global(self):
+    @api.depends(
+        "bobot_cpmk_cpl",
+        "rps_id.bobot_cpmk_cpl_ids.bobot_cpmk_cpl",
+        "rps_id.bobot_cpmk_cpl_ids.cpmk_id",
+        "rps_id.bobot_cpmk_cpl_ids.cpl_id",
+    )
+    def _compute_group_totals(self):
         for rec in self:
-            if not rec.cpl_id:
-                continue
-
-            # Mencari semua mapping yang menggunakan CPL yang sama di seluruh sistem
-            all_mappings = self.search([
-                ("cpl_id", "=", rec.cpl_id.id)
-            ])
-
-            # Cek jika masih ada bobot yang belum diisi (0.0)
-            if any(float_compare(line.bobot_cpmk_cpl, 0.0, precision_digits=2) <= 0 for line in all_mappings):
-                continue
-
-            total_bobot = sum(all_mappings.mapped("bobot_cpmk_cpl"))
-
-            # Validasi apakah total tepat 100%
-            if float_compare(total_bobot, 100.0, precision_digits=2) != 0:
-                raise ValidationError(
-                    f"Validasi Global: Total kontribusi CPMK terhadap CPL "
-                    f"'{rec.cpl_id.kode_cpl}' harus berjumlah 100%.\n"
-                    f"Total saat ini di seluruh mata kuliah: {total_bobot:.2f}%."
-                )
+            cpmk_lines = rec.rps_id.bobot_cpmk_cpl_ids.filtered(
+                lambda line: line.cpmk_id == rec.cpmk_id
+            )
+            cpl_lines = rec.rps_id.bobot_cpmk_cpl_ids.filtered(
+                lambda line: line.cpl_id == rec.cpl_id
+            )
+            rec.total_cpmk = sum(cpmk_lines.mapped("bobot_cpmk_cpl"))
+            rec.remaining_cpmk = 100.0 - rec.total_cpmk
+            rec.total_cpl = sum(cpl_lines.mapped("bobot_cpmk_cpl"))
+            rec.remaining_cpl = 100.0 - rec.total_cpl
+            rec.weight_status_cpmk = _weight_status(rec.total_cpmk)[0]
+            rec.weight_status_cpl = _weight_status(rec.total_cpl)[0]
 
     @api.constrains("rps_id", "cpmk_id")
     def _check_cpmk_faculty(self):
         for record in self:
-            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+            if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
-                    "Bobot CPMK harus berada di prodi mata kuliah RPS."
+                    "CPMK bobot CPL harus berasal dari mata kuliah pada RPS."
                 )
-
+            if record.cpl_id.prodi_id != record.rps_id.prodi_id:
+                raise ValidationError("CPL bobot harus berasal dari prodi RPS.")

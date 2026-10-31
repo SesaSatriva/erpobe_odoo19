@@ -191,13 +191,6 @@ class ErpobeDosen(models.Model):
             if not record.prodi_ids:
                 raise ValidationError("Dosen harus terdaftar pada minimal satu prodi.")
             faculties = record.prodi_ids.mapped("fakultas_id")
-            dean_faculties = self.env["erpobe.master.fakultas"].sudo().search(
-                [("dekan_id", "=", record.id)]
-            )
-            if any(faculty not in faculties for faculty in dean_faculties):
-                raise ValidationError(
-                    "Prodi dosen dekan harus berada di fakultas yang dipimpin."
-                )
             courses = self.env["erpobe.master.matakuliah"].sudo().search(
                 [
                     "|",

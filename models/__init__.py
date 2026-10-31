@@ -13,12 +13,15 @@ from . import akademik_cpmk
 from . import akademik_komponen
 from . import akademik_penawaran
 from . import akademik_krs
+from . import rps_lock
 from . import akademik_rps
 from . import akademik_tahunajaran
 
 from . import bobot_cpmk_cpl
 from . import bobot_cpmk_mk
 from . import bobot_komponen_cpmk
+from . import weight_validation
+from . import weight_monitor
 
 from . import grade
 from . import grade_cpmk

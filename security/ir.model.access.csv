@@ -153,6 +153,14 @@ access_erpobe_wizard_import_tahunajaran_admin,erpobe.wizard.import.tahunajaran a
 access_erpobe_wizard_import_tahunajaran_superadmin,erpobe.wizard.import.tahunajaran superadmin,model_erpobe_wizard_import_tahunajaran,erpobe.group_superadmin,1,1,1,1
 access_erpobe_wizard_import_komponen_admin,erpobe.wizard.import.komponen admin,model_erpobe_wizard_import_komponen,erpobe.group_admin,1,1,1,1
 access_erpobe_wizard_import_komponen_superadmin,erpobe.wizard.import.komponen superadmin,model_erpobe_wizard_import_komponen,erpobe.group_superadmin,1,1,1,1
+access_erpobe_weight_monitor_admin,erpobe.weight.monitor admin,model_erpobe_weight_monitor,erpobe.group_admin,1,1,1,1
+access_erpobe_weight_monitor_superadmin,erpobe.weight.monitor superadmin,model_erpobe_weight_monitor,erpobe.group_superadmin,1,1,1,1
+access_erpobe_weight_monitor_line_admin,erpobe.weight.monitor.line admin,model_erpobe_weight_monitor_line,erpobe.group_admin,1,1,1,1
+access_erpobe_weight_monitor_line_superadmin,erpobe.weight.monitor.line superadmin,model_erpobe_weight_monitor_line,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_rps_copy_admin,erpobe.wizard.rps.copy admin,model_erpobe_wizard_rps_copy,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_rps_copy_superadmin,erpobe.wizard.rps.copy superadmin,model_erpobe_wizard_rps_copy,erpobe.group_superadmin,1,1,1,1
+access_erpobe_wizard_rps_bulk_copy_admin,erpobe.wizard.rps.bulk.copy admin,model_erpobe_wizard_rps_bulk_copy,erpobe.group_admin,1,1,1,1
+access_erpobe_wizard_rps_bulk_copy_superadmin,erpobe.wizard.rps.bulk.copy superadmin,model_erpobe_wizard_rps_bulk_copy,erpobe.group_superadmin,1,1,1,1
 access_erpobe_master_grade_settings,erpobe.master.grade settings,model_erpobe_master_grade,base.group_system,1,1,1,1
 access_erpobe_master_grade_admin,access.erpobe.master.grade.admin,model_erpobe_master_grade,erpobe.group_admin,1,1,1,1
 access_erpobe_master_grade_dosen,access.erpobe.master.grade.dosen,model_erpobe_master_grade,erpobe.group_dosen,1,0,0,0

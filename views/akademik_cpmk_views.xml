@@ -23,6 +23,7 @@
                 <field name="name"/>
                 <field name="mk_id"/>
                 <field name="prodi_id"/>
+                <field name="weight_status" widget="badge"/>
                 <field name="cpl_ids" widget="many2many_tags" optional="hide"/>
             </list>
         </field>
@@ -42,6 +43,7 @@
                     <group>
                         <field name="mk_id"/>
                         <field name="prodi_id" readonly="1"/>
+                        <field name="weight_status" widget="badge" readonly="1"/>
                     </group>
                     <group string="Deskripsi">
                         <field name="name" nolabel="1"/>

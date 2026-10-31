@@ -1,3 +1,5 @@
+from lxml import etree
+
 from odoo.tests import TransactionCase, tagged
 
 
@@ -24,3 +26,20 @@ class TestErpObeUiViews(TransactionCase):
             )
             for view_type in view_types:
                 self.assertIn(view_type, result["views"], action.display_name)
+
+    def test_faculty_form_only_contains_program_studies(self):
+        action = self.env.ref("erpobe.action_erpobe_master_fakultas")
+        result = self.env["erpobe.master.fakultas"].get_views(
+            [(False, "form")],
+            options={"action_id": action.id},
+        )
+        arch = etree.fromstring(result["views"]["form"]["arch"].encode())
+        field_names = set(arch.xpath("//field/@name"))
+        self.assertEqual(
+            field_names,
+            {"active", "kode", "name", "prodi_ids"},
+        )
+        self.assertEqual(
+            self.env.ref("erpobe.menu_erpobe_master_prodi").parent_id,
+            self.env.ref("erpobe.menu_erpobe_master_fakultas"),
+        )

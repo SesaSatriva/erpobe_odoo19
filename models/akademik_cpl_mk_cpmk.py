@@ -32,3 +32,28 @@ class ErpObeAkademikCplMkCpmk(models.Model):
                 raise ValidationError(
                     "CPL dan CPMK harus berasal dari prodi yang sama."
                 )
+
+    def _sync_rps_weights(self, cpmks):
+        rps_records = self.env["erpobe.akademik.rps"].search(
+            [("matakuliah_id", "in", cpmks.mapped("mk_id").ids)]
+        )
+        rps_records._sync_bobot_tables()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._sync_rps_weights(records.mapped("cpmk_id"))
+        return records
+
+    def write(self, vals):
+        affected_cpmks = self.mapped("cpmk_id")
+        result = super().write(vals)
+        affected_cpmks |= self.mapped("cpmk_id")
+        self._sync_rps_weights(affected_cpmks)
+        return result
+
+    def unlink(self):
+        affected_cpmks = self.mapped("cpmk_id")
+        result = super().unlink()
+        self._sync_rps_weights(affected_cpmks)
+        return result

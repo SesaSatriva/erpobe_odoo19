@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_erpobe_weight_monitor_form" model="ir.ui.view">
+        <field name="name">erpobe.weight.monitor.form</field>
+        <field name="model">erpobe.weight.monitor</field>
+        <field name="arch" type="xml">
+            <form string="Kelengkapan Bobot">
+                <sheet>
+                    <group>
+                        <field name="prodi_id"/>
+                        <field name="relation"/>
+                        <field name="matakuliah_id" domain="[('prodi_id', '=', prodi_id)]"/>
+                        <field name="cpl_id" domain="[('prodi_id', '=', prodi_id)]"/>
+                        <field name="only_problems"/>
+                        <button name="action_refresh" type="object" string="Terapkan Filter" class="oe_highlight"/>
+                        <button name="action_open_export_list" type="object" string="Buka Daftar untuk Ekspor"/>
+                    </group>
+                    <group string="Ringkasan">
+                        <field name="summary" readonly="1"/>
+                        <field name="incomplete_groups" readonly="1"/>
+                        <field name="total_groups" readonly="1"/>
+                        <field name="complete_ratio" widget="progressbar" readonly="1"/>
+                    </group>
+                    <field name="line_ids" readonly="1">
+                        <list>
+                            <field name="relation"/>
+                            <field name="item_name"/>
+                            <field name="message"/>
+                            <field name="rps_id"/>
+                            <field name="total"/>
+                            <field name="difference"/>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'complete'"
+                                   decoration-warning="status == 'under'"
+                                   decoration-danger="status == 'over'"/>
+                            <button name="action_open_rps" type="object" string="Perbaiki"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_erpobe_rps_copy_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.rps.copy.form</field>
+        <field name="model">erpobe.wizard.rps.copy</field>
+        <field name="arch" type="xml">
+            <form string="Salin RPS Tahun Sebelumnya">
+                <group>
+                    <field name="penawaran_line_id"/>
+                    <field name="matakuliah_id"/>
+                    <field name="tahun_ajaran_id"/>
+                    <field name="source_rps_id"/>
+                </group>
+                <footer>
+                    <button name="action_copy" type="object" string="Salin sebagai Versi Baru" class="oe_highlight"/>
+                    <button string="Batal" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_erpobe_rps_bulk_copy_form" model="ir.ui.view">
+        <field name="name">erpobe.wizard.rps.bulk.copy.form</field>
+        <field name="model">erpobe.wizard.rps.bulk.copy</field>
+        <field name="arch" type="xml">
+            <form string="Pratinjau Salin RPS Massal">
+                <group>
+                    <field name="penawaran_id"/>
+                    <field name="line_ids" readonly="1">
+                        <list>
+                            <field name="matakuliah_id"/>
+                            <field name="tahun_ajaran_id"/>
+                        </list>
+                    </field>
+                    <field name="source_rps_ids" readonly="1">
+                        <list>
+                            <field name="matakuliah_id"/>
+                            <field name="tahun_ajaran_id"/>
+                            <field name="semester_akademik"/>
+                            <field name="version"/>
+                            <field name="status"/>
+                            <field name="create_date"/>
+                            <field name="write_date"/>
+                        </list>
+                    </field>
+                    <field name="confirm_copy"/>
+                    <field name="result_summary" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="action_copy" type="object" string="Konfirmasi dan Salin" class="oe_highlight"/>
+                    <button string="Batal" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

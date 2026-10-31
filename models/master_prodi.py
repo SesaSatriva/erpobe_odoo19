@@ -14,6 +14,9 @@ class ErpObeMasterProdi(models.Model):
         "erpobe.master.fakultas", required=True, ondelete="restrict", index=True
     )
     cpl_ids = fields.One2many("erpobe.akademik.cpl", "prodi_id", string="CPL")
+    cpmk_ids = fields.One2many(
+        "erpobe.akademik.cpmk", "prodi_id", string="CPMK"
+    )
     dosen_ids = fields.Many2many(
         "erpobe.master.dosen",
         "erpobe_prodi_dosen_rel",
@@ -37,6 +40,20 @@ class ErpObeMasterProdi(models.Model):
     rombel_ids = fields.One2many(
         "erpobe.master.rombel", "prodi_id", string="Rombel"
     )
+    rps_ids = fields.One2many("erpobe.akademik.rps", "prodi_id", string="RPS")
+    penawaran_line_ids = fields.One2many(
+        "erpobe.akademik.penawaran.line",
+        "prodi_id",
+        string="Penawaran Mata Kuliah",
+    )
+    metode_ids = fields.One2many(
+        "erpobe.akademik.metode.pembelajaran",
+        "prodi_id",
+        string="Metode Pembelajaran",
+    )
+    referensi_ids = fields.One2many(
+        "erpobe.akademik.referensi", "prodi_id", string="Referensi Akademik"
+    )
 
     _kode_unique = models.Constraint(
         "UNIQUE (fakultas_id, kode)", "Kode prodi harus unik dalam fakultas."
@@ -49,6 +66,38 @@ class ErpObeMasterProdi(models.Model):
     def _compute_display_name(self):
         for record in self:
             record.display_name = f"{record.kode} - {record.name}"
+
+    def action_open_weight_monitor(self):
+        self.ensure_one()
+        monitor = self.env["erpobe.weight.monitor"].create({"prodi_id": self.id})
+        monitor.action_refresh()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Kelengkapan Bobot",
+            "res_model": "erpobe.weight.monitor",
+            "res_id": monitor.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
+    def action_open_penawaran(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Penawaran Mata Kuliah",
+            "res_model": "erpobe.akademik.penawaran",
+            "view_mode": "list,form",
+            "domain": [("prodi_id", "=", self.id)],
+            "context": {"default_prodi_id": self.id},
+        }
+
+    def action_open_tahun_ajaran(self):
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Tahun Ajaran",
+            "res_model": "erpobe.akademik.tahunajaran",
+            "view_mode": "list,form",
+        }
 
     @api.model_create_multi
     def create(self, vals_list):

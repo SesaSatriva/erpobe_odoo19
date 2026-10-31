@@ -11,7 +11,8 @@ perkuliahan, penilaian, hasil studi, dan analitik akademik.
 
 - Pengelolaan fakultas dan program studi.
 - Data dosen, mahasiswa, rombongan belajar (rombel), mata kuliah, dan angkatan.
-- Relasi data akademik mengikuti program studi terkait.
+- Fakultas menampilkan data fakultas dan daftar program studi saja.
+- Data akademik ditelusuri melalui **Fakultas → Program Studi → Detail Prodi**.
 
 ### Kurikulum dan RPS
 
@@ -20,6 +21,12 @@ perkuliahan, penilaian, hasil studi, dan analitik akademik.
 - Penyusunan Rencana Pembelajaran Semester (RPS).
 - Pengelolaan kegiatan pembelajaran mingguan, metode, dan referensi.
 - Pengaturan komponen penilaian, rubrik, kriteria, serta bobot penilaian.
+- RPS melekat pada penawaran mata kuliah; salinan menjadi versi baru berstatus
+  **Perlu Ditinjau** dan RPS **Final** bersifat read-only.
+- Finalisasi RPS memerlukan seluruh kelompok bobot terkait tepat 100% dengan
+  toleransi 0,01 poin persentase.
+- Panel **Kelengkapan Bobot** pada detail prodi menampilkan kelompok bermasalah,
+  selisih, filter, tautan perbaikan, dan daftar yang dapat diekspor.
 
 ### Perkuliahan dan penilaian
 
@@ -40,13 +47,29 @@ Navigasi utama tersedia pada menu **ERP OBE**:
 
 | Menu | Isi |
 | --- | --- |
-| Data Akademik | Fakultas, program studi, dosen, mahasiswa, rombel, mata kuliah, dan angkatan |
-| Kurikulum dan RPS | CPL, CPMK, RPS, komponen penilaian, metode pembelajaran, referensi, dan skala nilai |
-| Perkuliahan | Tahun ajaran, penawaran mata kuliah, KRS, dan input nilai |
+| Fakultas | Data fakultas dan daftar program studi |
+| Program Studi | Master akademik prodi, CPL/CPMK, mata kuliah, dosen, rombel, penawaran, RPS, dan monitoring bobot |
+| Perkuliahan | KRS dan input nilai |
 | Hasil dan Analitik | KHS, analisis capaian, serta rekap per rombel dan angkatan |
 
-Kegiatan mingguan, rubrik, kriteria, dan pengaturan bobot dikelola dari formulir
-RPS. Baris penawaran, KRS, dan nilai dikelola dari formulir induknya.
+Tahun ajaran dan penawaran dibuka dari detail program studi. Kegiatan mingguan,
+rubrik, kriteria, dan pengaturan bobot dikelola dari formulir RPS. Baris KRS dan
+nilai dikelola dari formulir induknya.
+
+Bobot dapat disimpan sebagai draft meskipun belum lengkap. Statusnya tetap
+ditandai belum lengkap dan endpoint model `erpobe.weight.validation.get_problem_items`
+menyediakan daftar isu untuk UI atau ekspor. Hanya RPS berstatus **Perlu
+Ditinjau** dengan seluruh kelompok bobot lengkap yang dapat difinalisasi.
+
+Saat upgrade, RPS lama hanya ditautkan otomatis jika mata kuliahnya cocok dengan
+tepat satu penawaran. RPS dengan beberapa kemungkinan penawaran dan penawaran
+lintas prodi tetap perlu diperiksa manual; lihat catatan di
+`migrations/19.0.2.1.0/README.md`.
+
+Asumsi: bobot CPMK–CPL disimpan pada record RPS, sehingga validasi dua arah
+CPMK→CPL dan CPL←CPMK dihitung dalam satu versi RPS/penawaran, bukan
+digabungkan lintas tahun ajaran. Tahun ajaran tetap menjadi master global yang
+dipakai bersama oleh program studi.
 
 ## Akses dan keamanan
 

@@ -33,14 +33,4 @@ class ErpObeImportFakultasWizard(models.TransientModel):
             "example": "Ya",
             "description": "Terima Ya/Tidak, True/False, atau 1/0.",
         },
-        {
-            "name": "dekan_id",
-            "label": "NIP Dekan",
-            "type": "many2one",
-            "relation": "erpobe.master.dosen",
-            "lookup_field": "nip",
-            "required": False,
-            "example": "",
-            "description": "NIP dosen yang sudah terdaftar.",
-        },
     )

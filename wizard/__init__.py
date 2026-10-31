@@ -9,3 +9,4 @@ from . import import_tahunajaran
 from . import import_komponen
 from . import import_cpl
 from . import import_cpmk
+from . import rps_copy

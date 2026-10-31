@@ -1,6 +1,6 @@
 {
     "name": "OBE Management",
-    "version": "19.0.2.0.0",
+    "version": "19.0.2.1.0",
     "category": "Education",
     "author": "Sesa Nugroho Satriva",
     "license": "LGPL-3",
@@ -22,6 +22,7 @@
         "views/akademik_rps_views.xml",
         "views/akademik_tahunajaran_views.xml",
         "views/akademik_penawaran_views.xml",
+        "views/weight_monitor_views.xml",
         "views/akademik_krs_views.xml",
         "views/grade_views.xml",
         "views/grade_mk_views.xml",

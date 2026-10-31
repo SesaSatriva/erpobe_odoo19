@@ -185,7 +185,6 @@ class TestErpObeFacultyImportExport(TransactionCase):
                 "prodi_ids": [Command.set([prodi.id])],
             }
         )
-        faculty.dekan_id = dosen
         mahasiswa_partner = self.env["res.partner"].create(
             {
                 "name": "Mahasiswa Round Trip",
@@ -310,11 +309,9 @@ class TestErpObeFacultyImportExport(TransactionCase):
     def test_csv_import_validates_all_rows_and_reports_original_line(self):
         output = io.StringIO(newline="")
         writer = csv.writer(output, delimiter=";")
-        writer.writerow(
-            ["Kode Fakultas", "Nama Fakultas", "Aktif", "NIP Dekan", "_contoh"]
-        )
-        writer.writerow(["FK-CSV", "Fakultas, Utama\nBaris Dua", "Ya", "", ""])
-        writer.writerow(["FK-KOSONG", " ", "Ya", "", ""])
+        writer.writerow(["Kode Fakultas", "Nama Fakultas", "Aktif", "_contoh"])
+        writer.writerow(["FK-CSV", "Fakultas, Utama\nBaris Dua", "Ya", ""])
+        writer.writerow(["FK-KOSONG", " ", "Ya", ""])
         upload = base64.b64encode(output.getvalue().encode("utf-8-sig"))
 
         wizard = self._new_wizard(
@@ -346,7 +343,6 @@ class TestErpObeFacultyImportExport(TransactionCase):
             "Kode Fakultas": "FK-DUP-IMPORT",
             "Nama Fakultas": "Fakultas Duplikat",
             "Aktif": "Ya",
-            "NIP Dekan": "",
         }
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
@@ -385,9 +381,8 @@ class TestErpObeFacultyImportExport(TransactionCase):
                 wizard,
                 {
                     "Kode Fakultas": "FK-UNKNOWN-DEAN",
-                    "Nama Fakultas": "Fakultas Tanpa Dekan",
+                    "Nama Fakultas": "Fakultas Impor",
                     "Aktif": "Ya",
-                    "NIP Dekan": "NIP-TIDAK-ADA",
                 },
             ),
             filename="unknown_relation.xlsx",
@@ -460,10 +455,8 @@ class TestErpObeFacultyImportExport(TransactionCase):
     def test_unknown_headers_and_formula_like_text(self):
         output = io.StringIO(newline="")
         writer = csv.writer(output)
-        writer.writerow(
-            ["Kode Fakultas", "Nama Fakultas", "Aktif", "NIP Dekan", "Kolom Aneh"]
-        )
-        writer.writerow(["FK-UNKNOWN", "=1+1", "Ya", "", "nilai"])
+        writer.writerow(["Kode Fakultas", "Nama Fakultas", "Aktif", "Kolom Aneh"])
+        writer.writerow(["FK-UNKNOWN", "=1+1", "Ya", "nilai"])
         wizard = self._new_wizard(
             format="csv",
             file=base64.b64encode(output.getvalue().encode("utf-8")),

@@ -88,6 +88,7 @@
                 <field name="sks"/>
                 <field name="semester"/>
                 <field name="koordinator_id" optional="show"/>
+                <field name="weight_status" widget="badge"/>
             </list>
         </field>
     </record>
@@ -107,6 +108,7 @@
                         <group string="Identitas">
                             <field name="kode_mk"/>
                             <field name="prodi_id"/>
+                            <field name="weight_status" widget="badge" readonly="1"/>
                             <field name="sks"/>
                             <field name="semester"/>
                         </group>
@@ -127,6 +129,7 @@
                                 <list editable="bottom">
                                     <field name="kode_cpmk"/>
                                     <field name="name"/>
+                                    <field name="weight_status" widget="badge" readonly="1"/>
                                 </list>
                             </field>
                         </page>

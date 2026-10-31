@@ -1,10 +1,11 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
 
+from .weight_validation import _weight_status
 
 class ErpObeBobotCpmkMk(models.Model):
     _name = "erpobe.bobot.cpmk.mk"
+    _inherit = ["erpobe.rps.lock.mixin"]
     _description = "Bobot CPMK terhadap Mata Kuliah"
 
     rps_id = fields.Many2one(
@@ -28,6 +29,22 @@ class ErpObeBobotCpmkMk(models.Model):
     bobot_cpmk_mk = fields.Float(
         string="Bobot CPMK (%)",
     )
+    total_bobot = fields.Float(
+        string="Total bobot mata kuliah (%)",
+        compute="_compute_total_bobot",
+        digits=(5, 2),
+    )
+    remaining_bobot = fields.Float(
+        string="Sisa bobot (%)", compute="_compute_total_bobot", digits=(5, 2)
+    )
+    weight_status = fields.Selection(
+        [
+            ("complete", "Lengkap"),
+            ("under", "Kurang"),
+            ("over", "Melebihi"),
+        ],
+        compute="_compute_total_bobot",
+    )
     _bobot_range_constraint = models.Constraint('CHECK(bobot_cpmk_mk >= 0 AND bobot_cpmk_mk <= 100)', 'Bobot harus di antara 0 dan 100 persen.')
 
 
@@ -39,34 +56,18 @@ class ErpObeBobotCpmkMk(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.constrains("bobot_cpmk_mk", "rps_id")
-    def _check_total_bobot_cpmk_per_mk(self):
+    @api.depends("bobot_cpmk_mk", "rps_id.bobot_cpmk_mk_ids.bobot_cpmk_mk")
+    def _compute_total_bobot(self):
         for rec in self:
-            rps = rec.rps_id
-            if not rps:
-                continue
-
-            lines = rps.bobot_cpmk_mk_ids
-
-            # jika ada bobot 0 → belum selesai, JANGAN validasi
-            if any(float_compare(l.bobot_cpmk_mk, 0.0, precision_digits=2) <= 0 for l in lines):
-                continue
-
-            # semua sudah diisi → baru cek total
-            total = sum(lines.mapped("bobot_cpmk_mk"))
-
-            if float_compare(total, 100.0, precision_digits=2) != 0:
-                raise ValidationError(
-                    f"Total bobot CPMK untuk mata kuliah "
-                    f"'{rps.matakuliah_id.display_name}' harus 100%. "
-                    f"Saat ini {total:.2f}%."
-                )
+            total = sum(rec.rps_id.bobot_cpmk_mk_ids.mapped("bobot_cpmk_mk"))
+            rec.total_bobot = total
+            rec.remaining_bobot = 100.0 - total
+            rec.weight_status = _weight_status(total)[0]
 
     @api.constrains("rps_id", "cpmk_id")
     def _check_cpmk_faculty(self):
         for record in self:
-            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+            if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
-                    "Bobot CPMK harus berada di prodi mata kuliah RPS."
+                    "CPMK bobot harus berasal dari mata kuliah pada RPS."
                 )
-

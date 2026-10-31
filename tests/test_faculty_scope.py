@@ -351,9 +351,7 @@ class TestErpObeFacultyScope(TransactionCase):
     def test_faculty_relationship_validation_and_recompute(self):
         with self.assertRaises(ValidationError):
             self.mk_a.write({"rombel_ids": [Command.link(self.rombel_b.id)]})
-        self.faculty_a.write({"dekan_id": self.dosen_a.id})
-        with self.assertRaises(ValidationError):
-            self.faculty_a.write({"dekan_id": self.dosen_b.id})
+
 
         self.rombel_a.write({"prodi_id": self.prodi_b.id})
         self.assertEqual(self.mahasiswa_a.fakultas_id, self.faculty_b)

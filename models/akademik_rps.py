@@ -1,5 +1,5 @@
 from odoo import models, fields, api, Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 class ErpObeAkademikRps(models.Model):
     _name = "erpobe.akademik.rps"
@@ -10,6 +10,60 @@ class ErpObeAkademikRps(models.Model):
     # === 1. Header & Identitas MK ===
     matakuliah_id = fields.Many2one(
         "erpobe.master.matakuliah", string="Mata Kuliah", required=True, tracking=True
+    )
+    penawaran_line_id = fields.Many2one(
+        "erpobe.akademik.penawaran.line",
+        string="Penawaran Mata Kuliah",
+        ondelete="restrict",
+        index=True,
+        tracking=True,
+    )
+    tahun_ajaran_id = fields.Many2one(
+        related="penawaran_line_id.tahun_ajaran_id",
+        string="Tahun Ajaran",
+        store=True,
+        readonly=True,
+        index=True,
+    )
+    semester_akademik = fields.Selection(
+        related="tahun_ajaran_id.semester",
+        string="Semester Akademik",
+        store=True,
+        readonly=True,
+    )
+    version = fields.Integer(string="Versi", default=1, required=True, readonly=True)
+    source_rps_id = fields.Many2one(
+        "erpobe.akademik.rps",
+        string="Disalin dari RPS",
+        readonly=True,
+        ondelete="set null",
+        index=True,
+    )
+    status = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("review", "Perlu Ditinjau"),
+            ("final", "Final"),
+        ],
+        string="Status RPS",
+        default="draft",
+        required=True,
+        tracking=True,
+    )
+    weight_status = fields.Selection(
+        [
+            ("complete", "Bobot Lengkap"),
+            ("incomplete", "Bobot Belum Lengkap"),
+        ],
+        string="Kelengkapan Bobot",
+        compute="_compute_weight_status",
+    )
+    weight_issue_count = fields.Integer(
+        string="Jumlah Bobot Bermasalah", compute="_compute_weight_status"
+    )
+    _unique_offer_version = models.Constraint(
+        "UNIQUE(penawaran_line_id, version)",
+        "Nomor versi RPS harus unik dalam satu penawaran.",
     )
 
     # Field Related Wajib Store=True untuk Report/Search
@@ -61,6 +115,37 @@ class ErpObeAkademikRps(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
+    @api.depends(
+        "matakuliah_id",
+        "tahun_ajaran_id",
+        "version",
+        "status",
+        "create_date",
+    )
+    def _compute_display_name(self):
+        for record in self:
+            course = record.matakuliah_id.display_name or ""
+            year = record.tahun_ajaran_id.display_name
+            suffix = f" - {year}" if year else ""
+            created = (
+                f", {record.create_date.date()}" if record.create_date else ""
+            )
+            record.display_name = (
+                f"{record.kode_mk or ''} - {course}{suffix} "
+                f"(v{record.version}, {record.status or 'draft'}{created})"
+            )
+
+    @api.constrains("matakuliah_id", "penawaran_line_id")
+    def _check_offer_course(self):
+        for rps in self:
+            if (
+                rps.penawaran_line_id
+                and rps.penawaran_line_id.matakuliah_id != rps.matakuliah_id
+            ):
+                raise ValidationError(
+                    "Mata kuliah RPS harus sama dengan mata kuliah pada penawaran."
+                )
+
     @api.depends("matakuliah_id")
     def _compute_cpmk_ids(self):
         for rec in self:
@@ -85,6 +170,26 @@ class ErpObeAkademikRps(models.Model):
     def _compute_cpl_ids(self):
         for rec in self:
             rec.cpl_ids = rec.cpmk_ids.mapped("cpl_mapping_ids.cpl_id")
+
+    @api.depends(
+        "cpmk_ids",
+        "cpl_ids",
+        "bobot_cpmk_cpl_ids.cpmk_id",
+        "bobot_cpmk_cpl_ids.cpl_id",
+        "bobot_cpmk_cpl_ids.bobot_cpmk_cpl",
+        "bobot_cpmk_mk_ids.cpmk_id",
+        "bobot_cpmk_mk_ids.bobot_cpmk_mk",
+        "bobot_komponen_cpmk_ids.cpmk_id",
+        "bobot_komponen_cpmk_ids.bobot_komponen_cpmk",
+        "komponen_ids",
+    )
+    def _compute_weight_status(self):
+        validator = self.env["erpobe.weight.validation"]
+        for rps in self:
+            groups = validator.get_rps_summary(rps)
+            issues = [group for group in groups if group["status"] != "complete"]
+            rps.weight_issue_count = len(issues)
+            rps.weight_status = "incomplete" if issues else "complete"
 
     bobot_cpmk_mk_ids = fields.One2many(
         "erpobe.bobot.cpmk.mk", "rps_id", string="Bobot CPMK -> MK"
@@ -111,9 +216,6 @@ class ErpObeAkademikRps(models.Model):
         Hanya menambah baris baru atau menghapus baris yang validitasnya hilang.
         """
         for rps in self:
-            if not rps.cpmk_ids:
-                continue
-
             # --- A. Sync Bobot CPMK -> MK ---
             existing_cpmk_mk = rps.bobot_cpmk_mk_ids.mapped("cpmk_id")
             new_cpmk = rps.cpmk_ids - existing_cpmk_mk
@@ -171,9 +273,6 @@ class ErpObeAkademikRps(models.Model):
 
             # --- C. Sync Bobot Komponen -> CPMK ---
             # Cross Product: CPMK Terpilih x Komponen Terpilih (komponen_ids)
-            if not rps.komponen_ids:
-                continue
-
             valid_komp_cpmk = set()
             for cpmk in rps.cpmk_ids:
                 for komp in rps.komponen_ids:
@@ -207,20 +306,86 @@ class ErpObeAkademikRps(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if any(vals.get("status") == "final" for vals in vals_list):
+            raise UserError("RPS baru harus ditinjau sebelum dapat difinalisasi.")
         records = super().create(vals_list)
         records._sync_bobot_tables()
         return records
 
     def write(self, vals):
+        if any(record.status == "final" for record in self):
+            raise UserError(
+                "RPS berstatus Final bersifat read-only. Salin RPS untuk membuat versi baru."
+            )
+        if (
+            any(record.status == "review" for record in self)
+            and vals.get("status") not in ("review", "final")
+        ):
+            vals = {**vals, "status": "draft"}
+        if vals.get("status") == "final":
+            for rps in self:
+                if rps.status != "review":
+                    raise UserError(
+                        "Tandai RPS sebagai Perlu Ditinjau sebelum finalisasi."
+                    )
+                if not self.env["erpobe.weight.validation"].validate_rps(rps)[
+                    "complete"
+                ]:
+                    raise UserError(
+                        "RPS belum dapat difinalisasi karena bobot belum lengkap 100%."
+                    )
         res = super().write(vals)
         # Trigger sync jika ada perubahan pada MK, CPMK, atau Komponen
         if any(f in vals for f in ["matakuliah_id", "cpmk_ids", "komponen_ids"]):
             self._sync_bobot_tables()
         return res
 
+    def copy(self, default=None):
+        self.ensure_one()
+        values = dict(default or {})
+        values.setdefault("source_rps_id", self.id)
+        values.setdefault("version", self.version + 1)
+        values.setdefault("status", "review")
+        return super(
+            ErpObeAkademikRps,
+            self.with_context(preserve_rps_review_status=True),
+        ).copy(values)
+
+    def unlink(self):
+        if any(record.status == "final" for record in self):
+            raise UserError("RPS berstatus Final tidak dapat dihapus.")
+        return super().unlink()
+
+    def action_finalize(self):
+        for rps in self:
+            if rps.status != "review":
+                raise UserError(
+                    "Tandai RPS sebagai Perlu Ditinjau sebelum finalisasi."
+                )
+            validation = self.env["erpobe.weight.validation"].validate_rps(rps)
+            if not validation["complete"]:
+                messages = [
+                    f"{item['item_name']}: {item['total']:.2f}% "
+                    f"({'kurang' if item['difference'] > 0 else 'lebih'} "
+                    f"{abs(item['difference']):.2f}%)"
+                    for item in validation["problems"][:10]
+                ]
+                raise UserError(
+                    "RPS belum dapat difinalisasi karena bobot belum 100%:\n"
+                    + "\n".join(messages)
+                )
+            rps.write({"status": "final"})
+
+    def action_mark_for_review(self):
+        for rps in self:
+            if rps.status == "final":
+                raise UserError("RPS Final tidak dapat ditinjau ulang; salin versinya.")
+            rps.write({"status": "review"})
+
 
 class ErpObeAkademikKegiatanPerkuliahan(models.Model):
     _name = "erpobe.akademik.kegiatan.perkuliahan"
+    _inherit = ["erpobe.rps.lock.mixin"]
     _description = "Kegiatan Perkuliahan"
     _order = "minggu asc"
 
@@ -266,9 +431,9 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
     @api.constrains("rps_id", "cpmk_id")
     def _check_activity_faculty(self):
         for record in self:
-            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+            if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
-                    "CPMK kegiatan harus berasal dari prodi mata kuliah RPS."
+                    "CPMK kegiatan harus berasal dari mata kuliah pada RPS."
                 )
 
 
@@ -279,6 +444,9 @@ class ErpObeAkademikMetodePembelajaran(models.Model):
     name = fields.Char(string="Nama Metode", required=True)
     kode = fields.Char(string="Kode", size=5)
     active = fields.Boolean(default=True)
+    prodi_id = fields.Many2one(
+        "erpobe.master.prodi", string="Program Studi", index=True
+    )
 
     _uniq_name_constraint = models.Constraint('unique(name)', 'Nama metode sudah ada')
 
@@ -298,10 +466,14 @@ class ErpObeAkademikReferensi(models.Model):
     jenis = fields.Selection(
         [("utama", "Utama"), ("pendukung", "Pendukung")], default="pendukung"
     )
+    prodi_id = fields.Many2one(
+        "erpobe.master.prodi", string="Program Studi", index=True
+    )
 
 
 class ErpObeAkademikRubrikPenilaian(models.Model):
     _name = "erpobe.akademik.rubrik.penilaian"
+    _inherit = ["erpobe.rps.lock.mixin"]
     _description = "Item Rubrik (Baris)"
     _order = "sequence, id"
 
@@ -329,9 +501,9 @@ class ErpObeAkademikRubrikPenilaian(models.Model):
     @api.constrains("rps_id", "cpmk_id")
     def _check_rubric_faculty(self):
         for record in self:
-            if record.cpmk_id.prodi_id != record.rps_id.prodi_id:
+            if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
-                    "CPMK rubrik harus berasal dari prodi mata kuliah RPS."
+                    "CPMK rubrik harus berasal dari mata kuliah pada RPS."
                 )
 
     def action_open_kriteria(self):
@@ -349,6 +521,8 @@ class ErpObeAkademikRubrikPenilaian(models.Model):
 
 class ErpObeAkademikKriteria(models.Model):
     _name = "erpobe.akademik.kriteria"
+    _inherit = ["erpobe.rps.lock.mixin"]
+    _rps_link_field = "rubrik_id.rps_id"
     _description = "Kriteria Penilaian RPS"
 
     # === FIXED RELATION ===

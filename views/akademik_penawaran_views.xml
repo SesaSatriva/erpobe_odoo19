@@ -7,6 +7,7 @@
             <search string="Penawaran Mata Kuliah">
                 <field name="name"/>
                 <field name="tahun_ajaran"/>
+                <field name="prodi_id"/>
                 <field name="rombel_ids"/>
                 <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
                 <filter name="group_semester" string="Semester" context="{'group_by': 'semester_akademik'}"/>
@@ -20,8 +21,10 @@
             <list string="Penawaran Mata Kuliah">
                 <field name="name"/>
                 <field name="tahun_ajaran"/>
+                <field name="prodi_id"/>
                 <field name="semester_akademik"/>
                 <field name="rombel_ids" widget="many2many_tags"/>
+                <field name="rps_pending_count" widget="badge"/>
             </list>
         </field>
     </record>
@@ -39,21 +42,54 @@
                     </div>
                     <group>
                         <field name="tahun_ajaran"/>
+                        <field name="prodi_id"/>
                         <field name="semester_akademik" readonly="1"/>
                         <field name="filter_angkatan_ids" widget="many2many_tags"/>
-                        <field name="rombel_ids" widget="many2many_tags"/>
-                        <field name="temp_matakuliah_ids" widget="many2many_tags"/>
+                        <field name="rombel_ids" widget="many2many_tags" domain="[('prodi_id', '=', prodi_id)]"/>
+                        <field name="temp_matakuliah_ids" widget="many2many_tags" domain="[('prodi_id', '=', prodi_id)]"/>
+                        <field name="rps_pending_count" readonly="1"/>
+                        <button name="action_open_bulk_rps_copy" type="object" string="Salin Semua RPS dari Tahun Sebelumnya"/>
                     </group>
                     <notebook>
                         <page string="Kelas dan Mata Kuliah">
                             <field name="line_ids">
                                 <list editable="bottom">
-                                    <field name="matakuliah_id"/>
+                                    <field name="matakuliah_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
                                     <field name="semester_kurikulum"/>
                                     <field name="dosen_id"/>
                                     <field name="pengampu_ids" widget="many2many_tags"/>
-                                    <field name="rombel_ids" widget="many2many_tags"/>
+                                    <field name="rombel_ids" widget="many2many_tags" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                                    <field name="tahun_ajaran_id" readonly="1"/>
+                                    <field name="rps_status" widget="badge" readonly="1"/>
+                                    <field name="rps_weight_status" widget="badge" readonly="1"/>
+                                    <button name="action_create_rps" type="object" string="Buat RPS Baru"/>
+                                    <button name="action_copy_previous_rps" type="object" string="Salin RPS Sebelumnya"/>
                                 </list>
+                                <form string="Detail Penawaran Mata Kuliah">
+                                    <group>
+                                        <field name="penawaran_id" readonly="1"/>
+                                        <field name="matakuliah_id" readonly="1"/>
+                                        <field name="tahun_ajaran_id" readonly="1"/>
+                                        <field name="rps_status" widget="badge" readonly="1"/>
+                                        <field name="rps_weight_status" widget="badge" readonly="1"/>
+                                        <button name="action_create_rps" type="object" string="Buat RPS Baru"/>
+                                        <button name="action_copy_previous_rps" type="object" string="Pilih / Salin RPS Lama"/>
+                                    </group>
+                                    <field name="rps_ids" readonly="1">
+                                        <list>
+                                            <field name="tahun_ajaran_id"/>
+                                            <field name="semester_akademik"/>
+                                            <field name="version"/>
+                                            <field name="status"/>
+                                            <field name="weight_status"/>
+                                            <field name="create_date"/>
+                                            <field name="write_date"/>
+                                            <field name="create_uid"/>
+                                            <field name="write_uid"/>
+                                            <field name="source_rps_id"/>
+                                        </list>
+                                    </field>
+                                </form>
                             </field>
                         </page>
                     </notebook>

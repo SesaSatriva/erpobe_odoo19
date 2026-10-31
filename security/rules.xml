@@ -343,6 +343,48 @@
         <field name="domain_force">[(1, "=", 1)]</field>
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
+    <record id="erpobe_akademik_penawaran_prodi_scope" model="ir.rule">
+        <field name="name">erpobe.akademik.penawaran: cakupan prodi</field>
+        <field name="model_id" ref="model_erpobe_akademik_penawaran"/>
+        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_akademik_penawaran_superadmin_global" model="ir.rule">
+        <field name="name">erpobe.akademik.penawaran: Superadmin global</field>
+        <field name="model_id" ref="model_erpobe_akademik_penawaran"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_superadmin'))]"/>
+    </record>
+    <record id="erpobe_akademik_penawaran_settings_global" model="ir.rule">
+        <field name="name">erpobe.akademik.penawaran: Administrator Settings global</field>
+        <field name="model_id" ref="model_erpobe_akademik_penawaran"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+    <record id="erpobe_akademik_metode_prodi_scope" model="ir.rule">
+        <field name="name">erpobe.akademik.metode.pembelajaran: cakupan prodi</field>
+        <field name="model_id" ref="model_erpobe_akademik_metode_pembelajaran"/>
+        <field name="domain_force">['|', ('prodi_id', '=', False), ('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_akademik_metode_superadmin_global" model="ir.rule">
+        <field name="name">erpobe.akademik.metode.pembelajaran: Superadmin global</field>
+        <field name="model_id" ref="model_erpobe_akademik_metode_pembelajaran"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_superadmin'))]"/>
+    </record>
+    <record id="erpobe_akademik_referensi_prodi_scope" model="ir.rule">
+        <field name="name">erpobe.akademik.referensi: cakupan prodi</field>
+        <field name="model_id" ref="model_erpobe_akademik_referensi"/>
+        <field name="domain_force">['|', ('prodi_id', '=', False), ('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_akademik_referensi_superadmin_global" model="ir.rule">
+        <field name="name">erpobe.akademik.referensi: Superadmin global</field>
+        <field name="model_id" ref="model_erpobe_akademik_referensi"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_superadmin'))]"/>
+    </record>
     <record id="erpobe_input_nilai_faculty_scope" model="ir.rule">
         <field name="name">erpobe.input.nilai: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_input_nilai"/>

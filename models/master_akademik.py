@@ -36,6 +36,18 @@ class ErpObeMasterMataKuliah(models.Model):
 
     # CPMK langsung link ke MK (Parent-Child)
     cpmk_ids = fields.One2many("erpobe.akademik.cpmk", "mk_id", string="Daftar CPMK")
+    rps_ids = fields.One2many(
+        "erpobe.akademik.rps", "matakuliah_id", string="Versi RPS"
+    )
+    weight_status = fields.Selection(
+        [
+            ("missing", "Belum Ada RPS Aktif"),
+            ("incomplete", "Bobot Belum Lengkap"),
+            ("complete", "Bobot Lengkap"),
+        ],
+        string="Status Bobot",
+        compute="_compute_weight_status",
+    )
 
     _kode_mk_unique = models.Constraint(
         "UNIQUE (prodi_id, kode_mk)", "Kode Mata Kuliah harus unik dalam prodi."
@@ -94,6 +106,22 @@ class ErpObeMasterMataKuliah(models.Model):
                 raise ValidationError(
                     "Mata kuliah prasyarat harus berasal dari prodi yang sama."
                 )
+
+    @api.depends(
+        "rps_ids.weight_status",
+        "rps_ids.tahun_ajaran_id.aktif",
+    )
+    def _compute_weight_status(self):
+        for record in self:
+            active_rps = record.rps_ids.filtered(
+                lambda rps: rps.tahun_ajaran_id.aktif
+            )
+            if not active_rps:
+                record.weight_status = "missing"
+            elif any(rps.weight_status != "complete" for rps in active_rps):
+                record.weight_status = "incomplete"
+            else:
+                record.weight_status = "complete"
 
     def write(self, vals):
 

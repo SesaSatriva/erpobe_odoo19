@@ -35,6 +35,9 @@
                         <field name="kode"/>
                         <field name="name"/>
                         <field name="fakultas_id"/>
+                        <button name="action_open_weight_monitor" type="object" string="Kelengkapan Bobot" class="oe_highlight"/>
+                        <button name="action_open_tahun_ajaran" type="object" string="Tahun Ajaran"/>
+                        <button name="action_open_penawaran" type="object" string="Penawaran Mata Kuliah"/>
                     </group>
                     <notebook>
                         <page string="CPL">
@@ -42,6 +45,15 @@
                                 <list editable="bottom">
                                     <field name="kode_cpl"/>
                                     <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="CPMK">
+                            <field name="cpmk_ids" readonly="1">
+                                <list>
+                                    <field name="kode_cpmk"/>
+                                    <field name="name"/>
+                                    <field name="mk_id"/>
                                 </list>
                             </field>
                         </page>
@@ -72,6 +84,46 @@
                                 <list editable="bottom">
                                     <field name="name"/>
                                     <field name="angkatan"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Penawaran dan RPS">
+                            <field name="penawaran_line_ids" readonly="1">
+                                <list>
+                                    <field name="penawaran_id"/>
+                                    <field name="matakuliah_id"/>
+                                    <field name="tahun_ajaran_id"/>
+                                    <field name="rps_status" widget="badge"/>
+                                    <field name="rps_weight_status" widget="badge"/>
+                                </list>
+                            </field>
+                            <field name="rps_ids" readonly="1">
+                                <list>
+                                    <field name="matakuliah_id"/>
+                                    <field name="tahun_ajaran_id"/>
+                                    <field name="version"/>
+                                    <field name="status" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Metode Pembelajaran">
+                            <field name="metode_ids">
+                                <list editable="bottom">
+                                    <field name="kode"/>
+                                    <field name="name"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Referensi Akademik">
+                            <field name="referensi_ids">
+                                <list editable="bottom">
+                                    <field name="kode"/>
+                                    <field name="judul"/>
+                                    <field name="penulis"/>
+                                    <field name="tahun"/>
+                                    <field name="jenis"/>
+                                    <field name="link" widget="url"/>
                                 </list>
                             </field>
                         </page>

@@ -9,6 +9,7 @@
                 <field name="penawaran_id"/>
                 <field name="rombel_id"/>
                 <field name="tahun_ajaran"/>
+                <field name="state"/>
                 <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
                 <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
             </search>
@@ -24,6 +25,7 @@
                 <field name="penawaran_id"/>
                 <field name="tahun_ajaran"/>
                 <field name="total_sks"/>
+                <field name="state" widget="badge"/>
                 <field name="max_sks_allowed"/>
             </list>
         </field>
@@ -35,6 +37,9 @@
             <form string="Kartu Rencana Studi">
                 <header>
                     <button name="action_ambil_paket" type="object" string="Ambil Paket Rombel" class="oe_highlight"/>
+                    <button name="action_submit" type="object" string="Ajukan Persetujuan" class="oe_highlight" invisible="state not in ['draft', 'rejected']"/>
+                    <button name="action_approve" type="object" string="Setujui KRS" class="oe_highlight" groups="erpobe.group_dosen,erpobe.group_admin,erpobe.group_superadmin" invisible="state != 'submitted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -50,6 +55,7 @@
                         <field name="semester_akademik" readonly="1"/>
                         <field name="total_sks" readonly="1"/>
                         <field name="max_sks_allowed"/>
+                        <field name="advisor_note" readonly="1"/>
                     </group>
                     <field name="line_ids">
                         <list editable="bottom">

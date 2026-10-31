@@ -191,7 +191,7 @@ class TestErpObeFacultyImportExport(TransactionCase):
                 "email": "mahasiswa.round@example.test",
             }
         )
-        self.env["erpobe.master.mahasiswa"].with_context(
+        mahasiswa = self.env["erpobe.master.mahasiswa"].with_context(
             no_reset_password=True
         ).create(
             {
@@ -212,24 +212,24 @@ class TestErpObeFacultyImportExport(TransactionCase):
                 "tim_pengampu_ids": [Command.set([dosen.id])],
             }
         )
-        self.env["erpobe.akademik.cpl"].create(
+        cpl = self.env["erpobe.akademik.cpl"].create(
             {
                 "name": "Deskripsi CPL Round Trip",
                 "kode_cpl": "CPL-ROUND",
                 "prodi_id": prodi.id,
             }
         )
-        self.env["erpobe.akademik.cpmk"].create(
+        cpmk = self.env["erpobe.akademik.cpmk"].create(
             {
                 "mk_id": matakuliah.id,
                 "kode_cpmk": "CPMK-ROUND",
                 "name": "Deskripsi CPMK Round Trip",
             }
         )
-        self.env["erpobe.akademik.tahunajaran"].create(
+        tahunajaran = self.env["erpobe.akademik.tahunajaran"].create(
             {"tahun_ajaran": "2025/2026", "semester": "ganjil"}
         )
-        self.env["erpobe.akademik.komponen"].create(
+        komponen = self.env["erpobe.akademik.komponen"].create(
             {
                 "name": "Komponen Round Trip",
                 "tipe": "kognitif",
@@ -250,9 +250,35 @@ class TestErpObeFacultyImportExport(TransactionCase):
             "erpobe.wizard.import.cpl",
             "erpobe.wizard.import.cpmk",
         ]
+        records_by_model = {
+            "erpobe.master.fakultas": faculty,
+            "erpobe.master.prodi": prodi,
+            "erpobe.master.dosen": dosen,
+            "erpobe.master.mahasiswa": mahasiswa,
+            "erpobe.master.rombel": rombel,
+            "erpobe.master.matakuliah": matakuliah,
+            "erpobe.akademik.tahunajaran": tahunajaran,
+            "erpobe.akademik.komponen": komponen,
+            "erpobe.akademik.cpl": cpl,
+            "erpobe.akademik.cpmk": cpmk,
+        }
         for wizard_model in model_wizards:
-            wizard = self.env[wizard_model].with_user(self.superadmin).create(
-                {"mode": "export", "format": "xlsx"}
+            target_model = self.env[wizard_model]._import_export_model
+            records = records_by_model[target_model]
+            wizard = (
+                self.env[wizard_model]
+                .with_user(self.superadmin)
+                .with_context(
+                    active_model=target_model,
+                    active_ids=records.ids,
+                )
+                .create(
+                    {
+                        "mode": "export",
+                        "format": "xlsx",
+                        "export_selected": True,
+                    }
+                )
             )
             wizard.action_export()
             wizard.write(
@@ -368,26 +394,31 @@ class TestErpObeFacultyImportExport(TransactionCase):
         missing_header = self._new_wizard(
             format="csv",
             file=base64.b64encode(
-                b"Kode Fakultas,Nama Fakultas,Aktif\nFK-MISSING,Fakultas,Ya\n"
+                b"Kode Fakultas,Aktif\nFK-MISSING,Ya\n"
             ),
             filename="missing.csv",
         )
         with self.assertRaisesRegex(UserError, "Kolom wajib tidak ditemukan"):
             missing_header.action_validate()
 
-        unknown_relation = self._new_wizard(
-            format="xlsx",
-            file=self._xlsx_upload(
-                wizard,
-                {
-                    "Kode Fakultas": "FK-UNKNOWN-DEAN",
-                    "Nama Fakultas": "Fakultas Impor",
-                    "Aktif": "Ya",
-                },
-            ),
-            filename="unknown_relation.xlsx",
-            dry_run=True,
+        unknown_relation = self.env["erpobe.wizard.import.prodi"].with_user(
+            self.superadmin
+        ).create(
+            {
+                "format": "xlsx",
+                "dry_run": True,
+            }
         )
+        unknown_relation.file = self._xlsx_upload(
+            unknown_relation,
+            {
+                "Kode Fakultas": "FK-NOT-FOUND-TRITON-2026",
+                "Kode Prodi": "PR-NOT-FOUND-TRITON-2026",
+                "Nama Prodi": "Program Studi Impor",
+                "Aktif": "Ya",
+            },
+        )
+        unknown_relation.filename = "unknown_relation.xlsx"
         unknown_relation.action_validate()
         self.assertIn("1 ditolak", unknown_relation.result_summary)
 
@@ -412,7 +443,15 @@ class TestErpObeFacultyImportExport(TransactionCase):
         faculty = self.Faculty.create(
             {"kode": "FK-ROUND", "name": "Fakultas Round Trip", "active": True}
         )
-        wizard = self._new_wizard(mode="export", format="xlsx")
+        wizard = self._new_wizard(
+            mode="export",
+            format="xlsx",
+            export_selected=True,
+        )
+        wizard = wizard.with_context(
+            active_model="erpobe.master.fakultas",
+            active_ids=[faculty.id],
+        )
         wizard.action_export()
         export_file = wizard.export_file
         export_filename = wizard.export_filename

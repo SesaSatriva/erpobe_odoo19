@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_triton" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.triton</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="TRITON" name="triton_settings">
+                    <block title="Privasi Situs Publik" name="triton_public_privacy">
+                        <setting
+                            id="triton_public_people_setting"
+                            string="Daftar dosen dan mahasiswa"
+                            help="Izinkan daftar dan profil individu yang telah diaktifkan untuk publikasi. Statistik agregat tetap tersedia saat opsi ini mati.">
+                            <field name="triton_public_people_enabled"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

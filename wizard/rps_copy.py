@@ -101,6 +101,7 @@ class ErpObeRpsBulkCopyWizard(models.TransientModel):
     confirm_copy = fields.Boolean(
         string="Saya menyetujui penyalinan ke semua penawaran di atas",
         required=True,
+        default=False,
     )
     result_summary = fields.Char(readonly=True)
 

@@ -52,8 +52,11 @@
                     <group>
                         <group string="Identitas">
                             <field name="nip"/>
+                            <field name="jabatan_fungsional"/>
                             <field name="email"/>
                             <field name="phone"/>
+                            <field name="is_public_visible"/>
+                            <field name="public_opt_out"/>
                             <field name="user_id" readonly="1"/>
                         </group>
                         <group string="Program Studi">
@@ -118,6 +121,10 @@
                             <field name="prodi_id" readonly="1"/>
                             <field name="rombel_id"/>
                             <field name="angkatan" readonly="1"/>
+                            <field name="status_akademik"/>
+                            <field name="dosen_wali_id" domain="[('prodi_ids', 'in', prodi_id)]"/>
+                            <field name="is_public_visible"/>
+                            <field name="public_opt_out"/>
                         </group>
                     </group>
                     <notebook>

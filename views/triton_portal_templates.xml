@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_portal_nav" name="Navigasi Portal TRITON">
+        <nav class="o_triton_portal-nav" aria-label="Navigasi portal">
+            <a href="/my/triton" class="o_triton_brand"><span class="o_triton_brand-mark">T</span><span class="o_triton_brand-copy"><strong>TRITON</strong><small>Portal akademik</small></span></a>
+            <div class="o_triton_portal-links">
+                <a href="/my/triton">Beranda</a>
+                <a href="/my/krs">KRS</a>
+                <a href="/my/khs">KHS</a>
+                <a href="/my/mata-kuliah">Mata Kuliah</a>
+                <a href="/my/capaian-cpl">Capaian CPL</a>
+                <a href="/my/rps">RPS Dosen</a>
+                <a href="/my/kelas">Kelas</a>
+                <a href="/my/perwalian">Perwalian</a>
+                <a href="/my/profil">Profil</a>
+            </div>
+            <a href="/" class="o_triton_btn-ghost">Situs publik</a>
+        </nav>
+    </template>
+
+    <template id="triton_portal_home_page" name="Beranda Portal">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow">Portal <t t-out="role"/></span><h1>Selamat datang, <t t-out="user_name"/></h1><p class="o_triton_subtitle">Berikut tugas akademik yang perlu Anda tindak lanjuti.</p></div>
+                        </header>
+                        <div t-if="tasks" class="o_triton_grid-three">
+                            <t t-foreach="tasks" t-as="task"><article class="o_triton_task-card"><span class="o_triton_badge o_triton_badge-warning">Perlu ditindaklanjuti</span><h2 t-out="task['title']"/><p t-out="task['description']"/><a class="o_triton_link" t-att-href="task['url']">Buka tugas</a></article></t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Tidak ada tugas aktif</h2><p>Semua tugas yang tersedia telah ditindaklanjuti.</p></div>
+                        <nav class="o_triton_portal-shortcuts" aria-label="Menu portal">
+                            <a href="/my/krs">Kelola KRS</a><a href="/my/khs">Lihat KHS</a><a href="/my/mata-kuliah">Mata Kuliah Saya</a><a href="/my/capaian-cpl">Capaian CPL</a>
+                            <a t-if="role == 'Dosen'" href="/my/rps">Kelola RPS</a><a t-if="role == 'Dosen'" href="/my/kelas">Kelas yang Diampu</a><a t-if="role == 'Dosen'" href="/my/perwalian">Perwalian</a>
+                        </nav>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_krs_page" name="KRS Mahasiswa">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Kartu Rencana Studi</h1><p class="o_triton_subtitle">Pilih penawaran aktif untuk rombel Anda. Validasi SKS, prasyarat, dan bentrok jadwal dilakukan server-side.</p></div></header>
+                        <div t-if="error" class="o_triton_error" role="alert" t-out="error"/>
+                        <div t-if="message" class="o_triton_error" role="alert" t-out="message"/>
+                        <div t-if="krs" class="o_triton_privacy-note">
+                            <strong>Status:</strong> <span class="o_triton_badge" t-out="dict(krs._fields['state'].selection).get(krs.state, krs.state)"/>
+                            <span> • Total <t t-out="krs.total_sks"/> / <t t-out="krs.max_sks_allowed"/> SKS</span>
+                            <p t-if="krs.advisor_note"><strong>Catatan dosen wali:</strong> <t t-out="krs.advisor_note"/></p>
+                        </div>
+                        <div t-if="offers" class="o_triton_portal-list">
+                            <t t-foreach="offers" t-as="offer">
+                                <article class="o_triton_panel">
+                                    <h2 t-out="offer['name']"/>
+                                    <form action="/my/krs" method="post">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="penawaran_id" t-att-value="offer['id']"/>
+                                        <div t-if="offer['lines']" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Pilih</th><th>Kode</th><th>Mata Kuliah</th><th>SKS</th></tr></thead><tbody><t t-foreach="offer['lines']" t-as="line"><tr><td><input type="checkbox" name="penawaran_line_ids" t-att-value="line['id']" t-att-checked="line['selected']" aria-label="Ambil mata kuliah"/></td><td t-out="line['kode']"/><td t-out="line['name']"/><td t-out="line['sks']"/></tr></t></tbody></table></div>
+                                        <p t-else="">Tidak ada mata kuliah yang ditawarkan untuk rombel Anda pada periode ini.</p>
+                                        <button class="o_triton_btn" type="submit" t-att-disabled="krs and krs.state not in ['draft', 'rejected']">Simpan pilihan</button>
+                                    </form>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada penawaran aktif</h2><p>Penawaran untuk rombel Anda belum tersedia.</p></div>
+                        <form t-if="krs and krs.state in ['draft', 'rejected']" t-att-action="'/my/krs/%s/submit' % krs.id" method="post" class="o_triton_section-heading">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button class="o_triton_btn" type="submit">Kirim untuk persetujuan dosen wali</button>
+                        </form>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_khs_page" name="KHS Mahasiswa">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Kartu Hasil Studi dan Transkrip</h1><p class="o_triton_subtitle">Hanya laporan milik akun yang sedang masuk.</p></div></header><t t-if="reports"><t t-foreach="reports" t-as="report"><article class="o_triton_panel o_triton_section-heading"><div class="o_triton_heading"><div><h2 t-out="report['year']"/><p>IPK <strong t-out="report['ipk']"/> • SKS lulus <strong t-out="report['sks']"/></p></div><a class="o_triton_btn-ghost" t-att-href="'/report/pdf/erpobe.action_report_khs/%s' % report['id']">Cetak PDF</a></div><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Nilai angka</th><th>Nilai huruf</th></tr></thead><tbody><t t-foreach="report['courses']" t-as="course"><tr><td t-out="course['kode']"/><td t-out="course['name']"/><td t-out="course['sks']"/><td t-out="course['score']"/><td t-out="course['grade']"/></tr></t></tbody></table></div></article></t></t><div t-else="" class="o_triton_empty"><h2>Belum ada KHS</h2><p>Laporan hasil studi akan tersedia setelah nilai diproses oleh pengajar.</p></div><p class="o_triton_caption">Ringkasan IPS per semester tidak tersedia karena data nilai mata kuliah saat ini tidak mencatat tahun ajaran pada tiap nilai.</p></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_student_courses_page" name="Mata Kuliah Mahasiswa">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Mata kuliah saya</h1><p class="o_triton_subtitle">Daftar berasal dari KRS yang telah disetujui.</p></div></header><div t-if="courses" class="o_triton_grid-three"><t t-foreach="courses" t-as="course"><article class="o_triton_panel"><span class="o_triton_badge" t-out="course['year']"/> <h2 t-out="course['name']"/><p><t t-out="course['code']"/> • <t t-out="course['sks']"/> SKS • <t t-out="course['semester']"/></p><p><span t-if="course['rps']" class="o_triton_badge o_triton_badge-success">RPS Final</span><span t-else="" class="o_triton_badge o_triton_badge-warning">RPS Final belum tersedia</span></p><h3>CPMK</h3><ul class="o_triton_list"><t t-foreach="course['cpmk']" t-as="item"><li t-out="item['name']"/></t></ul><h3>Nilai komponen</h3><ul class="o_triton_list"><t t-foreach="course['components']" t-as="component"><li><t t-out="component['name']"/>: <t t-out="component['score']"/></li></t></ul></article></t></div><div t-else="" class="o_triton_empty"><h2>Belum ada mata kuliah</h2><p>Tidak ditemukan KRS yang disetujui.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_student_cpl_page" name="Capaian CPL Pribadi">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Capaian CPL pribadi</h1><p class="o_triton_subtitle">Informasi ini hanya dapat dilihat oleh pemilik akun.</p></div></header><div t-if="grades" class="o_triton_grid-three"><t t-foreach="grades" t-as="grade"><article class="o_triton_panel"><span class="o_triton_badge" t-out="grade['name']"/><h2 t-out="grade['description']"/><div class="o_triton_private-score"><strong><t t-out="grade['score']"/>%</strong><span t-if="grade['met']" class="o_triton_badge-success">Mencapai target</span><span t-else="" class="o_triton_badge-warning">Di bawah target 75%</span></div><meter class="o_triton_bar-track" min="0" max="100" t-att-value="grade['score']" t-att-aria-label="'Capaian ' + grade['name']"/></article></t></div><div t-else="" class="o_triton_empty"><h2>Belum ada capaian CPL</h2><p>Nilai CPL akan tersedia setelah nilai mata kuliah terkait diproses.</p></div><aside class="o_triton_privacy-note o_triton_section-heading">Capaian individu merupakan data privat dan tidak ditampilkan dalam halaman publik.</aside></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_student_profile_page" name="Profil Mahasiswa Portal">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Profil</span><h1>Profil dan privasi</h1></div></header><div t-if="message" class="o_triton_success" role="status" t-out="message"/><article t-if="student" class="o_triton_profile-card"><h2 t-out="student.name"/><p><strong>Program studi:</strong> <t t-out="student.prodi_id.name"/></p><p><strong>Angkatan:</strong> <t t-out="student.angkatan"/></p><p><strong>Status:</strong> <t t-out="dict(student._fields['status_akademik'].selection).get(student.status_akademik, student.status_akademik)"/></p></article><article t-if="teacher" class="o_triton_profile-card"><h2 t-out="teacher.name"/><p><strong>Program studi:</strong> <t t-out="', '.join(teacher.prodi_ids.mapped('name'))"/></p><p><strong>Jabatan fungsional:</strong> <t t-out="teacher.jabatan_fungsional or 'Belum diatur'"/></p></article><form action="/my/profil" method="post" class="o_triton_panel o_triton_section-heading"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><label class="o_triton_checkbox"><input type="checkbox" name="public_opt_out" value="1" t-att-checked="(student or teacher).public_opt_out"/> Jangan tampilkan profil saya pada daftar publik.</label><p class="o_triton_caption">Preferensi ini berlaku jika administrator mengaktifkan daftar individu untuk publik.</p><button class="o_triton_btn" type="submit">Simpan preferensi</button></form></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_rps_edit_page" name="Editor RPS Portal">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section"><div class="o_triton_container">
+                    <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen • RPS v<t t-out="rps.version"/></span><h1 t-out="line.matakuliah_id.name"/><p class="o_triton_subtitle"><t t-out="line.tahun_ajaran_id.tahun_ajaran"/> • <t t-out="line.tahun_ajaran_id.semester"/> • Status <t t-out="rps.status"/></p></div></header>
+                    <div t-if="error" class="o_triton_error" role="alert" t-out="error"/>
+                    <div t-if="message" class="o_triton_success" role="status" t-out="message"/>
+                    <form method="post" class="o_triton_panel o_triton_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <label>Deskripsi mata kuliah<textarea name="deskripsi_mk" rows="4" t-out="rps.deskripsi_mk"/></label>
+                        <div class="o_triton_form-row"><label>Media software<input name="media_software" t-att-value="rps.media_software or ''"/></label><label>Media hardware<input name="media_hardware" t-att-value="rps.media_hardware or ''"/></label></div>
+                        <fieldset><legend>Komponen penilaian</legend><div class="o_triton_grid-three"><t t-foreach="components" t-as="component"><label class="o_triton_checkbox"><input type="checkbox" name="komponen_ids" t-att-value="component.id" t-att-checked="component in rps.komponen_ids"/><t t-out="component.name"/></label></t></div></fieldset>
+                        <h2>Bobot CPMK → Mata Kuliah</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>CPMK</th><th>Bobot (%)</th></tr></thead><tbody><tr t-foreach="rps.bobot_cpmk_mk_ids" t-as="weight"><td t-out="weight.cpmk_id.name"/><td><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-name="'bobot_mk_%s' % weight.id" t-att-value="weight.bobot_cpmk_mk"/></td></tr></tbody></table></div>
+                        <h2>Bobot CPMK → CPL</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>CPMK</th><th>CPL</th><th>Bobot (%)</th></tr></thead><tbody><tr t-foreach="rps.bobot_cpmk_cpl_ids" t-as="weight"><td t-out="weight.cpmk_id.name"/><td t-out="weight.cpl_id.kode_cpl"/><td><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-name="'bobot_cpl_%s' % weight.id" t-att-value="weight.bobot_cpmk_cpl"/></td></tr></tbody></table></div>
+                        <h2>Bobot Komponen → CPMK</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Komponen</th><th>CPMK</th><th>Bobot (%)</th></tr></thead><tbody><tr t-foreach="rps.bobot_komponen_cpmk_ids" t-as="weight"><td t-out="weight.komponen_penilaian.name"/><td t-out="weight.cpmk_id.name"/><td><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-name="'bobot_komponen_%s' % weight.id" t-att-value="weight.bobot_komponen_cpmk"/></td></tr></tbody></table></div>
+                        <div class="o_triton_hero-actions"><button class="o_triton_btn-ghost" type="submit" name="operation" value="draft">Simpan Draft</button><button class="o_triton_btn" type="submit" name="operation" value="review">Simpan dan ajukan tinjauan</button></div>
+                    </form>
+                </div></section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_teacher_rps_page" name="RPS Dosen">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>RPS mata kuliah yang diampu</h1><p class="o_triton_subtitle">Aksi hanya tersedia untuk penawaran yang ditugaskan kepada Anda.</p></div></header><div t-if="message" class="o_triton_error" role="alert" t-out="message"/><div t-if="lines" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Tahun ajaran</th><th>Mata kuliah</th><th>Status RPS</th><th>Bobot</th><th>Aksi</th></tr></thead><tbody><t t-foreach="lines" t-as="line"><tr><td><t t-out="line['year']"/> • <t t-out="line['semester']"/></td><td><t t-out="line['code']"/> — <t t-out="line['course']"/></td><td t-out="line['status']"/><td t-out="line['weights']"/><td><form t-if="not line['rps_id']" t-att-action="'/my/rps/%s/create' % line['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><button class="o_triton_btn-ghost" type="submit">Buat RPS</button></form><form t-if="line['sources']" t-att-action="'/my/rps/%s/copy' % line['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><label class="visually-hidden" t-att-for="'source-%s' % line['id']">Salin RPS final sebelumnya</label><select t-att-id="'source-%s' % line['id']" name="source_rps_id" required="required"><option value="">Pilih RPS final</option><t t-foreach="line['sources']" t-as="source"><option t-att-value="source['id']" t-out="source['name']"/></t></select><button class="o_triton_btn-ghost" type="submit">Salin dari tahun sebelumnya</button></form><form t-if="line['rps_id'] and line['status'] == 'review'" t-att-action="'/my/rps/%s/finalize' % line['rps_id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><button class="o_triton_btn" type="submit">Finalisasi</button></form><a t-if="line['rps_id'] and line['status'] == 'final'" class="o_triton_link" t-att-href="'/report/pdf/erpobe.action_report_rps/%s' % line['rps_id']">Cetak RPS</a></td></tr></t></tbody></table></div><div t-else="" class="o_triton_empty"><h2>Belum ada penawaran</h2><p>Tidak ada penawaran mata kuliah yang ditugaskan kepada akun dosen ini.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_teacher_classes_page" name="Kelas Dosen">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>Kelas yang diampu</h1></div></header><div t-if="classes" class="o_triton_grid-three"><t t-foreach="classes" t-as="class_item"><article class="o_triton_panel"><span class="o_triton_badge" t-out="class_item['year']"/><h2 t-out="class_item['course']"/><p t-out="class_item['code']"/><p><t t-out="len(class_item['students'])"/> peserta</p><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai' % class_item['line_id']">Input nilai komponen</a><h3>Peserta</h3><ul class="o_triton_list"><t t-foreach="class_item['students']" t-as="student"><li><t t-out="student['name']"/> • <t t-out="student['cohort']"/></li></t></ul></article></t></div><div t-else="" class="o_triton_empty"><p>Tidak ada kelas yang diampu.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_teacher_grades_page" name="Input Nilai Dosen">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>Input nilai komponen</h1><p class="o_triton_subtitle">Nilai 0–100; penyimpanan akan memperbarui kalkulasi CPMK, CPL, dan laporan akademik.</p></div></header><div t-if="error" class="o_triton_error" role="alert" t-out="error"/><form t-if="students" t-att-action="'/my/kelas/%s/nilai' % line_id" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Mahasiswa</th><t t-foreach="students[0]['values']" t-as="component"><th t-out="component['name']"/></t></tr></thead><tbody><t t-foreach="students" t-as="student"><tr><th t-out="student['name']"/><t t-foreach="student['values']" t-as="value"><td><label class="visually-hidden" t-att-for="'grade-%s-%s' % (student['id'], value['id'])" t-out="value['name']"/><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-id="'grade-%s-%s' % (student['id'], value['id'])" t-att-name="'grade_%s_%s' % (student['id'], value['id'])" t-att-value="value['value']"/></td></t></tr></t></tbody></table></div><button class="o_triton_btn o_triton_section-heading" type="submit">Simpan dan hitung ulang</button></form><div t-else="" class="o_triton_empty"><p>Belum ada peserta pada kelas ini.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_advising_page" name="Perwalian Dosen">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen wali</span><h1>Persetujuan KRS perwalian</h1><p class="o_triton_subtitle">Hanya KRS mahasiswa bimbingan yang terhubung kepada Anda.</p></div></header><div t-if="krs_records" class="o_triton_portal-list"><t t-foreach="krs_records" t-as="krs"><article class="o_triton_panel"><div class="o_triton_meta"><span class="o_triton_badge" t-out="krs['state']"/><span><t t-out="krs['sks']"/> SKS</span></div><h2 t-out="krs['student']"/><p>Angkatan <t t-out="krs['cohort']"/> • <t t-out="krs['offer']"/></p><ul class="o_triton_list"><t t-foreach="krs['courses']" t-as="course"><li t-out="course"/></t></ul><p t-if="krs['note']"><strong>Catatan:</strong> <t t-out="krs['note']"/></p><form t-if="krs['state'] == 'submitted'" t-att-action="'/my/perwalian/%s/putusan' % krs['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><label t-att-for="'note-%s' % krs['id']">Catatan (wajib jika dikembalikan)</label><textarea t-att-id="'note-%s' % krs['id']" name="note" rows="2"/><button class="o_triton_btn" name="action" value="approve" type="submit">Setujui</button><button class="o_triton_btn-ghost" name="action" value="reject" type="submit">Kembalikan</button></form></article></t></div><div t-else="" class="o_triton_empty"><p>Tidak ada KRS yang menunggu atau memerlukan tindak lanjut.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_teacher_analysis_page" name="Analisis Kelas Dosen">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Analisis kelas</span><h1>Ringkasan capaian CPMK</h1><p class="o_triton_subtitle">Agregat dibatasi pada kelas yang diampu akun ini.</p></div></header><div t-if="analysis" class="o_triton_grid-three"><t t-foreach="analysis" t-as="class_item"><article class="o_triton_panel"><h2 t-out="class_item['course']"/><span class="o_triton_badge" t-out="class_item['year']"/><ul class="o_triton_list"><t t-foreach="class_item['results']" t-as="result"><li><strong t-out="result['name']"/><br/>Rata-rata <t t-out="result['average']"/>% • <t t-out="result['below_target']"/> mahasiswa di bawah target 75%</li></t></ul></article></t></div><div t-else="" class="o_triton_empty"><p>Belum ada hasil penilaian untuk kelas yang diampu.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_khs" model="ir.actions.report">
+        <field name="name">Kartu Hasil Studi</field>
+        <field name="model">erpobe.report.khs</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">erpobe.triton_report_khs</field>
+        <field name="report_file">erpobe.triton_report_khs</field>
+        <field name="print_report_name">'KHS - %s' % (object.mahasiswa_id.name)</field>
+    </record>
+    <template id="triton_report_khs" name="Laporan KHS TRITON">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Kartu Hasil Studi dan Transkrip</h2>
+                        <p><strong>Mahasiswa:</strong> <span t-field="doc.mahasiswa_id"/></p>
+                        <p><strong>NIM:</strong> <span t-field="doc.nim"/> • <strong>Program studi:</strong> <span t-field="doc.prodi_id"/></p>
+                        <p><strong>Tahun ajaran laporan:</strong> <span t-field="doc.tahun_ajaran_id"/> • <strong>IPK:</strong> <span t-field="doc.ipk"/> • <strong>SKS lulus:</strong> <span t-field="doc.total_sks_lulus"/></p>
+                        <table class="table table-sm">
+                            <thead><tr><th>Semester kurikulum</th><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Nilai angka</th><th>Huruf</th><th>Bobot</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="doc.mk_line_ids" t-as="line">
+                                    <td t-field="line.semester_mk"/><td t-field="line.kode_mk"/><td t-field="line.mk_id"/><td t-field="line.sks"/><td t-field="line.nilai_angka"/><td t-field="line.nilai_huruf"/><td t-field="line.bobot"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3>Capaian CPL</h3>
+                        <table class="table table-sm">
+                            <thead><tr><th>CPL</th><th>Capaian</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="doc.cpl_line_ids" t-as="line"><td t-field="line.cpl_id"/><td t-field="line.nilai_angka"/></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <record id="action_report_rps" model="ir.actions.report">
+        <field name="name">Rencana Pembelajaran Semester</field>
+        <field name="model">erpobe.akademik.rps</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">erpobe.triton_report_rps</field>
+        <field name="report_file">erpobe.triton_report_rps</field>
+        <field name="print_report_name">'RPS - %s' % (object.matakuliah_id.name)</field>
+    </record>
+    <template id="triton_report_rps" name="Laporan RPS TRITON">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Rencana Pembelajaran Semester</h2>
+                        <p><strong>Mata kuliah:</strong> <span t-field="doc.matakuliah_id"/> • <strong>Kode:</strong> <span t-field="doc.kode_mk"/></p>
+                        <p><strong>Program studi:</strong> <span t-field="doc.prodi_id"/> • <strong>Tahun ajaran:</strong> <span t-field="doc.tahun_ajaran_id"/> • <strong>Versi:</strong> <span t-field="doc.version"/></p>
+                        <p><strong>Status:</strong> <span t-field="doc.status"/> • <strong>Bobot:</strong> <span t-field="doc.weight_status"/></p>
+                        <h3>Deskripsi Mata Kuliah</h3><p t-field="doc.deskripsi_mk"/>
+                        <h3>CPMK</h3>
+                        <ul><li t-foreach="doc.cpmk_ids" t-as="cpmk"><span t-field="cpmk.name"/></li></ul>
+                        <h3>Komponen Penilaian</h3>
+                        <ul><li t-foreach="doc.komponen_ids" t-as="component"><span t-field="component.name"/></li></ul>
+                        <h3>Kegiatan Perkuliahan</h3>
+                        <table class="table table-sm">
+                            <thead><tr><th>Minggu</th><th>Bahan Kajian</th><th>Metode</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="doc.kegiatan_perkuliahan_ids" t-as="activity"><td t-field="activity.minggu"/><td t-field="activity.bahan_kajian"/><td t-field="activity.metode_pembelajaran_id"/></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

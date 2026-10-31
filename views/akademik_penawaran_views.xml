@@ -59,6 +59,9 @@
                                     <field name="dosen_id"/>
                                     <field name="pengampu_ids" widget="many2many_tags"/>
                                     <field name="rombel_ids" widget="many2many_tags" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                                    <field name="jadwal_hari"/>
+                                    <field name="jam_mulai" widget="float_time"/>
+                                    <field name="jam_selesai" widget="float_time"/>
                                     <field name="tahun_ajaran_id" readonly="1"/>
                                     <field name="rps_status" widget="badge" readonly="1"/>
                                     <field name="rps_weight_status" widget="badge" readonly="1"/>
@@ -70,6 +73,9 @@
                                         <field name="penawaran_id" readonly="1"/>
                                         <field name="matakuliah_id" readonly="1"/>
                                         <field name="tahun_ajaran_id" readonly="1"/>
+                                        <field name="jadwal_hari"/>
+                                        <field name="jam_mulai" widget="float_time"/>
+                                        <field name="jam_selesai" widget="float_time"/>
                                         <field name="rps_status" widget="badge" readonly="1"/>
                                         <field name="rps_weight_status" widget="badge" readonly="1"/>
                                         <button name="action_create_rps" type="object" string="Buat RPS Baru"/>

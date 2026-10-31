@@ -315,14 +315,21 @@ class TestErpObeFacultyScope(TransactionCase):
         for model in (self.Mahasiswa, self.Rombel, self.Matakuliah):
             self.assertFalse(model.with_user(self.admin_without_faculty).search([]))
         self.assertFalse(self.Prodi.with_user(self.admin_without_faculty).search([]))
-        for model in (
-            self.Dosen,
-            self.Mahasiswa,
-            self.Rombel,
-            self.Matakuliah,
-            self.Prodi,
+        for model, records in (
+            (self.Dosen, self.dosen_a | self.dosen_b),
+            (self.Mahasiswa, self.mahasiswa_a | self.mahasiswa_b),
+            (self.Rombel, self.rombel_a | self.rombel_b),
+            (self.Matakuliah, self.mk_a | self.mk_b),
+            (self.Prodi, self.prodi_a | self.prodi_b),
         ):
-            self.assertEqual(len(model.with_user(self.superadmin).search([])), 2)
+            self.assertEqual(
+                len(
+                    model.with_user(self.superadmin).search(
+                        [("id", "in", records.ids)]
+                    )
+                ),
+                2,
+            )
         self.mk_b.with_user(self.superadmin).write({"name": "MK B diubah"})
         self.assertEqual(
             self.Dosen.with_user(self.dosen_a.user_id).search([]).ids, [self.dosen_a.id]
@@ -389,10 +396,20 @@ class TestErpObeFacultyScope(TransactionCase):
     def test_system_user_is_not_restricted(self):
         self.assertTrue(self.system_user.has_group("base.group_system"))
         self.assertEqual(
-            len(self.Faculty.with_user(self.system_user).search([])), 2
+            len(
+                self.Faculty.with_user(self.system_user).search(
+                    [("id", "in", (self.faculty_a | self.faculty_b).ids)]
+                )
+            ),
+            2,
         )
         self.assertEqual(
-            len(self.Dosen.with_user(self.system_user).search([])), 2
+            len(
+                self.Dosen.with_user(self.system_user).search(
+                    [("id", "in", (self.dosen_a | self.dosen_b).ids)]
+                )
+            ),
+            2,
         )
 
     def test_user_rule_and_profile_creation_remain_usable(self):
@@ -488,7 +505,7 @@ class TestErpObeFacultyScope(TransactionCase):
                     1,
                     f"{model_name} didefinisikan oleh lebih dari satu class.",
                 )
-            if "prodi_id" in model._fields:
+            if not model._transient and "prodi_id" in model._fields:
                 self.assertIn("fakultas_id", model._fields, model_name)
                 self.assertEqual(
                     model._fields["fakultas_id"].related,

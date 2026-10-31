@@ -1,0 +1,341 @@
+:root {
+  --triton-deep-ocean: #0A2540;
+  --triton-cyan: #00A8CC;
+  --triton-emerald: #2EC4B6;
+  --triton-slate: #2D3748;
+  --triton-bg: #F8FAFC;
+  --triton-gradient: linear-gradient(45deg, var(--triton-deep-ocean), var(--triton-cyan), var(--triton-emerald));
+  --triton-border: #D7E0E8;
+  --triton-shadow-soft: 0 4px 14px rgba(10, 37, 64, 0.1);
+  --triton-success-soft: #E5F8F5;
+  --triton-warning-soft: #FFF4E5;
+  --triton-error-soft: #FDECEC;
+  --triton-text: var(--triton-slate);
+  --triton-muted: #526174;
+  --triton-surface: #fff;
+  --triton-focus: var(--triton-cyan);
+  --triton-radius: 8px;
+  --triton-space: clamp(20px, 4vw, 36px);
+}
+
+.o_triton_page {
+  min-height: 100vh;
+  background: var(--triton-bg);
+  color: var(--triton-slate);
+  font-family: var(--body-font-family, system-ui, sans-serif);
+}
+
+.o_triton_page a {
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_page h1,
+.o_triton_page h2,
+.o_triton_page h3,
+.o_triton_brand {
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_container {
+  width: calc(100% - 32px);
+  max-width: 1180px;
+  margin-inline: auto;
+}
+
+.o_triton_navbar,
+.o_triton_portal-nav {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  color: var(--triton-deep-ocean);
+  border-bottom: 1px solid var(--triton-border);
+  box-shadow: none;
+}
+
+.o_triton_navbar a,
+.o_triton_portal-nav a {
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_navbar .o_triton_brand-copy small,
+.o_triton_portal-nav .o_triton_brand-copy small {
+  color: var(--triton-muted);
+}
+
+.o_triton_hero {
+  background: var(--triton-gradient);
+  padding-block: clamp(44px, 7vw, 76px);
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_hero .o_triton_container {
+  padding: clamp(20px, 4vw, 40px);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.o_triton_hero h1,
+.o_triton_hero p,
+.o_triton_hero .o_triton_kicker {
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_hero .o_triton_kicker {
+  border-color: var(--triton-border);
+  background: #fff;
+}
+
+.o_triton_btn,
+.o_triton_search button {
+  color: var(--triton-deep-ocean);
+  background: linear-gradient(#fff, #fff) padding-box, var(--triton-gradient) border-box;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.o_triton_btn-secondary {
+  color: var(--triton-deep-ocean);
+  background: #fff;
+  border: 1px solid var(--triton-border);
+  border-radius: 6px;
+}
+
+.o_triton_btn-ghost {
+  color: var(--triton-deep-ocean);
+  background: #fff;
+  border: 1px solid var(--triton-border);
+  border-radius: 6px;
+}
+
+.o_triton_stat-card,
+.o_triton_card,
+.o_triton_panel,
+.o_triton_result-card,
+.o_triton_profile-card,
+.o_triton_task-card,
+.o_triton_filter-card {
+  border: 1px solid var(--triton-border);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.o_triton_stat-grid {
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+.o_triton_section {
+  padding-block: clamp(36px, 6vw, 60px);
+}
+
+.o_triton_label,
+.o_triton_mini-card .o_triton_label {
+  display: block;
+  color: var(--triton-muted);
+}
+
+.o_triton_result-card .o_triton_meta,
+.o_triton_panel .o_triton_meta,
+.o_triton_profile-card .o_triton_meta,
+.o_triton_panel .o_triton_kpi {
+  color: var(--triton-slate);
+}
+
+.o_triton_form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.o_triton_page input,
+.o_triton_page select,
+.o_triton_page textarea {
+  border: 1px solid #8797A8;
+  border-radius: 6px;
+}
+
+.o_triton_page input:focus-visible,
+.o_triton_page select:focus-visible,
+.o_triton_page textarea:focus-visible,
+.o_triton_page button:focus-visible,
+.o_triton_page a:focus-visible,
+.o_triton_mobile-menu summary:focus-visible {
+  outline: 3px solid var(--triton-deep-ocean);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--triton-cyan);
+}
+
+.o_triton_chart_fill,
+.o_triton_bar-fill,
+.o_triton_trend-fill {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 12px;
+  appearance: none;
+  border: 0;
+  border-radius: inherit;
+  background: var(--triton-cyan);
+}
+
+.o_triton_chart-bar .o_triton_chart_fill {
+  max-width: 100%;
+}
+
+.o_triton_chart_fill::-webkit-meter-bar {
+  width: 100%;
+  height: 12px;
+  background: #E5EDF3;
+  border: 0;
+  border-radius: 4px;
+}
+
+.o_triton_chart_fill::-webkit-meter-optimum-value,
+.o_triton_chart_fill::-moz-meter-bar {
+  background: var(--triton-cyan);
+  border-radius: 4px;
+}
+
+.o_triton_bar-track,
+.o_triton_trend-track {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: 12px;
+  background: #E5EDF3;
+  border-radius: 4px;
+}
+
+.o_triton_bar-track::-webkit-meter-bar,
+.o_triton_trend-track::-webkit-meter-bar {
+  width: 100%;
+  height: 12px;
+  background: #E5EDF3;
+  border: 0;
+  border-radius: 4px;
+}
+
+.o_triton_bar-track::-webkit-meter-optimum-value,
+.o_triton_trend-track::-webkit-meter-optimum-value,
+.o_triton_bar-track::-moz-meter-bar,
+.o_triton_trend-track::-moz-meter-bar {
+  background: var(--triton-cyan);
+  border-radius: 4px;
+}
+
+.o_triton_heatmap .o_triton_score-met {
+  background: #E5F8F5;
+}
+
+.o_triton_heatmap .o_triton_score-low {
+  background: #FFF4E5;
+}
+
+.o_triton_heatmap .o_triton_score-empty {
+  background: #F1F5F9;
+  color: var(--triton-muted);
+}
+
+.o_triton_footer {
+  background: var(--triton-deep-ocean);
+  color: #fff;
+  padding-block: 36px 20px;
+}
+
+.o_triton_footer a,
+.o_triton_footer h2,
+.o_triton_footer .o_triton_brand {
+  color: #fff;
+}
+
+.o_triton_empty,
+.o_triton_empty-inline,
+.o_triton_error,
+.o_triton_warning-box,
+.o_triton_success {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.o_triton_radar-series {
+  fill: rgba(0, 168, 204, 0.16);
+  stroke: #00647A;
+}
+
+.o_triton_mobile-menu {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .o_triton_hero .o_triton_container,
+  .o_triton_two-col,
+  .o_triton_grid-three,
+  .o_triton_score-grid,
+  .o_triton_feature-grid,
+  .o_triton_footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .o_triton_mobile-menu {
+    display: block;
+  }
+
+  .o_triton_mobile-menu summary {
+    color: var(--triton-deep-ocean);
+    border-color: var(--triton-border);
+  }
+
+  .o_triton_mobile-menu[open] .o_triton_nav-links {
+    background: #fff;
+    border: 1px solid var(--triton-border);
+  }
+
+  .o_triton_mobile-menu[open] .o_triton_nav-links a {
+    color: var(--triton-deep-ocean);
+  }
+
+  .o_triton_desktop-links {
+    display: none;
+  }
+
+  .o_triton_stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .o_triton_search {
+    flex-direction: column;
+  }
+
+  .o_triton_search select,
+  .o_triton_search button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .o_triton_container {
+    width: calc(100% - 24px);
+  }
+
+  .o_triton_stat-grid,
+  .o_triton_form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .o_triton_panel,
+  .o_triton_card,
+  .o_triton_task-card,
+  .o_triton_filter-card {
+    padding: 16px;
+  }
+}
+
+@media print {
+  .o_triton_navbar,
+  .o_triton_portal-nav,
+  .o_triton_footer,
+  .o_triton_comparison-actions {
+    display: none !important;
+  }
+}

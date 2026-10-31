@@ -320,6 +320,7 @@ class ErpObeAkademikRps(models.Model):
         if (
             any(record.status == "review" for record in self)
             and vals.get("status") not in ("review", "final")
+            and not self.env.context.get("preserve_rps_review_status")
         ):
             vals = {**vals, "status": "draft"}
         if vals.get("status") == "final":
@@ -447,6 +448,9 @@ class ErpObeAkademikMetodePembelajaran(models.Model):
     prodi_id = fields.Many2one(
         "erpobe.master.prodi", string="Program Studi", index=True
     )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
 
     _uniq_name_constraint = models.Constraint('unique(name)', 'Nama metode sudah ada')
 
@@ -468,6 +472,9 @@ class ErpObeAkademikReferensi(models.Model):
     )
     prodi_id = fields.Many2one(
         "erpobe.master.prodi", string="Program Studi", index=True
+    )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
 

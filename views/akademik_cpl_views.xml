@@ -7,6 +7,7 @@
             <search string="Capaian Pembelajaran Lulusan">
                 <field name="kode_cpl"/>
                 <field name="name"/>
+                <field name="jenis_cpl"/>
                 <field name="prodi_id"/>
                 <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
             </search>
@@ -19,6 +20,7 @@
             <list string="Capaian Pembelajaran Lulusan">
                 <field name="kode_cpl"/>
                 <field name="name"/>
+                <field name="jenis_cpl"/>
                 <field name="prodi_id"/>
             </list>
         </field>
@@ -37,6 +39,7 @@
                     </div>
                     <group>
                         <field name="prodi_id"/>
+                        <field name="jenis_cpl"/>
                         <field name="name"/>
                     </group>
                     <notebook>

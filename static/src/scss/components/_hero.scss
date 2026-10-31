@@ -1,0 +1,139 @@
+.o_triton_hero {
+  padding: 84px 0 42px;
+  background: var(--triton-gradient);
+  color: #fff;
+}
+
+.o_triton_kicker {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.o_triton_hero h1 {
+  margin: 22px 0 14px;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: #fff;
+}
+
+.o_triton_hero p {
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 640px;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.o_triton_hero-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.o_triton_search {
+  margin-top: 28px;
+  display: flex;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  padding: 10px 12px;
+  gap: 10px;
+  max-width: 760px;
+}
+
+.o_triton_search input,
+.o_triton_search select,
+.o_triton_form input,
+.o_triton_form select,
+.o_triton_form textarea {
+  border: 1px solid var(--triton-border);
+  background: #fff;
+  border-radius: 10px;
+  padding: 13px 14px;
+  min-height: 48px;
+}
+
+.o_triton_search input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.o_triton_search select {
+  max-width: 190px;
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.o_triton_search button {
+  border: 0;
+  border-radius: 12px;
+  background: var(--triton-cyan);
+  color: #fff;
+  font-weight: 700;
+  padding: 0 18px;
+  min-width: 140px;
+}
+
+.o_triton_hero-panel {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: var(--triton-shadow-soft);
+}
+
+.o_triton_stat-grid,
+.o_triton_grid-three,
+.o_triton_feature-grid,
+.o_triton_cta-grid,
+.o_triton_score-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.o_triton_cta-block {
+  padding: 32px;
+  border-radius: 24px;
+  background: linear-gradient(45deg, var(--triton-deep-ocean), rgba(0, 168, 204, 0.9));
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.o_triton_search-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.o_triton_search-tabs label {
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 8px 13px;
+  color: #fff;
+}
+
+.o_triton_search-tabs input {
+  width: 1px;
+  height: 1px;
+  min-height: auto;
+  margin: 0 4px 0 0;
+  padding: 0;
+}
+
+.o_triton_search-tabs label:has(input:checked) {
+  background: #fff;
+  color: var(--triton-deep-ocean);
+}

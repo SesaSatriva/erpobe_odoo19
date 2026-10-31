@@ -1,0 +1,63 @@
+.o_triton_badge-success {
+  background: var(--triton-success-soft);
+  color: #0f766e;
+}
+
+.o_triton_privacy-note {
+  border-left: 4px solid var(--triton-cyan);
+  background: rgba(0, 168, 204, 0.05);
+  padding: 16px 18px;
+  border-radius: 14px;
+  color: var(--triton-slate);
+}
+
+.o_triton_badge-warning,
+.o_triton_warning {
+  background: var(--triton-warning-soft);
+  color: #704b00;
+}
+
+.o_triton_warning-box,
+.o_triton_error {
+  margin: 18px 0;
+  border: 1px solid #b54708;
+  border-left: 5px solid #b54708;
+  border-radius: 12px;
+  background: #fff8eb;
+  color: #512f00;
+  padding: 14px 18px;
+}
+
+.o_triton_success {
+  margin: 18px 0;
+  border-left: 5px solid #0f766e;
+  border-radius: 12px;
+  background: var(--triton-success-soft);
+  color: #075e57;
+  padding: 14px 18px;
+}
+
+.o_triton_empty {
+  border: 1px dashed #9aa8b7;
+  border-radius: var(--triton-radius);
+  background: #fff;
+  color: var(--triton-text);
+  padding: 32px;
+  text-align: center;
+}
+
+.o_triton_empty h2 {
+  margin-top: 0;
+}
+
+.o_triton_skeleton {
+  min-height: 18px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e8eef4 25%, #f6f8fa 50%, #e8eef4 75%);
+  background-size: 200% 100%;
+  animation: o_triton_skeleton 1.4s ease infinite;
+}
+
+@keyframes o_triton_skeleton {
+  to { background-position: -200% 0; }
+}

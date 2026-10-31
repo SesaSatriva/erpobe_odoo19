@@ -1,0 +1,298 @@
+.o_triton_btn,
+.o_triton_btn-secondary,
+.o_triton_btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.o_triton_btn {
+  background: var(--triton-gradient);
+  color: #fff;
+  box-shadow: var(--triton-shadow-soft);
+}
+
+.o_triton_btn:hover,
+.o_triton_btn-secondary:hover,
+.o_triton_btn-ghost:hover {
+  transform: translateY(-1px);
+}
+
+.o_triton_btn-secondary {
+  background: rgba(0, 168, 204, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.o_triton_btn-ghost {
+  background: transparent;
+  color: var(--triton-slate);
+  border-color: var(--triton-border);
+}
+
+.o_triton_mini-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.o_triton_mini-card + .o_triton_mini-card {
+  margin-top: 16px;
+}
+
+.o_triton_mini-card .o_triton_label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.o_triton_mini-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.8rem;
+}
+
+.o_triton_section {
+  padding: 60px 0;
+}
+
+.o_triton_stat-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin-top: -24px;
+}
+
+.o_triton_stat-card,
+.o_triton_card,
+.o_triton_panel,
+.o_triton_result-card,
+.o_triton_profile-card,
+.o_triton_task-card,
+.o_triton_filter-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--triton-border);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+}
+
+.o_triton_stat-card {
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.o_triton_stat-card span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(45, 55, 72, 0.7);
+}
+
+.o_triton_stat-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(1.3rem, 2vw, 2.2rem);
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.o_triton_heading h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_subtitle {
+  margin: 0;
+  color: #4a5568;
+}
+
+.o_triton_grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.o_triton_feature-grid,
+.o_triton_score-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.o_triton_card,
+.o_triton_panel,
+.o_triton_result-card,
+.o_triton_profile-card,
+.o_triton_task-card,
+.o_triton_filter-card {
+  padding: 24px;
+}
+
+.o_triton_result-card .o_triton_meta,
+.o_triton_panel .o_triton_meta,
+.o_triton_profile-card .o_triton_meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: rgba(45, 55, 72, 0.8);
+  font-size: 0.88rem;
+}
+
+.o_triton_badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(0, 168, 204, 0.1);
+  color: var(--triton-deep-ocean);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.o_triton_table-wrap {
+  overflow-x: auto;
+}
+
+.o_triton_table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.o_triton_table th,
+.o_triton_table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--triton-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.o_triton_table thead th {
+  background: rgba(10, 37, 64, 0.04);
+  color: var(--triton-deep-ocean);
+  font-weight: 800;
+}
+
+.o_triton_two-col {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 28px;
+}
+
+.o_triton_form {
+  display: grid;
+  gap: 14px;
+}
+
+.o_triton_form .o_triton_form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.o_triton_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.o_triton_list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--triton-border);
+}
+
+.o_triton_panel .o_triton_kpi {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_page h1,
+.o_triton_page h2,
+.o_triton_page h3 {
+  color: var(--triton-deep-ocean);
+  line-height: 1.2;
+}
+
+.o_triton_heading h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.o_triton_heading h2 {
+  line-height: 1.2;
+}
+
+.o_triton_btn {
+  color: var(--triton-deep-ocean);
+  font-weight: 800;
+}
+
+.o_triton_section-heading {
+  margin-top: var(--triton-space);
+}
+
+.o_triton_subtitle,
+.o_triton_caption {
+  color: var(--triton-muted);
+  line-height: 1.65;
+}
+
+.o_triton_caption {
+  font-size: 0.9rem;
+}
+
+.o_triton_panel,
+.o_triton_card,
+.o_triton_result-card,
+.o_triton_profile-card,
+.o_triton_task-card,
+.o_triton_filter-card,
+.o_triton_stat-card {
+  background: var(--triton-surface);
+  border: 1px solid var(--triton-border);
+  border-radius: var(--triton-radius);
+  box-shadow: 0 10px 28px rgba(10, 37, 64, 0.06);
+}
+
+.o_triton_stat-card span {
+  color: #435368;
+}
+
+.o_triton_table {
+  color: var(--triton-text);
+}
+
+.o_triton_table tbody tr:hover {
+  background: rgba(0, 168, 204, 0.045);
+}
+
+.o_triton_filter-card form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  align-items: end;
+  gap: 14px;
+}
+
+.o_triton_filter-card label,
+.o_triton_panel form label {
+  display: grid;
+  gap: 6px;
+  color: var(--triton-deep-ocean);
+  font-weight: 650;
+}

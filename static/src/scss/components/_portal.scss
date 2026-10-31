@@ -1,0 +1,58 @@
+.o_triton_portal-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 16px;
+  background: var(--triton-deep-ocean);
+  color: #fff;
+}
+
+.o_triton_portal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.o_triton_portal-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 650;
+}
+
+.o_triton_portal-shortcuts a {
+  border: 1px solid var(--triton-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px 16px;
+  color: var(--triton-deep-ocean);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.o_triton_checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.o_triton_grade-input {
+  width: 92px;
+  min-height: 42px;
+}
+
+.o_triton_private-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.o_triton_private-score strong {
+  color: var(--triton-deep-ocean);
+  font-size: 1.8rem;
+}

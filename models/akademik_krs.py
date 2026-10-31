@@ -35,6 +35,19 @@ class ErpObeAkademikKrs(models.Model):
     line_ids = fields.One2many(
         "erpobe.akademik.krs.line", "krs_id", string="Mata Kuliah Diambil"
     )
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("submitted", "Menunggu Persetujuan"),
+            ("approved", "Disetujui"),
+            ("rejected", "Perlu Perbaikan"),
+        ],
+        string="Status Persetujuan",
+        default="draft",
+        required=True,
+        tracking=True,
+    )
+    advisor_note = fields.Text(string="Catatan Dosen Wali", tracking=True)
 
     total_sks = fields.Integer(compute="_compute_total_sks", store=True)
     max_sks_allowed = fields.Integer(default=24, string="Max SKS", tracking=True)
@@ -76,8 +89,92 @@ class ErpObeAkademikKrs(models.Model):
 
     _uniq_mhs_penawaran_constraint = models.Constraint('unique(mahasiswa_id, penawaran_id)', 'Mahasiswa ini sudah memiliki KRS untuk Penawaran tersebut!')
 
+    def _check_student_owner(self):
+        if self.env.user.has_group("erpobe.group_mahasiswa"):
+            if any(record.mahasiswa_id.user_id != self.env.user for record in self):
+                raise ValidationError("Anda hanya dapat mengakses KRS milik sendiri.")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._check_student_owner()
+        return records
+
+    def write(self, vals):
+        self._check_student_owner()
+        if (
+            self.env.user.has_group("erpobe.group_mahasiswa")
+            and "state" in vals
+            and not self.env.context.get("allow_krs_state_change")
+        ):
+            raise ValidationError(
+                "Status KRS hanya dapat diubah melalui alur pengajuan."
+            )
+        if (
+            self.env.user.has_group("erpobe.group_mahasiswa")
+            and any(record.state not in ("draft", "rejected") for record in self)
+            and any(key in vals for key in ("line_ids", "penawaran_id", "max_sks_allowed"))
+        ):
+            raise ValidationError(
+                "KRS yang sudah diajukan tidak dapat diubah sebelum dikembalikan."
+            )
+        return super().write(vals)
+
+    def action_submit(self):
+        self._check_student_owner()
+        for record in self:
+            if record.state not in ("draft", "rejected"):
+                raise ValidationError("KRS ini tidak berada dalam status yang dapat diajukan.")
+            if not record.line_ids:
+                raise ValidationError("Tambahkan mata kuliah sebelum mengajukan KRS.")
+            if record.total_sks > record.max_sks_allowed:
+                raise ValidationError("Total SKS melebihi batas yang diizinkan.")
+            record.sudo().with_context(allow_krs_state_change=True).write(
+                {"state": "submitted", "advisor_note": False}
+            )
+        return True
+
+    def _check_advisor_access(self):
+        if self.env.user.has_group("erpobe.group_admin") or self.env.user.has_group(
+            "erpobe.group_superadmin"
+        ) or self.env.user.has_group("base.group_system"):
+            return
+        if not self.env.user.has_group("erpobe.group_dosen"):
+            raise ValidationError("Hanya dosen wali yang dapat memproses persetujuan KRS.")
+        advisor = self.env["erpobe.master.dosen"].search(
+            [("user_id", "=", self.env.user.id)], limit=1
+        )
+        if not advisor or any(
+            record.mahasiswa_id.dosen_wali_id != advisor
+            for record in self.sudo()
+        ):
+            raise ValidationError("KRS ini bukan milik mahasiswa bimbingan Anda.")
+
+    def action_approve(self):
+        self._check_advisor_access()
+        if any(record.state != "submitted" for record in self):
+            raise ValidationError("Hanya KRS yang menunggu persetujuan yang dapat disetujui.")
+        self.sudo().with_context(allow_krs_state_change=True).write(
+            {"state": "approved"}
+        )
+        return True
+
+    def action_reject(self, note):
+        self._check_advisor_access()
+        if any(record.state != "submitted" for record in self):
+            raise ValidationError("Hanya KRS yang menunggu persetujuan yang dapat dikembalikan.")
+        if not note or not note.strip():
+            raise ValidationError("Catatan penolakan wajib diisi.")
+        self.sudo().with_context(allow_krs_state_change=True).write(
+            {"state": "rejected", "advisor_note": note.strip()}
+        )
+        return True
+
     def action_ambil_paket(self):
         self.ensure_one()
+        self._check_student_owner()
+        if self.state not in ("draft", "rejected"):
+            raise ValidationError("KRS yang sudah diajukan tidak dapat diubah.")
         if not self.penawaran_id or not self.rombel_id:
             raise ValidationError("Pastikan Penawaran dan Mahasiswa sudah terisi.")
 
@@ -165,8 +262,70 @@ class ErpObeAkademikKrsLine(models.Model):
                     "Mata kuliah KRS dan mahasiswa harus berada di prodi yang sama."
                 )
 
+    @api.constrains("krs_id", "penawaran_line_id", "status_pengambilan")
+    def _check_prerequisite_and_schedule(self):
+        for record in self:
+            student = record.mahasiswa_id
+            course = record.matakuliah_id
+            if not student or not course:
+                continue
+            if record.status_pengambilan != "ulang":
+                threshold = float(
+                    self.env["ir.config_parameter"].sudo().get_param(
+                        "erpobe.krs.minimum_passing_score", "60"
+                    )
+                )
+                for prerequisite in course.mk_prasyarat_ids:
+                    prior_grade = self.env["erpobe.grade.mk"].search(
+                        [
+                            ("mahasiswa_id", "=", student.id),
+                            ("mk_id", "=", prerequisite.id),
+                        ],
+                        limit=1,
+                    )
+                    if not prior_grade or prior_grade.nilai_mk < threshold:
+                        raise ValidationError(
+                            f"Prasyarat {prerequisite.display_name} belum lulus."
+                        )
+
+            offer_line = record.penawaran_line_id
+            day = offer_line.jadwal_hari
+            start = offer_line.jam_mulai
+            end = offer_line.jam_selesai
+            if not day or start is False or end is False:
+                continue
+            conflict = self.search(
+                [
+                    ("id", "!=", record.id),
+                    ("mahasiswa_id", "=", student.id),
+                    ("penawaran_line_id.jadwal_hari", "=", day),
+                    (
+                        "penawaran_line_id.tahun_ajaran_id",
+                        "=",
+                        offer_line.tahun_ajaran_id.id,
+                    ),
+                    ("penawaran_line_id.jam_mulai", "<", end),
+                    ("penawaran_line_id.jam_selesai", ">", start),
+                ],
+                limit=1,
+            )
+            if conflict:
+                raise ValidationError(
+                    f"Jadwal bentrok dengan {conflict.matakuliah_id.display_name}."
+                )
+
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.user.has_group("erpobe.group_mahasiswa"):
+            student = self.env["erpobe.master.mahasiswa"].search(
+                [("user_id", "=", self.env.user.id)], limit=1
+            )
+            if not student or any(
+                self.env["erpobe.akademik.krs"].browse(vals.get("krs_id")).mahasiswa_id
+                != student
+                for vals in vals_list
+            ):
+                raise ValidationError("Anda hanya dapat menambah mata kuliah pada KRS sendiri.")
         records = super().create(vals_list)
         for rec in records:
             if rec.penawaran_line_id and rec.mahasiswa_id:
@@ -176,6 +335,11 @@ class ErpObeAkademikKrsLine(models.Model):
         return records
 
     def write(self, vals):
+        if self.env.user.has_group("erpobe.group_mahasiswa"):
+            if any(record.mahasiswa_id.user_id != self.env.user for record in self):
+                raise ValidationError("Anda hanya dapat mengubah KRS milik sendiri.")
+            if any(record.krs_id.state not in ("draft", "rejected") for record in self):
+                raise ValidationError("KRS yang sudah diajukan tidak dapat diubah.")
         # Snapshot kelas lama sebelum update
         old_kelas_map = {}
         if "penawaran_line_id" in vals:
@@ -202,6 +366,11 @@ class ErpObeAkademikKrsLine(models.Model):
         return res
 
     def unlink(self):
+        if self.env.user.has_group("erpobe.group_mahasiswa"):
+            if any(record.mahasiswa_id.user_id != self.env.user for record in self):
+                raise ValidationError("Anda hanya dapat mengubah KRS milik sendiri.")
+            if any(record.krs_id.state not in ("draft", "rejected") for record in self):
+                raise ValidationError("KRS yang sudah diajukan tidak dapat diubah.")
         for rec in self:
             if rec.penawaran_line_id and rec.mahasiswa_id:
                 rec.penawaran_line_id.write(

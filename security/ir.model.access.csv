@@ -29,7 +29,7 @@ access_kriteria_mahasiswa,access.kriteria.mahasiswa,model_erpobe_akademik_kriter
 access_erpobe_akademik_krs_settings,erpobe.akademik.krs settings,model_erpobe_akademik_krs,base.group_system,1,1,1,1
 access_krs_admin,access.krs.admin,model_erpobe_akademik_krs,erpobe.group_admin,1,1,1,1
 access_krs_dosen,access.krs.dosen,model_erpobe_akademik_krs,erpobe.group_dosen,1,0,0,0
-access_krs_mahasiswa,access.krs.mahasiswa,model_erpobe_akademik_krs,erpobe.group_mahasiswa,1,1,1,0
+access_krs_mahasiswa,access.krs.mahasiswa,model_erpobe_akademik_krs,erpobe.group_mahasiswa,1,0,1,0
 access_erpobe_akademik_krs_line_settings,erpobe.akademik.krs.line settings,model_erpobe_akademik_krs_line,base.group_system,1,1,1,1
 access_erpobe_akademik_krs_line_admin,access.erpobe.akademik.krs.line.admin,model_erpobe_akademik_krs_line,erpobe.group_admin,1,1,1,1
 access_erpobe_akademik_krs_line_dosen,access.erpobe.akademik.krs.line.dosen,model_erpobe_akademik_krs_line,erpobe.group_dosen,1,0,0,0

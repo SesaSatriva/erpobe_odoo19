@@ -5,6 +5,20 @@ from odoo.fields import Domain
 from .faculty_access import _check_prodi_write_access
 
 
+class ErpObeResConfigSettings(models.TransientModel):
+    _inherit = "res.config.settings"
+
+    triton_public_people_enabled = fields.Boolean(
+        string="Tampilkan daftar dosen dan mahasiswa di situs publik",
+        config_parameter="erpobe.triton.public_people_enabled",
+        default=False,
+        help=(
+            "Jika dinonaktifkan, halaman publik tetap menampilkan statistik "
+            "agregat, tetapi tidak menampilkan daftar atau profil individu."
+        ),
+    )
+
+
 def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_field):
     partner = profile.partner_id
     if not partner.email:
@@ -174,6 +188,17 @@ class ErpobeDosen(models.Model):
     user_id = fields.Many2one("res.users", readonly=True)
     partner_id = fields.Many2one("res.partner", required=True, ondelete="cascade")
     nip = fields.Char(required=True)
+    jabatan_fungsional = fields.Char(string="Jabatan Fungsional")
+    is_public_visible = fields.Boolean(
+        string="Tampil di halaman publik",
+        default=True,
+        help="Mengaktifkan atau menonaktifkan profil publik di halaman TRITON.",
+    )
+    public_opt_out = fields.Boolean(
+        string="Opt-out publik",
+        default=False,
+        help="Jika aktif, nama tidak ditampilkan di daftar publik meski profil masih aktif.",
+    )
 
     _nip_unique = models.Constraint("UNIQUE (nip)", "NIP tidak boleh duplikat.")
 
@@ -286,6 +311,32 @@ class ErpobeMahasiswa(models.Model):
     user_id = fields.Many2one("res.users", readonly=True)
     partner_id = fields.Many2one("res.partner", required=True, ondelete="cascade")
     nim = fields.Char(required=True)
+    status_akademik = fields.Selection(
+        [
+            ("aktif", "Aktif"),
+            ("lulus", "Lulus"),
+            ("cuti", "Cuti"),
+        ],
+        string="Status Akademik",
+        default="aktif",
+        required=True,
+    )
+    dosen_wali_id = fields.Many2one(
+        "erpobe.master.dosen",
+        string="Dosen Wali",
+        ondelete="set null",
+        domain="[('prodi_ids', 'in', prodi_id)]",
+    )
+    is_public_visible = fields.Boolean(
+        string="Tampil di halaman publik",
+        default=True,
+        help="Mengaktifkan atau menonaktifkan profil publik di halaman TRITON.",
+    )
+    public_opt_out = fields.Boolean(
+        string="Opt-out publik",
+        default=False,
+        help="Jika aktif, nama tidak ditampilkan di daftar publik meski profil masih aktif.",
+    )
 
     rombel_id = fields.Many2one("erpobe.master.rombel", required=True)
     angkatan = fields.Integer(related="rombel_id.angkatan", store=True, readonly=True)

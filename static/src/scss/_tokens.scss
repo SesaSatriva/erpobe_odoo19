@@ -1,0 +1,57 @@
+:root {
+  --triton-deep-ocean: #0A2540;
+  --triton-cyan: #00A8CC;
+  --triton-emerald: #2EC4B6;
+  --triton-slate: #2D3748;
+  --triton-bg: #F8FAFC;
+  --triton-gradient: linear-gradient(45deg, #0A2540, #00A8CC, #2EC4B6);
+  --triton-border: rgba(13, 35, 57, 0.08);
+  --triton-shadow-soft: 0 18px 40px rgba(10, 37, 64, 0.12);
+  --triton-success-soft: rgba(46, 196, 182, 0.12);
+  --triton-warning-soft: rgba(255, 184, 77, 0.12);
+  --triton-error-soft: rgba(220, 53, 69, 0.12);
+}
+
+.o_triton_page {
+  background: var(--triton-bg);
+}
+
+.o_triton_container {
+  width: calc(100% - 32px);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.o_triton_hero .o_triton_container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 36px;
+  align-items: center;
+}
+
+:root {
+  --triton-text: #2D3748;
+  --triton-muted: #526174;
+  --triton-surface: #fff;
+  --triton-focus: #00A8CC;
+  --triton-radius: 16px;
+  --triton-space: clamp(20px, 4vw, 36px);
+}
+
+.o_triton_btn:focus-visible,
+.o_triton_btn-secondary:focus-visible,
+.o_triton_btn-ghost:focus-visible,
+.o_triton_navbar a:focus-visible,
+.o_triton_footer a:focus-visible,
+.o_triton_portal-nav a:focus-visible,
+.o_triton_mobile-menu summary:focus-visible,
+.o_triton_search input:focus-visible,
+.o_triton_search select:focus-visible,
+.o_triton_page input:focus-visible,
+.o_triton_page select:focus-visible,
+.o_triton_page textarea:focus-visible,
+.o_triton_page button:focus-visible {
+  outline: 3px solid #00A8CC;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(248, 250, 252, 0.9);
+}

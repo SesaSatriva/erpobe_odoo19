@@ -77,7 +77,13 @@
         <field name="name">erpobe.master.mahasiswa: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_master_mahasiswa"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen'))]"/>
+    </record>
+    <record id="erpobe_master_mahasiswa_own" model="ir.rule">
+        <field name="name">erpobe.master.mahasiswa: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_master_mahasiswa"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_master_mahasiswa_superadmin_global" model="ir.rule">
         <field name="name">erpobe.master.mahasiswa: Superadmin global</field>
@@ -293,7 +299,13 @@
         <field name="name">erpobe.akademik.krs: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_akademik_krs"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_akademik_krs_own" model="ir.rule">
+        <field name="name">erpobe.akademik.krs: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_akademik_krs"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_akademik_krs_superadmin_global" model="ir.rule">
         <field name="name">erpobe.akademik.krs: Superadmin global</field>
@@ -311,7 +323,13 @@
         <field name="name">erpobe.akademik.krs.line: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_akademik_krs_line"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_akademik_krs_line_own" model="ir.rule">
+        <field name="name">erpobe.akademik.krs.line: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_akademik_krs_line"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_akademik_krs_line_superadmin_global" model="ir.rule">
         <field name="name">erpobe.akademik.krs.line: Superadmin global</field>
@@ -389,7 +407,7 @@
         <field name="name">erpobe.input.nilai: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_input_nilai"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
     </record>
     <record id="erpobe_input_nilai_superadmin_global" model="ir.rule">
         <field name="name">erpobe.input.nilai: Superadmin global</field>
@@ -407,7 +425,7 @@
         <field name="name">erpobe.grade.komponen: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_grade_komponen"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
     </record>
     <record id="erpobe_grade_komponen_superadmin_global" model="ir.rule">
         <field name="name">erpobe.grade.komponen: Superadmin global</field>
@@ -425,7 +443,13 @@
         <field name="name">erpobe.grade.cpmk: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_grade_cpmk"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin')])]"/>
+    </record>
+    <record id="erpobe_grade_cpmk_own" model="ir.rule">
+        <field name="name">erpobe.grade.cpmk: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_grade_cpmk"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_grade_cpmk_superadmin_global" model="ir.rule">
         <field name="name">erpobe.grade.cpmk: Superadmin global</field>
@@ -443,7 +467,13 @@
         <field name="name">erpobe.grade.cpl: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_grade_cpl"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_grade_cpl_own" model="ir.rule">
+        <field name="name">erpobe.grade.cpl: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_grade_cpl"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_grade_cpl_superadmin_global" model="ir.rule">
         <field name="name">erpobe.grade.cpl: Superadmin global</field>
@@ -461,7 +491,13 @@
         <field name="name">erpobe.grade.mk: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_grade_mk"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin')])]"/>
+    </record>
+    <record id="erpobe_grade_mk_own" model="ir.rule">
+        <field name="name">erpobe.grade.mk: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_grade_mk"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_grade_mk_superadmin_global" model="ir.rule">
         <field name="name">erpobe.grade.mk: Superadmin global</field>
@@ -587,7 +623,13 @@
         <field name="name">erpobe.report.khs: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_report_khs"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_report_khs_own" model="ir.rule">
+        <field name="name">erpobe.report.khs: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_report_khs"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_report_khs_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs: Superadmin global</field>
@@ -605,7 +647,13 @@
         <field name="name">erpobe.report.khs.mk: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_report_khs_mk"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_report_khs_mk_own" model="ir.rule">
+        <field name="name">erpobe.report.khs.mk: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_report_khs_mk"/>
+        <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_report_khs_mk_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.mk: Superadmin global</field>
@@ -623,7 +671,13 @@
         <field name="name">erpobe.report.khs.cpmk: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_report_khs_cpmk"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_report_khs_cpmk_own" model="ir.rule">
+        <field name="name">erpobe.report.khs.cpmk: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_report_khs_cpmk"/>
+        <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_report_khs_cpmk_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.cpmk: Superadmin global</field>
@@ -641,7 +695,13 @@
         <field name="name">erpobe.report.khs.cpl: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_report_khs_cpl"/>
         <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+    </record>
+    <record id="erpobe_report_khs_cpl_own" model="ir.rule">
+        <field name="name">erpobe.report.khs.cpl: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_report_khs_cpl"/>
+        <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
     </record>
     <record id="erpobe_report_khs_cpl_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.cpl: Superadmin global</field>

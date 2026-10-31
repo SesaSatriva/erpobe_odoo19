@@ -266,7 +266,8 @@ class ErpObeImportExportMixin(models.AbstractModel):
         missing = [
             column["label"]
             for column in self._get_columns()
-            if self._normalize_header(column["label"]) not in mapped
+            if column.get("required")
+            and self._normalize_header(column["label"]) not in mapped
         ]
         messages = []
         if missing:
@@ -689,8 +690,8 @@ class ErpObeImportExportMixin(models.AbstractModel):
             for column in self._get_columns()
             if column["type"] in {"many2one", "many2many"}
         ]
+        reference_sheet = workbook.add_worksheet("Referensi")
         if relation_columns:
-            reference_sheet = workbook.add_worksheet("Referensi")
             for column_index, spec in enumerate(relation_columns):
                 relation_model = self.env[spec["relation"]]
                 lookup_field = spec.get("lookup_field", "name")
@@ -713,6 +714,10 @@ class ErpObeImportExportMixin(models.AbstractModel):
                         str(record.display_name or ""),
                     )
                 reference_sheet.set_column(column_index * 2, column_index * 2 + 1, 28)
+        else:
+            reference_sheet.write_string(
+                0, 0, "Tidak ada kolom relasi untuk referensi."
+            )
         workbook.close()
         return output.getvalue()
 

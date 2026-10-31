@@ -7,6 +7,19 @@ class ErpObeAkademikCpl(models.Model):
 
     name = fields.Text(string="Deskripsi CPL", required=True)
     kode_cpl = fields.Char(string="Kode CPL", required=True, index=True)
+    jenis_cpl = fields.Selection(
+        [
+            ("sikap", "Sikap"),
+            ("pengetahuan", "Pengetahuan"),
+            ("keterampilan_umum", "Keterampilan Umum"),
+            ("keterampilan_khusus", "Keterampilan Khusus"),
+            ("lainnya", "Lainnya"),
+        ],
+        string="Jenis CPL",
+        default="lainnya",
+        required=True,
+        index=True,
+    )
     prodi_id = fields.Many2one(
         "erpobe.master.prodi", required=True, ondelete="restrict", index=True
     )

@@ -25,6 +25,9 @@ class ErpObeAkademikPenawaran(models.Model):
         index=True,
         default=lambda self: self.env.context.get("default_prodi_id"),
     )
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
     semester_akademik = fields.Selection(
         related="tahun_ajaran.semester",
         store=True,
@@ -230,6 +233,8 @@ class ErpObeAkademikPenawaranLine(models.Model):
         "erpobe.akademik.rps",
         string="RPS Aktif",
         compute="_compute_rps_status",
+        store=True,
+        compute_sudo=True,
     )
     rps_status = fields.Selection(
         [
@@ -240,12 +245,10 @@ class ErpObeAkademikPenawaranLine(models.Model):
         ],
         string="Status RPS",
         compute="_compute_rps_status",
+        store=True,
+        compute_sudo=True,
     )
     rps_weight_status = fields.Selection(
-        [
-            ("complete", "Bobot Lengkap"),
-            ("incomplete", "Bobot Belum Lengkap"),
-        ],
         string="Kelengkapan Bobot",
         related="latest_rps_id.weight_status",
     )
@@ -260,6 +263,20 @@ class ErpObeAkademikPenawaranLine(models.Model):
         related="matakuliah_id.tim_pengampu_ids",
         readonly=True,
     )
+    jadwal_hari = fields.Selection(
+        [
+            ("senin", "Senin"),
+            ("selasa", "Selasa"),
+            ("rabu", "Rabu"),
+            ("kamis", "Kamis"),
+            ("jumat", "Jumat"),
+            ("sabtu", "Sabtu"),
+            ("minggu", "Minggu"),
+        ],
+        string="Hari Kuliah",
+    )
+    jam_mulai = fields.Float(string="Jam Mulai", help="Gunakan format jam desimal, mis. 8.5 untuk 08.30.")
+    jam_selesai = fields.Float(string="Jam Selesai", help="Gunakan format jam desimal, mis. 10.0 untuk 10.00.")
     mahasiswa_ids = fields.Many2many(
         "erpobe.master.mahasiswa",
         "erpobe_penawaran_line_mahasiswa_rel",
@@ -316,9 +333,7 @@ class ErpObeAkademikPenawaranLine(models.Model):
             "context": {"default_penawaran_line_id": self.id},
         }
 
-    @api.constrains(
-        "matakuliah_id", "rombel_ids", "dosen_id", "pengampu_ids", "mahasiswa_ids"
-    )
+    @api.constrains("matakuliah_id", "rombel_ids", "mahasiswa_ids")
     def _check_penawaran_faculty(self):
         for record in self:
             if any(
@@ -352,6 +367,18 @@ class ErpObeAkademikPenawaranLine(models.Model):
             ):
                 raise ValidationError(
                     "Mata kuliah penawaran harus berasal dari prodi penawaran."
+                )
+
+    @api.constrains("jadwal_hari", "jam_mulai", "jam_selesai")
+    def _check_schedule(self):
+        for line in self:
+            if line.jadwal_hari and (
+                line.jam_mulai < 0
+                or line.jam_selesai > 24
+                or line.jam_selesai <= line.jam_mulai
+            ):
+                raise ValidationError(
+                    "Jadwal kuliah harus memiliki rentang waktu yang valid."
                 )
 
     @api.model_create_multi

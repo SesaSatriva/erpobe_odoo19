@@ -1,0 +1,111 @@
+.o_triton_navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(10, 37, 64, 0.92);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.o_triton_nav-inner {
+  width: calc(100% - 32px);
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  gap: 24px;
+}
+
+.o_triton_brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+}
+
+.o_triton_brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--triton-gradient);
+  box-shadow: var(--triton-shadow-soft);
+  font-size: 14px;
+}
+
+.o_triton_nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.o_triton_nav-links a, .o_triton_nav-actions a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.o_triton_nav-links a:hover, .o_triton_nav-actions a:hover {
+  color: #fff;
+}
+
+.o_triton_nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.o_triton_footer {
+  background: var(--triton-deep-ocean);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 60px 0 20px;
+  margin-top: 50px;
+}
+
+.o_triton_footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr;
+  gap: 32px;
+}
+
+.o_triton_footer a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+}
+
+.o_triton_footer small {
+  display: block;
+  margin-top: 22px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.o_triton_mobile-menu {
+  display: none;
+}
+
+.o_triton_brand-copy {
+  display: grid;
+  line-height: 1.1;
+}
+
+.o_triton_brand-copy small {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.o_triton_footer h2 {
+  color: #fff;
+}

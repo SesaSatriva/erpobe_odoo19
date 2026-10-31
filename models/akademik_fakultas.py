@@ -13,6 +13,14 @@ class ErpObeMasterFakultas(models.Model):
     prodi_ids = fields.One2many(
         "erpobe.master.prodi", "fakultas_id", string="Program Studi"
     )
+    metode_pembelajaran_ids = fields.One2many(
+        "erpobe.akademik.metode.pembelajaran",
+        "fakultas_id",
+        string="Metode Pembelajaran",
+    )
+    referensi_akademik_ids = fields.One2many(
+        "erpobe.akademik.referensi", "fakultas_id", string="Referensi Akademik"
+    )
     dosen_ids = fields.Many2many(
         "erpobe.master.dosen",
         compute="_compute_dosen_ids",
@@ -47,6 +55,9 @@ class ErpObeMasterFakultas(models.Model):
         "erpobe.akademik.penawaran.line",
         "fakultas_id",
         string="Penawaran Mata Kuliah",
+    )
+    penawaran_ids = fields.One2many(
+        "erpobe.akademik.penawaran", "fakultas_id", string="Penawaran"
     )
     rps_ids = fields.One2many(
         "erpobe.akademik.rps", "fakultas_id", string="RPS"

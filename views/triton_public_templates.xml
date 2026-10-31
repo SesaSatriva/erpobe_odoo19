@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="menu_triton_public" model="website.menu">
+        <field name="name">TRITON</field>
+        <field name="url">/</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">1</field>
+    </record>
+
+    <template id="triton_main_nav" name="Navigasi TRITON">
+        <nav class="o_triton_navbar" aria-label="Navigasi utama TRITON">
+            <div class="o_triton_nav-inner">
+                <a class="o_triton_brand" href="/" aria-label="TRITON, beranda">
+                    <span class="o_triton_brand-mark" aria-hidden="true">T</span>
+                    <span class="o_triton_brand-copy">
+                        <strong>TRITON</strong>
+                        <small>Outcome-based education</small>
+                    </span>
+                </a>
+                <details class="o_triton_mobile-menu">
+                    <summary aria-label="Buka menu">Menu</summary>
+                    <div class="o_triton_nav-links">
+                        <a href="/">Beranda</a>
+                        <a href="/fakultas">Fakultas &amp; Prodi</a>
+                        <a href="/perbandingan-cpl">Perbandingan CPL</a>
+                        <a href="/tracking">Tracking</a>
+                        <a href="/tentang">Tentang</a>
+                        <a href="/panduan">Panduan</a>
+                        <a href="/faq">FAQ</a>
+                    </div>
+                </details>
+                <div class="o_triton_desktop-links o_triton_nav-links">
+                    <a href="/">Beranda</a>
+                    <a href="/fakultas">Fakultas &amp; Prodi</a>
+                    <a href="/perbandingan-cpl">Perbandingan CPL</a>
+                    <a href="/tracking">Tracking</a>
+                    <a href="/tentang">Tentang</a>
+                </div>
+                <a href="/my" class="o_triton_btn-secondary">Masuk Portal</a>
+            </div>
+        </nav>
+    </template>
+
+    <template id="triton_footer" name="Footer TRITON">
+        <footer class="o_triton_footer">
+            <div class="o_triton_container o_triton_footer-grid">
+                <div>
+                    <a class="o_triton_brand" href="/">
+                        <span class="o_triton_brand-mark" aria-hidden="true">T</span>
+                        <span class="o_triton_brand-copy">
+                            <strong>TRITON</strong>
+                            <small>Outcome-based education</small>
+                        </span>
+                    </a>
+                    <p>Tracking, Reporting, and Integrated Technology for Outcome-based Education Network.</p>
+                </div>
+                <div>
+                    <h2>Jelajah</h2>
+                    <ul class="o_triton_list">
+                        <li><a href="/fakultas">Fakultas dan program studi</a></li>
+                        <li><a href="/perbandingan-cpl">Perbandingan CPL</a></li>
+                        <li><a href="/tracking">Tracking agregat</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>Bantuan</h2>
+                    <ul class="o_triton_list">
+                        <li><a href="/panduan">Panduan</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/kontak">Kontak</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>Informasi</h2>
+                    <ul class="o_triton_list">
+                        <li><a href="/metodologi">Metodologi</a></li>
+                        <li><a href="/kebijakan-privasi">Kebijakan privasi</a></li>
+                        <li><a href="/my">Portal pengguna</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="o_triton_container">
+                <small>TRITON — pemantauan capaian pembelajaran berbasis OBE.</small>
+            </div>
+        </footer>
+    </template>
+
+    <template id="triton_home_page" name="Beranda TRITON">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_hero">
+                    <div class="o_triton_container">
+                        <div>
+                            <span class="o_triton_kicker">Tracking • Reporting • OBE</span>
+                            <h1>Memahami capaian pembelajaran, bersama data yang terhubung.</h1>
+                            <p>TRITON menyajikan informasi akademik dan capaian pembelajaran lulusan secara terstruktur, transparan, dan memperhatikan privasi.</p>
+                            <form class="o_triton_search" action="/cari" method="get" role="search">
+                                <label class="visually-hidden" for="o_triton_search-query">Kata kunci</label>
+                                <input id="o_triton_search-query" type="search" name="q" placeholder="Cari nama, program studi, mata kuliah, atau CPL"/>
+                                <fieldset class="o_triton_search-tabs">
+                                    <legend class="visually-hidden">Kategori pencarian</legend>
+                                    <label><input type="radio" name="category" value="all" checked="checked"/>Semua</label>
+                                    <label><input type="radio" name="category" value="mahasiswa"/>Mahasiswa</label>
+                                    <label><input type="radio" name="category" value="dosen"/>Dosen</label>
+                                    <label><input type="radio" name="category" value="prodi"/>Program Studi</label>
+                                    <label><input type="radio" name="category" value="fakultas"/>Fakultas</label>
+                                    <label><input type="radio" name="category" value="mata-kuliah"/>Mata Kuliah</label>
+                                    <label><input type="radio" name="category" value="cpl"/>CPL</label>
+                                </fieldset>
+                                <button type="submit">Cari</button>
+                            </form>
+                            <div class="o_triton_hero-actions">
+                                <a class="o_triton_btn" href="/perbandingan-cpl">Jelajahi perbandingan CPL</a>
+                                <a class="o_triton_btn-secondary" href="/my">Masuk portal</a>
+                            </div>
+                        </div>
+                        <div class="o_triton_hero-panel" aria-label="Ringkasan capaian institusi">
+                            <span class="o_triton_kicker">Ringkasan institusi</span>
+                            <div class="o_triton_mini-card">
+                                <span class="o_triton_label">Rata-rata capaian CPL*</span>
+                                <strong t-if="stats['institutional_average']"><t t-out="stats['institutional_average']"/>%</strong>
+                                <strong t-else="">Belum tersedia</strong>
+                            </div>
+                            <p class="o_triton_hero-footnote">*Agregat penawaran dengan RPS final, bobot lengkap, dan KRS disetujui.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="o_triton_section o_triton_stats-section" aria-label="Statistik akademik">
+                    <div class="o_triton_container o_triton_stat-grid">
+                        <article class="o_triton_stat-card"><span>Fakultas</span><strong t-out="stats['faculties']"/></article>
+                        <article class="o_triton_stat-card"><span>Program Studi</span><strong t-out="stats['prodis']"/></article>
+                        <article class="o_triton_stat-card"><span>Dosen</span><strong t-out="stats['dosen']"/></article>
+                        <article class="o_triton_stat-card"><span>Mahasiswa aktif</span><strong t-out="stats['mahasiswa_aktif']"/></article>
+                        <article class="o_triton_stat-card"><span>Mata Kuliah</span><strong t-out="stats['courses']"/></article>
+                        <article class="o_triton_stat-card"><span>CPL / CPMK</span><strong><t t-out="stats['cpl_count']"/> / <t t-out="stats['cpmk_count']"/></strong></article>
+                        <article class="o_triton_stat-card"><span>RPS Final</span><strong t-out="stats['rps_final']"/></article>
+                    </div>
+                </section>
+
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <div class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">Analisis agregat</span>
+                                <h2>Pratinjau perbandingan CPL</h2>
+                                <p class="o_triton_subtitle">Data dihitung dari penawaran dengan RPS final dan bobot lengkap.</p>
+                            </div>
+                            <a class="o_triton_btn-ghost" href="/perbandingan-cpl">Buka analisis</a>
+                        </div>
+                        <t t-if="comparison['prodis']">
+                            <div class="o_triton_two-col">
+                                <div class="o_triton_panel">
+                                    <h3>Rata-rata capaian menurut jenis CPL</h3>
+                                    <div class="o_triton_chart-bars" role="img" aria-label="Diagram batang rata-rata capaian CPL">
+                                        <t t-foreach="comparison['categories']" t-as="category">
+                                            <div class="o_triton_chart-bar">
+                                                <meter class="o_triton_chart_fill" min="0" max="100" t-att-value="comparison['prodis'][0]['scores'][category_index] or 0" t-att-aria-label="category['name']"/>
+                                                <span t-out="category['name']"/>
+                                                <strong t-if="comparison['prodis'][0]['scores'][category_index]"><t t-out="comparison['prodis'][0]['scores'][category_index]"/>%</strong>
+                                                <strong t-else="">—</strong>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <p class="o_triton_caption">Nilai yang tidak tersedia ditampilkan sebagai tanda pisah, bukan nol.</p>
+                                </div>
+                                <div class="o_triton_panel">
+                                    <h3>Program studi</h3>
+                                    <ul class="o_triton_list">
+                                        <t t-foreach="comparison['prodis']" t-as="prodi">
+                                            <li>
+                                                <a t-att-href="'/prodi/%s' % prodi['id']"><strong t-out="prodi['name']"/></a>
+                                                <span class="o_triton_badge" t-out="prodi['kode']"/>
+                                                <p t-if="prodi['warning']" class="o_triton_warning">Sebagian data belum memiliki RPS final atau bobot lengkap.</p>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                        <div t-else="" class="o_triton_empty">
+                            <h3>Data perbandingan belum tersedia</h3>
+                            <p>Belum ada data penawaran dengan RPS final, bobot lengkap, dan KRS yang disetujui pada periode terpilih.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="o_triton_section o_triton_alt-section">
+                    <div class="o_triton_container">
+                        <div class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow">Jelajah akademik</span><h2>Fakultas dan program studi</h2></div>
+                            <a href="/fakultas" class="o_triton_btn-ghost">Semua fakultas</a>
+                        </div>
+                        <div class="o_triton_grid-three">
+                            <t t-foreach="faculties" t-as="faculty">
+                                <article class="o_triton_result-card">
+                                    <span class="o_triton_badge" t-out="faculty['kode']"/>
+                                    <h3><a t-att-href="'/fakultas/%s' % faculty['id']" t-out="faculty['name']"/></h3>
+                                    <p>Jelajahi program studi dan ringkasan akademik fakultas.</p>
+                                </article>
+                            </t>
+                        </div>
+                        <div class="o_triton_grid-three o_triton_prodi-preview">
+                            <t t-foreach="featured_prodi" t-as="prodi">
+                                <article class="o_triton_result-card">
+                                    <span class="o_triton_badge" t-out="prodi['kode']"/>
+                                    <h3><a t-att-href="'/prodi/%s' % prodi['id']" t-out="prodi['name']"/></h3>
+                                    <p t-out="prodi['fakultas']"/>
+                                </article>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="o_triton_section">
+                    <div class="o_triton_container o_triton_two-col">
+                        <article class="o_triton_card">
+                            <span class="o_triton_eyebrow">Tentang OBE</span>
+                            <h2>Hasil pembelajaran yang dapat dipantau</h2>
+                            <p>Outcome-Based Education mengarahkan kurikulum, pembelajaran, dan penilaian pada capaian yang diharapkan. TRITON menghubungkan struktur akademik dengan pemetaan CPL, CPMK, dan RPS.</p>
+                            <a href="/tentang" class="o_triton_link">Pelajari tentang TRITON</a>
+                        </article>
+                        <article class="o_triton_cta-block">
+                            <div><h2>Masuk ke portal akademik</h2><p>Akses KRS, KHS, RPS, dan tugas sesuai peran dan kewenangan akun.</p></div>
+                            <a href="/my" class="o_triton_btn-secondary">Masuk portal</a>
+                        </article>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_search_page" name="Hasil Pencarian TRITON">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Pencarian</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Pencarian publik</span><h1>Hasil pencarian</h1><p class="o_triton_subtitle"><t t-out="total"/> hasil ditampilkan secara bertahap.</p></div></header>
+                        <form class="o_triton_search o_triton_search-light" action="/cari" method="get">
+                            <label class="visually-hidden" for="search-q">Kata kunci</label>
+                            <input id="search-q" type="search" name="q" t-att-value="q" placeholder="Masukkan kata kunci"/>
+                            <label class="visually-hidden" for="search-category">Kategori</label>
+                            <select id="search-category" name="category">
+                                <option value="all" t-att-selected="category == 'all'">Semua kategori</option>
+                                <t t-foreach="categories" t-as="item"><option t-att-value="item['key']" t-att-selected="category == item['key']" t-out="item['label']"/></t>
+                            </select>
+                            <button type="submit">Cari</button>
+                        </form>
+                        <div t-if="not people_enabled and category in ['all', 'mahasiswa', 'dosen']" class="o_triton_privacy-note">Daftar individu tidak tersedia karena visibilitas publik dinonaktifkan oleh administrator.</div>
+                        <div t-if="results" class="o_triton_grid-three o_triton_search-results">
+                            <t t-foreach="results" t-as="item">
+                                <article class="o_triton_result-card">
+                                    <span class="o_triton_badge" t-out="item['category_label']"/>
+                                    <h2>
+                                        <a t-if="item['category'] == 'fakultas'" t-att-href="'/fakultas/%s' % item['id']" t-out="item['name']"/>
+                                        <a t-elif="item['category'] == 'prodi'" t-att-href="'/prodi/%s' % item['id']" t-out="item['name']"/>
+                                        <a t-elif="item['category'] == 'dosen'" t-att-href="'/dosen/%s' % item['id']" t-out="item['name']"/>
+                                        <a t-elif="item['category'] == 'mahasiswa'" t-att-href="'/mahasiswa/%s' % item['id']" t-out="item['name']"/>
+                                        <span t-else="" t-out="item['name']"/>
+                                    </h2>
+                                    <p t-if="item.get('kode')"><span t-out="item['kode']"/> <span t-if="item.get('prodi')">• <t t-out="item['prodi']"/></span></p>
+                                    <p t-if="item.get('identifier')">ID tersamarkan: <t t-out="item['identifier']"/></p>
+                                    <p t-if="item.get('status')">Status: <t t-out="item['status']"/> <span t-if="item.get('angkatan')">• Angkatan <t t-out="item['angkatan']"/></span></p>
+                                    <p t-if="item.get('jabatan') and item['category'] == 'dosen'" t-out="item['jabatan']"/>
+                                    <p t-if="item.get('jenis')">Jenis: <t t-out="item['jenis']"/></p>
+                                    <p t-if="item.get('sks')"><t t-out="item['sks']"/> SKS</p>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-elif="q" class="o_triton_empty"><h2>Tidak ada hasil</h2><p>Periksa ejaan atau pilih kategori lain.</p></div>
+                        <nav t-if="page &gt; 1 or total &gt; 20" class="o_triton_pagination" aria-label="Paginasi">
+                            <a t-if="page &gt; 1" t-att-href="'/cari?q=%s&amp;category=%s&amp;page=%s' % (q, category, page - 1)">Sebelumnya</a>
+                            <span>Halaman <t t-out="page"/></span>
+                            <a t-if="total &gt; page * 20" t-att-href="'/cari?q=%s&amp;category=%s&amp;page=%s' % (q, category, page + 1)">Berikutnya</a>
+                        </nav>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_faculty_list_page" name="Daftar Fakultas">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Fakultas</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Struktur akademik</span><h1>Fakultas</h1><p class="o_triton_subtitle">Pilih fakultas untuk melihat program studi dan statistik agregat.</p></div></header>
+                        <div t-if="faculties" class="o_triton_grid-three">
+                            <t t-foreach="faculties" t-as="faculty">
+                                <article class="o_triton_result-card">
+                                    <div class="o_triton_meta"><span class="o_triton_badge" t-out="faculty['kode']"/><span><t t-out="faculty['prodi_count']"/> program studi</span></div>
+                                    <h2><a t-att-href="'/fakultas/%s' % faculty['id']" t-out="faculty['name']"/></h2>
+                                    <p><t t-out="faculty['student_count']"/> mahasiswa aktif.</p>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada fakultas</h2><p>Belum ada data fakultas yang aktif.</p></div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_faculty_detail_page" name="Detail Fakultas">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><a href="/fakultas">Fakultas</a><span>/</span><span t-out="faculty['name']"/></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Fakultas</span><h1 t-out="faculty['name']"/><p class="o_triton_subtitle">Kode <t t-out="faculty['kode']"/></p></div></header>
+                        <div class="o_triton_stat-grid o_triton_stat-grid-small">
+                            <article class="o_triton_stat-card"><span>Program Studi</span><strong t-out="stats['prodi_count']"/></article>
+                            <article class="o_triton_stat-card"><span>Dosen</span><strong t-out="stats['dosen_count']"/></article>
+                            <article class="o_triton_stat-card"><span>Mahasiswa aktif</span><strong t-out="stats['student_count']"/></article>
+                        </div>
+                        <div class="o_triton_heading o_triton_section-heading"><h2>Program studi</h2></div>
+                        <div t-if="prodis" class="o_triton_grid-three">
+                            <t t-foreach="prodis" t-as="prodi"><article class="o_triton_result-card"><span class="o_triton_badge" t-out="prodi['kode']"/><h3><a t-att-href="'/prodi/%s' % prodi['id']" t-out="prodi['name']"/></h3></article></t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><p>Belum ada program studi aktif di fakultas ini.</p></div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_prodi_detail_page" name="Detail Program Studi">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><a href="/fakultas">Fakultas</a><span>/</span><span t-out="prodi['name']"/></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Program Studi</span><h1 t-out="prodi['name']"/><p class="o_triton_subtitle"><t t-out="prodi['kode']"/> • <t t-out="prodi['fakultas']"/></p></div></header>
+                        <div class="o_triton_stat-grid o_triton_stat-grid-small">
+                            <article class="o_triton_stat-card"><span>Dosen terdaftar</span><strong t-out="stats['dosen']"/></article>
+                            <article class="o_triton_stat-card"><span>Mahasiswa</span><strong t-out="stats['mahasiswa']"/></article>
+                            <article class="o_triton_stat-card"><span>CPL</span><strong t-out="stats['cpl']"/></article>
+                        </div>
+                        <nav class="o_triton_tabs" aria-label="Informasi program studi">
+                            <a t-att-class="'active' if tab == 'profil' else ''" t-att-href="'/prodi/%s?tab=profil' % prodi['id']">Profil</a>
+                            <a t-att-class="'active' if tab == 'dosen' else ''" t-att-href="'/prodi/%s?tab=dosen' % prodi['id']">Dosen</a>
+                            <a t-att-class="'active' if tab == 'mahasiswa' else ''" t-att-href="'/prodi/%s?tab=mahasiswa' % prodi['id']">Mahasiswa</a>
+                            <a t-att-class="'active' if tab == 'cpl' else ''" t-att-href="'/prodi/%s?tab=cpl' % prodi['id']">CPL</a>
+                            <a t-att-class="'active' if tab == 'mata-kuliah' else ''" t-att-href="'/prodi/%s?tab=mata-kuliah' % prodi['id']">Mata Kuliah</a>
+                        </nav>
+                        <div t-if="tab == 'profil'" class="o_triton_panel">
+                            <h2>Profil Program Studi</h2>
+                            <p>Data kurikulum, mata kuliah, dan capaian pembelajaran ditampilkan sesuai sumber akademik yang tersedia.</p>
+                            <p>Daftar dosen dan mahasiswa tunduk pada pengaturan visibilitas publik administrator dan preferensi individu.</p>
+                        </div>
+                        <div t-elif="tab in ['dosen', 'mahasiswa']" class="o_triton_panel">
+                            <div t-if="privacy_disabled" class="o_triton_privacy-note">Daftar individu sedang dinonaktifkan administrator. Statistik agregat program studi tetap tersedia.</div>
+                            <t t-else="">
+                                <form class="o_triton_filter-form" t-att-action="'/prodi/%s' % prodi['id']" method="get">
+                                    <input type="hidden" name="tab" t-att-value="tab"/>
+                                    <label for="prodi-query">Cari nama</label><input id="prodi-query" name="q" type="search" t-att-value="query"/>
+                                    <t t-if="tab == 'mahasiswa'">
+                                        <label for="cohort-filter">Angkatan</label>
+                                        <select id="cohort-filter" name="angkatan"><option value="">Semua angkatan</option><t t-foreach="years" t-as="year"><option t-att-value="year['angkatan']" t-att-selected="angkatan_filter == str(year['angkatan'])" t-out="year['angkatan']"/></t></select>
+                                        <label for="status-filter">Status</label>
+                                        <select id="status-filter" name="status"><option value="">Semua status</option><option value="aktif" t-att-selected="status_filter == 'aktif'">Aktif</option><option value="lulus" t-att-selected="status_filter == 'lulus'">Lulus</option><option value="cuti" t-att-selected="status_filter == 'cuti'">Cuti</option></select>
+                                    </t>
+                                    <button type="submit" class="o_triton_btn">Terapkan</button>
+                                </form>
+                                <div t-if="results" class="o_triton_table-wrap">
+                                    <table class="o_triton_table">
+                                        <thead><tr><th>Nama</th><th t-if="tab == 'dosen'">Jabatan Fungsional</th><th t-if="tab == 'mahasiswa'">Angkatan</th><th t-if="tab == 'mahasiswa'">Status</th><th>Identitas tersamarkan</th></tr></thead>
+                                        <tbody><t t-foreach="results" t-as="person"><tr>
+                                            <td><a t-if="tab == 'dosen'" t-att-href="'/dosen/%s' % person['id']" t-out="person['name']"/><a t-else="" t-att-href="'/mahasiswa/%s' % person['id']" t-out="person['name']"/></td>
+                                            <td t-if="tab == 'dosen'" t-out="person['jabatan']"/>
+                                            <td t-if="tab == 'mahasiswa'" t-out="person['angkatan']"/>
+                                            <td t-if="tab == 'mahasiswa'" t-out="person['status']"/>
+                                            <td t-out="person['identifier']"/>
+                                        </tr></t></tbody>
+                                    </table>
+                                </div>
+                                <div t-elif="not privacy_disabled" class="o_triton_empty"><p>Tidak ada data yang cocok dengan filter.</p></div>
+                                <nav t-if="pager and (pager['previous'] or pager['next'])" class="o_triton_pagination" aria-label="Paginasi daftar">
+                                    <a t-if="pager['previous']" t-att-href="pager['previous']">Sebelumnya</a><span>Halaman <t t-out="pager['page']"/> / <t t-out="pager['page_count']"/></span><a t-if="pager['next']" t-att-href="pager['next']">Berikutnya</a>
+                                </nav>
+                                <p class="o_triton_caption">Data identitas ditampilkan terbatas. Nilai, kontak, alamat, dan informasi sensitif tidak tersedia di area publik.</p>
+                            </t>
+                        </div>
+                        <div t-elif="tab == 'cpl'" class="o_triton_panel">
+                            <div t-if="results" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Kode</th><th>Jenis</th><th>Deskripsi CPL</th><th>CPMK pendukung</th></tr></thead><tbody><t t-foreach="results" t-as="cpl"><tr><td t-out="cpl['kode']"/><td t-out="cpl['jenis']"/><td t-out="cpl['name']"/><td><t t-foreach="cpl['cpmk']" t-as="cpmk"><span class="o_triton_badge" t-out="cpmk"/></t></td></tr></t></tbody></table></div>
+                            <div t-else="" class="o_triton_empty"><p>Belum ada CPL yang terdaftar.</p></div>
+                        </div>
+                        <div t-elif="tab == 'mata-kuliah'" class="o_triton_panel">
+                            <div t-if="results" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Tahun Ajaran</th><th>Semester</th><th>Status RPS</th></tr></thead><tbody><t t-foreach="results" t-as="course"><tr><td t-out="course['kode']"/><td t-out="course['name']"/><td t-out="course['sks']"/><td t-out="course['tahun_ajaran']"/><td t-out="course['semester']"/><td><span class="o_triton_badge o_triton_badge-success">Final</span></td></tr></t></tbody></table></div>
+                            <div t-else="" class="o_triton_empty"><p>Belum ada RPS final yang dapat ditampilkan.</p></div>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_person_profile_page" name="Profil Publik">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Profil publik</span></nav>
+                        <article class="o_triton_profile-card">
+                            <span class="o_triton_badge" t-out="'Dosen' if kind == 'dosen' else 'Mahasiswa'"/>
+                            <h1 t-out="person['name']"/>
+                            <p><strong>Program studi:</strong> <t t-out="', '.join(item['name'] for item in person['prodis']) if kind == 'dosen' else person['prodi']"/></p>
+                            <p t-if="kind == 'dosen'"><strong>Jabatan fungsional:</strong> <t t-out="person['jabatan']"/></p>
+                            <p t-if="kind == 'mahasiswa'"><strong>Angkatan:</strong> <t t-out="person['angkatan']"/></p>
+                            <p t-if="kind == 'mahasiswa'"><strong>Status:</strong> <t t-out="person['status']"/></p>
+                            <p><strong>ID tersamarkan:</strong> <t t-out="person['identifier']"/></p>
+                        </article>
+                        <article t-if="kind == 'dosen'" class="o_triton_panel o_triton_section-heading">
+                            <h2>Mata kuliah yang diampu</h2>
+                            <ul class="o_triton_list"><t t-foreach="courses" t-as="course"><li><strong t-out="course['name']"/> • <t t-out="course['kode']"/> • <t t-out="course['prodi']"/></li></t></ul>
+                        </article>
+                        <aside class="o_triton_privacy-note o_triton_section-heading">Halaman publik tidak memuat nilai individu, KRS, KHS, IPK/IPS, kontak pribadi, alamat, NIK, tanggal lahir, atau foto.</aside>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_comparison_page" name="Perbandingan CPL">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Perbandingan CPL</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Analisis OBE</span><h1>Perbandingan capaian CPL</h1><p class="o_triton_subtitle">Analisis hanya menggunakan RPS final dengan semua kelompok bobot lengkap dan KRS yang telah disetujui.</p></div></header>
+                        <form class="o_triton_filter-card o_triton_filter-form" action="/perbandingan-cpl" method="get">
+                            <div class="o_triton_form-grid">
+                                <div><label for="year-start">Tahun awal</label><select id="year-start" name="tahun_awal"><option value="">Terbaru</option><t t-foreach="comparison['years']" t-as="year"><option t-att-value="year" t-att-selected="comparison['year_start'] == year" t-out="year"/></t></select></div>
+                                <div><label for="year-end">Tahun akhir</label><select id="year-end" name="tahun_akhir"><option value="">Terbaru</option><t t-foreach="comparison['years']" t-as="year"><option t-att-value="year" t-att-selected="comparison['year_end'] == year" t-out="year"/></t></select></div>
+                                <div><label for="semester">Semester</label><select id="semester" name="semester"><option value="">Semua</option><option value="ganjil" t-att-selected="comparison['semester'] == 'ganjil'">Ganjil</option><option value="genap" t-att-selected="comparison['semester'] == 'genap'">Genap</option><option value="pendek" t-att-selected="comparison['semester'] == 'pendek'">Pendek</option></select></div>
+                                <div><label for="faculty">Fakultas</label><select id="faculty" name="fakultas_id"><option value="">Semua fakultas</option><t t-foreach="faculties" t-as="faculty"><option t-att-value="faculty['id']" t-att-selected="comparison['faculty_id'] == faculty['id']" t-out="faculty['name']"/></t></select></div>
+                                <div><label for="prodi-selection">Program studi (maksimal 6)</label><select id="prodi-selection" name="prodi_id" multiple="multiple" size="4"><t t-foreach="prodis" t-as="prodi"><option t-att-value="prodi['id']" t-att-selected="prodi['id'] in comparison['prodi_ids']" t-out="prodi['name']"/></t></select></div>
+                                <div><label for="cpl-type">Jenis CPL</label><select id="cpl-type" name="jenis_cpl"><option value="">Semua jenis</option><t t-foreach="cpl_types" t-as="category"><option t-att-value="category['key']" t-att-selected="comparison['jenis_cpl'] == category['key']" t-out="category['name']"/></t></select></div>
+                            </div>
+                            <p class="o_triton_caption">Pilih beberapa prodi dengan Ctrl/Command. Pilihan dibatasi enam prodi per permintaan.</p>
+                            <button class="o_triton_btn" type="submit">Terapkan filter</button>
+                        </form>
+                        <div t-if="comparison['warnings']" class="o_triton_warning-box" role="status"><strong>Data belum lengkap untuk:</strong> <t t-out="', '.join(comparison['warnings'])"/>. Program studi tanpa data valid tidak ditampilkan dalam nilai perbandingan.</div>
+                        <div t-if="comparison['prodis']" class="o_triton_comparison-results">
+                            <div class="o_triton_comparison-actions">
+                                <a class="o_triton_btn-ghost" href="/perbandingan-cpl.csv">Unduh CSV agregat</a>
+                                <button class="o_triton_btn-ghost o_triton_print" type="button">Cetak / Simpan PDF</button>
+                            </div>
+                            <div class="o_triton_grid-three">
+                                <article class="o_triton_panel">
+                                    <h2>Radar profil CPL</h2>
+                                    <svg class="o_triton_radar" viewBox="0 0 200 200" role="img" aria-label="Radar capaian CPL per program studi">
+                                        <circle cx="100" cy="100" r="78" class="o_triton_radar-grid"/>
+                                        <circle cx="100" cy="100" r="52" class="o_triton_radar-grid"/>
+                                        <circle cx="100" cy="100" r="26" class="o_triton_radar-grid"/>
+                                        <t t-foreach="comparison['prodis']" t-as="prodi"><polygon class="o_triton_radar-series" t-att-points="prodi['radar_points']"/></t>
+                                    </svg>
+                                    <ul class="o_triton_legend"><t t-foreach="comparison['prodis']" t-as="prodi"><li><span class="o_triton_legend-marker" aria-hidden="true"/> <t t-out="prodi['name']"/></li></t></ul>
+                                </article>
+                                <article class="o_triton_panel o_triton_chart-panel">
+                                    <h2>Grouped bar</h2>
+                                    <div class="o_triton_grouped-bars"><t t-foreach="comparison['prodis']" t-as="prodi"><div class="o_triton_group"><strong t-out="prodi['name']"/><t t-foreach="prodi['scores']" t-as="score"><div class="o_triton_bar-row"><span t-out="comparison['categories'][score_index]['name']"/><meter class="o_triton_bar-track" min="0" max="100" t-att-value="score or 0" t-att-aria-label="comparison['categories'][score_index]['name']"/><b t-if="score"><t t-out="score"/>%</b><b t-else="">—</b></div></t></div></t></div>
+                                </article>
+                                <article class="o_triton_panel">
+                                    <h2>Tren antar tahun</h2>
+                                    <div t-if="comparison['trend']" class="o_triton_trend"><t t-foreach="comparison['trend']" t-as="item"><div class="o_triton_trend-item"><span t-out="item['year']"/><meter class="o_triton_trend-track" min="0" max="100" t-att-value="item['average']" t-att-aria-label="'Capaian ' + item['year']"/><strong><t t-out="item['average']"/>%</strong></div></t></div>
+                                    <div t-else="" class="o_triton_empty-inline">Belum ada data tren pada periode ini.</div>
+                                </article>
+                            </div>
+                            <article class="o_triton_panel o_triton_section-heading">
+                                <h2>Heatmap capaian</h2>
+                                <div class="o_triton_table-wrap"><table class="o_triton_table o_triton_heatmap"><thead><tr><th>Program Studi</th><t t-foreach="comparison['categories']" t-as="category"><th t-out="category['name']"/></t></tr></thead><tbody><t t-foreach="comparison['prodis']" t-as="prodi"><tr><th t-out="prodi['name']"/><t t-foreach="prodi['scores']" t-as="score"><td t-att-class="'o_triton_score-cell ' + ('o_triton_score-met' if score and score &gt;= comparison['target'] else 'o_triton_score-low' if score else 'o_triton_score-empty')"><strong t-if="score"><t t-out="score"/>%</strong><span t-else="">Belum ada data</span></td></t></tr></t></tbody></table></div>
+                            </article>
+                            <article class="o_triton_panel o_triton_section-heading">
+                                <h2>Tabel perbandingan dan target <t t-out="comparison['target']"/>%</h2>
+                                <div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Program Studi</th><t t-foreach="comparison['categories']" t-as="category"><th t-out="category['name']"/></t></tr></thead><tbody><t t-foreach="comparison['prodis']" t-as="prodi"><tr><th><t t-out="prodi['kode']"/> — <t t-out="prodi['name']"/></th><t t-foreach="prodi['scores']" t-as="score"><td t-if="score"><strong><t t-out="score"/>%</strong><span t-if="score &gt;= comparison['target']" class="o_triton_badge o_triton_badge-success">≥ target</span><span t-else="" class="o_triton_badge o_triton_badge-warning"> &lt; target</span></td><td t-else="">Belum tersedia</td></t></tr></t></tbody></table></div>
+                            </article>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada hasil perbandingan</h2><p>Pastikan terdapat penawaran pada periode yang dipilih, RPS final dengan bobot lengkap, nilai komponen, dan KRS yang disetujui.</p></div>
+                        <aside class="o_triton_privacy-note o_triton_section-heading"><strong>Metodologi:</strong> <t t-out="comparison['methodology']"/></aside>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_tracking_page" name="Tracking Agregat">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Tracking</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Statistik agregat</span><h1>Tracking akademik</h1><p class="o_triton_subtitle">Informasi disajikan dalam agregat, tanpa nilai individu atau data identitas pribadi.</p></div></header>
+                        <article class="o_triton_panel"><h2>Ringkasan per program studi</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Program Studi</th><th>Mahasiswa aktif</th><th>Lulus</th><th>Dosen</th><th>RPS dengan bobot lengkap</th></tr></thead><tbody><t t-foreach="tracking" t-as="row"><tr><th><t t-out="row['kode']"/> — <t t-out="row['name']"/></th><td t-out="row['active_students']"/><td t-out="row['graduated_students']"/><td t-out="row['teachers']"/><td t-if="row['weight_complete_percent']"><t t-out="row['weight_complete_percent']"/>%</td><td t-else="">Belum ada data RPS</td></tr></t></tbody></table></div></article>
+                        <div class="o_triton_two-col o_triton_section-heading">
+                            <article class="o_triton_panel"><h2>Mahasiswa menurut angkatan</h2><div t-if="cohorts" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Program Studi</th><th>Angkatan</th><th>Jumlah</th></tr></thead><tbody><t t-foreach="cohorts" t-as="cohort"><tr><td t-out="cohort['prodi']"/><td t-out="cohort['angkatan']"/><td t-out="cohort['jumlah']"/></tr></t></tbody></table></div><p t-else="">Belum ada data angkatan.</p></article>
+                            <article class="o_triton_panel"><h2>RPS Final per tahun ajaran</h2><div t-if="rps_years" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Tahun Ajaran</th><th>Jumlah RPS final</th></tr></thead><tbody><t t-foreach="rps_years" t-as="row"><tr><td t-out="row['year']"/><td t-out="row['count']"/></tr></t></tbody></table></div><p t-else="">Belum ada RPS final.</p></article>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_about_page" name="Tentang TRITON">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container o_triton_card"><span class="o_triton_eyebrow">Tentang</span><h1>TRITON dan Outcome-Based Education</h1><p>TRITON (Tracking, Reporting, and Integrated Technology for Outcome-based Education Network) adalah sistem pelaporan dan pemantauan capaian pembelajaran yang menghubungkan struktur fakultas, program studi, CPL, CPMK, mata kuliah, RPS, penawaran, dan tahun ajaran.</p><p>Pendekatan OBE mengarahkan kurikulum dan penilaian pada hasil belajar yang terukur. TRITON menyajikan indikator capaian sebagai data pendukung evaluasi akademik.</p></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+    <template id="triton_guide_page" name="Panduan TRITON">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container o_triton_card"><span class="o_triton_eyebrow">Panduan</span><h1>Panduan penggunaan TRITON</h1><ol class="o_triton_guide-list"><li>Gunakan pencarian atau halaman fakultas untuk menemukan program studi dan informasi akademik yang tersedia secara publik.</li><li>Pilih perbandingan CPL, lalu saring tahun ajaran, semester, fakultas, program studi, dan jenis CPL.</li><li>Periksa catatan kelengkapan data. Hanya RPS final dengan bobot lengkap dan KRS disetujui yang masuk ke agregat.</li><li>Masuk ke portal untuk mengakses data akademik pribadi sesuai peran. Gunakan menu portal untuk tugas KRS, KHS, RPS, kelas, dan perwalian.</li></ol></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+    <template id="triton_faq_page" name="FAQ TRITON">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container o_triton_card"><span class="o_triton_eyebrow">Bantuan</span><h1>Pertanyaan umum</h1><div class="o_triton_faq"><h2>Data apa yang tersedia untuk publik?</h2><p>Profil individu terbatas pada informasi akademik yang diizinkan, jika visibilitas publik diaktifkan. Nilai individu, KRS, KHS, IPK/IPS, kontak, alamat, NIK, tanggal lahir, dan foto tidak ditampilkan.</p><h2>Bagaimana capaian CPL dihitung?</h2><p>Capaian CPL dihitung dari capaian CPMK dan bobot pada RPS final yang lengkap. Lihat metodologi untuk rumus dan batasan agregasinya.</p><h2>Mengapa hasil perbandingan kosong?</h2><p>Hasil hanya tersedia jika periode memiliki penawaran, RPS final dengan semua kelompok bobot 100%, nilai komponen, dan KRS yang disetujui.</p><h2>Bagaimana cara mengakses data akademik pribadi?</h2><p>Masuk ke portal memakai akun institusi. Hak akses mengikuti peran dan kepemilikan data.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+    <template id="triton_contact_page" name="Kontak TRITON">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container o_triton_card"><span class="o_triton_eyebrow">Kontak</span><h1>Hubungi pengelola TRITON</h1><p>Untuk bantuan akun, koreksi data akademik, permintaan privasi, atau dukungan penggunaan, hubungi administrator akademik melalui kanal resmi institusi Anda.</p><p>Permintaan perubahan data harus menyebutkan bagian yang perlu ditinjau tanpa mengirimkan kata sandi atau informasi autentikasi.</p></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+    <template id="triton_privacy_page" name="Kebijakan Privasi TRITON">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container o_triton_card"><span class="o_triton_eyebrow">Privasi</span><h1>Kebijakan privasi publik</h1><div class="o_triton_privacy-note">Area publik tidak menampilkan nilai individu, KHS, KRS, IPK/IPS, alamat, kontak pribadi, NIK, tanggal lahir, foto, atau data sensitif lainnya.</div><ul class="o_triton_list"><li>Nama dosen dan mahasiswa hanya ditampilkan jika administrator mengaktifkan visibilitas publik dan profil individu tidak memilih opt-out.</li><li>ID NIDN/NIM pada halaman publik disamarkan sebagian.</li><li>Pencarian dan daftar individu menggunakan paginasi, pembatasan laju permintaan, dan tidak menyediakan ekspor massal nama.</li><li>Halaman perbandingan hanya mengembalikan agregat capaian; data individual tidak disertakan dalam respons publik.</li><li>Pengguna dapat mengatur opt-out profil melalui portal jika fitur tersebut diaktifkan pada akunnya.</li></ul><p>Status visibilitas daftar saat ini: <strong t-if="people_enabled">diaktifkan administrator</strong><strong t-else="">dinonaktifkan administrator</strong>.</p></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+    <template id="triton_methodology_page" name="Metodologi Capaian CPL">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container o_triton_card"><span class="o_triton_eyebrow">Metodologi</span><h1>Rumus dan batasan capaian CPL</h1><p><strong>Capaian CPL = Σ(nilai CPMK × bobot CPMK→CPL) / Σ bobot CPMK→CPL.</strong></p><p>Nilai CPMK dihitung sebagai jumlah nilai komponen penilaian yang dikalikan bobot komponen terhadap CPMK pada RPS. Analisis lintas prodi mengelompokkan CPL berdasarkan jenis CPL yang ditetapkan program studi.</p><p>Hanya RPS berstatus final dengan semua kelompok bobot tepat 100% (dengan toleransi validasi modul) dan KRS yang disetujui yang dihitung. Rata-rata program studi adalah rata-rata pengamatan mahasiswa untuk CPL/jenis CPL pada penawaran yang terpilih.</p><p>Data historis hanya dapat dibandingkan jika terdapat penawaran dan penilaian per tahun ajaran; nilai lama yang tidak terhubung pada penawaran tidak dimasukkan.</p></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+</odoo>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="demo_summary_analytics" model="erpobe.summary.analytics.mixin">
+        <field name="name">Data demo analytics</field>
+        <field name="active" eval="True" />
+    </record>
+</odoo>

@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="penawaran_ti_ta_2026_2027_ganjil" model="erpobe.akademik.penawaran">
+        <field name="tahun_ajaran" ref="erpobe.ta_2026_2027_ganjil" />
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ti_2026_a')])]" />
+    </record>
+    <record id="penawaran_line_ti_1" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ti_01" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ti_2026_a')])]" />
+        <field name="jadwal_hari">selasa</field>
+        <field name="jam_mulai">8.5</field>
+        <field name="jam_selesai">10.0</field>
+    </record>
+    <record id="penawaran_line_ti_2" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ti_02" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ti_2026_a')])]" />
+        <field name="jadwal_hari">rabu</field>
+        <field name="jam_mulai">9.0</field>
+        <field name="jam_selesai">10.5</field>
+    </record>
+    <record id="penawaran_line_ti_3" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ti_03" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ti_2026_a')])]" />
+        <field name="jadwal_hari">kamis</field>
+        <field name="jam_mulai">9.5</field>
+        <field name="jam_selesai">11.0</field>
+    </record>
+    <record id="penawaran_line_ti_4" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ti_04" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ti_2026_a')])]" />
+        <field name="jadwal_hari">jumat</field>
+        <field name="jam_mulai">10.0</field>
+        <field name="jam_selesai">11.5</field>
+    </record>
+    <record id="penawaran_line_ti_5" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ti_05" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ti_2026_a')])]" />
+        <field name="jadwal_hari">senin</field>
+        <field name="jam_mulai">10.5</field>
+        <field name="jam_selesai">12.0</field>
+    </record>
+    <record id="penawaran_si_ta_2026_2027_ganjil" model="erpobe.akademik.penawaran">
+        <field name="tahun_ajaran" ref="erpobe.ta_2026_2027_ganjil" />
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_si_2026_a')])]" />
+    </record>
+    <record id="penawaran_line_si_1" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_si_01" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_si_2026_a')])]" />
+        <field name="jadwal_hari">selasa</field>
+        <field name="jam_mulai">8.5</field>
+        <field name="jam_selesai">10.0</field>
+    </record>
+    <record id="penawaran_line_si_2" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_si_02" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_si_2026_a')])]" />
+        <field name="jadwal_hari">rabu</field>
+        <field name="jam_mulai">9.0</field>
+        <field name="jam_selesai">10.5</field>
+    </record>
+    <record id="penawaran_line_si_3" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_si_03" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_si_2026_a')])]" />
+        <field name="jadwal_hari">kamis</field>
+        <field name="jam_mulai">9.5</field>
+        <field name="jam_selesai">11.0</field>
+    </record>
+    <record id="penawaran_line_si_4" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_si_04" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_si_2026_a')])]" />
+        <field name="jadwal_hari">jumat</field>
+        <field name="jam_mulai">10.0</field>
+        <field name="jam_selesai">11.5</field>
+    </record>
+    <record id="penawaran_line_si_5" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_si_05" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_si_2026_a')])]" />
+        <field name="jadwal_hari">senin</field>
+        <field name="jam_mulai">10.5</field>
+        <field name="jam_selesai">12.0</field>
+    </record>
+    <record id="penawaran_me_ta_2026_2027_ganjil" model="erpobe.akademik.penawaran">
+        <field name="tahun_ajaran" ref="erpobe.ta_2026_2027_ganjil" />
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_me_2026_a')])]" />
+    </record>
+    <record id="penawaran_line_me_1" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_me_01" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_me_2026_a')])]" />
+        <field name="jadwal_hari">selasa</field>
+        <field name="jam_mulai">8.5</field>
+        <field name="jam_selesai">10.0</field>
+    </record>
+    <record id="penawaran_line_me_2" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_me_02" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_me_2026_a')])]" />
+        <field name="jadwal_hari">rabu</field>
+        <field name="jam_mulai">9.0</field>
+        <field name="jam_selesai">10.5</field>
+    </record>
+    <record id="penawaran_line_me_3" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_me_03" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_me_2026_a')])]" />
+        <field name="jadwal_hari">kamis</field>
+        <field name="jam_mulai">9.5</field>
+        <field name="jam_selesai">11.0</field>
+    </record>
+    <record id="penawaran_line_me_4" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_me_04" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_me_2026_a')])]" />
+        <field name="jadwal_hari">jumat</field>
+        <field name="jam_mulai">10.0</field>
+        <field name="jam_selesai">11.5</field>
+    </record>
+    <record id="penawaran_line_me_5" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_me_05" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_me_2026_a')])]" />
+        <field name="jadwal_hari">senin</field>
+        <field name="jam_mulai">10.5</field>
+        <field name="jam_selesai">12.0</field>
+    </record>
+    <record id="penawaran_el_ta_2026_2027_ganjil" model="erpobe.akademik.penawaran">
+        <field name="tahun_ajaran" ref="erpobe.ta_2026_2027_ganjil" />
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_el_2026_a')])]" />
+    </record>
+    <record id="penawaran_line_el_1" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_el_01" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_el_2026_a')])]" />
+        <field name="jadwal_hari">selasa</field>
+        <field name="jam_mulai">8.5</field>
+        <field name="jam_selesai">10.0</field>
+    </record>
+    <record id="penawaran_line_el_2" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_el_02" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_el_2026_a')])]" />
+        <field name="jadwal_hari">rabu</field>
+        <field name="jam_mulai">9.0</field>
+        <field name="jam_selesai">10.5</field>
+    </record>
+    <record id="penawaran_line_el_3" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_el_03" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_el_2026_a')])]" />
+        <field name="jadwal_hari">kamis</field>
+        <field name="jam_mulai">9.5</field>
+        <field name="jam_selesai">11.0</field>
+    </record>
+    <record id="penawaran_line_el_4" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_el_04" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_el_2026_a')])]" />
+        <field name="jadwal_hari">jumat</field>
+        <field name="jam_mulai">10.0</field>
+        <field name="jam_selesai">11.5</field>
+    </record>
+    <record id="penawaran_line_el_5" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_el_05" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_el_2026_a')])]" />
+        <field name="jadwal_hari">senin</field>
+        <field name="jam_mulai">10.5</field>
+        <field name="jam_selesai">12.0</field>
+    </record>
+    <record id="penawaran_ind_ta_2026_2027_ganjil" model="erpobe.akademik.penawaran">
+        <field name="tahun_ajaran" ref="erpobe.ta_2026_2027_ganjil" />
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ind_2026_a')])]" />
+    </record>
+    <record id="penawaran_line_ind_1" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ind_01" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ind_2026_a')])]" />
+        <field name="jadwal_hari">selasa</field>
+        <field name="jam_mulai">8.5</field>
+        <field name="jam_selesai">10.0</field>
+    </record>
+    <record id="penawaran_line_ind_2" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ind_02" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ind_2026_a')])]" />
+        <field name="jadwal_hari">rabu</field>
+        <field name="jam_mulai">9.0</field>
+        <field name="jam_selesai">10.5</field>
+    </record>
+    <record id="penawaran_line_ind_3" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ind_03" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ind_2026_a')])]" />
+        <field name="jadwal_hari">kamis</field>
+        <field name="jam_mulai">9.5</field>
+        <field name="jam_selesai">11.0</field>
+    </record>
+    <record id="penawaran_line_ind_4" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ind_04" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ind_2026_a')])]" />
+        <field name="jadwal_hari">jumat</field>
+        <field name="jam_mulai">10.0</field>
+        <field name="jam_selesai">11.5</field>
+    </record>
+    <record id="penawaran_line_ind_5" model="erpobe.akademik.penawaran.line">
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="matakuliah_id" ref="erpobe.mk_ind_05" />
+        <field name="rombel_ids" eval="[(6, 0, [ref('erpobe.rombel_ind_2026_a')])]" />
+        <field name="jadwal_hari">senin</field>
+        <field name="jam_mulai">10.5</field>
+        <field name="jam_selesai">12.0</field>
+    </record>
+</odoo>

@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="krs_ti_1" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_ti_1" />
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_ti_1_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ti_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ti_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_ti_1_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ti_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ti_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_ti_2" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_ti_2" />
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="state">submitted</field>
+    </record>
+    <record id="krs_line_krs_ti_2_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ti_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ti_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_ti_2_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ti_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ti_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_ti_3" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_ti_3" />
+        <field name="penawaran_id" ref="erpobe.penawaran_ti_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_ti_3_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ti_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ti_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_ti_3_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ti_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ti_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_si_1" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_si_1" />
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_si_1_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_si_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_si_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_si_1_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_si_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_si_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_si_2" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_si_2" />
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="state">submitted</field>
+    </record>
+    <record id="krs_line_krs_si_2_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_si_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_si_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_si_2_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_si_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_si_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_si_3" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_si_3" />
+        <field name="penawaran_id" ref="erpobe.penawaran_si_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_si_3_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_si_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_si_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_si_3_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_si_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_si_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_me_1" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_me_1" />
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_me_1_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_me_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_me_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_me_1_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_me_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_me_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_me_2" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_me_2" />
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="state">submitted</field>
+    </record>
+    <record id="krs_line_krs_me_2_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_me_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_me_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_me_2_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_me_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_me_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_me_3" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_me_3" />
+        <field name="penawaran_id" ref="erpobe.penawaran_me_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_me_3_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_me_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_me_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_me_3_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_me_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_me_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_el_1" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_el_1" />
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_el_1_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_el_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_el_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_el_1_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_el_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_el_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_el_2" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_el_2" />
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="state">submitted</field>
+    </record>
+    <record id="krs_line_krs_el_2_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_el_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_el_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_el_2_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_el_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_el_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_el_3" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_el_3" />
+        <field name="penawaran_id" ref="erpobe.penawaran_el_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_el_3_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_el_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_el_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_el_3_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_el_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_el_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_ind_1" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_ind_1" />
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_ind_1_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ind_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ind_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_ind_1_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ind_1" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ind_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_ind_2" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_ind_2" />
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="state">submitted</field>
+    </record>
+    <record id="krs_line_krs_ind_2_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ind_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ind_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_ind_2_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ind_2" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ind_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_ind_3" model="erpobe.akademik.krs">
+        <field name="mahasiswa_id" ref="erpobe.mhs_ind_3" />
+        <field name="penawaran_id" ref="erpobe.penawaran_ind_ta_2026_2027_ganjil" />
+        <field name="state">approved</field>
+    </record>
+    <record id="krs_line_krs_ind_3_1" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ind_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ind_1" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+    <record id="krs_line_krs_ind_3_2" model="erpobe.akademik.krs.line">
+        <field name="krs_id" ref="erpobe.krs_ind_3" />
+        <field name="penawaran_line_id" ref="erpobe.penawaran_line_ind_2" />
+        <field name="status_pengambilan">baru</field>
+    </record>
+</odoo>

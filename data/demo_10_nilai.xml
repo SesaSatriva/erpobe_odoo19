@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="grade_a" model="erpobe.master.grade">
+        <field name="name">A</field>
+        <field name="nilai_min">85.0</field>
+        <field name="nilai_max">100.0</field>
+        <field name="bobot">4.0</field>
+        <field name="keterangan_standar">Sangat Baik</field>
+    </record>
+    <record id="grade_ab" model="erpobe.master.grade">
+        <field name="name">A-</field>
+        <field name="nilai_min">80.0</field>
+        <field name="nilai_max">84.99</field>
+        <field name="bobot">3.7</field>
+        <field name="keterangan_standar">Baik Sekali</field>
+    </record>
+    <record id="grade_b" model="erpobe.master.grade">
+        <field name="name">B</field>
+        <field name="nilai_min">70.0</field>
+        <field name="nilai_max">79.99</field>
+        <field name="bobot">3.0</field>
+        <field name="keterangan_standar">Baik</field>
+    </record>
+    <record id="grade_bc" model="erpobe.master.grade">
+        <field name="name">B-</field>
+        <field name="nilai_min">65.0</field>
+        <field name="nilai_max">69.99</field>
+        <field name="bobot">2.7</field>
+        <field name="keterangan_standar">Cukup Baik</field>
+    </record>
+    <record id="grade_c" model="erpobe.master.grade">
+        <field name="name">C</field>
+        <field name="nilai_min">55.0</field>
+        <field name="nilai_max">64.99</field>
+        <field name="bobot">2.0</field>
+        <field name="keterangan_standar">Cukup</field>
+    </record>
+    <record id="grade_d" model="erpobe.master.grade">
+        <field name="name">D</field>
+        <field name="nilai_min">40.0</field>
+        <field name="nilai_max">54.99</field>
+        <field name="bobot">1.0</field>
+        <field name="keterangan_standar">Kurang</field>
+    </record>
+    <record id="grade_e" model="erpobe.master.grade">
+        <field name="name">E</field>
+        <field name="nilai_min">0.0</field>
+        <field name="nilai_max">39.99</field>
+        <field name="bobot">0.0</field>
+        <field name="keterangan_standar">Gagal</field>
+    </record>
+</odoo>

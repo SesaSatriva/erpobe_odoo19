@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="demo_admin_erpobe" model="res.users">
+        <field name="name">Admin Akademik Demo</field>
+        <field name="login">admin.akademik@example.test</field>
+        <field name="email">admin.akademik@example.test</field>
+        <field name="password">admin123</field>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('erpobe.group_admin')])]" />
+    </record>
+</odoo>

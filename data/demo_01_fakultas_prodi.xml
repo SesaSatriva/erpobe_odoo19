@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="fakultas_teknik" model="erpobe.master.fakultas">
+        <field name="name">Fakultas Teknik</field>
+        <field name="kode">FT</field>
+    </record>
+    <record id="prodi_ti" model="erpobe.master.prodi">
+        <field name="name">Teknik Informatika</field>
+        <field name="kode">IF</field>
+        <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
+    </record>
+    <record id="prodi_si" model="erpobe.master.prodi">
+        <field name="name">Teknik Sipil</field>
+        <field name="kode">SI</field>
+        <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
+    </record>
+    <record id="prodi_me" model="erpobe.master.prodi">
+        <field name="name">Teknik Mesin</field>
+        <field name="kode">ME</field>
+        <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
+    </record>
+    <record id="prodi_el" model="erpobe.master.prodi">
+        <field name="name">Teknik Elektro</field>
+        <field name="kode">EL</field>
+        <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
+    </record>
+    <record id="prodi_ind" model="erpobe.master.prodi">
+        <field name="name">Teknik Industri</field>
+        <field name="kode">IN</field>
+        <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
+    </record>
+</odoo>

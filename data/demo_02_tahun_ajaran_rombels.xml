@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="ta_2022_2023_ganjil" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2022/2023</field>
+        <field name="semester">ganjil</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2022_2023_genap" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2022/2023</field>
+        <field name="semester">genap</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2023_2024_ganjil" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2023/2024</field>
+        <field name="semester">ganjil</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2023_2024_genap" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2023/2024</field>
+        <field name="semester">genap</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2024_2025_ganjil" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2024/2025</field>
+        <field name="semester">ganjil</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2024_2025_genap" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2024/2025</field>
+        <field name="semester">genap</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2025_2026_ganjil" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2025/2026</field>
+        <field name="semester">ganjil</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2025_2026_genap" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2025/2026</field>
+        <field name="semester">genap</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="ta_2026_2027_ganjil" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2026/2027</field>
+        <field name="semester">ganjil</field>
+        <field name="aktif" eval="True" />
+    </record>
+    <record id="ta_2026_2027_genap" model="erpobe.akademik.tahunajaran">
+        <field name="tahun_ajaran">2026/2027</field>
+        <field name="semester">genap</field>
+        <field name="aktif" eval="False" />
+    </record>
+    <record id="rombel_ti_2026_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_ti_2025_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2025</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_si_2026_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_si_2025_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2025</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_me_2026_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="rombel_me_2025_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2025</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="rombel_el_2026_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="rombel_el_2025_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2025</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="rombel_ind_2026_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="rombel_ind_2025_a" model="erpobe.master.rombel">
+        <field name="name">A</field>
+        <field name="angkatan">2025</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+</odoo>

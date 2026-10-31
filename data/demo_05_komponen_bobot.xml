@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="komp_tugas" model="erpobe.akademik.komponen">
+        <field name="name">Tugas</field>
+        <field name="tipe">kognitif</field>
+        <field name="aktif" eval="True" />
+        <field name="color">0</field>
+    </record>
+    <record id="komp_kuis" model="erpobe.akademik.komponen">
+        <field name="name">Kuis</field>
+        <field name="tipe">partisipatif</field>
+        <field name="aktif" eval="True" />
+        <field name="color">0</field>
+    </record>
+    <record id="komp_uts" model="erpobe.akademik.komponen">
+        <field name="name">UTS</field>
+        <field name="tipe">kognitif</field>
+        <field name="aktif" eval="True" />
+        <field name="color">0</field>
+    </record>
+    <record id="komp_uas" model="erpobe.akademik.komponen">
+        <field name="name">UAS</field>
+        <field name="tipe">kognitif</field>
+        <field name="aktif" eval="True" />
+        <field name="color">0</field>
+    </record>
+    <record id="komp_proyek" model="erpobe.akademik.komponen">
+        <field name="name">Proyek</field>
+        <field name="tipe">partisipatif</field>
+        <field name="aktif" eval="True" />
+        <field name="color">0</field>
+    </record>
+    <record id="komp_praktikum" model="erpobe.akademik.komponen">
+        <field name="name">Praktikum</field>
+        <field name="tipe">partisipatif</field>
+        <field name="aktif" eval="True" />
+        <field name="color">0</field>
+    </record>
+</odoo>

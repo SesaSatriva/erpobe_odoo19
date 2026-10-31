@@ -1,0 +1,579 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="partner_ti_dosen_1" model="res.partner">
+        <field name="name">Dr. Rina Kumalasari</field>
+        <field name="email">ti.dosen1@example.test</field>
+    </record>
+    <record id="dosen_ti_1" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_ti_dosen_1" />
+        <field name="name">Dr. Rina Kumalasari</field>
+        <field name="nip">1987001001</field>
+        <field name="jabatan_fungsional">Lektor Kepala</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_dosen_2" model="res.partner">
+        <field name="name">Budi Santoso, S.T.</field>
+        <field name="email">ti.dosen2@example.test</field>
+    </record>
+    <record id="dosen_ti_2" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_ti_dosen_2" />
+        <field name="name">Budi Santoso, S.T.</field>
+        <field name="nip">1987001002</field>
+        <field name="jabatan_fungsional">Asisten Ahli</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_dosen_3" model="res.partner">
+        <field name="name">Ir. Damar Priyanto</field>
+        <field name="email">ti.dosen3@example.test</field>
+    </record>
+    <record id="dosen_ti_3" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_ti_dosen_3" />
+        <field name="name">Ir. Damar Priyanto</field>
+        <field name="nip">1987001003</field>
+        <field name="jabatan_fungsional">Guru Besar</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_mhs_1" model="res.partner">
+        <field name="name">Anisa Putri</field>
+        <field name="email">ti.mhs.1@example.test</field>
+    </record>
+    <record id="mhs_ti_1" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ti_mhs_1" />
+        <field name="name">Anisa Putri</field>
+        <field name="nim">2026IF001</field>
+        <field name="status_akademik">lulus</field>
+        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_mhs_2" model="res.partner">
+        <field name="name">Raka Pradana</field>
+        <field name="email">ti.mhs.2@example.test</field>
+    </record>
+    <record id="mhs_ti_2" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ti_mhs_2" />
+        <field name="name">Raka Pradana</field>
+        <field name="nim">2026IF002</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_mhs_3" model="res.partner">
+        <field name="name">Lukman Hidayat</field>
+        <field name="email">ti.mhs.3@example.test</field>
+    </record>
+    <record id="mhs_ti_3" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ti_mhs_3" />
+        <field name="name">Lukman Hidayat</field>
+        <field name="nim">2026IF003</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_mhs_4" model="res.partner">
+        <field name="name">Nadia Aulia</field>
+        <field name="email">ti.mhs.4@example.test</field>
+    </record>
+    <record id="mhs_ti_4" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ti_mhs_4" />
+        <field name="name">Nadia Aulia</field>
+        <field name="nim">2026IF004</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ti_mhs_5" model="res.partner">
+        <field name="name">Farhan Wijaya</field>
+        <field name="email">ti.mhs.5@example.test</field>
+    </record>
+    <record id="mhs_ti_5" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ti_mhs_5" />
+        <field name="name">Farhan Wijaya</field>
+        <field name="nim">2026IF005</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="True" />
+    </record>
+    <record id="partner_ti_mhs_6" model="res.partner">
+        <field name="name">Salsa Putri</field>
+        <field name="email">ti.mhs.6@example.test</field>
+    </record>
+    <record id="mhs_ti_6" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ti_mhs_6" />
+        <field name="name">Salsa Putri</field>
+        <field name="nim">2026IF006</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_dosen_1" model="res.partner">
+        <field name="name">Dr. Rina Kumalasari</field>
+        <field name="email">si.dosen1@example.test</field>
+    </record>
+    <record id="dosen_si_1" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_si_dosen_1" />
+        <field name="name">Dr. Rina Kumalasari</field>
+        <field name="nip">1987001004</field>
+        <field name="jabatan_fungsional">Lektor Kepala</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_dosen_2" model="res.partner">
+        <field name="name">Budi Santoso, S.T.</field>
+        <field name="email">si.dosen2@example.test</field>
+    </record>
+    <record id="dosen_si_2" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_si_dosen_2" />
+        <field name="name">Budi Santoso, S.T.</field>
+        <field name="nip">1987001005</field>
+        <field name="jabatan_fungsional">Asisten Ahli</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_dosen_3" model="res.partner">
+        <field name="name">Ir. Damar Priyanto</field>
+        <field name="email">si.dosen3@example.test</field>
+    </record>
+    <record id="dosen_si_3" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_si_dosen_3" />
+        <field name="name">Ir. Damar Priyanto</field>
+        <field name="nip">1987001006</field>
+        <field name="jabatan_fungsional">Guru Besar</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_mhs_1" model="res.partner">
+        <field name="name">Gilang Permana</field>
+        <field name="email">si.mhs.1@example.test</field>
+    </record>
+    <record id="mhs_si_1" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_si_mhs_1" />
+        <field name="name">Gilang Permana</field>
+        <field name="nim">2026SI001</field>
+        <field name="status_akademik">lulus</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_mhs_2" model="res.partner">
+        <field name="name">Maya Sari</field>
+        <field name="email">si.mhs.2@example.test</field>
+    </record>
+    <record id="mhs_si_2" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_si_mhs_2" />
+        <field name="name">Maya Sari</field>
+        <field name="nim">2026SI002</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_mhs_3" model="res.partner">
+        <field name="name">Rafi Kusuma</field>
+        <field name="email">si.mhs.3@example.test</field>
+    </record>
+    <record id="mhs_si_3" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_si_mhs_3" />
+        <field name="name">Rafi Kusuma</field>
+        <field name="nim">2026SI003</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_mhs_4" model="res.partner">
+        <field name="name">Della Putri</field>
+        <field name="email">si.mhs.4@example.test</field>
+    </record>
+    <record id="mhs_si_4" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_si_mhs_4" />
+        <field name="name">Della Putri</field>
+        <field name="nim">2026SI004</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_si_mhs_5" model="res.partner">
+        <field name="name">Hafiz Rahman</field>
+        <field name="email">si.mhs.5@example.test</field>
+    </record>
+    <record id="mhs_si_5" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_si_mhs_5" />
+        <field name="name">Hafiz Rahman</field>
+        <field name="nim">2026SI005</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="True" />
+    </record>
+    <record id="partner_si_mhs_6" model="res.partner">
+        <field name="name">Wulan Safitri</field>
+        <field name="email">si.mhs.6@example.test</field>
+    </record>
+    <record id="mhs_si_6" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_si_mhs_6" />
+        <field name="name">Wulan Safitri</field>
+        <field name="nim">2026SI006</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_dosen_1" model="res.partner">
+        <field name="name">Ari Setiawan, M.T.</field>
+        <field name="email">me.dosen1@example.test</field>
+    </record>
+    <record id="dosen_me_1" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_me_dosen_1" />
+        <field name="name">Ari Setiawan, M.T.</field>
+        <field name="nip">1987001007</field>
+        <field name="jabatan_fungsional">Lektor</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_me')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_dosen_2" model="res.partner">
+        <field name="name">Lina Mardiana, S.T.</field>
+        <field name="email">me.dosen2@example.test</field>
+    </record>
+    <record id="dosen_me_2" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_me_dosen_2" />
+        <field name="name">Lina Mardiana, S.T.</field>
+        <field name="nip">1987001008</field>
+        <field name="jabatan_fungsional">Asisten Ahli</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_me')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_mhs_1" model="res.partner">
+        <field name="name">Dewi Lestari</field>
+        <field name="email">me.mhs.1@example.test</field>
+    </record>
+    <record id="mhs_me_1" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_me_mhs_1" />
+        <field name="name">Dewi Lestari</field>
+        <field name="nim">2026ME001</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_mhs_2" model="res.partner">
+        <field name="name">Adit Pratama</field>
+        <field name="email">me.mhs.2@example.test</field>
+    </record>
+    <record id="mhs_me_2" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_me_mhs_2" />
+        <field name="name">Adit Pratama</field>
+        <field name="nim">2026ME002</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_mhs_3" model="res.partner">
+        <field name="name">Santi Wulandari</field>
+        <field name="email">me.mhs.3@example.test</field>
+    </record>
+    <record id="mhs_me_3" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_me_mhs_3" />
+        <field name="name">Santi Wulandari</field>
+        <field name="nim">2026ME003</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_mhs_4" model="res.partner">
+        <field name="name">Bram Setiawan</field>
+        <field name="email">me.mhs.4@example.test</field>
+    </record>
+    <record id="mhs_me_4" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_me_mhs_4" />
+        <field name="name">Bram Setiawan</field>
+        <field name="nim">2026ME004</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_me_mhs_5" model="res.partner">
+        <field name="name">Nabil Ahmad</field>
+        <field name="email">me.mhs.5@example.test</field>
+    </record>
+    <record id="mhs_me_5" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_me_mhs_5" />
+        <field name="name">Nabil Ahmad</field>
+        <field name="nim">2026ME005</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="True" />
+    </record>
+    <record id="partner_me_mhs_6" model="res.partner">
+        <field name="name">Yuliana Sari</field>
+        <field name="email">me.mhs.6@example.test</field>
+    </record>
+    <record id="mhs_me_6" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_me_mhs_6" />
+        <field name="name">Yuliana Sari</field>
+        <field name="nim">2026ME006</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_dosen_1" model="res.partner">
+        <field name="name">Nadya Rahmawati, M.Eng.</field>
+        <field name="email">el.dosen1@example.test</field>
+    </record>
+    <record id="dosen_el_1" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_el_dosen_1" />
+        <field name="name">Nadya Rahmawati, M.Eng.</field>
+        <field name="nip">1987001009</field>
+        <field name="jabatan_fungsional">Lektor</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_dosen_2" model="res.partner">
+        <field name="name">Rahmat Setiawan, S.T.</field>
+        <field name="email">el.dosen2@example.test</field>
+    </record>
+    <record id="dosen_el_2" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_el_dosen_2" />
+        <field name="name">Rahmat Setiawan, S.T.</field>
+        <field name="nip">1987001010</field>
+        <field name="jabatan_fungsional">Asisten Ahli</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_mhs_1" model="res.partner">
+        <field name="name">Irfan Maulana</field>
+        <field name="email">el.mhs.1@example.test</field>
+    </record>
+    <record id="mhs_el_1" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_el_mhs_1" />
+        <field name="name">Irfan Maulana</field>
+        <field name="nim">2026EL001</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_mhs_2" model="res.partner">
+        <field name="name">Citra Lestari</field>
+        <field name="email">el.mhs.2@example.test</field>
+    </record>
+    <record id="mhs_el_2" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_el_mhs_2" />
+        <field name="name">Citra Lestari</field>
+        <field name="nim">2026EL002</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_mhs_3" model="res.partner">
+        <field name="name">Aditya Firmansyah</field>
+        <field name="email">el.mhs.3@example.test</field>
+    </record>
+    <record id="mhs_el_3" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_el_mhs_3" />
+        <field name="name">Aditya Firmansyah</field>
+        <field name="nim">2026EL003</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_mhs_4" model="res.partner">
+        <field name="name">Rizky Hidayat</field>
+        <field name="email">el.mhs.4@example.test</field>
+    </record>
+    <record id="mhs_el_4" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_el_mhs_4" />
+        <field name="name">Rizky Hidayat</field>
+        <field name="nim">2026EL004</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_el_mhs_5" model="res.partner">
+        <field name="name">Sabrina Noor</field>
+        <field name="email">el.mhs.5@example.test</field>
+    </record>
+    <record id="mhs_el_5" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_el_mhs_5" />
+        <field name="name">Sabrina Noor</field>
+        <field name="nim">2026EL005</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="True" />
+    </record>
+    <record id="partner_el_mhs_6" model="res.partner">
+        <field name="name">Vega Pratama</field>
+        <field name="email">el.mhs.6@example.test</field>
+    </record>
+    <record id="mhs_el_6" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_el_mhs_6" />
+        <field name="name">Vega Pratama</field>
+        <field name="nim">2026EL006</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_dosen_1" model="res.partner">
+        <field name="name">Fadli Nugraha, S.T.</field>
+        <field name="email">ind.dosen1@example.test</field>
+    </record>
+    <record id="dosen_ind_1" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_ind_dosen_1" />
+        <field name="name">Fadli Nugraha, S.T.</field>
+        <field name="nip">1987001011</field>
+        <field name="jabatan_fungsional">Asisten Ahli</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ind')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_dosen_2" model="res.partner">
+        <field name="name">Mira Lestari, M.T.</field>
+        <field name="email">ind.dosen2@example.test</field>
+    </record>
+    <record id="dosen_ind_2" model="erpobe.master.dosen">
+        <field name="partner_id" ref="erpobe.partner_ind_dosen_2" />
+        <field name="name">Mira Lestari, M.T.</field>
+        <field name="nip">1987001012</field>
+        <field name="jabatan_fungsional">Lektor</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ind')])]" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_mhs_1" model="res.partner">
+        <field name="name">Maya Sari</field>
+        <field name="email">ind.mhs.1@example.test</field>
+    </record>
+    <record id="mhs_ind_1" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ind_mhs_1" />
+        <field name="name">Maya Sari</field>
+        <field name="nim">2026IN001</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_mhs_2" model="res.partner">
+        <field name="name">Farel Nanda</field>
+        <field name="email">ind.mhs.2@example.test</field>
+    </record>
+    <record id="mhs_ind_2" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ind_mhs_2" />
+        <field name="name">Farel Nanda</field>
+        <field name="nim">2026IN002</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_mhs_3" model="res.partner">
+        <field name="name">Hana Rahma</field>
+        <field name="email">ind.mhs.3@example.test</field>
+    </record>
+    <record id="mhs_ind_3" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ind_mhs_3" />
+        <field name="name">Hana Rahma</field>
+        <field name="nim">2026IN003</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_mhs_4" model="res.partner">
+        <field name="name">Dimas Akbar</field>
+        <field name="email">ind.mhs.4@example.test</field>
+    </record>
+    <record id="mhs_ind_4" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ind_mhs_4" />
+        <field name="name">Dimas Akbar</field>
+        <field name="nim">2026IN004</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+    <record id="partner_ind_mhs_5" model="res.partner">
+        <field name="name">Aisyah Putri</field>
+        <field name="email">ind.mhs.5@example.test</field>
+    </record>
+    <record id="mhs_ind_5" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ind_mhs_5" />
+        <field name="name">Aisyah Putri</field>
+        <field name="nim">2026IN005</field>
+        <field name="status_akademik">aktif</field>
+        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
+        <field name="is_public_visible" eval="False" />
+        <field name="public_opt_out" eval="True" />
+    </record>
+    <record id="partner_ind_mhs_6" model="res.partner">
+        <field name="name">Yusuf Hadi</field>
+        <field name="email">ind.mhs.6@example.test</field>
+    </record>
+    <record id="mhs_ind_6" model="erpobe.master.mahasiswa">
+        <field name="partner_id" ref="erpobe.partner_ind_mhs_6" />
+        <field name="name">Yusuf Hadi</field>
+        <field name="nim">2026IN006</field>
+        <field name="status_akademik">cuti</field>
+        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
+        <field name="is_public_visible" eval="True" />
+        <field name="public_opt_out" eval="False" />
+    </record>
+</odoo>

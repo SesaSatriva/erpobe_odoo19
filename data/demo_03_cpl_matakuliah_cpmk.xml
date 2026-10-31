@@ -1,0 +1,1493 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+    <record id="cpl_ti_01" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-01</field>
+        <field name="name">Menunjukkan sikap religius, etis, dan bertanggung jawab dalam tugas akademik.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_02" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-02</field>
+        <field name="name">Menguasai konsep algoritma, struktur data, dan analisis sistem informasi.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_03" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-03</field>
+        <field name="name">Merancang solusi perangkat lunak yang aman, terukur, dan ramah pengguna.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_04" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-04</field>
+        <field name="name">Menganalisis kebutuhan sistem lalu merumuskan spesifikasi fungsional.</field>
+        <field name="jenis_cpl">keterampilan_umum</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_05" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-05</field>
+        <field name="name">Mendesain dan menguji antarmuka serta fitur perangkat lunak.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_06" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-06</field>
+        <field name="name">Mengoperasikan basis data dan query SQL untuk kebutuhan bisnis.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_07" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-07</field>
+        <field name="name">Memecahkan persoalan teknologi informasi dengan pendekatan ilmiah.</field>
+        <field name="jenis_cpl">keterampilan_umum</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpl_ti_08" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-08</field>
+        <field name="name">Bekerja dalam tim dan menyampaikan hasil secara efektif.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="mk_ti_01" model="erpobe.master.matakuliah">
+        <field name="name">Algoritma dan Struktur Data</field>
+        <field name="kode_mk">IF101</field>
+        <field name="sks">3</field>
+        <field name="semester">1</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Algoritma dan Struktur Data adalah mata kuliah inti dalam bidang Teknik Informatika.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpmk_ti_if101_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_01" />
+        <field name="kode_cpmk">CPMK-IF101-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk algoritma dan struktur data secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if101_1_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_1" />
+    </record>
+    <record id="map_cpmk_ti_if101_1_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_1" />
+    </record>
+    <record id="cpmk_ti_if101_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_01" />
+        <field name="kode_cpmk">CPMK-IF101-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk algoritma dan struktur data secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if101_2_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_2" />
+    </record>
+    <record id="map_cpmk_ti_if101_2_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_2" />
+    </record>
+    <record id="cpmk_ti_if101_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_01" />
+        <field name="kode_cpmk">CPMK-IF101-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk algoritma dan struktur data secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if101_3_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_3" />
+    </record>
+    <record id="map_cpmk_ti_if101_3_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_3" />
+    </record>
+    <record id="mk_ti_02" model="erpobe.master.matakuliah">
+        <field name="name">Basis Data</field>
+        <field name="kode_mk">IF102</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Basis Data adalah mata kuliah inti dalam bidang Teknik Informatika.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpmk_ti_if102_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_02" />
+        <field name="kode_cpmk">CPMK-IF102-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk basis data secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if102_1_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_1" />
+    </record>
+    <record id="map_cpmk_ti_if102_1_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_1" />
+    </record>
+    <record id="cpmk_ti_if102_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_02" />
+        <field name="kode_cpmk">CPMK-IF102-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk basis data secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if102_2_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_2" />
+    </record>
+    <record id="map_cpmk_ti_if102_2_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_2" />
+    </record>
+    <record id="cpmk_ti_if102_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_02" />
+        <field name="kode_cpmk">CPMK-IF102-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk basis data secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if102_3_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_3" />
+    </record>
+    <record id="map_cpmk_ti_if102_3_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_3" />
+    </record>
+    <record id="mk_ti_03" model="erpobe.master.matakuliah">
+        <field name="name">Rekayasa Perangkat Lunak</field>
+        <field name="kode_mk">IF203</field>
+        <field name="sks">4</field>
+        <field name="semester">3</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Rekayasa Perangkat Lunak adalah mata kuliah inti dalam bidang Teknik Informatika.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpmk_ti_if203_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_03" />
+        <field name="kode_cpmk">CPMK-IF203-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rekayasa perangkat lunak secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if203_1_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_1" />
+    </record>
+    <record id="map_cpmk_ti_if203_1_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_1" />
+    </record>
+    <record id="cpmk_ti_if203_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_03" />
+        <field name="kode_cpmk">CPMK-IF203-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rekayasa perangkat lunak secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if203_2_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_2" />
+    </record>
+    <record id="map_cpmk_ti_if203_2_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_2" />
+    </record>
+    <record id="cpmk_ti_if203_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_03" />
+        <field name="kode_cpmk">CPMK-IF203-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rekayasa perangkat lunak secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if203_3_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_3" />
+    </record>
+    <record id="map_cpmk_ti_if203_3_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_3" />
+    </record>
+    <record id="mk_ti_04" model="erpobe.master.matakuliah">
+        <field name="name">Jaringan Komputer</field>
+        <field name="kode_mk">IF204</field>
+        <field name="sks">3</field>
+        <field name="semester">4</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Jaringan Komputer adalah mata kuliah inti dalam bidang Teknik Informatika.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpmk_ti_if204_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_04" />
+        <field name="kode_cpmk">CPMK-IF204-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk jaringan komputer secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if204_1_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_1" />
+    </record>
+    <record id="map_cpmk_ti_if204_1_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_1" />
+    </record>
+    <record id="cpmk_ti_if204_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_04" />
+        <field name="kode_cpmk">CPMK-IF204-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk jaringan komputer secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if204_2_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_2" />
+    </record>
+    <record id="map_cpmk_ti_if204_2_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_2" />
+    </record>
+    <record id="cpmk_ti_if204_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_04" />
+        <field name="kode_cpmk">CPMK-IF204-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk jaringan komputer secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if204_3_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_3" />
+    </record>
+    <record id="map_cpmk_ti_if204_3_cpl_ti_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_3" />
+    </record>
+    <record id="mk_ti_05" model="erpobe.master.matakuliah">
+        <field name="name">Kecerdasan Buatan</field>
+        <field name="kode_mk">IF205</field>
+        <field name="sks">3</field>
+        <field name="semester">5</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Kecerdasan Buatan adalah mata kuliah inti dalam bidang Teknik Informatika.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="cpmk_ti_if205_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_05" />
+        <field name="kode_cpmk">CPMK-IF205-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk kecerdasan buatan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if205_1_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_1" />
+    </record>
+    <record id="map_cpmk_ti_if205_1_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_1" />
+    </record>
+    <record id="cpmk_ti_if205_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_05" />
+        <field name="kode_cpmk">CPMK-IF205-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk kecerdasan buatan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if205_2_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_2" />
+    </record>
+    <record id="map_cpmk_ti_if205_2_cpl_ti_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_2" />
+    </record>
+    <record id="cpmk_ti_if205_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ti_05" />
+        <field name="kode_cpmk">CPMK-IF205-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk kecerdasan buatan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ti_if205_3_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_3" />
+    </record>
+    <record id="map_cpmk_ti_if205_3_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_3" />
+    </record>
+    <record id="cpl_si_01" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-01</field>
+        <field name="name">Menggunakan prinsip keselamatan, etika, dan tanggung jawab dalam rancang bangun sipil.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_02" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-02</field>
+        <field name="name">Menganalisis mekanika tanah dan beban struktur secara tepat.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_03" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-03</field>
+        <field name="name">Merancang komponen struktur dan pondasi sesuai standar teknis.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_04" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-04</field>
+        <field name="name">Mengevaluasi material konstruksi serta eksposur lingkungan.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_05" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-05</field>
+        <field name="name">Mengelola proyek konstruksi secara operasional dan aman.</field>
+        <field name="jenis_cpl">keterampilan_umum</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_06" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-06</field>
+        <field name="name">Membaca dan menafsirkan data survei dan pemetaan lahan.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_07" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-07</field>
+        <field name="name">Mengembangkan solusi rekayasa infrastruktur berkelanjutan.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpl_si_08" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-08</field>
+        <field name="name">Menyusun laporan teknis dan presentasi hasil kajian.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="mk_si_01" model="erpobe.master.matakuliah">
+        <field name="name">Mekanika Tanah</field>
+        <field name="kode_mk">SI101</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Mekanika Tanah adalah mata kuliah inti dalam bidang Teknik Sipil.</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpmk_si_si101_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_01" />
+        <field name="kode_cpmk">CPMK-SI101-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika tanah secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si101_1_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si101_1" />
+    </record>
+    <record id="map_cpmk_si_si101_1_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si101_1" />
+    </record>
+    <record id="cpmk_si_si101_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_01" />
+        <field name="kode_cpmk">CPMK-SI101-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika tanah secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si101_2_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si101_2" />
+    </record>
+    <record id="map_cpmk_si_si101_2_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si101_2" />
+    </record>
+    <record id="cpmk_si_si101_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_01" />
+        <field name="kode_cpmk">CPMK-SI101-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika tanah secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si101_3_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si101_3" />
+    </record>
+    <record id="map_cpmk_si_si101_3_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si101_3" />
+    </record>
+    <record id="mk_si_02" model="erpobe.master.matakuliah">
+        <field name="name">Struktur Beton</field>
+        <field name="kode_mk">SI102</field>
+        <field name="sks">4</field>
+        <field name="semester">3</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Struktur Beton adalah mata kuliah inti dalam bidang Teknik Sipil.</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpmk_si_si102_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_02" />
+        <field name="kode_cpmk">CPMK-SI102-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk struktur beton secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si102_1_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si102_1" />
+    </record>
+    <record id="map_cpmk_si_si102_1_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si102_1" />
+    </record>
+    <record id="cpmk_si_si102_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_02" />
+        <field name="kode_cpmk">CPMK-SI102-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk struktur beton secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si102_2_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si102_2" />
+    </record>
+    <record id="map_cpmk_si_si102_2_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si102_2" />
+    </record>
+    <record id="cpmk_si_si102_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_02" />
+        <field name="kode_cpmk">CPMK-SI102-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk struktur beton secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si102_3_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si102_3" />
+    </record>
+    <record id="map_cpmk_si_si102_3_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si102_3" />
+    </record>
+    <record id="mk_si_03" model="erpobe.master.matakuliah">
+        <field name="name">Hidrologi</field>
+        <field name="kode_mk">SI103</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Hidrologi adalah mata kuliah inti dalam bidang Teknik Sipil.</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpmk_si_si103_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_03" />
+        <field name="kode_cpmk">CPMK-SI103-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk hidrologi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si103_1_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si103_1" />
+    </record>
+    <record id="map_cpmk_si_si103_1_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si103_1" />
+    </record>
+    <record id="cpmk_si_si103_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_03" />
+        <field name="kode_cpmk">CPMK-SI103-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk hidrologi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si103_2_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si103_2" />
+    </record>
+    <record id="map_cpmk_si_si103_2_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si103_2" />
+    </record>
+    <record id="cpmk_si_si103_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_03" />
+        <field name="kode_cpmk">CPMK-SI103-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk hidrologi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si103_3_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si103_3" />
+    </record>
+    <record id="map_cpmk_si_si103_3_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si103_3" />
+    </record>
+    <record id="mk_si_04" model="erpobe.master.matakuliah">
+        <field name="name">Surveying dan Pemetaan</field>
+        <field name="kode_mk">SI204</field>
+        <field name="sks">3</field>
+        <field name="semester">4</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Surveying dan Pemetaan adalah mata kuliah inti dalam bidang Teknik Sipil.</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpmk_si_si204_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_04" />
+        <field name="kode_cpmk">CPMK-SI204-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk surveying dan pemetaan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si204_1_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si204_1" />
+    </record>
+    <record id="map_cpmk_si_si204_1_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si204_1" />
+    </record>
+    <record id="cpmk_si_si204_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_04" />
+        <field name="kode_cpmk">CPMK-SI204-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk surveying dan pemetaan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si204_2_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si204_2" />
+    </record>
+    <record id="map_cpmk_si_si204_2_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si204_2" />
+    </record>
+    <record id="cpmk_si_si204_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_04" />
+        <field name="kode_cpmk">CPMK-SI204-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk surveying dan pemetaan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si204_3_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si204_3" />
+    </record>
+    <record id="map_cpmk_si_si204_3_cpl_si_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si204_3" />
+    </record>
+    <record id="mk_si_05" model="erpobe.master.matakuliah">
+        <field name="name">Transportasi dan Perkerasan</field>
+        <field name="kode_mk">SI205</field>
+        <field name="sks">3</field>
+        <field name="semester">5</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Transportasi dan Perkerasan adalah mata kuliah inti dalam bidang Teknik Sipil.</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="cpmk_si_si205_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_05" />
+        <field name="kode_cpmk">CPMK-SI205-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk transportasi dan perkerasan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si205_1_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si205_1" />
+    </record>
+    <record id="map_cpmk_si_si205_1_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si205_1" />
+    </record>
+    <record id="cpmk_si_si205_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_05" />
+        <field name="kode_cpmk">CPMK-SI205-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk transportasi dan perkerasan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si205_2_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si205_2" />
+    </record>
+    <record id="map_cpmk_si_si205_2_cpl_si_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si205_2" />
+    </record>
+    <record id="cpmk_si_si205_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_si_05" />
+        <field name="kode_cpmk">CPMK-SI205-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk transportasi dan perkerasan secara terukur.</field>
+    </record>
+    <record id="map_cpmk_si_si205_3_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si205_3" />
+    </record>
+    <record id="map_cpmk_si_si205_3_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_si_si205_3" />
+    </record>
+    <record id="cpl_me_01" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-01</field>
+        <field name="name">Menunjukkan sikap profesional dan bertanggung jawab dalam praktik mekanik.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_02" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-02</field>
+        <field name="name">Menguasai prinsip termodinamika dan mekanika fluida.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_03" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-03</field>
+        <field name="name">Merancang komponen mesin sesuai kebutuhan performa dan keamanan.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_04" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-04</field>
+        <field name="name">Menganalisis proses manufaktur dan sistem energi.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_05" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-05</field>
+        <field name="name">Menyusun simulasi dan eksperimen mesin secara valid.</field>
+        <field name="jenis_cpl">keterampilan_umum</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_06" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-06</field>
+        <field name="name">Memilih material dan proses manufaktur yang efisien.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_07" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-07</field>
+        <field name="name">Mengembangkan inovasi mesin dan otomasi.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpl_me_08" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-08</field>
+        <field name="name">Mengkomunikasikan hasil desain teknis secara efektif.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="mk_me_01" model="erpobe.master.matakuliah">
+        <field name="name">Termodinamika</field>
+        <field name="kode_mk">ME101</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Termodinamika adalah mata kuliah inti dalam bidang Teknik Mesin.</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpmk_me_me101_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_01" />
+        <field name="kode_cpmk">CPMK-ME101-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk termodinamika secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me101_1_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me101_1" />
+    </record>
+    <record id="map_cpmk_me_me101_1_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me101_1" />
+    </record>
+    <record id="cpmk_me_me101_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_01" />
+        <field name="kode_cpmk">CPMK-ME101-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk termodinamika secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me101_2_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me101_2" />
+    </record>
+    <record id="map_cpmk_me_me101_2_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me101_2" />
+    </record>
+    <record id="cpmk_me_me101_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_01" />
+        <field name="kode_cpmk">CPMK-ME101-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk termodinamika secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me101_3_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me101_3" />
+    </record>
+    <record id="map_cpmk_me_me101_3_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me101_3" />
+    </record>
+    <record id="mk_me_02" model="erpobe.master.matakuliah">
+        <field name="name">Mekanika Fluida</field>
+        <field name="kode_mk">ME102</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Mekanika Fluida adalah mata kuliah inti dalam bidang Teknik Mesin.</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpmk_me_me102_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_02" />
+        <field name="kode_cpmk">CPMK-ME102-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika fluida secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me102_1_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me102_1" />
+    </record>
+    <record id="map_cpmk_me_me102_1_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me102_1" />
+    </record>
+    <record id="cpmk_me_me102_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_02" />
+        <field name="kode_cpmk">CPMK-ME102-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika fluida secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me102_2_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me102_2" />
+    </record>
+    <record id="map_cpmk_me_me102_2_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me102_2" />
+    </record>
+    <record id="cpmk_me_me102_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_02" />
+        <field name="kode_cpmk">CPMK-ME102-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika fluida secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me102_3_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me102_3" />
+    </record>
+    <record id="map_cpmk_me_me102_3_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me102_3" />
+    </record>
+    <record id="mk_me_03" model="erpobe.master.matakuliah">
+        <field name="name">Desain Mesin</field>
+        <field name="kode_mk">ME203</field>
+        <field name="sks">4</field>
+        <field name="semester">3</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Desain Mesin adalah mata kuliah inti dalam bidang Teknik Mesin.</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpmk_me_me203_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_03" />
+        <field name="kode_cpmk">CPMK-ME203-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk desain mesin secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me203_1_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me203_1" />
+    </record>
+    <record id="map_cpmk_me_me203_1_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me203_1" />
+    </record>
+    <record id="cpmk_me_me203_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_03" />
+        <field name="kode_cpmk">CPMK-ME203-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk desain mesin secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me203_2_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me203_2" />
+    </record>
+    <record id="map_cpmk_me_me203_2_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me203_2" />
+    </record>
+    <record id="cpmk_me_me203_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_03" />
+        <field name="kode_cpmk">CPMK-ME203-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk desain mesin secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me203_3_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me203_3" />
+    </record>
+    <record id="map_cpmk_me_me203_3_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me203_3" />
+    </record>
+    <record id="mk_me_04" model="erpobe.master.matakuliah">
+        <field name="name">Proses Manufaktur</field>
+        <field name="kode_mk">ME204</field>
+        <field name="sks">3</field>
+        <field name="semester">4</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Proses Manufaktur adalah mata kuliah inti dalam bidang Teknik Mesin.</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpmk_me_me204_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_04" />
+        <field name="kode_cpmk">CPMK-ME204-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk proses manufaktur secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me204_1_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me204_1" />
+    </record>
+    <record id="map_cpmk_me_me204_1_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me204_1" />
+    </record>
+    <record id="cpmk_me_me204_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_04" />
+        <field name="kode_cpmk">CPMK-ME204-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk proses manufaktur secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me204_2_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me204_2" />
+    </record>
+    <record id="map_cpmk_me_me204_2_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me204_2" />
+    </record>
+    <record id="cpmk_me_me204_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_04" />
+        <field name="kode_cpmk">CPMK-ME204-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk proses manufaktur secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me204_3_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me204_3" />
+    </record>
+    <record id="map_cpmk_me_me204_3_cpl_me_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me204_3" />
+    </record>
+    <record id="mk_me_05" model="erpobe.master.matakuliah">
+        <field name="name">CAD/CAM</field>
+        <field name="kode_mk">ME205</field>
+        <field name="sks">3</field>
+        <field name="semester">5</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">CAD/CAM adalah mata kuliah inti dalam bidang Teknik Mesin.</field>
+        <field name="prodi_id" ref="erpobe.prodi_me" />
+    </record>
+    <record id="cpmk_me_me205_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_05" />
+        <field name="kode_cpmk">CPMK-ME205-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk cad/cam secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me205_1_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me205_1" />
+    </record>
+    <record id="map_cpmk_me_me205_1_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me205_1" />
+    </record>
+    <record id="cpmk_me_me205_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_05" />
+        <field name="kode_cpmk">CPMK-ME205-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk cad/cam secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me205_2_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me205_2" />
+    </record>
+    <record id="map_cpmk_me_me205_2_cpl_me_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me205_2" />
+    </record>
+    <record id="cpmk_me_me205_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_me_05" />
+        <field name="kode_cpmk">CPMK-ME205-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk cad/cam secara terukur.</field>
+    </record>
+    <record id="map_cpmk_me_me205_3_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me205_3" />
+    </record>
+    <record id="map_cpmk_me_me205_3_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_me_me205_3" />
+    </record>
+    <record id="cpl_el_01" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-01</field>
+        <field name="name">Menjaga etika kerja dan keselamatan dalam praktik kelistrikan.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_02" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-02</field>
+        <field name="name">Menguasai prinsip rangkaian, sinyal, dan sistem tenaga listrik.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_03" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-03</field>
+        <field name="name">Merancang sistem kontrol dan elektronik kendali.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_04" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-04</field>
+        <field name="name">Menganalisis perilaku sistem tenaga dan instalasi listrik.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_05" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-05</field>
+        <field name="name">Menggunakan alat ukur dan pemodelan sistem listrik.</field>
+        <field name="jenis_cpl">keterampilan_umum</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_06" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-06</field>
+        <field name="name">Menerapkan teknik komunikasi dan elektronika digital.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_07" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-07</field>
+        <field name="name">Merancang solusi energi terbarukan dan penggunaan listrik efektif.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpl_el_08" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-08</field>
+        <field name="name">Menyampaikan hasil analisis dan desain teknis dengan jelas.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="mk_el_01" model="erpobe.master.matakuliah">
+        <field name="name">Rangkaian Listrik</field>
+        <field name="kode_mk">EL101</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Rangkaian Listrik adalah mata kuliah inti dalam bidang Teknik Elektro.</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpmk_el_el101_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_01" />
+        <field name="kode_cpmk">CPMK-EL101-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rangkaian listrik secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el101_1_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el101_1" />
+    </record>
+    <record id="map_cpmk_el_el101_1_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el101_1" />
+    </record>
+    <record id="cpmk_el_el101_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_01" />
+        <field name="kode_cpmk">CPMK-EL101-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rangkaian listrik secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el101_2_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el101_2" />
+    </record>
+    <record id="map_cpmk_el_el101_2_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el101_2" />
+    </record>
+    <record id="cpmk_el_el101_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_01" />
+        <field name="kode_cpmk">CPMK-EL101-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rangkaian listrik secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el101_3_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el101_3" />
+    </record>
+    <record id="map_cpmk_el_el101_3_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el101_3" />
+    </record>
+    <record id="mk_el_02" model="erpobe.master.matakuliah">
+        <field name="name">Elektronika Dasar</field>
+        <field name="kode_mk">EL102</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Elektronika Dasar adalah mata kuliah inti dalam bidang Teknik Elektro.</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpmk_el_el102_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_02" />
+        <field name="kode_cpmk">CPMK-EL102-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk elektronika dasar secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el102_1_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el102_1" />
+    </record>
+    <record id="map_cpmk_el_el102_1_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el102_1" />
+    </record>
+    <record id="cpmk_el_el102_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_02" />
+        <field name="kode_cpmk">CPMK-EL102-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk elektronika dasar secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el102_2_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el102_2" />
+    </record>
+    <record id="map_cpmk_el_el102_2_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el102_2" />
+    </record>
+    <record id="cpmk_el_el102_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_02" />
+        <field name="kode_cpmk">CPMK-EL102-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk elektronika dasar secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el102_3_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el102_3" />
+    </record>
+    <record id="map_cpmk_el_el102_3_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el102_3" />
+    </record>
+    <record id="mk_el_03" model="erpobe.master.matakuliah">
+        <field name="name">Sistem Kontrol</field>
+        <field name="kode_mk">EL203</field>
+        <field name="sks">4</field>
+        <field name="semester">3</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Sistem Kontrol adalah mata kuliah inti dalam bidang Teknik Elektro.</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpmk_el_el203_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_03" />
+        <field name="kode_cpmk">CPMK-EL203-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem kontrol secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el203_1_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el203_1" />
+    </record>
+    <record id="map_cpmk_el_el203_1_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el203_1" />
+    </record>
+    <record id="cpmk_el_el203_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_03" />
+        <field name="kode_cpmk">CPMK-EL203-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem kontrol secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el203_2_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el203_2" />
+    </record>
+    <record id="map_cpmk_el_el203_2_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el203_2" />
+    </record>
+    <record id="cpmk_el_el203_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_03" />
+        <field name="kode_cpmk">CPMK-EL203-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem kontrol secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el203_3_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el203_3" />
+    </record>
+    <record id="map_cpmk_el_el203_3_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el203_3" />
+    </record>
+    <record id="mk_el_04" model="erpobe.master.matakuliah">
+        <field name="name">Sistem Tenaga</field>
+        <field name="kode_mk">EL204</field>
+        <field name="sks">3</field>
+        <field name="semester">4</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Sistem Tenaga adalah mata kuliah inti dalam bidang Teknik Elektro.</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpmk_el_el204_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_04" />
+        <field name="kode_cpmk">CPMK-EL204-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem tenaga secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el204_1_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el204_1" />
+    </record>
+    <record id="map_cpmk_el_el204_1_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el204_1" />
+    </record>
+    <record id="cpmk_el_el204_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_04" />
+        <field name="kode_cpmk">CPMK-EL204-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem tenaga secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el204_2_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el204_2" />
+    </record>
+    <record id="map_cpmk_el_el204_2_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el204_2" />
+    </record>
+    <record id="cpmk_el_el204_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_04" />
+        <field name="kode_cpmk">CPMK-EL204-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem tenaga secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el204_3_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el204_3" />
+    </record>
+    <record id="map_cpmk_el_el204_3_cpl_el_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el204_3" />
+    </record>
+    <record id="mk_el_05" model="erpobe.master.matakuliah">
+        <field name="name">Teknik Digital</field>
+        <field name="kode_mk">EL205</field>
+        <field name="sks">3</field>
+        <field name="semester">5</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Teknik Digital adalah mata kuliah inti dalam bidang Teknik Elektro.</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="cpmk_el_el205_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_05" />
+        <field name="kode_cpmk">CPMK-EL205-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk teknik digital secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el205_1_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el205_1" />
+    </record>
+    <record id="map_cpmk_el_el205_1_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el205_1" />
+    </record>
+    <record id="cpmk_el_el205_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_05" />
+        <field name="kode_cpmk">CPMK-EL205-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk teknik digital secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el205_2_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el205_2" />
+    </record>
+    <record id="map_cpmk_el_el205_2_cpl_el_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el205_2" />
+    </record>
+    <record id="cpmk_el_el205_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_el_05" />
+        <field name="kode_cpmk">CPMK-EL205-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk teknik digital secara terukur.</field>
+    </record>
+    <record id="map_cpmk_el_el205_3_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el205_3" />
+    </record>
+    <record id="map_cpmk_el_el205_3_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_el_el205_3" />
+    </record>
+    <record id="cpl_ind_01" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-01</field>
+        <field name="name">Menunjukkan sikap profesional dan integritas dalam penyelesaian masalah industri.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_02" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-02</field>
+        <field name="name">Menguasai prinsip optimasi, tata letak, dan manajemen operasi.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_03" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-03</field>
+        <field name="name">Merancang sistem produksi yang efisien dan berkelanjutan.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_04" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-04</field>
+        <field name="name">Menganalisis kebutuhan pelanggan dan performa proses industri.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_05" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-05</field>
+        <field name="name">Menggunakan alat keputusan dan simulasi dalam pengambilan keputusan.</field>
+        <field name="jenis_cpl">keterampilan_umum</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_06" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-06</field>
+        <field name="name">Menilai kualitas, keselamatan, dan ergonomi kerja.</field>
+        <field name="jenis_cpl">pengetahuan</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_07" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-07</field>
+        <field name="name">Mengembangkan inovasi rantai pasok dan manufaktur digital.</field>
+        <field name="jenis_cpl">keterampilan_khusus</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpl_ind_08" model="erpobe.akademik.cpl">
+        <field name="kode_cpl">CPL-08</field>
+        <field name="name">Menyampaikan rekomendasi operasional secara efektif.</field>
+        <field name="jenis_cpl">sikap</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="mk_ind_01" model="erpobe.master.matakuliah">
+        <field name="name">Analisis Operasi</field>
+        <field name="kode_mk">IN101</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Analisis Operasi adalah mata kuliah inti dalam bidang Teknik Industri.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpmk_ind_in101_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_01" />
+        <field name="kode_cpmk">CPMK-IN101-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk analisis operasi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in101_1_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_1" />
+    </record>
+    <record id="map_cpmk_ind_in101_1_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_1" />
+    </record>
+    <record id="cpmk_ind_in101_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_01" />
+        <field name="kode_cpmk">CPMK-IN101-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk analisis operasi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in101_2_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_2" />
+    </record>
+    <record id="map_cpmk_ind_in101_2_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_2" />
+    </record>
+    <record id="cpmk_ind_in101_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_01" />
+        <field name="kode_cpmk">CPMK-IN101-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk analisis operasi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in101_3_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_3" />
+    </record>
+    <record id="map_cpmk_ind_in101_3_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_3" />
+    </record>
+    <record id="mk_ind_02" model="erpobe.master.matakuliah">
+        <field name="name">Perencanaan Produksi</field>
+        <field name="kode_mk">IN102</field>
+        <field name="sks">3</field>
+        <field name="semester">2</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Perencanaan Produksi adalah mata kuliah inti dalam bidang Teknik Industri.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpmk_ind_in102_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_02" />
+        <field name="kode_cpmk">CPMK-IN102-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk perencanaan produksi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in102_1_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_1" />
+    </record>
+    <record id="map_cpmk_ind_in102_1_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_1" />
+    </record>
+    <record id="cpmk_ind_in102_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_02" />
+        <field name="kode_cpmk">CPMK-IN102-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk perencanaan produksi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in102_2_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_2" />
+    </record>
+    <record id="map_cpmk_ind_in102_2_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_2" />
+    </record>
+    <record id="cpmk_ind_in102_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_02" />
+        <field name="kode_cpmk">CPMK-IN102-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk perencanaan produksi secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in102_3_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_3" />
+    </record>
+    <record id="map_cpmk_ind_in102_3_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_3" />
+    </record>
+    <record id="mk_ind_03" model="erpobe.master.matakuliah">
+        <field name="name">Sistem Manufaktur</field>
+        <field name="kode_mk">IN203</field>
+        <field name="sks">4</field>
+        <field name="semester">3</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Sistem Manufaktur adalah mata kuliah inti dalam bidang Teknik Industri.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpmk_ind_in203_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_03" />
+        <field name="kode_cpmk">CPMK-IN203-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem manufaktur secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in203_1_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_1" />
+    </record>
+    <record id="map_cpmk_ind_in203_1_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_1" />
+    </record>
+    <record id="cpmk_ind_in203_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_03" />
+        <field name="kode_cpmk">CPMK-IN203-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem manufaktur secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in203_2_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_2" />
+    </record>
+    <record id="map_cpmk_ind_in203_2_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_2" />
+    </record>
+    <record id="cpmk_ind_in203_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_03" />
+        <field name="kode_cpmk">CPMK-IN203-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem manufaktur secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in203_3_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_3" />
+    </record>
+    <record id="map_cpmk_ind_in203_3_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_3" />
+    </record>
+    <record id="mk_ind_04" model="erpobe.master.matakuliah">
+        <field name="name">Ergonomi Industri</field>
+        <field name="kode_mk">IN204</field>
+        <field name="sks">3</field>
+        <field name="semester">4</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Ergonomi Industri adalah mata kuliah inti dalam bidang Teknik Industri.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpmk_ind_in204_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_04" />
+        <field name="kode_cpmk">CPMK-IN204-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk ergonomi industri secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in204_1_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_1" />
+    </record>
+    <record id="map_cpmk_ind_in204_1_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_1" />
+    </record>
+    <record id="cpmk_ind_in204_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_04" />
+        <field name="kode_cpmk">CPMK-IN204-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk ergonomi industri secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in204_2_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_2" />
+    </record>
+    <record id="map_cpmk_ind_in204_2_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_2" />
+    </record>
+    <record id="cpmk_ind_in204_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_04" />
+        <field name="kode_cpmk">CPMK-IN204-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk ergonomi industri secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in204_3_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_3" />
+    </record>
+    <record id="map_cpmk_ind_in204_3_cpl_ind_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_3" />
+    </record>
+    <record id="mk_ind_05" model="erpobe.master.matakuliah">
+        <field name="name">Logistik dan Supply Chain</field>
+        <field name="kode_mk">IN205</field>
+        <field name="sks">3</field>
+        <field name="semester">5</field>
+        <field name="tipe_mk">T</field>
+        <field name="jenis_mk">I</field>
+        <field name="bahasa">I</field>
+        <field name="deskripsi_mk">Logistik dan Supply Chain adalah mata kuliah inti dalam bidang Teknik Industri.</field>
+        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    </record>
+    <record id="cpmk_ind_in205_1" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_05" />
+        <field name="kode_cpmk">CPMK-IN205-1</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk logistik dan supply chain secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in205_1_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_1" />
+    </record>
+    <record id="map_cpmk_ind_in205_1_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_1" />
+    </record>
+    <record id="cpmk_ind_in205_2" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_05" />
+        <field name="kode_cpmk">CPMK-IN205-2</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk logistik dan supply chain secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in205_2_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_2" />
+    </record>
+    <record id="map_cpmk_ind_in205_2_cpl_ind_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_01" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_2" />
+    </record>
+    <record id="cpmk_ind_in205_3" model="erpobe.akademik.cpmk">
+        <field name="mk_id" ref="erpobe.mk_ind_05" />
+        <field name="kode_cpmk">CPMK-IN205-3</field>
+        <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk logistik dan supply chain secara terukur.</field>
+    </record>
+    <record id="map_cpmk_ind_in205_3_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_3" />
+    </record>
+    <record id="map_cpmk_ind_in205_3_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
+        <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_3" />
+    </record>
+</odoo>

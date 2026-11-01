@@ -18,4 +18,21 @@
     <menuitem id="menu_erpobe_cpmk_angkatan" name="CPMK per Angkatan" parent="menu_erpobe_results" action="action_erpobe_cpmk_angkatan" sequence="90" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_grade_cpl_rombel" name="CPL per Rombel" parent="menu_erpobe_results" action="action_erpobe_grade_cpl_rombel" sequence="100" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_grade_cpl_angkatan" name="CPL per Angkatan" parent="menu_erpobe_results" action="action_erpobe_grade_cpl_angkatan" sequence="110" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_superadmin"/>
+       <menuitem id="menu_erpobe_master_prodi" name="Program Studi" parent="menu_erpobe_root" action="action_erpobe_master_prodi" sequence="20" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_master" name="Data Akademik" parent="menu_erpobe_root" sequence="30" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_dosen" name="Dosen" parent="menu_erpobe_master" action="action_erpobe_master_dosen" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_mahasiswa" name="Mahasiswa" parent="menu_erpobe_master" action="action_erpobe_master_mahasiswa" sequence="20" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_rombel" name="Rombel" parent="menu_erpobe_master" action="action_erpobe_master_rombel" sequence="30" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_matakuliah" name="Mata Kuliah" parent="menu_erpobe_master" action="action_erpobe_master_matakuliah" sequence="40" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_angkatan" name="Angkatan" parent="menu_erpobe_master" action="action_erpobe_master_angkatan" sequence="50" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_curriculum" name="Kurikulum dan RPS" parent="menu_erpobe_root" sequence="40" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_cpl" name="Capaian Pembelajaran Lulusan" parent="menu_erpobe_curriculum" action="action_erpobe_cpl" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_cpmk" name="CPMK" parent="menu_erpobe_curriculum" action="action_erpobe_cpmk" sequence="20" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_rps" name="Rencana Pembelajaran Semester" parent="menu_erpobe_curriculum" action="action_erpobe_rps" sequence="30" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_komponen" name="Komponen Penilaian" parent="menu_erpobe_curriculum" action="action_erpobe_komponen" sequence="40" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_metode" name="Metode Pembelajaran" parent="menu_erpobe_curriculum" action="action_erpobe_metode" sequence="50" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_referensi" name="Referensi Akademik" parent="menu_erpobe_curriculum" action="action_erpobe_referensi" sequence="60" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_master_grade" name="Skala Nilai" parent="menu_erpobe_curriculum" action="action_erpobe_master_grade" sequence="70" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+     <menuitem id="menu_erpobe_tahunajaran" name="Tahun Ajaran" parent="menu_erpobe_academic_ops" action="action_erpobe_tahunajaran" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_penawaran" name="Penawaran Mata Kuliah" parent="menu_erpobe_academic_ops" action="action_erpobe_penawaran" sequence="20" groups="erpobe.group_admin,erpobe.group_superadmin"/>
 </odoo>

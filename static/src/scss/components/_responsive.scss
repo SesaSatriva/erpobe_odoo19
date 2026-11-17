@@ -4,12 +4,18 @@
   .o_triton_grid-three,
   .o_triton_score-grid,
   .o_triton_feature-grid,
-  .o_triton_footer-grid {
+  .o_triton_footer-grid,
+  .o_triton_analysis-layout {
     grid-template-columns: 1fr;
   }
 
-  .o_triton_stat-grid {
+  .o_triton_stat-grid,
+  .o_triton_summary-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .o_triton_filter-panel {
+    position: static;
   }
 }
 
@@ -25,7 +31,8 @@
     justify-content: space-between;
   }
 
-  .o_triton_stat-grid {
+  .o_triton_stat-grid,
+  .o_triton_summary-strip {
     grid-template-columns: 1fr;
   }
 

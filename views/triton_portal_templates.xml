@@ -3,15 +3,24 @@
     <template id="triton_portal_nav" name="Navigasi Portal TRITON">
         <nav class="o_triton_portal-nav" aria-label="Navigasi portal">
             <a href="/my/triton" class="o_triton_brand"><span class="o_triton_brand-mark">T</span><span class="o_triton_brand-copy"><strong>TRITON</strong><small>Portal akademik</small></span></a>
-            <div class="o_triton_portal-links">
+            <div class="o_triton_portal-links" t-if="request.env.user and request.env.user.has_group('erpobe.group_dosen')">
+                <a href="/my/triton">Beranda</a>
+                <a href="/my/rps">RPS</a>
+                <a href="/my/kelas">Kelas</a>
+                <a href="/my/perwalian">Perwalian</a>
+                <a href="/my/analisis">Analisis</a>
+                <a href="/my/profil">Profil</a>
+            </div>
+            <div class="o_triton_portal-links" t-elif="request.env.user and request.env.user.has_group('erpobe.group_mahasiswa')">
                 <a href="/my/triton">Beranda</a>
                 <a href="/my/krs">KRS</a>
                 <a href="/my/khs">KHS</a>
                 <a href="/my/mata-kuliah">Mata Kuliah</a>
                 <a href="/my/capaian-cpl">Capaian CPL</a>
-                <a href="/my/rps">RPS Dosen</a>
-                <a href="/my/kelas">Kelas</a>
-                <a href="/my/perwalian">Perwalian</a>
+                <a href="/my/profil">Profil</a>
+            </div>
+            <div class="o_triton_portal-links" t-else="">
+                <a href="/my/triton">Beranda</a>
                 <a href="/my/profil">Profil</a>
             </div>
             <a href="/" class="o_triton_btn-ghost">Situs publik</a>

@@ -66,8 +66,37 @@
 }
 
 .o_triton_stat-grid {
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: -24px;
+}
+
+.o_triton_summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+}
+
+.o_triton_summary-item {
+  background: rgba(23, 58, 94, 0.04);
+  border: 1px solid var(--triton-border);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.o_triton_summary-item span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--triton-muted);
+}
+
+.o_triton_summary-item strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(1.1rem, 2vw, 1.8rem);
+  color: var(--triton-deep-ocean);
 }
 
 .o_triton_stat-card,
@@ -192,6 +221,78 @@
   gap: 28px;
 }
 
+.o_triton_info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.o_triton_profile-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.o_triton_key-points,
+.o_triton_article-list,
+.o_triton_guide-list,
+.o_triton_faq-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.o_triton_guide-list li,
+.o_triton_article-list li,
+.o_triton_faq-list li {
+  line-height: 1.7;
+  color: var(--triton-text);
+}
+
+.o_triton_section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.o_triton_info-block {
+  display: grid;
+  gap: 12px;
+}
+
+.o_triton_info-block p,
+.o_triton_info-block li {
+  color: var(--triton-text);
+  line-height: 1.7;
+}
+
+.o_triton_tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.o_triton_tabs a {
+  border: 1px solid var(--triton-border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 9px 14px;
+  color: var(--triton-deep-ocean);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.o_triton_tabs a.active {
+  background: var(--triton-primary);
+  color: #fff;
+  border-color: var(--triton-primary);
+}
+
 .o_triton_form {
   display: grid;
   gap: 14px;
@@ -282,14 +383,70 @@
   background: rgba(0, 168, 204, 0.045);
 }
 
-.o_triton_filter-card form {
+.o_triton_analysis-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.o_triton_filter-panel {
+  position: sticky;
+  top: 20px;
+}
+
+.o_triton_filter-panel h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.3rem;
+}
+
+.o_triton_validation-hint,
+.o_triton_multiselect-status {
+  display: block;
+  margin-top: 8px;
+  color: var(--triton-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.o_triton_multiselect-status {
+  color: var(--triton-deep-ocean);
+  font-weight: 700;
+}
+
+.o_triton_results-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.o_triton_form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.o_triton_full-span {
+  grid-column: 1 / -1;
+}
+
+.o_triton_filter-card form,
+.o_triton_filter-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   align-items: end;
   gap: 14px;
 }
 
+.o_triton_filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
 .o_triton_filter-card label,
+.o_triton_filter-form label,
 .o_triton_panel form label {
   display: grid;
   gap: 6px;

@@ -7,8 +7,10 @@
   justify-content: space-between;
   gap: 20px;
   padding: 12px 16px;
-  background: var(--triton-deep-ocean);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--triton-border);
+  color: var(--triton-primary);
+  box-shadow: var(--triton-shadow-soft);
 }
 
 .o_triton_portal-links {
@@ -18,7 +20,7 @@
 }
 
 .o_triton_portal-nav a {
-  color: #fff;
+  color: var(--triton-primary);
   text-decoration: none;
   font-weight: 650;
 }
@@ -28,9 +30,10 @@
   border-radius: 12px;
   background: #fff;
   padding: 12px 16px;
-  color: var(--triton-deep-ocean);
+  color: var(--triton-primary);
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 2px 8px rgba(18, 38, 63, 0.04);
 }
 
 .o_triton_checkbox {

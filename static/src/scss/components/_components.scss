@@ -13,7 +13,7 @@
 }
 
 .o_triton_btn {
-  background: var(--triton-gradient);
+  background: var(--triton-primary);
   color: #fff;
   box-shadow: var(--triton-shadow-soft);
 }
@@ -25,9 +25,9 @@
 }
 
 .o_triton_btn-secondary {
-  background: rgba(0, 168, 204, 0.12);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.18);
+  background: #fff;
+  color: var(--triton-primary);
+  border-color: var(--triton-border);
 }
 
 .o_triton_btn-ghost {

@@ -21,19 +21,19 @@
 .o_triton_page {
   min-height: 100vh;
   background: var(--triton-bg);
-  color: var(--triton-slate);
+  color: var(--triton-text);
   font-family: var(--body-font-family, system-ui, sans-serif);
 }
 
 .o_triton_page a {
-  color: var(--triton-deep-ocean);
+  color: var(--triton-primary);
 }
 
 .o_triton_page h1,
 .o_triton_page h2,
 .o_triton_page h3,
 .o_triton_brand {
-  color: var(--triton-deep-ocean);
+  color: var(--triton-primary);
 }
 
 .o_triton_container {
@@ -46,10 +46,10 @@
 .o_triton_portal-nav {
   position: relative;
   z-index: 2;
-  background: #fff;
-  color: var(--triton-deep-ocean);
+  background: var(--triton-surface);
+  color: var(--triton-primary);
   border-bottom: 1px solid var(--triton-border);
-  box-shadow: none;
+  box-shadow: var(--triton-shadow-soft);
 }
 
 .o_triton_navbar a,

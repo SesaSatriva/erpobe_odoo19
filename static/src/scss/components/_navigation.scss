@@ -2,10 +2,10 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(10, 37, 64, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(10px);
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--triton-primary);
+  border-bottom: 1px solid var(--triton-border);
 }
 
 .o_triton_nav-inner {
@@ -26,7 +26,7 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--triton-primary);
   text-decoration: none;
 }
 
@@ -39,6 +39,7 @@
   background: var(--triton-gradient);
   box-shadow: var(--triton-shadow-soft);
   font-size: 14px;
+  color: #fff;
 }
 
 .o_triton_nav-links {
@@ -49,13 +50,13 @@
 }
 
 .o_triton_nav-links a, .o_triton_nav-actions a {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--triton-primary);
   text-decoration: none;
   font-weight: 600;
 }
 
 .o_triton_nav-links a:hover, .o_triton_nav-actions a:hover {
-  color: #fff;
+  color: var(--triton-cyan);
 }
 
 .o_triton_nav-actions {

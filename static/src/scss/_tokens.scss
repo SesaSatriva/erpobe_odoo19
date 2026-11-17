@@ -1,19 +1,27 @@
 :root {
-  --triton-deep-ocean: #0A2540;
-  --triton-cyan: #00A8CC;
-  --triton-emerald: #2EC4B6;
-  --triton-slate: #2D3748;
-  --triton-bg: #F8FAFC;
-  --triton-gradient: linear-gradient(45deg, #0A2540, #00A8CC, #2EC4B6);
-  --triton-border: rgba(13, 35, 57, 0.08);
-  --triton-shadow-soft: 0 18px 40px rgba(10, 37, 64, 0.12);
-  --triton-success-soft: rgba(46, 196, 182, 0.12);
-  --triton-warning-soft: rgba(255, 184, 77, 0.12);
-  --triton-error-soft: rgba(220, 53, 69, 0.12);
+  --triton-deep-ocean: #12263f;
+  --triton-primary: #173a5e;
+  --triton-primary-soft: #edf4ff;
+  --triton-cyan: #1d5f9c;
+  --triton-emerald: #2d8b7a;
+  --triton-slate: #1f2937;
+  --triton-bg: #f4f6f9;
+  --triton-surface: #ffffff;
+  --triton-border: rgba(18, 38, 63, 0.12);
+  --triton-muted: #5d6d82;
+  --triton-text: #1f2937;
+  --triton-success-soft: rgba(45, 139, 122, 0.12);
+  --triton-warning-soft: rgba(217, 119, 6, 0.12);
+  --triton-error-soft: rgba(185, 28, 28, 0.12);
+  --triton-shadow-soft: 0 12px 26px rgba(18, 38, 63, 0.06);
+  --triton-gradient: linear-gradient(135deg, #12263f 0%, #173a5e 100%);
+  --triton-radius: 16px;
+  --triton-space: clamp(20px, 4vw, 36px);
 }
 
 .o_triton_page {
   background: var(--triton-bg);
+  color: var(--triton-text);
 }
 
 .o_triton_container {
@@ -27,15 +35,6 @@
   grid-template-columns: 1.2fr 0.8fr;
   gap: 36px;
   align-items: center;
-}
-
-:root {
-  --triton-text: #2D3748;
-  --triton-muted: #526174;
-  --triton-surface: #fff;
-  --triton-focus: #00A8CC;
-  --triton-radius: 16px;
-  --triton-space: clamp(20px, 4vw, 36px);
 }
 
 .o_triton_btn:focus-visible,

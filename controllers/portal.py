@@ -20,6 +20,11 @@ class TritonPortalHome(TritonPortalBase):
             if pending:
                 tasks.insert(0, {'title': 'Perbaiki KRS', 'description': 'Dosen wali mengembalikan KRS untuk diperbaiki.', 'url': '/my/krs'})
             role = 'Mahasiswa'
+            summary = {
+                'profile_status': 'Profil akademik terhubung',
+                'pending_tasks': len(tasks),
+                'detail': f'{len(krs_records)} catatan KRS terdokumentasi',
+            }
         elif teacher:
             lines = self._teacher_lines(teacher)
             pending_rps = lines.filtered(lambda line: line.latest_rps_id and line.latest_rps_id.status != 'final')
@@ -32,7 +37,22 @@ class TritonPortalHome(TritonPortalBase):
                 tasks.append({'title': 'Persetujuan KRS perwalian', 'description': f'{pending_krs} KRS mahasiswa bimbingan menunggu keputusan.', 'url': '/my/perwalian'})
             tasks.append({'title': 'Pantau kelas yang diampu', 'description': 'Tinjau peserta kelas dan kelengkapan nilai.', 'url': '/my/kelas'})
             role = 'Dosen'
+            summary = {
+                'profile_status': 'Profil dosen aktif',
+                'pending_tasks': len(tasks),
+                'detail': f'{len(lines)} mata kuliah atau kelas terikat',
+            }
         else:
             tasks = [{'title': 'Hubungkan profil akademik', 'description': 'Hubungi administrator agar akun dikaitkan dengan profil ERP OBE.', 'url': '/my'}]
             role = 'Pengguna'
-        return request.render('erpobe.triton_portal_home_page', {'role': role, 'tasks': tasks, 'user_name': request.env.user.name})
+            summary = {
+                'profile_status': 'Belum terhubung dengan profil akademik',
+                'pending_tasks': 1,
+                'detail': 'Akun perlu dikaitkan ke data institusi',
+            }
+        return request.render('erpobe.triton_portal_home_page', {
+            'role': role,
+            'tasks': tasks,
+            'summary': summary,
+            'user_name': request.env.user.name,
+        })

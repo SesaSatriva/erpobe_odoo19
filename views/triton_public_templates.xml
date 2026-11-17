@@ -92,40 +92,34 @@
             <main class="o_triton_page">
                 <t t-call="erpobe.triton_main_nav"/>
                 <section class="o_triton_hero">
-                    <div class="o_triton_container">
+                    <div class="o_triton_container o_triton_hero-layout">
                         <div>
-                            <span class="o_triton_kicker">Tracking • Reporting • OBE</span>
-                            <h1>Memahami capaian pembelajaran, bersama data yang terhubung.</h1>
-                            <p>TRITON menyajikan informasi akademik dan capaian pembelajaran lulusan secara terstruktur, transparan, dan memperhatikan privasi.</p>
+                            <span class="o_triton_kicker">Academic information system</span>
+                            <h1>Informasi akademik yang terstruktur, dapat ditelusuri, dan siap dipertanggungjawabkan.</h1>
+                            <p>TRITON menghubungkan kurikulum, capaian pembelajaran, aktivitas perkuliahan, dan laporan akademik dalam satu ekosistem yang konsisten untuk institusi.</p>
                             <form class="o_triton_search" action="/cari" method="get" role="search">
                                 <label class="visually-hidden" for="o_triton_search-query">Kata kunci</label>
                                 <input id="o_triton_search-query" type="search" name="q" placeholder="Cari nama, program studi, mata kuliah, atau CPL"/>
-                                <fieldset class="o_triton_search-tabs">
-                                    <legend class="visually-hidden">Kategori pencarian</legend>
-                                    <label><input type="radio" name="category" value="all" checked="checked"/>Semua</label>
-                                    <label><input type="radio" name="category" value="mahasiswa"/>Mahasiswa</label>
-                                    <label><input type="radio" name="category" value="dosen"/>Dosen</label>
-                                    <label><input type="radio" name="category" value="prodi"/>Program Studi</label>
-                                    <label><input type="radio" name="category" value="fakultas"/>Fakultas</label>
-                                    <label><input type="radio" name="category" value="mata-kuliah"/>Mata Kuliah</label>
-                                    <label><input type="radio" name="category" value="cpl"/>CPL</label>
-                                </fieldset>
                                 <button type="submit">Cari</button>
                             </form>
                             <div class="o_triton_hero-actions">
-                                <a class="o_triton_btn" href="/perbandingan-cpl">Jelajahi perbandingan CPL</a>
-                                <a class="o_triton_btn-secondary" href="/my">Masuk portal</a>
+                                <a class="o_triton_btn" href="/perbandingan-cpl">Lihat capaian CPL</a>
+                                <a class="o_triton_btn-secondary" href="/fakultas">Jelajahi program</a>
                             </div>
                         </div>
-                        <div class="o_triton_hero-panel" aria-label="Ringkasan capaian institusi">
-                            <span class="o_triton_kicker">Ringkasan institusi</span>
+                        <aside class="o_triton_hero-panel" aria-label="Ringkasan capaian institusi">
+                            <span class="o_triton_eyebrow">Ringkasan institusi</span>
                             <div class="o_triton_mini-card">
-                                <span class="o_triton_label">Rata-rata capaian CPL*</span>
+                                <span class="o_triton_label">Rata-rata capaian CPL</span>
                                 <strong t-if="stats['institutional_average']"><t t-out="stats['institutional_average']"/>%</strong>
                                 <strong t-else="">Belum tersedia</strong>
                             </div>
-                            <p class="o_triton_hero-footnote">*Agregat penawaran dengan RPS final, bobot lengkap, dan KRS disetujui.</p>
-                        </div>
+                            <ul class="o_triton_list o_triton_hero-list">
+                                <li><strong t-out="stats['prodis']"/> program studi terpantau</li>
+                                <li><strong t-out="stats['cpl_count']"/> CPL tercatat</li>
+                                <li><strong t-out="stats['rps_final']"/> RPS final tersimpan</li>
+                            </ul>
+                        </aside>
                     </div>
                 </section>
 

@@ -155,7 +155,6 @@
   padding: 0;
 }
 
-.o_triton_search-tabs label:has(input:checked) {
-  background: #fff;
-  color: var(--triton-deep-ocean);
+.o_triton_search-tabs label:hover {
+  background: rgba(255, 255, 255, 0.08);
 }

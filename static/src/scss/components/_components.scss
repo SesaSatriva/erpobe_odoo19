@@ -383,73 +383,400 @@
   background: rgba(0, 168, 204, 0.045);
 }
 
-.o_triton_analysis-layout {
+.o_triton_comparison-page .o_triton_container {
+  max-width: 1240px;
+}
+
+.o_triton_page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 10px 0 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--triton-border);
+}
+
+.o_triton_page-header__copy {
   display: grid;
-  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+  gap: 6px;
 }
 
-.o_triton_filter-panel {
-  position: sticky;
-  top: 20px;
+.o_triton_page-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
 }
 
-.o_triton_filter-panel h2 {
-  margin-top: 0;
-  margin-bottom: 18px;
-  font-size: 1.3rem;
+.o_triton_page-header__meta {
+  display: grid;
+  gap: 6px;
+  min-width: 170px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--triton-border);
 }
 
+.o_triton_page-header__meta span {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--triton-muted);
+}
+
+.o_triton_page-header__meta strong {
+  font-size: 1rem;
+  color: var(--triton-deep-ocean);
+}
+
+.o_triton_filter-shell {
+  background: var(--triton-surface);
+  border: 1px solid var(--triton-border);
+  border-radius: 16px;
+  padding: 22px 22px 18px;
+  margin-top: 22px;
+}
+
+.o_triton_filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.o_triton_filter-field {
+  display: grid;
+  gap: 8px;
+}
+
+.o_triton_filter-field--wide {
+  grid-column: span 2;
+}
+
+.o_triton_filter-card label,
+.o_triton_filter-form label,
+.o_triton_panel form label,
+.o_triton_filter-field label {
+  display: grid;
+  gap: 7px;
+  color: var(--triton-deep-ocean);
+  font-weight: 650;
+  font-size: 0.87rem;
+}
+
+.o_triton_filter-field select,
+.o_triton_page select,
+.o_triton_page input,
+.o_triton_page textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--triton-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--triton-text);
+  font: inherit;
+}
+
+.o_triton_filter-field select:focus,
+.o_triton_page select:focus,
+.o_triton_page input:focus,
+.o_triton_page textarea:focus {
+  outline: 2px solid rgba(0, 168, 204, 0.2);
+  border-color: var(--triton-primary);
+}
+
+.o_triton_field-help,
+.o_triton_field-status,
 .o_triton_validation-hint,
 .o_triton_multiselect-status {
   display: block;
-  margin-top: 8px;
+  margin-top: 4px;
   color: var(--triton-muted);
-  font-size: 0.8rem;
-  line-height: 1.5;
+  font-size: 0.78rem;
+  line-height: 1.45;
 }
 
+.o_triton_field-status,
 .o_triton_multiselect-status {
   color: var(--triton-deep-ocean);
   font-weight: 700;
 }
 
-.o_triton_results-stack {
-  display: grid;
-  gap: 18px;
-}
-
-.o_triton_form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.o_triton_full-span {
-  grid-column: 1 / -1;
-}
-
-.o_triton_filter-card form,
-.o_triton_filter-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  align-items: end;
-  gap: 14px;
-}
-
 .o_triton_filter-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
-  margin-top: 6px;
+  margin-top: 18px;
 }
 
-.o_triton_filter-card label,
-.o_triton_filter-form label,
-.o_triton_panel form label {
+.o_triton_submit-status {
+  color: var(--triton-muted);
+  font-size: 0.8rem;
+}
+
+.o_triton_summary-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 22px;
+  border: 1px solid var(--triton-border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(11, 36, 63, 0.015);
+}
+
+.o_triton_summary-item {
   display: grid;
   gap: 6px;
+  padding: 16px 18px;
+  border-right: 1px solid var(--triton-border);
+}
+
+.o_triton_summary-item:last-child {
+  border-right: none;
+}
+
+.o_triton_summary-item span {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--triton-muted);
+}
+
+.o_triton_summary-item strong {
+  font-size: 1.1rem;
   color: var(--triton-deep-ocean);
-  font-weight: 650;
+}
+
+.o_triton_analysis-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 22px 0 16px;
+}
+
+.o_triton_visual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.o_triton_chart-panel--full {
+  grid-column: 1 / -1;
+}
+
+.o_triton_panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.o_triton_panel-header h2 {
+  margin: 8px 0 0;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+.o_triton_section-kicker {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--triton-muted);
+}
+
+.o_triton_comparison-results {
+  display: grid;
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.o_triton_grouped-bars {
+  display: grid;
+  gap: 16px;
+}
+
+.o_triton_group {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--triton-border);
+}
+
+.o_triton_group:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.o_triton_group > strong {
+  color: var(--triton-deep-ocean);
+  font-size: 0.9rem;
+}
+
+.o_triton_bar-row,
+.o_triton_trend-item {
+  display: grid;
+  grid-template-columns: minmax(90px, 120px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+.o_triton_bar-track,
+.o_triton_trend-track {
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7edf3;
+}
+
+.o_triton_bar-fill,
+.o_triton_trend-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--triton-primary), #3d9ad6);
+}
+
+.o_triton_trend-list {
+  display: grid;
+  gap: 10px;
+}
+
+.o_triton_empty-inline {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  color: var(--triton-muted);
+}
+
+.o_triton_radar {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 12px auto 0;
+}
+
+.o_triton_radar-grid {
+  fill: transparent;
+  stroke: var(--triton-border);
+  stroke-width: 1;
+}
+
+.o_triton_radar-series {
+  fill: rgba(0, 168, 204, 0.16);
+  stroke: var(--triton-primary);
+  stroke-width: 2;
+}
+
+.o_triton_legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+}
+
+.o_triton_legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--triton-muted);
+  font-size: 0.82rem;
+}
+
+.o_triton_legend-marker {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--triton-primary);
+}
+
+.o_triton_table-wrap {
+  overflow-x: auto;
+}
+
+.o_triton_table {
+  width: 100%;
+  min-width: 540px;
+  border-collapse: collapse;
+}
+
+.o_triton_table th,
+.o_triton_table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--triton-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.o_triton_table thead th {
+  background: rgba(15, 36, 58, 0.03);
+  color: var(--triton-deep-ocean);
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.o_triton_table--comparison th:first-child {
+  min-width: 200px;
+}
+
+.o_triton_table-code {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--triton-muted);
+}
+
+.o_triton_table-empty {
+  color: var(--triton-muted);
+}
+
+.o_triton_warning-box {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(212, 161, 54, 0.35);
+  border-left: 4px solid #d4a136;
+  border-radius: 10px;
+  background: rgba(255, 188, 70, 0.08);
+  color: var(--triton-text);
+}
+
+.o_triton_empty {
+  margin-top: 24px;
+  padding: 28px 24px;
+  border: 1px dashed var(--triton-border);
+  border-radius: 16px;
+  background: rgba(12, 33, 53, 0.015);
+}
+
+.o_triton_empty h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+}
+
+.o_triton_methodology-note {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--triton-border);
+  color: var(--triton-text);
+  line-height: 1.7;
+}
+
+.o_triton_methodology-note strong {
+  white-space: nowrap;
+  color: var(--triton-deep-ocean);
 }

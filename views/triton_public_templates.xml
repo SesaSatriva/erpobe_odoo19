@@ -438,82 +438,247 @@
     <template id="triton_comparison_page" name="Perbandingan CPL">
         <t t-call="website.layout">
             <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
-            <main class="o_triton_page">
+            <main class="o_triton_page o_triton_comparison-page">
                 <t t-call="erpobe.triton_main_nav"/>
                 <section class="o_triton_section">
                     <div class="o_triton_container">
-                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Perbandingan CPL</span></nav>
-                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Analisis OBE</span><h1>Perbandingan capaian CPL</h1><p class="o_triton_subtitle">Analisis hanya menggunakan RPS final dengan semua kelompok bobot lengkap dan KRS yang telah disetujui.</p></div></header>
-                        <div class="o_triton_summary-strip o_triton_section-heading" aria-label="Ringkasan indikator analisis">
-                            <article class="o_triton_summary-item"><span>Periode</span><strong><t t-out="comparison['year_start'] or 'Terbaru'"/> — <t t-out="comparison['year_end'] or 'Terbaru'"/></strong></article>
-                            <article class="o_triton_summary-item"><span>Program studi</span><strong t-out="len(comparison['prodis'])"/></article>
-                            <article class="o_triton_summary-item"><span>Target</span><strong><t t-out="comparison['target']"/>%</strong></article>
-                            <article class="o_triton_summary-item"><span>Jenis CPL</span><strong><t t-out="comparison['jenis_cpl'] or 'Semua'"/></strong></article>
-                        </div>
-                        <div class="o_triton_analysis-layout">
-                            <aside class="o_triton_panel o_triton_filter-panel">
-                                <h2>Filter analisis</h2>
-                                <form class="o_triton_filter-form" action="/perbandingan-cpl" method="get">
-                                    <div class="o_triton_form-grid">
-                                        <div><label for="year-start">Tahun awal</label><select id="year-start" name="tahun_awal"><option value="">Terbaru</option><t t-foreach="comparison['years']" t-as="year"><option t-att-value="year" t-att-selected="comparison['year_start'] == year" t-out="year"/></t></select></div>
-                                        <div><label for="year-end">Tahun akhir</label><select id="year-end" name="tahun_akhir"><option value="">Terbaru</option><t t-foreach="comparison['years']" t-as="year"><option t-att-value="year" t-att-selected="comparison['year_end'] == year" t-out="year"/></t></select></div>
-                                        <div><label for="semester">Semester</label><select id="semester" name="semester"><option value="">Semua</option><option value="ganjil" t-att-selected="comparison['semester'] == 'ganjil'">Ganjil</option><option value="genap" t-att-selected="comparison['semester'] == 'genap'">Genap</option><option value="pendek" t-att-selected="comparison['semester'] == 'pendek'">Pendek</option></select></div>
-                                        <div><label for="faculty">Fakultas</label><select id="faculty" name="fakultas_id"><option value="">Semua fakultas</option><t t-foreach="faculties" t-as="faculty"><option t-att-value="faculty['id']" t-att-selected="comparison['faculty_id'] == faculty['id']" t-out="faculty['name']"/></t></select></div>
-                                        <div class="o_triton_full-span"><label for="prodi-selection">Program studi (maksimal 6)</label><select id="prodi-selection" name="prodi_id" multiple="multiple" size="4" data-max-selection="6" aria-describedby="prodi-selection-help"><t t-foreach="prodis" t-as="prodi"><option t-att-value="prodi['id']" t-att-selected="prodi['id'] in comparison['prodi_ids']" t-out="prodi['name']"/></t></select><small id="prodi-selection-help" class="o_triton_validation-hint">Pilih maksimal enam program studi sekaligus. Pengurutan mengikuti pilihan Anda di formulir.</small><span id="prodi-selection-status" class="o_triton_multiselect-status" aria-live="polite">0/6 terpilih</span></div>
-                                        <div><label for="cpl-type">Jenis CPL</label><select id="cpl-type" name="jenis_cpl"><option value="">Semua jenis</option><t t-foreach="cpl_types" t-as="category"><option t-att-value="category['key']" t-att-selected="comparison['jenis_cpl'] == category['key']" t-out="category['name']"/></t></select></div>
-                                    </div>
-                                    <p class="o_triton_caption">Pilih beberapa prodi dengan Ctrl/Command atau klik berturut-turut. Pilihan dibatasi enam prodi per permintaan untuk menjaga konsistensi analisis.</p>
-                                    <div class="o_triton_filter-actions">
-                                        <button class="o_triton_btn" type="submit">Terapkan filter</button>
-                                        <a class="o_triton_btn-ghost" href="/perbandingan-cpl">Reset</a>
-                                    </div>
-                                </form>
-                            </aside>
-                            <div class="o_triton_results-stack">
-                                <div t-if="comparison['warnings']" class="o_triton_warning-box" role="status"><strong>Data belum lengkap untuk:</strong> <t t-out="', '.join(comparison['warnings'])"/>. Program studi tanpa data valid tidak ditampilkan dalam nilai perbandingan.</div>
-                                <div t-if="comparison['prodis']" class="o_triton_comparison-results">
-                                    <div class="o_triton_comparison-actions">
-                                        <a class="o_triton_btn-ghost" href="/perbandingan-cpl.csv">Unduh CSV agregat</a>
-                                        <button class="o_triton_btn-ghost o_triton_print" type="button">Cetak / Simpan PDF</button>
-                                    </div>
-                                    <div class="o_triton_grid-three">
-                                        <article class="o_triton_panel">
-                                            <h2>Radar profil CPL</h2>
-                                            <svg class="o_triton_radar" viewBox="0 0 200 200" role="img" aria-label="Radar capaian CPL per program studi">
-                                                <circle cx="100" cy="100" r="78" class="o_triton_radar-grid"/>
-                                                <circle cx="100" cy="100" r="52" class="o_triton_radar-grid"/>
-                                                <circle cx="100" cy="100" r="26" class="o_triton_radar-grid"/>
-                                                <t t-foreach="comparison['prodis']" t-as="prodi"><polygon class="o_triton_radar-series" t-att-points="prodi['radar_points']"/></t>
-                                            </svg>
-                                            <ul class="o_triton_legend"><t t-foreach="comparison['prodis']" t-as="prodi"><li><span class="o_triton_legend-marker" aria-hidden="true"/> <t t-out="prodi['name']"/></li></t></ul>
-                                        </article>
-                                        <article class="o_triton_panel o_triton_chart-panel">
-                                            <h2>Grouped bar</h2>
-                                            <div class="o_triton_grouped-bars"><t t-foreach="comparison['prodis']" t-as="prodi"><div class="o_triton_group"><strong t-out="prodi['name']"/><t t-foreach="prodi['scores']" t-as="score"><div class="o_triton_bar-row"><span t-out="comparison['categories'][score_index]['name']"/><meter class="o_triton_bar-track" min="0" max="100" t-att-value="score or 0" t-att-aria-label="comparison['categories'][score_index]['name']"/><b t-if="score"><t t-out="score"/>%</b><b t-else="">—</b></div></t></div></t></div>
-                                        </article>
-                                        <article class="o_triton_panel">
-                                            <h2>Tren antar tahun</h2>
-                                            <div t-if="comparison['trend']" class="o_triton_trend"><t t-foreach="comparison['trend']" t-as="item"><div class="o_triton_trend-item"><span t-out="item['year']"/><meter class="o_triton_trend-track" min="0" max="100" t-att-value="item['average']" t-att-aria-label="'Capaian ' + item['year']"/><strong><t t-out="item['average']"/>%</strong></div></t></div>
-                                            <div t-else="" class="o_triton_empty-inline">Belum ada data tren pada periode ini.</div>
-                                        </article>
-                                    </div>
-                                    <article class="o_triton_panel o_triton_section-heading">
-                                        <h2>Heatmap capaian</h2>
-                                        <div class="o_triton_table-wrap"><table class="o_triton_table o_triton_heatmap"><thead><tr><th>Program Studi</th><t t-foreach="comparison['categories']" t-as="category"><th t-out="category['name']"/></t></tr></thead><tbody><t t-foreach="comparison['prodis']" t-as="prodi"><tr><th t-out="prodi['name']"/><t t-foreach="prodi['scores']" t-as="score"><td t-att-class="'o_triton_score-cell ' + ('o_triton_score-met' if score and score &gt;= comparison['target'] else 'o_triton_score-low' if score else 'o_triton_score-empty')"><strong t-if="score"><t t-out="score"/>%</strong><span t-else="">Belum ada data</span></td></t></tr></t></tbody></table></div>
-                                    </article>
-                                    <article class="o_triton_panel o_triton_section-heading">
-                                        <h2>Tabel perbandingan dan target <t t-out="comparison['target']"/>%</h2>
-                                        <div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Program Studi</th><t t-foreach="comparison['categories']" t-as="category"><th t-out="category['name']"/></t></tr></thead><tbody><t t-foreach="comparison['prodis']" t-as="prodi"><tr><th><t t-out="prodi['kode']"/> — <t t-out="prodi['name']"/></th><t t-foreach="prodi['scores']" t-as="score"><td t-if="score"><strong><t t-out="score"/>%</strong><span t-if="score &gt;= comparison['target']" class="o_triton_badge o_triton_badge-success">≥ target</span><span t-else="" class="o_triton_badge o_triton_badge-warning"> &lt; target</span></td><td t-else="">Belum tersedia</td></t></tr></t></tbody></table></div>
-                                    </article>
-                                </div>
-                                <div t-else="" class="o_triton_empty"><h2>Belum ada hasil perbandingan</h2><p>Pastikan terdapat penawaran pada periode yang dipilih, RPS final dengan bobot lengkap, nilai komponen, dan KRS yang disetujui.</p></div>
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb">
+                            <a href="/">Beranda</a>
+                            <span>/</span>
+                            <span>Perbandingan CPL</span>
+                        </nav>
+
+                        <header class="o_triton_page-header">
+                            <div class="o_triton_page-header__copy">
+                                <span class="o_triton_eyebrow">Analisis OBE</span>
+                                <h1>Perbandingan capaian CPL</h1>
                             </div>
+                            <div class="o_triton_page-header__meta">
+                                <span>Periode</span>
+                                <strong><t t-out="comparison['year_start'] or 'Terbaru'"/> — <t t-out="comparison['year_end'] or 'Terbaru'"/></strong>
+                            </div>
+                        </header>
+
+                        <p class="o_triton_subtitle">Analisis hanya menggunakan RPS final dengan seluruh kelompok bobot lengkap dan KRS yang telah disetujui.</p>
+
+                        <section class="o_triton_filter-shell" aria-label="Filter analisis">
+                            <form class="o_triton_filter-form" action="/perbandingan-cpl" method="get">
+                                <div class="o_triton_filter-grid">
+                                    <div class="o_triton_filter-field">
+                                        <label for="year-start">Tahun awal</label>
+                                        <select id="year-start" name="tahun_awal">
+                                            <option value="">Terbaru</option>
+                                            <t t-foreach="comparison['years']" t-as="year">
+                                                <option t-att-value="year" t-att-selected="comparison['year_start'] == year" t-out="year"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="o_triton_filter-field">
+                                        <label for="year-end">Tahun akhir</label>
+                                        <select id="year-end" name="tahun_akhir">
+                                            <option value="">Terbaru</option>
+                                            <t t-foreach="comparison['years']" t-as="year">
+                                                <option t-att-value="year" t-att-selected="comparison['year_end'] == year" t-out="year"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="o_triton_filter-field">
+                                        <label for="semester">Semester</label>
+                                        <select id="semester" name="semester">
+                                            <option value="">Semua</option>
+                                            <option value="ganjil" t-att-selected="comparison['semester'] == 'ganjil'">Ganjil</option>
+                                            <option value="genap" t-att-selected="comparison['semester'] == 'genap'">Genap</option>
+                                            <option value="pendek" t-att-selected="comparison['semester'] == 'pendek'">Pendek</option>
+                                        </select>
+                                    </div>
+                                    <div class="o_triton_filter-field">
+                                        <label for="faculty">Fakultas</label>
+                                        <select id="faculty" name="fakultas_id">
+                                            <option value="">Semua fakultas</option>
+                                            <t t-foreach="faculties" t-as="faculty">
+                                                <option t-att-value="faculty['id']" t-att-selected="comparison['faculty_id'] == faculty['id']" t-out="faculty['name']"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="o_triton_filter-field o_triton_filter-field--wide">
+                                        <label for="prodi-selection">Program studi <small>(maksimal 6)</small></label>
+                                        <select id="prodi-selection" name="prodi_id" multiple="multiple" size="5" data-max-selection="6" aria-describedby="prodi-selection-help">
+                                            <t t-foreach="prodis" t-as="prodi">
+                                                <option t-att-value="prodi['id']" t-att-selected="prodi['id'] in comparison['prodi_ids']" t-out="prodi['name']"/>
+                                            </t>
+                                        </select>
+                                        <small id="prodi-selection-help" class="o_triton_field-help">Pilih maksimal enam program studi dalam satu analisis.</small>
+                                        <span id="prodi-selection-status" class="o_triton_field-status" aria-live="polite">0/6 terpilih</span>
+                                    </div>
+                                    <div class="o_triton_filter-field">
+                                        <label for="cpl-type">Jenis CPL</label>
+                                        <select id="cpl-type" name="jenis_cpl">
+                                            <option value="">Semua jenis</option>
+                                            <t t-foreach="cpl_types" t-as="category">
+                                                <option t-att-value="category['key']" t-att-selected="comparison['jenis_cpl'] == category['key']" t-out="category['name']"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="o_triton_filter-actions">
+                                    <button class="o_triton_btn o_triton_primary-action" type="submit">Terapkan analisis</button>
+                                    <a class="o_triton_btn-ghost" href="/perbandingan-cpl">Reset</a>
+                                    <span class="o_triton_submit-status" aria-live="polite">Menyiapkan analisis...</span>
+                                </div>
+                            </form>
+                        </section>
+
+                        <div class="o_triton_summary-bar" aria-label="Ringkasan indikator analisis">
+                            <article class="o_triton_summary-item">
+                                <span>Periode</span>
+                                <strong><t t-out="comparison['year_start'] or 'Terbaru'"/> — <t t-out="comparison['year_end'] or 'Terbaru'"/></strong>
+                            </article>
+                            <article class="o_triton_summary-item">
+                                <span>Program studi</span>
+                                <strong t-out="len(comparison['prodis'])"/>
+                            </article>
+                            <article class="o_triton_summary-item">
+                                <span>Target</span>
+                                <strong><t t-out="comparison['target']"/>%</strong>
+                            </article>
+                            <article class="o_triton_summary-item">
+                                <span>Jenis CPL</span>
+                                <strong><t t-out="comparison['jenis_cpl'] or 'Semua'"/></strong>
+                            </article>
                         </div>
-                        <aside class="o_triton_privacy-note o_triton_section-heading"><strong>Metodologi:</strong> <t t-out="comparison['methodology']"/></aside>
+
+                        <div t-if="comparison['warnings']" class="o_triton_warning-box" role="status">
+                            <strong>Data belum lengkap untuk:</strong>
+                            <t t-out="', '.join(comparison['warnings'])"/>.
+                            Program studi tanpa data valid tidak ditampilkan dalam nilai perbandingan.
+                        </div>
+
+                        <div t-if="comparison['prodis']" class="o_triton_comparison-results">
+                            <div class="o_triton_analysis-toolbar">
+                                <a class="o_triton_btn-ghost" href="/perbandingan-cpl.csv">Unduh CSV agregat</a>
+                                <button class="o_triton_btn-ghost o_triton_print" type="button">Cetak / Simpan PDF</button>
+                            </div>
+
+                            <div class="o_triton_visual-grid">
+                                <article class="o_triton_panel o_triton_chart-panel">
+                                    <div class="o_triton_panel-header">
+                                        <div>
+                                            <span class="o_triton_section-kicker">Visualisasi utama</span>
+                                            <h2>Perbandingan capaian CPL</h2>
+                                        </div>
+                                    </div>
+                                    <svg class="o_triton_radar" viewBox="0 0 220 220" role="img" aria-label="Radar capaian CPL per program studi">
+                                        <circle cx="110" cy="110" r="80" class="o_triton_radar-grid"/>
+                                        <circle cx="110" cy="110" r="54" class="o_triton_radar-grid"/>
+                                        <circle cx="110" cy="110" r="28" class="o_triton_radar-grid"/>
+                                        <t t-foreach="comparison['prodis']" t-as="prodi">
+                                            <polygon class="o_triton_radar-series" t-att-points="prodi['radar_points']"/>
+                                        </t>
+                                    </svg>
+                                    <ul class="o_triton_legend">
+                                        <t t-foreach="comparison['prodis']" t-as="prodi">
+                                            <li><span class="o_triton_legend-marker" aria-hidden="true"/><t t-out="prodi['name']"/></li>
+                                        </t>
+                                    </ul>
+                                </article>
+
+                                <article class="o_triton_panel o_triton_chart-panel">
+                                    <div class="o_triton_panel-header">
+                                        <div>
+                                            <span class="o_triton_section-kicker">Distribusi</span>
+                                            <h2>Rata-rata capaian per kelompok CPL</h2>
+                                        </div>
+                                    </div>
+                                    <div class="o_triton_grouped-bars">
+                                        <t t-foreach="comparison['prodis']" t-as="prodi">
+                                            <div class="o_triton_group">
+                                                <strong t-out="prodi['name']"/>
+                                                <t t-foreach="prodi['scores']" t-as="score">
+                                                    <div class="o_triton_bar-row">
+                                                        <span t-out="comparison['categories'][score_index]['name']"/>
+                                                        <meter class="o_triton_bar-track" min="0" max="100" t-att-value="score or 0" t-att-aria-label="comparison['categories'][score_index]['name']"/>
+                                                        <b t-if="score"><t t-out="score"/>%</b>
+                                                        <b t-else="">—</b>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </article>
+
+                                <article class="o_triton_panel o_triton_chart-panel o_triton_chart-panel--full">
+                                    <div class="o_triton_panel-header">
+                                        <div>
+                                            <span class="o_triton_section-kicker">Tren</span>
+                                            <h2>Perkembangan capaian antarperiode</h2>
+                                        </div>
+                                    </div>
+                                    <div t-if="comparison['trend']" class="o_triton_trend-list">
+                                        <t t-foreach="comparison['trend']" t-as="item">
+                                            <div class="o_triton_trend-item">
+                                                <span t-out="item['year']"/>
+                                                <meter class="o_triton_trend-track" min="0" max="100" t-att-value="item['average']" t-att-aria-label="'Capaian ' + item['year']"/>
+                                                <strong><t t-out="item['average']"/>%</strong>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div t-else="" class="o_triton_empty-inline">Belum ada data tren pada periode ini.</div>
+                                </article>
+                            </div>
+
+                            <article class="o_triton_panel o_triton_table-panel">
+                                <div class="o_triton_panel-header">
+                                    <div>
+                                        <span class="o_triton_section-kicker">Tabel analisis</span>
+                                        <h2>Perbandingan program studi</h2>
+                                    </div>
+                                </div>
+                                <div class="o_triton_table-wrap">
+                                    <table class="o_triton_table o_triton_table--comparison">
+                                        <thead>
+                                            <tr>
+                                                <th>Program studi</th>
+                                                <t t-foreach="comparison['categories']" t-as="category">
+                                                    <th t-out="category['name']"/>
+                                                </t>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="comparison['prodis']" t-as="prodi">
+                                                <tr>
+                                                    <th>
+                                                        <span class="o_triton_table-code" t-out="prodi['kode']"/>
+                                                        <span t-out="prodi['name']"/>
+                                                    </th>
+                                                    <t t-foreach="prodi['scores']" t-as="score">
+                                                        <td t-if="score">
+                                                            <strong><t t-out="score"/>%</strong>
+                                                        </td>
+                                                        <td t-else="" class="o_triton_table-empty">Belum ada data</td>
+                                                    </t>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div t-else="" class="o_triton_empty">
+                            <h2>Belum ada hasil perbandingan</h2>
+                            <p>Pastikan terdapat penawaran pada periode yang dipilih, RPS final dengan bobot lengkap, nilai komponen, serta KRS yang telah disetujui.</p>
+                        </div>
+
+                        <aside class="o_triton_methodology-note">
+                            <strong>Metodologi:</strong>
+                            <span><t t-out="comparison['methodology']"/></span>
+                        </aside>
                     </div>
                 </section>
                 <t t-call="erpobe.triton_footer"/>
             </main>
+
             <script type="text/javascript">
                 (function() {
                     var select = document.getElementById('prodi-selection');
@@ -521,6 +686,7 @@
                         return;
                     }
                     var status = document.getElementById('prodi-selection-status');
+                    var submitStatus = document.querySelector('.o_triton_submit-status');
                     var update = function() {
                         var values = Array.prototype.slice.call(select.selectedOptions).map(function(option) { return option.value; });
                         var max = parseInt(select.dataset.maxSelection || '6', 10);
@@ -528,11 +694,11 @@
                             status.textContent = values.length + '/' + max + ' terpilih';
                         }
                         if (values.length > max) {
-                            var remove = values.length - max;
+                            var remaining = values.length - max;
                             for (var idx = select.options.length - 1; idx >= 0; idx--) {
-                                if (select.options[idx].selected &amp;&amp; remove > 0) {
+                                if (select.options[idx].selected &amp;&amp; remaining > 0) {
                                     select.options[idx].selected = false;
-                                    remove -= 1;
+                                    remaining -= 1;
                                 }
                             }
                             if (status) {
@@ -542,6 +708,19 @@
                     };
                     update();
                     select.addEventListener('change', update);
+                    var forms = document.querySelectorAll('.o_triton_filter-form');
+                    forms.forEach(function(form) {
+                        form.addEventListener('submit', function() {
+                            var button = form.querySelector('.o_triton_primary-action');
+                            if (button) {
+                                button.disabled = true;
+                                button.textContent = 'Memproses…';
+                            }
+                            if (submitStatus) {
+                                submitStatus.textContent = 'Memproses analisis…';
+                            }
+                        });
+                    });
                 })();
             </script>
         </t>

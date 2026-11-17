@@ -5,17 +5,32 @@
   .o_triton_score-grid,
   .o_triton_feature-grid,
   .o_triton_footer-grid,
-  .o_triton_analysis-layout {
+  .o_triton_visual-grid,
+  .o_triton_filter-grid {
     grid-template-columns: 1fr;
   }
 
   .o_triton_stat-grid,
-  .o_triton_summary-strip {
+  .o_triton_summary-strip,
+  .o_triton_summary-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .o_triton_filter-panel {
-    position: static;
+  .o_triton_page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .o_triton_page-header__meta {
+    border-left: none;
+    border-top: 2px solid var(--triton-border);
+    min-width: 0;
+    padding-left: 0;
+    padding-top: 12px;
+  }
+
+  .o_triton_filter-field--wide {
+    grid-column: auto;
   }
 }
 
@@ -32,7 +47,8 @@
   }
 
   .o_triton_stat-grid,
-  .o_triton_summary-strip {
+  .o_triton_summary-strip,
+  .o_triton_summary-bar {
     grid-template-columns: 1fr;
   }
 
@@ -48,6 +64,22 @@
 
   .o_triton_form .o_triton_form-row {
     grid-template-columns: 1fr;
+  }
+
+  .o_triton_filter-shell {
+    padding: 16px;
+  }
+
+  .o_triton_filter-actions,
+  .o_triton_analysis-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .o_triton_bar-row,
+  .o_triton_trend-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 }
 

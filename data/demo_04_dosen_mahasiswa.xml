@@ -2,7 +2,7 @@
 <odoo noupdate="1">
     <record id="partner_ti_dosen_1" model="res.partner">
         <field name="name">Dr. Rina Kumalasari</field>
-        <field name="email">ti.dosen1@example.test</field>
+        <field name="email">dosen.if.01@example.test</field>
     </record>
     <record id="dosen_ti_1" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_ti_dosen_1" />
@@ -15,7 +15,7 @@
     </record>
     <record id="partner_ti_dosen_2" model="res.partner">
         <field name="name">Budi Santoso, S.T.</field>
-        <field name="email">ti.dosen2@example.test</field>
+        <field name="email">dosen.if.02@example.test</field>
     </record>
     <record id="dosen_ti_2" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_ti_dosen_2" />
@@ -28,7 +28,7 @@
     </record>
     <record id="partner_ti_dosen_3" model="res.partner">
         <field name="name">Ir. Damar Priyanto</field>
-        <field name="email">ti.dosen3@example.test</field>
+        <field name="email">dosen.if.03@example.test</field>
     </record>
     <record id="dosen_ti_3" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_ti_dosen_3" />
@@ -41,7 +41,7 @@
     </record>
     <record id="partner_ti_mhs_1" model="res.partner">
         <field name="name">Anisa Putri</field>
-        <field name="email">ti.mhs.1@example.test</field>
+        <field name="email">mahasiswa.if.001@example.test</field>
     </record>
     <record id="mhs_ti_1" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ti_mhs_1" />
@@ -55,7 +55,7 @@
     </record>
     <record id="partner_ti_mhs_2" model="res.partner">
         <field name="name">Raka Pradana</field>
-        <field name="email">ti.mhs.2@example.test</field>
+        <field name="email">mahasiswa.if.002@example.test</field>
     </record>
     <record id="mhs_ti_2" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ti_mhs_2" />
@@ -69,7 +69,7 @@
     </record>
     <record id="partner_ti_mhs_3" model="res.partner">
         <field name="name">Lukman Hidayat</field>
-        <field name="email">ti.mhs.3@example.test</field>
+        <field name="email">mahasiswa.if.003@example.test</field>
     </record>
     <record id="mhs_ti_3" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ti_mhs_3" />
@@ -83,7 +83,7 @@
     </record>
     <record id="partner_ti_mhs_4" model="res.partner">
         <field name="name">Nadia Aulia</field>
-        <field name="email">ti.mhs.4@example.test</field>
+        <field name="email">mahasiswa.if.004@example.test</field>
     </record>
     <record id="mhs_ti_4" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ti_mhs_4" />
@@ -97,7 +97,7 @@
     </record>
     <record id="partner_ti_mhs_5" model="res.partner">
         <field name="name">Farhan Wijaya</field>
-        <field name="email">ti.mhs.5@example.test</field>
+        <field name="email">mahasiswa.if.005@example.test</field>
     </record>
     <record id="mhs_ti_5" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ti_mhs_5" />
@@ -111,7 +111,7 @@
     </record>
     <record id="partner_ti_mhs_6" model="res.partner">
         <field name="name">Salsa Putri</field>
-        <field name="email">ti.mhs.6@example.test</field>
+        <field name="email">mahasiswa.if.006@example.test</field>
     </record>
     <record id="mhs_ti_6" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ti_mhs_6" />
@@ -125,7 +125,7 @@
     </record>
     <record id="partner_si_dosen_1" model="res.partner">
         <field name="name">Dr. Rina Kumalasari</field>
-        <field name="email">si.dosen1@example.test</field>
+        <field name="email">dosen.si.01@example.test</field>
     </record>
     <record id="dosen_si_1" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_si_dosen_1" />
@@ -138,7 +138,7 @@
     </record>
     <record id="partner_si_dosen_2" model="res.partner">
         <field name="name">Budi Santoso, S.T.</field>
-        <field name="email">si.dosen2@example.test</field>
+        <field name="email">dosen.si.02@example.test</field>
     </record>
     <record id="dosen_si_2" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_si_dosen_2" />
@@ -151,7 +151,7 @@
     </record>
     <record id="partner_si_dosen_3" model="res.partner">
         <field name="name">Ir. Damar Priyanto</field>
-        <field name="email">si.dosen3@example.test</field>
+        <field name="email">dosen.si.03@example.test</field>
     </record>
     <record id="dosen_si_3" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_si_dosen_3" />
@@ -164,7 +164,7 @@
     </record>
     <record id="partner_si_mhs_1" model="res.partner">
         <field name="name">Gilang Permana</field>
-        <field name="email">si.mhs.1@example.test</field>
+        <field name="email">mahasiswa.si.001@example.test</field>
     </record>
     <record id="mhs_si_1" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_si_mhs_1" />
@@ -178,7 +178,7 @@
     </record>
     <record id="partner_si_mhs_2" model="res.partner">
         <field name="name">Maya Sari</field>
-        <field name="email">si.mhs.2@example.test</field>
+        <field name="email">mahasiswa.si.002@example.test</field>
     </record>
     <record id="mhs_si_2" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_si_mhs_2" />
@@ -192,7 +192,7 @@
     </record>
     <record id="partner_si_mhs_3" model="res.partner">
         <field name="name">Rafi Kusuma</field>
-        <field name="email">si.mhs.3@example.test</field>
+        <field name="email">mahasiswa.si.003@example.test</field>
     </record>
     <record id="mhs_si_3" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_si_mhs_3" />
@@ -206,7 +206,7 @@
     </record>
     <record id="partner_si_mhs_4" model="res.partner">
         <field name="name">Della Putri</field>
-        <field name="email">si.mhs.4@example.test</field>
+        <field name="email">mahasiswa.si.004@example.test</field>
     </record>
     <record id="mhs_si_4" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_si_mhs_4" />
@@ -220,7 +220,7 @@
     </record>
     <record id="partner_si_mhs_5" model="res.partner">
         <field name="name">Hafiz Rahman</field>
-        <field name="email">si.mhs.5@example.test</field>
+        <field name="email">mahasiswa.si.005@example.test</field>
     </record>
     <record id="mhs_si_5" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_si_mhs_5" />
@@ -234,7 +234,7 @@
     </record>
     <record id="partner_si_mhs_6" model="res.partner">
         <field name="name">Wulan Safitri</field>
-        <field name="email">si.mhs.6@example.test</field>
+        <field name="email">mahasiswa.si.006@example.test</field>
     </record>
     <record id="mhs_si_6" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_si_mhs_6" />
@@ -248,7 +248,7 @@
     </record>
     <record id="partner_me_dosen_1" model="res.partner">
         <field name="name">Ari Setiawan, M.T.</field>
-        <field name="email">me.dosen1@example.test</field>
+        <field name="email">dosen.me.01@example.test</field>
     </record>
     <record id="dosen_me_1" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_me_dosen_1" />
@@ -261,7 +261,7 @@
     </record>
     <record id="partner_me_dosen_2" model="res.partner">
         <field name="name">Lina Mardiana, S.T.</field>
-        <field name="email">me.dosen2@example.test</field>
+        <field name="email">dosen.me.02@example.test</field>
     </record>
     <record id="dosen_me_2" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_me_dosen_2" />
@@ -274,7 +274,7 @@
     </record>
     <record id="partner_me_mhs_1" model="res.partner">
         <field name="name">Dewi Lestari</field>
-        <field name="email">me.mhs.1@example.test</field>
+        <field name="email">mahasiswa.me.001@example.test</field>
     </record>
     <record id="mhs_me_1" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_me_mhs_1" />
@@ -288,7 +288,7 @@
     </record>
     <record id="partner_me_mhs_2" model="res.partner">
         <field name="name">Adit Pratama</field>
-        <field name="email">me.mhs.2@example.test</field>
+        <field name="email">mahasiswa.me.002@example.test</field>
     </record>
     <record id="mhs_me_2" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_me_mhs_2" />
@@ -302,7 +302,7 @@
     </record>
     <record id="partner_me_mhs_3" model="res.partner">
         <field name="name">Santi Wulandari</field>
-        <field name="email">me.mhs.3@example.test</field>
+        <field name="email">mahasiswa.me.003@example.test</field>
     </record>
     <record id="mhs_me_3" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_me_mhs_3" />
@@ -316,7 +316,7 @@
     </record>
     <record id="partner_me_mhs_4" model="res.partner">
         <field name="name">Bram Setiawan</field>
-        <field name="email">me.mhs.4@example.test</field>
+        <field name="email">mahasiswa.me.004@example.test</field>
     </record>
     <record id="mhs_me_4" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_me_mhs_4" />
@@ -330,7 +330,7 @@
     </record>
     <record id="partner_me_mhs_5" model="res.partner">
         <field name="name">Nabil Ahmad</field>
-        <field name="email">me.mhs.5@example.test</field>
+        <field name="email">mahasiswa.me.005@example.test</field>
     </record>
     <record id="mhs_me_5" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_me_mhs_5" />
@@ -344,7 +344,7 @@
     </record>
     <record id="partner_me_mhs_6" model="res.partner">
         <field name="name">Yuliana Sari</field>
-        <field name="email">me.mhs.6@example.test</field>
+        <field name="email">mahasiswa.me.006@example.test</field>
     </record>
     <record id="mhs_me_6" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_me_mhs_6" />
@@ -358,7 +358,7 @@
     </record>
     <record id="partner_el_dosen_1" model="res.partner">
         <field name="name">Nadya Rahmawati, M.Eng.</field>
-        <field name="email">el.dosen1@example.test</field>
+        <field name="email">dosen.el.01@example.test</field>
     </record>
     <record id="dosen_el_1" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_el_dosen_1" />
@@ -371,7 +371,7 @@
     </record>
     <record id="partner_el_dosen_2" model="res.partner">
         <field name="name">Rahmat Setiawan, S.T.</field>
-        <field name="email">el.dosen2@example.test</field>
+        <field name="email">dosen.el.02@example.test</field>
     </record>
     <record id="dosen_el_2" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_el_dosen_2" />
@@ -384,7 +384,7 @@
     </record>
     <record id="partner_el_mhs_1" model="res.partner">
         <field name="name">Irfan Maulana</field>
-        <field name="email">el.mhs.1@example.test</field>
+        <field name="email">mahasiswa.el.001@example.test</field>
     </record>
     <record id="mhs_el_1" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_el_mhs_1" />
@@ -398,7 +398,7 @@
     </record>
     <record id="partner_el_mhs_2" model="res.partner">
         <field name="name">Citra Lestari</field>
-        <field name="email">el.mhs.2@example.test</field>
+        <field name="email">mahasiswa.el.002@example.test</field>
     </record>
     <record id="mhs_el_2" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_el_mhs_2" />
@@ -412,7 +412,7 @@
     </record>
     <record id="partner_el_mhs_3" model="res.partner">
         <field name="name">Aditya Firmansyah</field>
-        <field name="email">el.mhs.3@example.test</field>
+        <field name="email">mahasiswa.el.003@example.test</field>
     </record>
     <record id="mhs_el_3" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_el_mhs_3" />
@@ -426,7 +426,7 @@
     </record>
     <record id="partner_el_mhs_4" model="res.partner">
         <field name="name">Rizky Hidayat</field>
-        <field name="email">el.mhs.4@example.test</field>
+        <field name="email">mahasiswa.el.004@example.test</field>
     </record>
     <record id="mhs_el_4" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_el_mhs_4" />
@@ -440,7 +440,7 @@
     </record>
     <record id="partner_el_mhs_5" model="res.partner">
         <field name="name">Sabrina Noor</field>
-        <field name="email">el.mhs.5@example.test</field>
+        <field name="email">mahasiswa.el.005@example.test</field>
     </record>
     <record id="mhs_el_5" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_el_mhs_5" />
@@ -454,7 +454,7 @@
     </record>
     <record id="partner_el_mhs_6" model="res.partner">
         <field name="name">Vega Pratama</field>
-        <field name="email">el.mhs.6@example.test</field>
+        <field name="email">mahasiswa.el.006@example.test</field>
     </record>
     <record id="mhs_el_6" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_el_mhs_6" />
@@ -468,7 +468,7 @@
     </record>
     <record id="partner_ind_dosen_1" model="res.partner">
         <field name="name">Fadli Nugraha, S.T.</field>
-        <field name="email">ind.dosen1@example.test</field>
+        <field name="email">dosen.in.01@example.test</field>
     </record>
     <record id="dosen_ind_1" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_ind_dosen_1" />
@@ -481,7 +481,7 @@
     </record>
     <record id="partner_ind_dosen_2" model="res.partner">
         <field name="name">Mira Lestari, M.T.</field>
-        <field name="email">ind.dosen2@example.test</field>
+        <field name="email">dosen.in.02@example.test</field>
     </record>
     <record id="dosen_ind_2" model="erpobe.master.dosen">
         <field name="partner_id" ref="erpobe.partner_ind_dosen_2" />
@@ -494,7 +494,7 @@
     </record>
     <record id="partner_ind_mhs_1" model="res.partner">
         <field name="name">Maya Sari</field>
-        <field name="email">ind.mhs.1@example.test</field>
+        <field name="email">mahasiswa.in.001@example.test</field>
     </record>
     <record id="mhs_ind_1" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ind_mhs_1" />
@@ -508,7 +508,7 @@
     </record>
     <record id="partner_ind_mhs_2" model="res.partner">
         <field name="name">Farel Nanda</field>
-        <field name="email">ind.mhs.2@example.test</field>
+        <field name="email">mahasiswa.in.002@example.test</field>
     </record>
     <record id="mhs_ind_2" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ind_mhs_2" />
@@ -522,7 +522,7 @@
     </record>
     <record id="partner_ind_mhs_3" model="res.partner">
         <field name="name">Hana Rahma</field>
-        <field name="email">ind.mhs.3@example.test</field>
+        <field name="email">mahasiswa.in.003@example.test</field>
     </record>
     <record id="mhs_ind_3" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ind_mhs_3" />
@@ -536,7 +536,7 @@
     </record>
     <record id="partner_ind_mhs_4" model="res.partner">
         <field name="name">Dimas Akbar</field>
-        <field name="email">ind.mhs.4@example.test</field>
+        <field name="email">mahasiswa.in.004@example.test</field>
     </record>
     <record id="mhs_ind_4" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ind_mhs_4" />
@@ -550,7 +550,7 @@
     </record>
     <record id="partner_ind_mhs_5" model="res.partner">
         <field name="name">Aisyah Putri</field>
-        <field name="email">ind.mhs.5@example.test</field>
+        <field name="email">mahasiswa.in.005@example.test</field>
     </record>
     <record id="mhs_ind_5" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ind_mhs_5" />
@@ -564,7 +564,7 @@
     </record>
     <record id="partner_ind_mhs_6" model="res.partner">
         <field name="name">Yusuf Hadi</field>
-        <field name="email">ind.mhs.6@example.test</field>
+        <field name="email">mahasiswa.in.006@example.test</field>
     </record>
     <record id="mhs_ind_6" model="erpobe.master.mahasiswa">
         <field name="partner_id" ref="erpobe.partner_ind_mhs_6" />

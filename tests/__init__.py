@@ -1,4 +1,5 @@
 from . import test_faculty_scope
+from . import test_demo_users
 from . import test_import_export
 from . import test_ui_views
 from . import test_weight_validation

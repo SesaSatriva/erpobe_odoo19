@@ -64,12 +64,12 @@
         <field name="kode_cpmk">CPMK-IF101-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk algoritma dan struktur data secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if101_1_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
+    <record id="map_cpmk_ti_if101_1_cpl_ti_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_1" />
     </record>
-    <record id="map_cpmk_ti_if101_1_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+    <record id="map_cpmk_ti_if101_1_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_1" />
     </record>
     <record id="cpmk_ti_if101_2" model="erpobe.akademik.cpmk">
@@ -77,12 +77,12 @@
         <field name="kode_cpmk">CPMK-IF101-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk algoritma dan struktur data secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if101_2_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
+    <record id="map_cpmk_ti_if101_2_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_2" />
     </record>
-    <record id="map_cpmk_ti_if101_2_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+    <record id="map_cpmk_ti_if101_2_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_2" />
     </record>
     <record id="cpmk_ti_if101_3" model="erpobe.akademik.cpmk">
@@ -90,12 +90,12 @@
         <field name="kode_cpmk">CPMK-IF101-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk algoritma dan struktur data secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if101_3_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+    <record id="map_cpmk_ti_if101_3_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_3" />
     </record>
-    <record id="map_cpmk_ti_if101_3_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+    <record id="map_cpmk_ti_if101_3_cpl_ti_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if101_3" />
     </record>
     <record id="mk_ti_02" model="erpobe.master.matakuliah">
@@ -114,12 +114,12 @@
         <field name="kode_cpmk">CPMK-IF102-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk basis data secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if102_1_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
+    <record id="map_cpmk_ti_if102_1_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_1" />
     </record>
-    <record id="map_cpmk_ti_if102_1_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+    <record id="map_cpmk_ti_if102_1_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_1" />
     </record>
     <record id="cpmk_ti_if102_2" model="erpobe.akademik.cpmk">
@@ -127,12 +127,12 @@
         <field name="kode_cpmk">CPMK-IF102-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk basis data secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if102_2_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+    <record id="map_cpmk_ti_if102_2_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_2" />
     </record>
-    <record id="map_cpmk_ti_if102_2_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+    <record id="map_cpmk_ti_if102_2_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_2" />
     </record>
     <record id="cpmk_ti_if102_3" model="erpobe.akademik.cpmk">
@@ -140,12 +140,12 @@
         <field name="kode_cpmk">CPMK-IF102-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk basis data secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if102_3_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+    <record id="map_cpmk_ti_if102_3_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_3" />
     </record>
-    <record id="map_cpmk_ti_if102_3_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+    <record id="map_cpmk_ti_if102_3_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if102_3" />
     </record>
     <record id="mk_ti_03" model="erpobe.master.matakuliah">
@@ -164,12 +164,12 @@
         <field name="kode_cpmk">CPMK-IF203-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rekayasa perangkat lunak secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if203_1_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
+    <record id="map_cpmk_ti_if203_1_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_1" />
     </record>
-    <record id="map_cpmk_ti_if203_1_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+    <record id="map_cpmk_ti_if203_1_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_1" />
     </record>
     <record id="cpmk_ti_if203_2" model="erpobe.akademik.cpmk">
@@ -177,12 +177,12 @@
         <field name="kode_cpmk">CPMK-IF203-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rekayasa perangkat lunak secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if203_2_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+    <record id="map_cpmk_ti_if203_2_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_2" />
     </record>
-    <record id="map_cpmk_ti_if203_2_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+    <record id="map_cpmk_ti_if203_2_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_2" />
     </record>
     <record id="cpmk_ti_if203_3" model="erpobe.akademik.cpmk">
@@ -190,12 +190,12 @@
         <field name="kode_cpmk">CPMK-IF203-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rekayasa perangkat lunak secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if203_3_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+    <record id="map_cpmk_ti_if203_3_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_3" />
     </record>
-    <record id="map_cpmk_ti_if203_3_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+    <record id="map_cpmk_ti_if203_3_cpl_ti_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if203_3" />
     </record>
     <record id="mk_ti_04" model="erpobe.master.matakuliah">
@@ -214,12 +214,12 @@
         <field name="kode_cpmk">CPMK-IF204-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk jaringan komputer secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if204_1_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
+    <record id="map_cpmk_ti_if204_1_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_1" />
     </record>
-    <record id="map_cpmk_ti_if204_1_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+    <record id="map_cpmk_ti_if204_1_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_1" />
     </record>
     <record id="cpmk_ti_if204_2" model="erpobe.akademik.cpmk">
@@ -227,12 +227,12 @@
         <field name="kode_cpmk">CPMK-IF204-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk jaringan komputer secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if204_2_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+    <record id="map_cpmk_ti_if204_2_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_2" />
     </record>
-    <record id="map_cpmk_ti_if204_2_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+    <record id="map_cpmk_ti_if204_2_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_2" />
     </record>
     <record id="cpmk_ti_if204_3" model="erpobe.akademik.cpmk">
@@ -240,12 +240,12 @@
         <field name="kode_cpmk">CPMK-IF204-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk jaringan komputer secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if204_3_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+    <record id="map_cpmk_ti_if204_3_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_3" />
     </record>
-    <record id="map_cpmk_ti_if204_3_cpl_ti_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
+    <record id="map_cpmk_ti_if204_3_cpl_ti_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if204_3" />
     </record>
     <record id="mk_ti_05" model="erpobe.master.matakuliah">
@@ -264,12 +264,12 @@
         <field name="kode_cpmk">CPMK-IF205-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk kecerdasan buatan secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if205_1_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
+    <record id="map_cpmk_ti_if205_1_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_1" />
     </record>
-    <record id="map_cpmk_ti_if205_1_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+    <record id="map_cpmk_ti_if205_1_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_1" />
     </record>
     <record id="cpmk_ti_if205_2" model="erpobe.akademik.cpmk">
@@ -277,12 +277,12 @@
         <field name="kode_cpmk">CPMK-IF205-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk kecerdasan buatan secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if205_2_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
+    <record id="map_cpmk_ti_if205_2_cpl_ti_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_2" />
     </record>
-    <record id="map_cpmk_ti_if205_2_cpl_ti_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
+    <record id="map_cpmk_ti_if205_2_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_2" />
     </record>
     <record id="cpmk_ti_if205_3" model="erpobe.akademik.cpmk">
@@ -290,12 +290,12 @@
         <field name="kode_cpmk">CPMK-IF205-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk kecerdasan buatan secara terukur.</field>
     </record>
-    <record id="map_cpmk_ti_if205_3_cpl_ti_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_08" />
+    <record id="map_cpmk_ti_if205_3_cpl_ti_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_3" />
     </record>
-    <record id="map_cpmk_ti_if205_3_cpl_ti_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ti_02" />
+    <record id="map_cpmk_ti_if205_3_cpl_ti_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ti_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ti_if205_3" />
     </record>
     <record id="cpl_si_01" model="erpobe.akademik.cpl">
@@ -362,12 +362,12 @@
         <field name="kode_cpmk">CPMK-SI101-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika tanah secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si101_1_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_02" />
+    <record id="map_cpmk_si_si101_1_cpl_si_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si101_1" />
     </record>
-    <record id="map_cpmk_si_si101_1_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+    <record id="map_cpmk_si_si101_1_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si101_1" />
     </record>
     <record id="cpmk_si_si101_2" model="erpobe.akademik.cpmk">
@@ -375,12 +375,12 @@
         <field name="kode_cpmk">CPMK-SI101-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika tanah secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si101_2_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_03" />
+    <record id="map_cpmk_si_si101_2_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si101_2" />
     </record>
-    <record id="map_cpmk_si_si101_2_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+    <record id="map_cpmk_si_si101_2_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si101_2" />
     </record>
     <record id="cpmk_si_si101_3" model="erpobe.akademik.cpmk">
@@ -388,12 +388,12 @@
         <field name="kode_cpmk">CPMK-SI101-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika tanah secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si101_3_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+    <record id="map_cpmk_si_si101_3_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si101_3" />
     </record>
-    <record id="map_cpmk_si_si101_3_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+    <record id="map_cpmk_si_si101_3_cpl_si_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si101_3" />
     </record>
     <record id="mk_si_02" model="erpobe.master.matakuliah">
@@ -412,12 +412,12 @@
         <field name="kode_cpmk">CPMK-SI102-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk struktur beton secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si102_1_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_03" />
+    <record id="map_cpmk_si_si102_1_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si102_1" />
     </record>
-    <record id="map_cpmk_si_si102_1_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+    <record id="map_cpmk_si_si102_1_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si102_1" />
     </record>
     <record id="cpmk_si_si102_2" model="erpobe.akademik.cpmk">
@@ -425,12 +425,12 @@
         <field name="kode_cpmk">CPMK-SI102-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk struktur beton secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si102_2_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+    <record id="map_cpmk_si_si102_2_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si102_2" />
     </record>
-    <record id="map_cpmk_si_si102_2_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+    <record id="map_cpmk_si_si102_2_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si102_2" />
     </record>
     <record id="cpmk_si_si102_3" model="erpobe.akademik.cpmk">
@@ -438,12 +438,12 @@
         <field name="kode_cpmk">CPMK-SI102-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk struktur beton secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si102_3_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+    <record id="map_cpmk_si_si102_3_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si102_3" />
     </record>
-    <record id="map_cpmk_si_si102_3_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+    <record id="map_cpmk_si_si102_3_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si102_3" />
     </record>
     <record id="mk_si_03" model="erpobe.master.matakuliah">
@@ -462,12 +462,12 @@
         <field name="kode_cpmk">CPMK-SI103-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk hidrologi secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si103_1_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_04" />
+    <record id="map_cpmk_si_si103_1_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si103_1" />
     </record>
-    <record id="map_cpmk_si_si103_1_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+    <record id="map_cpmk_si_si103_1_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si103_1" />
     </record>
     <record id="cpmk_si_si103_2" model="erpobe.akademik.cpmk">
@@ -475,12 +475,12 @@
         <field name="kode_cpmk">CPMK-SI103-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk hidrologi secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si103_2_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+    <record id="map_cpmk_si_si103_2_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si103_2" />
     </record>
-    <record id="map_cpmk_si_si103_2_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+    <record id="map_cpmk_si_si103_2_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si103_2" />
     </record>
     <record id="cpmk_si_si103_3" model="erpobe.akademik.cpmk">
@@ -488,12 +488,12 @@
         <field name="kode_cpmk">CPMK-SI103-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk hidrologi secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si103_3_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+    <record id="map_cpmk_si_si103_3_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si103_3" />
     </record>
-    <record id="map_cpmk_si_si103_3_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+    <record id="map_cpmk_si_si103_3_cpl_si_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si103_3" />
     </record>
     <record id="mk_si_04" model="erpobe.master.matakuliah">
@@ -512,12 +512,12 @@
         <field name="kode_cpmk">CPMK-SI204-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk surveying dan pemetaan secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si204_1_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_05" />
+    <record id="map_cpmk_si_si204_1_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si204_1" />
     </record>
-    <record id="map_cpmk_si_si204_1_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+    <record id="map_cpmk_si_si204_1_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si204_1" />
     </record>
     <record id="cpmk_si_si204_2" model="erpobe.akademik.cpmk">
@@ -525,12 +525,12 @@
         <field name="kode_cpmk">CPMK-SI204-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk surveying dan pemetaan secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si204_2_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+    <record id="map_cpmk_si_si204_2_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si204_2" />
     </record>
-    <record id="map_cpmk_si_si204_2_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+    <record id="map_cpmk_si_si204_2_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si204_2" />
     </record>
     <record id="cpmk_si_si204_3" model="erpobe.akademik.cpmk">
@@ -538,12 +538,12 @@
         <field name="kode_cpmk">CPMK-SI204-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk surveying dan pemetaan secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si204_3_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+    <record id="map_cpmk_si_si204_3_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si204_3" />
     </record>
-    <record id="map_cpmk_si_si204_3_cpl_si_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_01" />
+    <record id="map_cpmk_si_si204_3_cpl_si_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si204_3" />
     </record>
     <record id="mk_si_05" model="erpobe.master.matakuliah">
@@ -562,12 +562,12 @@
         <field name="kode_cpmk">CPMK-SI205-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk transportasi dan perkerasan secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si205_1_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_06" />
+    <record id="map_cpmk_si_si205_1_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si205_1" />
     </record>
-    <record id="map_cpmk_si_si205_1_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+    <record id="map_cpmk_si_si205_1_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si205_1" />
     </record>
     <record id="cpmk_si_si205_2" model="erpobe.akademik.cpmk">
@@ -575,12 +575,12 @@
         <field name="kode_cpmk">CPMK-SI205-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk transportasi dan perkerasan secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si205_2_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_07" />
+    <record id="map_cpmk_si_si205_2_cpl_si_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si205_2" />
     </record>
-    <record id="map_cpmk_si_si205_2_cpl_si_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_01" />
+    <record id="map_cpmk_si_si205_2_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si205_2" />
     </record>
     <record id="cpmk_si_si205_3" model="erpobe.akademik.cpmk">
@@ -588,12 +588,12 @@
         <field name="kode_cpmk">CPMK-SI205-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk transportasi dan perkerasan secara terukur.</field>
     </record>
-    <record id="map_cpmk_si_si205_3_cpl_si_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_08" />
+    <record id="map_cpmk_si_si205_3_cpl_si_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si205_3" />
     </record>
-    <record id="map_cpmk_si_si205_3_cpl_si_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_si_02" />
+    <record id="map_cpmk_si_si205_3_cpl_si_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_si_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_si_si205_3" />
     </record>
     <record id="cpl_me_01" model="erpobe.akademik.cpl">
@@ -660,12 +660,12 @@
         <field name="kode_cpmk">CPMK-ME101-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk termodinamika secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me101_1_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_02" />
+    <record id="map_cpmk_me_me101_1_cpl_me_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me101_1" />
     </record>
-    <record id="map_cpmk_me_me101_1_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+    <record id="map_cpmk_me_me101_1_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me101_1" />
     </record>
     <record id="cpmk_me_me101_2" model="erpobe.akademik.cpmk">
@@ -673,12 +673,12 @@
         <field name="kode_cpmk">CPMK-ME101-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk termodinamika secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me101_2_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_03" />
+    <record id="map_cpmk_me_me101_2_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me101_2" />
     </record>
-    <record id="map_cpmk_me_me101_2_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+    <record id="map_cpmk_me_me101_2_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me101_2" />
     </record>
     <record id="cpmk_me_me101_3" model="erpobe.akademik.cpmk">
@@ -686,12 +686,12 @@
         <field name="kode_cpmk">CPMK-ME101-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk termodinamika secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me101_3_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+    <record id="map_cpmk_me_me101_3_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me101_3" />
     </record>
-    <record id="map_cpmk_me_me101_3_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+    <record id="map_cpmk_me_me101_3_cpl_me_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me101_3" />
     </record>
     <record id="mk_me_02" model="erpobe.master.matakuliah">
@@ -710,12 +710,12 @@
         <field name="kode_cpmk">CPMK-ME102-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika fluida secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me102_1_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_03" />
+    <record id="map_cpmk_me_me102_1_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me102_1" />
     </record>
-    <record id="map_cpmk_me_me102_1_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+    <record id="map_cpmk_me_me102_1_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me102_1" />
     </record>
     <record id="cpmk_me_me102_2" model="erpobe.akademik.cpmk">
@@ -723,12 +723,12 @@
         <field name="kode_cpmk">CPMK-ME102-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika fluida secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me102_2_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+    <record id="map_cpmk_me_me102_2_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me102_2" />
     </record>
-    <record id="map_cpmk_me_me102_2_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+    <record id="map_cpmk_me_me102_2_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me102_2" />
     </record>
     <record id="cpmk_me_me102_3" model="erpobe.akademik.cpmk">
@@ -736,12 +736,12 @@
         <field name="kode_cpmk">CPMK-ME102-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk mekanika fluida secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me102_3_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+    <record id="map_cpmk_me_me102_3_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me102_3" />
     </record>
-    <record id="map_cpmk_me_me102_3_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+    <record id="map_cpmk_me_me102_3_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me102_3" />
     </record>
     <record id="mk_me_03" model="erpobe.master.matakuliah">
@@ -760,12 +760,12 @@
         <field name="kode_cpmk">CPMK-ME203-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk desain mesin secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me203_1_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_04" />
+    <record id="map_cpmk_me_me203_1_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me203_1" />
     </record>
-    <record id="map_cpmk_me_me203_1_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+    <record id="map_cpmk_me_me203_1_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me203_1" />
     </record>
     <record id="cpmk_me_me203_2" model="erpobe.akademik.cpmk">
@@ -773,12 +773,12 @@
         <field name="kode_cpmk">CPMK-ME203-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk desain mesin secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me203_2_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+    <record id="map_cpmk_me_me203_2_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me203_2" />
     </record>
-    <record id="map_cpmk_me_me203_2_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+    <record id="map_cpmk_me_me203_2_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me203_2" />
     </record>
     <record id="cpmk_me_me203_3" model="erpobe.akademik.cpmk">
@@ -786,12 +786,12 @@
         <field name="kode_cpmk">CPMK-ME203-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk desain mesin secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me203_3_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+    <record id="map_cpmk_me_me203_3_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me203_3" />
     </record>
-    <record id="map_cpmk_me_me203_3_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+    <record id="map_cpmk_me_me203_3_cpl_me_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me203_3" />
     </record>
     <record id="mk_me_04" model="erpobe.master.matakuliah">
@@ -810,12 +810,12 @@
         <field name="kode_cpmk">CPMK-ME204-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk proses manufaktur secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me204_1_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_05" />
+    <record id="map_cpmk_me_me204_1_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me204_1" />
     </record>
-    <record id="map_cpmk_me_me204_1_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+    <record id="map_cpmk_me_me204_1_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me204_1" />
     </record>
     <record id="cpmk_me_me204_2" model="erpobe.akademik.cpmk">
@@ -823,12 +823,12 @@
         <field name="kode_cpmk">CPMK-ME204-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk proses manufaktur secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me204_2_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+    <record id="map_cpmk_me_me204_2_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me204_2" />
     </record>
-    <record id="map_cpmk_me_me204_2_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+    <record id="map_cpmk_me_me204_2_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me204_2" />
     </record>
     <record id="cpmk_me_me204_3" model="erpobe.akademik.cpmk">
@@ -836,12 +836,12 @@
         <field name="kode_cpmk">CPMK-ME204-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk proses manufaktur secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me204_3_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+    <record id="map_cpmk_me_me204_3_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me204_3" />
     </record>
-    <record id="map_cpmk_me_me204_3_cpl_me_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_01" />
+    <record id="map_cpmk_me_me204_3_cpl_me_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me204_3" />
     </record>
     <record id="mk_me_05" model="erpobe.master.matakuliah">
@@ -860,12 +860,12 @@
         <field name="kode_cpmk">CPMK-ME205-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk cad/cam secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me205_1_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_06" />
+    <record id="map_cpmk_me_me205_1_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me205_1" />
     </record>
-    <record id="map_cpmk_me_me205_1_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+    <record id="map_cpmk_me_me205_1_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me205_1" />
     </record>
     <record id="cpmk_me_me205_2" model="erpobe.akademik.cpmk">
@@ -873,12 +873,12 @@
         <field name="kode_cpmk">CPMK-ME205-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk cad/cam secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me205_2_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_07" />
+    <record id="map_cpmk_me_me205_2_cpl_me_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me205_2" />
     </record>
-    <record id="map_cpmk_me_me205_2_cpl_me_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_01" />
+    <record id="map_cpmk_me_me205_2_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me205_2" />
     </record>
     <record id="cpmk_me_me205_3" model="erpobe.akademik.cpmk">
@@ -886,12 +886,12 @@
         <field name="kode_cpmk">CPMK-ME205-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk cad/cam secara terukur.</field>
     </record>
-    <record id="map_cpmk_me_me205_3_cpl_me_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_08" />
+    <record id="map_cpmk_me_me205_3_cpl_me_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me205_3" />
     </record>
-    <record id="map_cpmk_me_me205_3_cpl_me_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_me_02" />
+    <record id="map_cpmk_me_me205_3_cpl_me_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_me_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_me_me205_3" />
     </record>
     <record id="cpl_el_01" model="erpobe.akademik.cpl">
@@ -958,12 +958,12 @@
         <field name="kode_cpmk">CPMK-EL101-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rangkaian listrik secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el101_1_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_02" />
+    <record id="map_cpmk_el_el101_1_cpl_el_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el101_1" />
     </record>
-    <record id="map_cpmk_el_el101_1_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+    <record id="map_cpmk_el_el101_1_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el101_1" />
     </record>
     <record id="cpmk_el_el101_2" model="erpobe.akademik.cpmk">
@@ -971,12 +971,12 @@
         <field name="kode_cpmk">CPMK-EL101-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rangkaian listrik secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el101_2_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_03" />
+    <record id="map_cpmk_el_el101_2_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el101_2" />
     </record>
-    <record id="map_cpmk_el_el101_2_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+    <record id="map_cpmk_el_el101_2_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el101_2" />
     </record>
     <record id="cpmk_el_el101_3" model="erpobe.akademik.cpmk">
@@ -984,12 +984,12 @@
         <field name="kode_cpmk">CPMK-EL101-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk rangkaian listrik secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el101_3_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+    <record id="map_cpmk_el_el101_3_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el101_3" />
     </record>
-    <record id="map_cpmk_el_el101_3_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+    <record id="map_cpmk_el_el101_3_cpl_el_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el101_3" />
     </record>
     <record id="mk_el_02" model="erpobe.master.matakuliah">
@@ -1008,12 +1008,12 @@
         <field name="kode_cpmk">CPMK-EL102-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk elektronika dasar secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el102_1_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_03" />
+    <record id="map_cpmk_el_el102_1_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el102_1" />
     </record>
-    <record id="map_cpmk_el_el102_1_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+    <record id="map_cpmk_el_el102_1_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el102_1" />
     </record>
     <record id="cpmk_el_el102_2" model="erpobe.akademik.cpmk">
@@ -1021,12 +1021,12 @@
         <field name="kode_cpmk">CPMK-EL102-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk elektronika dasar secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el102_2_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+    <record id="map_cpmk_el_el102_2_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el102_2" />
     </record>
-    <record id="map_cpmk_el_el102_2_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+    <record id="map_cpmk_el_el102_2_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el102_2" />
     </record>
     <record id="cpmk_el_el102_3" model="erpobe.akademik.cpmk">
@@ -1034,12 +1034,12 @@
         <field name="kode_cpmk">CPMK-EL102-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk elektronika dasar secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el102_3_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+    <record id="map_cpmk_el_el102_3_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el102_3" />
     </record>
-    <record id="map_cpmk_el_el102_3_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+    <record id="map_cpmk_el_el102_3_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el102_3" />
     </record>
     <record id="mk_el_03" model="erpobe.master.matakuliah">
@@ -1058,12 +1058,12 @@
         <field name="kode_cpmk">CPMK-EL203-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem kontrol secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el203_1_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_04" />
+    <record id="map_cpmk_el_el203_1_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el203_1" />
     </record>
-    <record id="map_cpmk_el_el203_1_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+    <record id="map_cpmk_el_el203_1_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el203_1" />
     </record>
     <record id="cpmk_el_el203_2" model="erpobe.akademik.cpmk">
@@ -1071,12 +1071,12 @@
         <field name="kode_cpmk">CPMK-EL203-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem kontrol secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el203_2_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+    <record id="map_cpmk_el_el203_2_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el203_2" />
     </record>
-    <record id="map_cpmk_el_el203_2_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+    <record id="map_cpmk_el_el203_2_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el203_2" />
     </record>
     <record id="cpmk_el_el203_3" model="erpobe.akademik.cpmk">
@@ -1084,12 +1084,12 @@
         <field name="kode_cpmk">CPMK-EL203-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem kontrol secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el203_3_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+    <record id="map_cpmk_el_el203_3_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el203_3" />
     </record>
-    <record id="map_cpmk_el_el203_3_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+    <record id="map_cpmk_el_el203_3_cpl_el_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el203_3" />
     </record>
     <record id="mk_el_04" model="erpobe.master.matakuliah">
@@ -1108,12 +1108,12 @@
         <field name="kode_cpmk">CPMK-EL204-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem tenaga secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el204_1_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_05" />
+    <record id="map_cpmk_el_el204_1_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el204_1" />
     </record>
-    <record id="map_cpmk_el_el204_1_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+    <record id="map_cpmk_el_el204_1_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el204_1" />
     </record>
     <record id="cpmk_el_el204_2" model="erpobe.akademik.cpmk">
@@ -1121,12 +1121,12 @@
         <field name="kode_cpmk">CPMK-EL204-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem tenaga secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el204_2_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+    <record id="map_cpmk_el_el204_2_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el204_2" />
     </record>
-    <record id="map_cpmk_el_el204_2_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+    <record id="map_cpmk_el_el204_2_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el204_2" />
     </record>
     <record id="cpmk_el_el204_3" model="erpobe.akademik.cpmk">
@@ -1134,12 +1134,12 @@
         <field name="kode_cpmk">CPMK-EL204-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem tenaga secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el204_3_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+    <record id="map_cpmk_el_el204_3_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el204_3" />
     </record>
-    <record id="map_cpmk_el_el204_3_cpl_el_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_01" />
+    <record id="map_cpmk_el_el204_3_cpl_el_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el204_3" />
     </record>
     <record id="mk_el_05" model="erpobe.master.matakuliah">
@@ -1158,12 +1158,12 @@
         <field name="kode_cpmk">CPMK-EL205-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk teknik digital secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el205_1_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_06" />
+    <record id="map_cpmk_el_el205_1_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el205_1" />
     </record>
-    <record id="map_cpmk_el_el205_1_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+    <record id="map_cpmk_el_el205_1_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el205_1" />
     </record>
     <record id="cpmk_el_el205_2" model="erpobe.akademik.cpmk">
@@ -1171,12 +1171,12 @@
         <field name="kode_cpmk">CPMK-EL205-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk teknik digital secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el205_2_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_07" />
+    <record id="map_cpmk_el_el205_2_cpl_el_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el205_2" />
     </record>
-    <record id="map_cpmk_el_el205_2_cpl_el_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_01" />
+    <record id="map_cpmk_el_el205_2_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el205_2" />
     </record>
     <record id="cpmk_el_el205_3" model="erpobe.akademik.cpmk">
@@ -1184,12 +1184,12 @@
         <field name="kode_cpmk">CPMK-EL205-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk teknik digital secara terukur.</field>
     </record>
-    <record id="map_cpmk_el_el205_3_cpl_el_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_08" />
+    <record id="map_cpmk_el_el205_3_cpl_el_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el205_3" />
     </record>
-    <record id="map_cpmk_el_el205_3_cpl_el_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_el_02" />
+    <record id="map_cpmk_el_el205_3_cpl_el_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_el_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_el_el205_3" />
     </record>
     <record id="cpl_ind_01" model="erpobe.akademik.cpl">
@@ -1256,12 +1256,12 @@
         <field name="kode_cpmk">CPMK-IN101-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk analisis operasi secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in101_1_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
+    <record id="map_cpmk_ind_in101_1_cpl_ind_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_1" />
     </record>
-    <record id="map_cpmk_ind_in101_1_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+    <record id="map_cpmk_ind_in101_1_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_1" />
     </record>
     <record id="cpmk_ind_in101_2" model="erpobe.akademik.cpmk">
@@ -1269,12 +1269,12 @@
         <field name="kode_cpmk">CPMK-IN101-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk analisis operasi secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in101_2_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
+    <record id="map_cpmk_ind_in101_2_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_2" />
     </record>
-    <record id="map_cpmk_ind_in101_2_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+    <record id="map_cpmk_ind_in101_2_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_2" />
     </record>
     <record id="cpmk_ind_in101_3" model="erpobe.akademik.cpmk">
@@ -1282,12 +1282,12 @@
         <field name="kode_cpmk">CPMK-IN101-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk analisis operasi secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in101_3_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+    <record id="map_cpmk_ind_in101_3_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_3" />
     </record>
-    <record id="map_cpmk_ind_in101_3_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+    <record id="map_cpmk_ind_in101_3_cpl_ind_01" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_01" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in101_3" />
     </record>
     <record id="mk_ind_02" model="erpobe.master.matakuliah">
@@ -1306,12 +1306,12 @@
         <field name="kode_cpmk">CPMK-IN102-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk perencanaan produksi secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in102_1_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
+    <record id="map_cpmk_ind_in102_1_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_1" />
     </record>
-    <record id="map_cpmk_ind_in102_1_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+    <record id="map_cpmk_ind_in102_1_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_1" />
     </record>
     <record id="cpmk_ind_in102_2" model="erpobe.akademik.cpmk">
@@ -1319,12 +1319,12 @@
         <field name="kode_cpmk">CPMK-IN102-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk perencanaan produksi secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in102_2_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+    <record id="map_cpmk_ind_in102_2_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_2" />
     </record>
-    <record id="map_cpmk_ind_in102_2_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+    <record id="map_cpmk_ind_in102_2_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_2" />
     </record>
     <record id="cpmk_ind_in102_3" model="erpobe.akademik.cpmk">
@@ -1332,12 +1332,12 @@
         <field name="kode_cpmk">CPMK-IN102-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk perencanaan produksi secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in102_3_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+    <record id="map_cpmk_ind_in102_3_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_3" />
     </record>
-    <record id="map_cpmk_ind_in102_3_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+    <record id="map_cpmk_ind_in102_3_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in102_3" />
     </record>
     <record id="mk_ind_03" model="erpobe.master.matakuliah">
@@ -1356,12 +1356,12 @@
         <field name="kode_cpmk">CPMK-IN203-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem manufaktur secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in203_1_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
+    <record id="map_cpmk_ind_in203_1_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_1" />
     </record>
-    <record id="map_cpmk_ind_in203_1_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+    <record id="map_cpmk_ind_in203_1_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_1" />
     </record>
     <record id="cpmk_ind_in203_2" model="erpobe.akademik.cpmk">
@@ -1369,12 +1369,12 @@
         <field name="kode_cpmk">CPMK-IN203-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem manufaktur secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in203_2_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+    <record id="map_cpmk_ind_in203_2_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_2" />
     </record>
-    <record id="map_cpmk_ind_in203_2_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+    <record id="map_cpmk_ind_in203_2_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_2" />
     </record>
     <record id="cpmk_ind_in203_3" model="erpobe.akademik.cpmk">
@@ -1382,12 +1382,12 @@
         <field name="kode_cpmk">CPMK-IN203-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk sistem manufaktur secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in203_3_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+    <record id="map_cpmk_ind_in203_3_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_3" />
     </record>
-    <record id="map_cpmk_ind_in203_3_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+    <record id="map_cpmk_ind_in203_3_cpl_ind_03" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_03" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in203_3" />
     </record>
     <record id="mk_ind_04" model="erpobe.master.matakuliah">
@@ -1406,12 +1406,12 @@
         <field name="kode_cpmk">CPMK-IN204-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk ergonomi industri secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in204_1_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
+    <record id="map_cpmk_ind_in204_1_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_1" />
     </record>
-    <record id="map_cpmk_ind_in204_1_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+    <record id="map_cpmk_ind_in204_1_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_1" />
     </record>
     <record id="cpmk_ind_in204_2" model="erpobe.akademik.cpmk">
@@ -1419,12 +1419,12 @@
         <field name="kode_cpmk">CPMK-IN204-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk ergonomi industri secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in204_2_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+    <record id="map_cpmk_ind_in204_2_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_2" />
     </record>
-    <record id="map_cpmk_ind_in204_2_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+    <record id="map_cpmk_ind_in204_2_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_2" />
     </record>
     <record id="cpmk_ind_in204_3" model="erpobe.akademik.cpmk">
@@ -1432,12 +1432,12 @@
         <field name="kode_cpmk">CPMK-IN204-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk ergonomi industri secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in204_3_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+    <record id="map_cpmk_ind_in204_3_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_3" />
     </record>
-    <record id="map_cpmk_ind_in204_3_cpl_ind_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_01" />
+    <record id="map_cpmk_ind_in204_3_cpl_ind_04" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_04" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in204_3" />
     </record>
     <record id="mk_ind_05" model="erpobe.master.matakuliah">
@@ -1456,12 +1456,12 @@
         <field name="kode_cpmk">CPMK-IN205-1</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk logistik dan supply chain secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in205_1_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
+    <record id="map_cpmk_ind_in205_1_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_1" />
     </record>
-    <record id="map_cpmk_ind_in205_1_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+    <record id="map_cpmk_ind_in205_1_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_1" />
     </record>
     <record id="cpmk_ind_in205_2" model="erpobe.akademik.cpmk">
@@ -1469,12 +1469,12 @@
         <field name="kode_cpmk">CPMK-IN205-2</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk logistik dan supply chain secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in205_2_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
+    <record id="map_cpmk_ind_in205_2_cpl_ind_06" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_06" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_2" />
     </record>
-    <record id="map_cpmk_ind_in205_2_cpl_ind_01" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_01" />
+    <record id="map_cpmk_ind_in205_2_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_2" />
     </record>
     <record id="cpmk_ind_in205_3" model="erpobe.akademik.cpmk">
@@ -1482,12 +1482,12 @@
         <field name="kode_cpmk">CPMK-IN205-3</field>
         <field name="name">Mahasiswa mampu menghitung, menganalisis, dan menyampaikan solusi relevan untuk logistik dan supply chain secara terukur.</field>
     </record>
-    <record id="map_cpmk_ind_in205_3_cpl_ind_08" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_08" />
+    <record id="map_cpmk_ind_in205_3_cpl_ind_07" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_07" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_3" />
     </record>
-    <record id="map_cpmk_ind_in205_3_cpl_ind_02" model="erpobe.akademik.cpl.mk.cpmk">
-        <field name="cpl_id" ref="erpobe.cpl_ind_02" />
+    <record id="map_cpmk_ind_in205_3_cpl_ind_05" model="erpobe.akademik.cpl.mk.cpmk">
+        <field name="cpl_id" ref="erpobe.cpl_ind_05" />
         <field name="cpmk_id" ref="erpobe.cpmk_ind_in205_3" />
     </record>
 </odoo>

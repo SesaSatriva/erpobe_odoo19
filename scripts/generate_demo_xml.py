@@ -157,7 +157,11 @@ def xml_field(name, value=None, ref=None, eval_value=None):
 
 def build_records(list_of_entries):
     root = ET.Element('odoo', {'noupdate': '1'})
-    for model, xml_id, fields in list_of_entries:
+    for entry in list_of_entries:
+        if isinstance(entry, ET.Element):
+            root.append(entry)
+            continue
+        model, xml_id, fields = entry
         rec = ET.SubElement(root, 'record', {'id': xml_id, 'model': model})
         for field_name, value in fields.items():
             if value is None:
@@ -182,6 +186,21 @@ def write_file(filename, root):
     tree = ET.ElementTree(root)
     ET.indent(tree, space='    ')
     tree.write(path, encoding='utf-8', xml_declaration=True)
+
+
+def append_search_write(root, model, domain, values_eval):
+    function = ET.Element('function', {'model': model, 'name': 'write'})
+    ET.SubElement(
+        function,
+        'function',
+        {
+            'model': model,
+            'name': 'search',
+            'eval': f'[[{", ".join(domain)}]]',
+        },
+    )
+    ET.SubElement(function, 'value', {'eval': values_eval})
+    root.append(function)
 
 
 def generate_demo_files():
@@ -251,11 +270,12 @@ def generate_demo_files():
                     cpmk_id,
                     {'mk_id': {'ref': f'erpobe.{mk_id}'}, 'kode_cpmk': f'CPMK-{kode_mk}-{sub_idx}', 'name': desc}
                 ))
-                cpl_targets = [f'erpobe.cpl_{key}_{(sub_idx * 2 + idx) % len(cfg["cpls"]) + 1:02d}' if False else '']
-                # map each CPMK to two CPLs with a stable offset
+                base_cpl = (idx - 1) % len(cfg['cpls'])
+                first_offset = (sub_idx - 1) % 3
+                second_offset = sub_idx % 3
                 mapped = [
-                    f'cpl_{key}_{((idx + sub_idx - 1) % len(cfg["cpls"])) + 1:02d}',
-                    f'cpl_{key}_{((idx + sub_idx + 1) % len(cfg["cpls"])) + 1:02d}',
+                    f'cpl_{key}_{(base_cpl + first_offset) % len(cfg["cpls"]) + 1:02d}',
+                    f'cpl_{key}_{(base_cpl + second_offset) % len(cfg["cpls"]) + 1:02d}',
                 ]
                 for cpl in mapped:
                     core_records.append((
@@ -284,7 +304,16 @@ def generate_demo_files():
             nip = str(nip_counter)
             nip_counter += 1
             pid = f'partner_{key}_dosen_{idx}'
-            user_records.append(('res.partner', pid, {'name': name, 'email': f'{key}.dosen{idx}@example.test'}))
+            user_records.append(
+                (
+                    'res.partner',
+                    pid,
+                    {
+                        'name': name,
+                        'email': f'dosen.{cfg["code"].lower()}.{idx:02d}@example.test',
+                    },
+                )
+            )
             user_records.append((
                 'erpobe.master.dosen',
                 f'dosen_{key}_{idx}',
@@ -301,7 +330,16 @@ def generate_demo_files():
 
         for idx, student_name in enumerate(STUDENT_NAMES[key], 1):
             pid = f'partner_{key}_mhs_{idx}'
-            user_records.append(('res.partner', pid, {'name': student_name, 'email': f'{key}.mhs.{idx}@example.test'}))
+            user_records.append(
+                (
+                    'res.partner',
+                    pid,
+                    {
+                        'name': student_name,
+                        'email': f'mahasiswa.{cfg["code"].lower()}.{idx:03d}@example.test',
+                    },
+                )
+            )
             status = 'aktif' if idx % 3 else 'cuti'
             if idx == 1 and key in {'ti', 'si'}:
                 status = 'lulus'
@@ -327,17 +365,15 @@ def generate_demo_files():
         comp_records.append(('erpobe.akademik.komponen', xml_id, {'name': name, 'tipe': tipe, 'aktif': True, 'color': 0}))
     write_file('demo_05_komponen_bobot.xml', build_records(comp_records))
 
-    # 06: admin account and access
-    access_records = [
-        ('res.users', 'demo_admin_erpobe', {
-            'name': 'Admin Akademik Demo',
-            'login': 'admin.akademik@example.test',
-            'email': 'admin.akademik@example.test',
-            'password': 'admin123',
-            'group_ids': {'eval': "[(6, 0, [ref('base.group_user'), ref('erpobe.group_admin')])]"},
-        })
-    ]
-    write_file('demo_06_akun_akses.xml', build_records(access_records))
+    # 06: create role accounts dynamically for every registered program
+    demo_users = ET.Element('odoo', {'noupdate': '0'})
+    demo_users.append(
+        ET.Element(
+            'function',
+            {'model': 'res.users', 'name': 'load_erpobe_demo_users'},
+        )
+    )
+    write_file('demo_06_akun_akses.xml', demo_users)
 
     # 07: offerings for active year and some previous years
     offer_records = []
@@ -372,6 +408,7 @@ def generate_demo_files():
 
     # 08: RPS and weights for all offered lines; keep weights complete for demo stability
     rps_records = []
+    rps_functions = []
     for key, cfg in PRODIS.items():
         offer_id = f'penawaran_{key}_{active_year}'
         for idx, (kode_mk, name_mk, sks, semester, tipe) in enumerate(cfg['courses'], 1):
@@ -384,7 +421,7 @@ def generate_demo_files():
                     'matakuliah_id': {'ref': f'erpobe.mk_{key}_{idx:02d}'},
                     'penawaran_line_id': {'ref': f'erpobe.{line_id}'},
                     'version': 1,
-                    'status': 'final',
+                    'status': 'review',
                 }
             ))
             # cpmk-mk distribution exact 100% per course
@@ -393,32 +430,37 @@ def generate_demo_files():
             ]
             weights_mk = [35, 35, 30]
             for cpmk_id, pct in zip(cpmk_ids, weights_mk):
-                rps_records.append((
+                append_search_write(
+                    rps_functions,
                     'erpobe.bobot.cpmk.mk',
-                    f'bobot_mk_{rps_id}_{cpmk_id}',
-                    {
-                        'rps_id': {'ref': f'erpobe.{rps_id}'},
-                        'cpmk_id': {'ref': f'erpobe.{cpmk_id}'},
-                        'bobot_cpmk_mk': pct,
-                    }
-                ))
+                    [
+                        f"('rps_id', '=', ref('erpobe.{rps_id}'))",
+                        f"('cpmk_id', '=', ref('erpobe.{cpmk_id}'))",
+                        "('rps_id.status', '=', 'review')",
+                    ],
+                    repr({'bobot_cpmk_mk': pct}),
+                )
             # cpmk-cpl distribution exact 100% per cpmk
-            cpl_dist = [
-                f'cpl_{key}_{((idx + 1) % len(cfg["cpls"])) + 1:02d}',
-                f'cpl_{key}_{((idx + 2) % len(cfg["cpls"])) + 1:02d}',
-            ]
             for sub_idx, cpmk_id in enumerate(cpmk_ids, 1):
+                base_cpl = (idx - 1) % len(cfg['cpls'])
+                first_offset = (sub_idx - 1) % 3
+                second_offset = sub_idx % 3
+                cpl_dist = [
+                    f'cpl_{key}_{(base_cpl + first_offset) % len(cfg["cpls"]) + 1:02d}',
+                    f'cpl_{key}_{(base_cpl + second_offset) % len(cfg["cpls"]) + 1:02d}',
+                ]
                 for cpl_id, pct in zip(cpl_dist, [60, 40]):
-                    rps_records.append((
+                    append_search_write(
+                        rps_functions,
                         'erpobe.bobot.cpmk.cpl',
-                        f'bobot_cpl_{rps_id}_{cpmk_id}_{cpl_id}',
-                        {
-                            'rps_id': {'ref': f'erpobe.{rps_id}'},
-                            'cpmk_id': {'ref': f'erpobe.{cpmk_id}'},
-                            'cpl_id': {'ref': f'erpobe.{cpl_id}'},
-                            'bobot_cpmk_cpl': pct,
-                        }
-                    ))
+                        [
+                            f"('rps_id', '=', ref('erpobe.{rps_id}'))",
+                            f"('cpmk_id', '=', ref('erpobe.{cpmk_id}'))",
+                            f"('cpl_id', '=', ref('erpobe.{cpl_id}'))",
+                            "('rps_id.status', '=', 'review')",
+                        ],
+                        repr({'bobot_cpmk_cpl': pct}),
+                    )
             # komponen weights exact 100% per cpmk
             for sub_idx, cpmk_id in enumerate(cpmk_ids, 1):
                 comp_values = [25, 15, 20, 25, 10, 5]
@@ -435,7 +477,41 @@ def generate_demo_files():
                             'bobot_komponen_cpmk': comp_values[comp_index],
                         }
                     ))
-    write_file('demo_08_rps.xml', build_records(rps_records))
+            components = ', '.join(
+                f"ref('erpobe.{component_id}')" for component_id, *_ in COMPONENTS
+            )
+            append_search_write(
+                rps_functions,
+                'erpobe.akademik.rps',
+                [
+                    f"('id', '=', ref('erpobe.{rps_id}'))",
+                    "('status', '=', 'review')",
+                ],
+                f"{{'komponen_ids': [(6, 0, [{components}])]}}",
+            )
+            finalize = ET.Element(
+                'function', {'model': 'erpobe.akademik.rps', 'name': 'action_finalize'}
+            )
+            ET.SubElement(
+                finalize,
+                'function',
+                {
+                    'model': 'erpobe.akademik.rps',
+                    'name': 'search',
+                    'eval': (
+                        f"[[('id', '=', ref('erpobe.{rps_id}')), "
+                        "('status', '=', 'review')]]"
+                    ),
+                },
+            )
+            rps_functions.append(finalize)
+    rps_root = ET.Element('odoo', {'noupdate': '0'})
+    rps_data = ET.SubElement(rps_root, 'data', {'noupdate': '1'})
+    for record in build_records(rps_records):
+        rps_data.append(record)
+    for function in rps_functions:
+        rps_root.append(function)
+    write_file('demo_08_rps.xml', rps_root)
 
     # 09: KRS for current students across active offering
     krs_records = []
@@ -476,12 +552,15 @@ def generate_demo_files():
         ))
     write_file('demo_10_nilai.xml', build_records(grade_records))
 
-    # 11: a few report/capaian records, which are generated from the KRS values and not required as source data
+    # 11: a sample CPL achievement record calculated from student CPMK grades
     cap_records = []
     cap_records.append((
-        'erpobe.summary.analytics.mixin',
-        'demo_summary_analytics',
-        {'name': 'Data demo analytics', 'active': True}
+        'erpobe.grade.cpl',
+        'grade_cpl_demo_ti_1',
+        {
+            'mahasiswa_id': {'ref': 'erpobe.mhs_ti_1'},
+            'cpl_id': {'ref': 'erpobe.cpl_ti_01'},
+        }
     ))
     write_file('demo_11_capaian.xml', build_records(cap_records))
 

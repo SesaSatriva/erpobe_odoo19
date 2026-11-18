@@ -21,7 +21,7 @@
   width: 100%;
   max-width: 56px;
   border-radius: 12px 12px 0 0;
-  background: linear-gradient(180deg, #00A8CC 0%, #2EC4B6 100%);
+  background: var(--triton-cyan);
 }
 
 .o_triton_chart-bar span {
@@ -110,5 +110,5 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--triton-cyan), var(--triton-emerald));
+  background: var(--triton-cyan);
 }

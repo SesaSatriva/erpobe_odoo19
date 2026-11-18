@@ -2,8 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
+  background: #fff;
+  backdrop-filter: none;
   color: var(--triton-primary);
   border-bottom: 1px solid var(--triton-border);
 }
@@ -35,9 +35,9 @@
   height: 34px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  background: var(--triton-gradient);
-  box-shadow: var(--triton-shadow-soft);
+  border-radius: 6px;
+  background: var(--triton-primary);
+  box-shadow: none;
   font-size: 14px;
   color: #fff;
 }

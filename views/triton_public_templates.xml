@@ -508,9 +508,8 @@
                                             </t>
                                         </select>
                                         <small id="prodi-selection-help" class="o_triton_field-help">Pilih maksimal enam program studi dalam satu analisis.</small>
-                                        <span id="prodi-selection-status" class="o_triton_field-status" aria-live="polite">0/6 terpilih</span>
                                     </div>
-                                    <div class="o_triton_filter-field">
+                                    <div class="o_triton_filter-field o_triton_filter-field--wide">
                                         <label for="cpl-type">Jenis CPL</label>
                                         <select id="cpl-type" name="jenis_cpl">
                                             <option value="">Semua jenis</option>
@@ -522,9 +521,9 @@
                                 </div>
 
                                 <div class="o_triton_filter-actions">
-                                    <button class="o_triton_btn o_triton_primary-action" type="submit">Terapkan analisis</button>
+                                    <span id="prodi-selection-status" class="o_triton_field-status" aria-live="polite">0/6 terpilih</span>
                                     <a class="o_triton_btn-ghost" href="/perbandingan-cpl">Reset</a>
-                                    <span class="o_triton_submit-status" aria-live="polite">Menyiapkan analisis...</span>
+                                    <button class="o_triton_btn o_triton_primary-action" type="submit">Terapkan analisis</button>
                                 </div>
                             </form>
                         </section>

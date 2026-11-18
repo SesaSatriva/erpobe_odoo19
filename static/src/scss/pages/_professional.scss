@@ -1,15 +1,17 @@
 :root {
-  --triton-deep-ocean: #0A2540;
-  --triton-cyan: #00A8CC;
-  --triton-emerald: #2EC4B6;
-  --triton-slate: #2D3748;
-  --triton-bg: #F8FAFC;
-  --triton-gradient: linear-gradient(45deg, var(--triton-deep-ocean), var(--triton-cyan), var(--triton-emerald));
-  --triton-border: #D7E0E8;
-  --triton-shadow-soft: 0 4px 14px rgba(10, 37, 64, 0.1);
-  --triton-success-soft: #E5F8F5;
-  --triton-warning-soft: #FFF4E5;
-  --triton-error-soft: #FDECEC;
+  --triton-deep-ocean: #172D3D;
+  --triton-primary: #123C56;
+  --triton-primary-soft: #EDF3F6;
+  --triton-cyan: #087F8C;
+  --triton-emerald: #087F8C;
+  --triton-slate: #657786;
+  --triton-bg: #F5F7F8;
+  --triton-gradient: none;
+  --triton-border: #D9E1E7;
+  --triton-shadow-soft: 0 4px 14px rgba(23, 45, 61, 0.06);
+  --triton-success-soft: #EDF6F4;
+  --triton-warning-soft: #FBF4E8;
+  --triton-error-soft: #FBEFEE;
   --triton-text: var(--triton-slate);
   --triton-muted: #526174;
   --triton-surface: #fff;
@@ -63,15 +65,15 @@
 }
 
 .o_triton_hero {
-  background: var(--triton-gradient);
-  padding-block: clamp(44px, 7vw, 76px);
+  background: #EEF3F5;
+  padding-block: clamp(40px, 6vw, 56px);
   color: var(--triton-deep-ocean);
 }
 
 .o_triton_hero .o_triton_container {
-  padding: clamp(20px, 4vw, 40px);
+  padding: 0;
   border-radius: 8px;
-  background: #fff;
+  background: transparent;
 }
 
 .o_triton_hero h1,
@@ -87,9 +89,9 @@
 
 .o_triton_btn,
 .o_triton_search button {
-  color: var(--triton-deep-ocean);
-  background: linear-gradient(#fff, #fff) padding-box, var(--triton-gradient) border-box;
-  border: 2px solid transparent;
+  color: #fff;
+  background: var(--triton-primary);
+  border: 1px solid var(--triton-primary);
   border-radius: 6px;
   box-shadow: none;
 }

@@ -1,6 +1,6 @@
 .o_triton_hero {
-  padding: 72px 0 42px;
-  background: linear-gradient(180deg, #f5f8fb 0%, #eef3f9 100%);
+  padding: 56px 0 40px;
+  background: #EEF3F5;
   color: var(--triton-text);
   border-bottom: 1px solid var(--triton-border);
 }
@@ -15,10 +15,10 @@
 .o_triton_kicker,
 .o_triton_eyebrow {
   display: inline-flex;
-  padding: 7px 12px;
-  border-radius: 999px;
+  padding: 6px 9px;
+  border-radius: 4px;
   border: 1px solid var(--triton-border);
-  background: var(--triton-primary-soft);
+  background: #fff;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -27,10 +27,10 @@
 }
 
 .o_triton_hero h1 {
-  margin: 22px 0 14px;
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  line-height: 1.08;
-  letter-spacing: -0.04em;
+  margin: 18px 0 12px;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
   color: var(--triton-primary);
 }
 
@@ -38,7 +38,7 @@
   color: var(--triton-muted);
   max-width: 620px;
   font-size: 1.06rem;
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .o_triton_hero-actions {
@@ -95,9 +95,9 @@
 .o_triton_hero-panel {
   background: #fff;
   border: 1px solid var(--triton-border);
-  border-radius: 22px;
+  border-radius: 8px;
   padding: 22px;
-  box-shadow: var(--triton-shadow-soft);
+  box-shadow: none;
 }
 
 .o_triton_hero-panel .o_triton_list {
@@ -122,8 +122,8 @@
 
 .o_triton_cta-block {
   padding: 32px;
-  border-radius: 24px;
-  background: var(--triton-deep-ocean);
+  border-radius: 8px;
+  background: var(--triton-primary);
   color: #fff;
   display: flex;
   flex-wrap: wrap;

@@ -1,22 +1,22 @@
 :root {
-  --triton-deep-ocean: #12263f;
-  --triton-primary: #173a5e;
-  --triton-primary-soft: #edf4ff;
-  --triton-cyan: #1d5f9c;
-  --triton-emerald: #2d8b7a;
-  --triton-slate: #1f2937;
-  --triton-bg: #f4f6f9;
+  --triton-deep-ocean: #172D3D;
+  --triton-primary: #123C56;
+  --triton-primary-soft: #EDF3F6;
+  --triton-cyan: #087F8C;
+  --triton-emerald: #087F8C;
+  --triton-slate: #657786;
+  --triton-bg: #F5F7F8;
   --triton-surface: #ffffff;
-  --triton-border: rgba(18, 38, 63, 0.12);
-  --triton-muted: #5d6d82;
-  --triton-text: #1f2937;
-  --triton-success-soft: rgba(45, 139, 122, 0.12);
-  --triton-warning-soft: rgba(217, 119, 6, 0.12);
-  --triton-error-soft: rgba(185, 28, 28, 0.12);
-  --triton-shadow-soft: 0 12px 26px rgba(18, 38, 63, 0.06);
-  --triton-gradient: linear-gradient(135deg, #12263f 0%, #173a5e 100%);
-  --triton-radius: 16px;
-  --triton-space: clamp(20px, 4vw, 36px);
+  --triton-border: #D9E1E7;
+  --triton-muted: #657786;
+  --triton-text: #172D3D;
+  --triton-success-soft: #EDF6F4;
+  --triton-warning-soft: #FBF4E8;
+  --triton-error-soft: #FBEFEE;
+  --triton-shadow-soft: 0 4px 14px rgba(23, 45, 61, 0.06);
+  --triton-gradient: none;
+  --triton-radius: 8px;
+  --triton-space: clamp(16px, 3vw, 24px);
 }
 
 .o_triton_page {

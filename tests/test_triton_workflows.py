@@ -370,3 +370,35 @@ class TestTritonPublicRoutes(HttpCase):
         ):
             response = self.url_open(route, allow_redirects=False)
             self.assertIn(response.status_code, (302, 303), route)
+
+    def test_student_courses_route_renders_without_approved_krs(self):
+        suffix = uuid.uuid4().hex[:8].upper()
+        faculty = self.env["erpobe.master.fakultas"].create(
+            {"name": f"Faculty Courses {suffix}", "kode": f"FC{suffix}"}
+        )
+        prodi = self.env["erpobe.master.prodi"].create(
+            {
+                "name": f"Program Courses {suffix}",
+                "kode": f"PC{suffix}",
+                "fakultas_id": faculty.id,
+            }
+        )
+        rombel = self.env["erpobe.master.rombel"].create(
+            {"name": f"Rombel {suffix}", "angkatan": 2025, "prodi_id": prodi.id}
+        )
+        email = f"student-courses-{suffix.lower()}@example.test"
+        student = self.env["erpobe.master.mahasiswa"].create(
+            {
+                "partner_id": self.env["res.partner"].create(
+                    {"name": f"Student Courses {suffix}", "email": email}
+                ).id,
+                "nim": f"SC{suffix}",
+                "rombel_id": rombel.id,
+            }
+        )
+        self.authenticate(email, student.nim)
+
+        response = self.url_open("/my/mata-kuliah")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Belum ada mata kuliah", response.text)

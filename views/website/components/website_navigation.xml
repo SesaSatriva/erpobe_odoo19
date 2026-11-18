@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="menu_triton_public" model="website.menu">
+        <field name="name">TRITON</field>
+        <field name="url">/</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">1</field>
+    </record>
+
+    <template id="triton_main_nav" name="Navigasi TRITON">
+        <nav class="o_triton_navbar" aria-label="Navigasi utama TRITON">
+            <div class="o_triton_nav-inner">
+                <a class="o_triton_brand" href="/" aria-label="TRITON, beranda">
+                    <span class="o_triton_brand-mark" aria-hidden="true">T</span>
+                    <span class="o_triton_brand-copy">
+                        <strong>TRITON</strong>
+                        <small>Outcome-based education</small>
+                    </span>
+                </a>
+                <details class="o_triton_mobile-menu">
+                    <summary aria-label="Buka menu">Menu</summary>
+                    <div class="o_triton_nav-links">
+                        <a href="/">Beranda</a>
+                        <a href="/fakultas">Fakultas &amp; Prodi</a>
+                        <a href="/perbandingan-cpl">Perbandingan CPL</a>
+                        <a href="/tracking">Tracking</a>
+                        <a href="/tentang">Tentang</a>
+                        <a href="/panduan">Panduan</a>
+                        <a href="/faq">FAQ</a>
+                    </div>
+                </details>
+                <div class="o_triton_desktop-links o_triton_nav-links">
+                    <a href="/">Beranda</a>
+                    <a href="/fakultas">Fakultas &amp; Prodi</a>
+                    <a href="/perbandingan-cpl">Perbandingan CPL</a>
+                    <a href="/tracking">Tracking</a>
+                    <a href="/tentang">Tentang</a>
+                </div>
+                <a href="/my" class="o_triton_btn-secondary">Masuk Portal</a>
+            </div>
+        </nav>
+    </template>
+
+    <template id="triton_footer" name="Footer TRITON">
+        <footer class="o_triton_footer">
+            <div class="o_triton_container o_triton_footer-grid">
+                <div>
+                    <a class="o_triton_brand" href="/">
+                        <span class="o_triton_brand-mark" aria-hidden="true">T</span>
+                        <span class="o_triton_brand-copy">
+                            <strong>TRITON</strong>
+                            <small>Outcome-based education</small>
+                        </span>
+                    </a>
+                    <p>Tracking, Reporting, and Integrated Technology for Outcome-based Education Network.</p>
+                </div>
+                <div>
+                    <h2>Jelajah</h2>
+                    <ul class="o_triton_list">
+                        <li><a href="/fakultas">Fakultas dan program studi</a></li>
+                        <li><a href="/perbandingan-cpl">Perbandingan CPL</a></li>
+                        <li><a href="/tracking">Tracking agregat</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>Bantuan</h2>
+                    <ul class="o_triton_list">
+                        <li><a href="/panduan">Panduan</a></li>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/kontak">Kontak</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>Informasi</h2>
+                    <ul class="o_triton_list">
+                        <li><a href="/metodologi">Metodologi</a></li>
+                        <li><a href="/kebijakan-privasi">Kebijakan privasi</a></li>
+                        <li><a href="/my">Portal pengguna</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="o_triton_container">
+                <small>TRITON — pemantauan capaian pembelajaran berbasis OBE.</small>
+            </div>
+        </footer>
+    </template>
+
+</odoo>

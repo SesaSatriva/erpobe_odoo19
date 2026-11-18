@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_faculty_detail_page" name="Detail Fakultas">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><a href="/fakultas">Fakultas</a><span>/</span><span t-out="faculty['name']"/></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Fakultas</span><h1 t-out="faculty['name']"/><p class="o_triton_subtitle">Kode <t t-out="faculty['kode']"/></p></div></header>
+                        <div class="o_triton_stat-grid o_triton_stat-grid-small">
+                            <article class="o_triton_stat-card"><span>Program Studi</span><strong t-out="stats['prodi_count']"/></article>
+                            <article class="o_triton_stat-card"><span>Dosen</span><strong t-out="stats['dosen_count']"/></article>
+                            <article class="o_triton_stat-card"><span>Mahasiswa aktif</span><strong t-out="stats['student_count']"/></article>
+                        </div>
+                        <div class="o_triton_heading o_triton_section-heading"><h2>Program studi</h2></div>
+                        <div t-if="prodis" class="o_triton_grid-three">
+                            <t t-foreach="prodis" t-as="prodi"><article class="o_triton_result-card"><span class="o_triton_badge" t-out="prodi['kode']"/><h3><a t-att-href="'/prodi/%s' % prodi['id']" t-out="prodi['name']"/></h3></article></t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><p>Belum ada program studi aktif di fakultas ini.</p></div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

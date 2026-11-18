@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_contact_page" name="Kontak TRITON">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page"><t t-call="erpobe.triton_main_nav"/><section class="o_triton_section"><div class="o_triton_container"><nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Kontak</span></nav><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Kontak</span><h1>Hubungi pengelola TRITON</h1><p class="o_triton_subtitle">Untuk dukungan akun, perubahan data akademik, atau pertanyaan mengenai akses publik dan privasi.</p></div></header><div class="o_triton_section-grid"><article class="o_triton_panel o_triton_info-block"><h2>Saluran resmi</h2><p>Gunakan kanal komunikasi resmi institusi untuk permintaan perbaikan data, akses akun, dan bantuan operasional.</p><ul class="o_triton_key-points"><li>Administrator akademik fakultas.</li><li>Tim support TRITON institusi.</li><li>Unit kurikulum dan penjaminan mutu.</li></ul></article><article class="o_triton_panel o_triton_info-block"><h2>Praktik aman</h2><p>Permintaan perubahan data harus menyebutkan bagian yang akan ditinjau tanpa mengirimkan kata sandi atau informasi autentikasi.</p><p>Semua permintaan akan diproses sesuai kewenangan dan kebijakan akses institusi.</p></article></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+</odoo>

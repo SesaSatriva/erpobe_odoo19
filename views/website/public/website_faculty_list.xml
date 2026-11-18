@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_faculty_list_page" name="Daftar Fakultas">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Fakultas</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Struktur akademik</span><h1>Fakultas</h1><p class="o_triton_subtitle">Pilih fakultas untuk melihat program studi dan statistik agregat.</p></div></header>
+                        <div t-if="faculties" class="o_triton_grid-three">
+                            <t t-foreach="faculties" t-as="faculty">
+                                <article class="o_triton_result-card">
+                                    <div class="o_triton_meta"><span class="o_triton_badge" t-out="faculty['kode']"/><span><t t-out="faculty['prodi_count']"/> program studi</span></div>
+                                    <h2><a t-att-href="'/fakultas/%s' % faculty['id']" t-out="faculty['name']"/></h2>
+                                    <p><t t-out="faculty['student_count']"/> mahasiswa aktif.</p>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada fakultas</h2><p>Belum ada data fakultas yang aktif.</p></div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

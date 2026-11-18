@@ -124,7 +124,7 @@ class TritonPortalDosen(TritonPortalBase):
                     if not input_record:
                         input_record = Input.create({'penawaran_id': line.penawaran_id.id, 'penawaran_line_id': line.id})
                     input_record.action_calculate_grades_and_khs(krs_lines)
-            except (ValidationError, ValueError) as exc:
+            except (ValidationError, UserError, ValueError) as exc:
                 error = str(exc)
         grade_rows = request.env['erpobe.grade.komponen'].sudo().search([('krs_line_id', 'in', krs_lines.ids)])
         grade_map = {(grade.krs_line_id.id, grade.komponen_id.id): grade.nilai for grade in grade_rows}

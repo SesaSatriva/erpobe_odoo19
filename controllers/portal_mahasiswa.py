@@ -41,6 +41,8 @@ class TritonPortalMahasiswa(TritonPortalBase):
                     except (ValidationError, UserError) as exc:
                         error = str(exc)
         krs = Krs.search([('id', '=', krs_id), ('mahasiswa_id', '=', student.id)], limit=1) if krs_id else Krs.search([('mahasiswa_id', '=', student.id)], order='tahun_ajaran desc', limit=1)
+        if krs_id and not krs:
+            raise AccessError('KRS tidak ditemukan.')
         active_offers = request.env['erpobe.akademik.penawaran'].sudo().search([('tahun_ajaran.aktif', '=', True), ('prodi_id', '=', student.prodi_id.id), ('rombel_ids', 'in', student.rombel_id.id)], order='name asc')
         offer_data = []
         for offer in active_offers:
@@ -71,7 +73,7 @@ class TritonPortalMahasiswa(TritonPortalBase):
     @http.route('/my/mata-kuliah', type='http', auth='user', website=True)
     def triton_student_courses(self, **kwargs):
         student = self._require_student()
-        krs_lines = request.env['erpobe.akademik.krs.line'].sudo().search([('mahasiswa_id', '=', student.id), ('krs_id.state', '=', 'approved')], order='penawaran_line_id.tahun_ajaran_id desc, matakuliah_id asc')
+        krs_lines = request.env['erpobe.akademik.krs.line'].sudo().search([('mahasiswa_id', '=', student.id), ('krs_id.state', '=', 'approved')], order='krs_id asc, matakuliah_id asc')
         courses = []
         for line in krs_lines:
             final_rps = line.penawaran_line_id.rps_ids.filtered(lambda record: record.status == 'final').sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_person_profile_page" name="Profil Publik">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Profil publik</span></nav>
+                        <article class="o_triton_profile-card">
+                            <span class="o_triton_badge" t-out="'Dosen' if kind == 'dosen' else 'Mahasiswa'"/>
+                            <h1 t-out="person['name']"/>
+                            <p><strong>Program studi:</strong> <t t-out="', '.join(item['name'] for item in person['prodis']) if kind == 'dosen' else person['prodi']"/></p>
+                            <p t-if="kind == 'dosen'"><strong>Jabatan fungsional:</strong> <t t-out="person['jabatan']"/></p>
+                            <p t-if="kind == 'mahasiswa'"><strong>Angkatan:</strong> <t t-out="person['angkatan']"/></p>
+                            <p t-if="kind == 'mahasiswa'"><strong>Status:</strong> <t t-out="person['status']"/></p>
+                            <p><strong>ID tersamarkan:</strong> <t t-out="person['identifier']"/></p>
+                        </article>
+                        <article t-if="kind == 'dosen'" class="o_triton_panel o_triton_section-heading">
+                            <h2>Mata kuliah yang diampu</h2>
+                            <ul class="o_triton_list"><t t-foreach="courses" t-as="course"><li><strong t-out="course['name']"/> • <t t-out="course['kode']"/> • <t t-out="course['prodi']"/></li></t></ul>
+                        </article>
+                        <aside class="o_triton_privacy-note o_triton_section-heading">Halaman publik tidak memuat nilai individu, KRS, KHS, IPK/IPS, kontak pribadi, alamat, NIK, tanggal lahir, atau foto.</aside>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

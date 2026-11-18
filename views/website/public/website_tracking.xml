@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_tracking_page" name="Tracking Agregat">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Tracking</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Statistik agregat</span><h1>Tracking akademik</h1><p class="o_triton_subtitle">Informasi disajikan dalam agregat, tanpa nilai individu atau data identitas pribadi.</p></div></header>
+                        <article class="o_triton_panel"><h2>Ringkasan per program studi</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Program Studi</th><th>Mahasiswa aktif</th><th>Lulus</th><th>Dosen</th><th>RPS dengan bobot lengkap</th></tr></thead><tbody><t t-foreach="tracking" t-as="row"><tr><th><t t-out="row['kode']"/> — <t t-out="row['name']"/></th><td t-out="row['active_students']"/><td t-out="row['graduated_students']"/><td t-out="row['teachers']"/><td t-if="row['weight_complete_percent']"><t t-out="row['weight_complete_percent']"/>%</td><td t-else="">Belum ada data RPS</td></tr></t></tbody></table></div></article>
+                        <div class="o_triton_two-col o_triton_section-heading">
+                            <article class="o_triton_panel"><h2>Mahasiswa menurut angkatan</h2><div t-if="cohorts" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Program Studi</th><th>Angkatan</th><th>Jumlah</th></tr></thead><tbody><t t-foreach="cohorts" t-as="cohort"><tr><td t-out="cohort['prodi']"/><td t-out="cohort['angkatan']"/><td t-out="cohort['jumlah']"/></tr></t></tbody></table></div><p t-else="">Belum ada data angkatan.</p></article>
+                            <article class="o_triton_panel"><h2>RPS Final per tahun ajaran</h2><div t-if="rps_years" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Tahun Ajaran</th><th>Jumlah RPS final</th></tr></thead><tbody><t t-foreach="rps_years" t-as="row"><tr><td t-out="row['year']"/><td t-out="row['count']"/></tr></t></tbody></table></div><p t-else="">Belum ada RPS final.</p></article>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

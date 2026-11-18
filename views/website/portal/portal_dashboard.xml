@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_portal_home_page" name="Beranda Portal">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow">Portal <t t-out="role"/></span><h1>Selamat datang, <t t-out="user_name"/></h1><p class="o_triton_subtitle">Ikhtisar aktivitas akademik Anda dan akses cepat ke fitur yang relevan.</p></div>
+                        </header>
+                        <div class="o_triton_stat-grid o_triton_section-heading">
+                            <article class="o_triton_stat-card">
+                                <span>Peran</span>
+                                <strong t-out="role"/>
+                            </article>
+                            <article class="o_triton_stat-card">
+                                <span>Status akun</span>
+                                <strong t-out="summary['profile_status']"/>
+                            </article>
+                            <article class="o_triton_stat-card">
+                                <span>Tugas tertunda</span>
+                                <strong t-out="summary['pending_tasks']"/>
+                            </article>
+                            <article class="o_triton_stat-card">
+                                <span>Rangkuman</span>
+                                <strong t-out="summary['detail']"/>
+                            </article>
+                        </div>
+                        <div t-if="tasks" class="o_triton_grid-three o_triton_section-heading">
+                            <t t-foreach="tasks" t-as="task"><article class="o_triton_task-card"><span class="o_triton_badge o_triton_badge-warning">Perlu ditindaklanjuti</span><h2 t-out="task['title']"/><p t-out="task['description']"/><a class="o_triton_link" t-att-href="task['url']">Buka tugas</a></article></t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Tidak ada tugas aktif</h2><p>Semua tugas yang tersedia telah ditindaklanjuti.</p></div>
+                        <nav class="o_triton_portal-shortcuts" aria-label="Menu portal">
+                            <a href="/my/krs">Kelola KRS</a><a href="/my/khs">Lihat KHS</a><a href="/my/mata-kuliah">Mata Kuliah Saya</a><a href="/my/capaian-cpl">Capaian CPL</a>
+                            <a t-if="role == 'Dosen'" href="/my/rps">Kelola RPS</a><a t-if="role == 'Dosen'" href="/my/kelas">Kelas yang Diampu</a><a t-if="role == 'Dosen'" href="/my/perwalian">Perwalian</a>
+                        </nav>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

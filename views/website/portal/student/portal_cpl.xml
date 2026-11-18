@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_student_cpl_page" name="Capaian CPL Pribadi">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Capaian CPL pribadi</h1><p class="o_triton_subtitle">Informasi ini hanya dapat dilihat oleh pemilik akun.</p></div></header><div t-if="grades" class="o_triton_grid-three"><t t-foreach="grades" t-as="grade"><article class="o_triton_panel"><span class="o_triton_badge" t-out="grade['name']"/><h2 t-out="grade['description']"/><div class="o_triton_private-score"><strong><t t-out="grade['score']"/>%</strong><span t-if="grade['met']" class="o_triton_badge-success">Mencapai target</span><span t-else="" class="o_triton_badge-warning">Di bawah target 75%</span></div><meter class="o_triton_bar-track" min="0" max="100" t-att-value="grade['score']" t-att-aria-label="'Capaian ' + grade['name']"/></article></t></div><div t-else="" class="o_triton_empty"><h2>Belum ada capaian CPL</h2><p>Nilai CPL akan tersedia setelah nilai mata kuliah terkait diproses.</p></div><aside class="o_triton_privacy-note o_triton_section-heading">Capaian individu merupakan data privat dan tidak ditampilkan dalam halaman publik.</aside></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+</odoo>

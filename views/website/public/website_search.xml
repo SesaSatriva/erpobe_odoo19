@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_search_page" name="Hasil Pencarian TRITON">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Pencarian</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Pencarian publik</span><h1>Hasil pencarian</h1><p class="o_triton_subtitle"><t t-out="total"/> hasil ditampilkan secara bertahap.</p></div></header>
+                        <form class="o_triton_search o_triton_search-light" action="/cari" method="get">
+                            <label class="visually-hidden" for="search-q">Kata kunci</label>
+                            <input id="search-q" type="search" name="q" t-att-value="q" placeholder="Masukkan kata kunci"/>
+                            <label class="visually-hidden" for="search-category">Kategori</label>
+                            <select id="search-category" name="category">
+                                <option value="all" t-att-selected="category == 'all'">Semua kategori</option>
+                                <t t-foreach="categories" t-as="item"><option t-att-value="item['key']" t-att-selected="category == item['key']" t-out="item['label']"/></t>
+                            </select>
+                            <button type="submit">Cari</button>
+                        </form>
+                        <div t-if="not people_enabled and category in ['all', 'mahasiswa', 'dosen']" class="o_triton_privacy-note">Daftar individu tidak tersedia karena visibilitas publik dinonaktifkan oleh administrator.</div>
+                        <div t-if="results" class="o_triton_grid-three o_triton_search-results">
+                            <t t-foreach="results" t-as="item">
+                                <article class="o_triton_result-card">
+                                    <span class="o_triton_badge" t-out="item['category_label']"/>
+                                    <h2>
+                                        <a t-if="item['category'] == 'fakultas'" t-att-href="'/fakultas/%s' % item['id']" t-out="item['name']"/>
+                                        <a t-elif="item['category'] == 'prodi'" t-att-href="'/prodi/%s' % item['id']" t-out="item['name']"/>
+                                        <a t-elif="item['category'] == 'dosen'" t-att-href="'/dosen/%s' % item['id']" t-out="item['name']"/>
+                                        <a t-elif="item['category'] == 'mahasiswa'" t-att-href="'/mahasiswa/%s' % item['id']" t-out="item['name']"/>
+                                        <span t-else="" t-out="item['name']"/>
+                                    </h2>
+                                    <p t-if="item.get('kode')"><span t-out="item['kode']"/> <span t-if="item.get('prodi')">• <t t-out="item['prodi']"/></span></p>
+                                    <p t-if="item.get('identifier')">ID tersamarkan: <t t-out="item['identifier']"/></p>
+                                    <p t-if="item.get('status')">Status: <t t-out="item['status']"/> <span t-if="item.get('angkatan')">• Angkatan <t t-out="item['angkatan']"/></span></p>
+                                    <p t-if="item.get('jabatan') and item['category'] == 'dosen'" t-out="item['jabatan']"/>
+                                    <p t-if="item.get('jenis')">Jenis: <t t-out="item['jenis']"/></p>
+                                    <p t-if="item.get('sks')"><t t-out="item['sks']"/> SKS</p>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-elif="q" class="o_triton_empty"><h2>Tidak ada hasil</h2><p>Periksa ejaan atau pilih kategori lain.</p></div>
+                        <nav t-if="previous_url or next_url" class="o_triton_pagination" aria-label="Paginasi">
+                            <a t-if="previous_url" t-att-href="previous_url">Sebelumnya</a>
+                            <span>Halaman <t t-out="page"/> / <t t-out="page_count"/></span>
+                            <a t-if="next_url" t-att-href="next_url">Berikutnya</a>
+                        </nav>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

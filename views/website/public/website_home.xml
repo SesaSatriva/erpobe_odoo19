@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_home_page" name="Beranda TRITON">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page">
+                <t t-call="erpobe.triton_main_nav"/>
+                <section class="o_triton_hero">
+                    <div class="o_triton_container o_triton_hero-layout">
+                        <div>
+                            <span class="o_triton_kicker">Academic information system</span>
+                            <h1>Informasi akademik yang terstruktur, dapat ditelusuri, dan siap dipertanggungjawabkan.</h1>
+                            <p>TRITON menghubungkan kurikulum, capaian pembelajaran, aktivitas perkuliahan, dan laporan akademik dalam satu ekosistem yang konsisten untuk institusi.</p>
+                            <form class="o_triton_search" action="/cari" method="get" role="search">
+                                <label class="visually-hidden" for="o_triton_search-query">Kata kunci</label>
+                                <input id="o_triton_search-query" type="search" name="q" placeholder="Cari nama, program studi, mata kuliah, atau CPL"/>
+                                <button type="submit">Cari</button>
+                            </form>
+                            <div class="o_triton_hero-actions">
+                                <a class="o_triton_btn" href="/perbandingan-cpl">Lihat capaian CPL</a>
+                                <a class="o_triton_btn-secondary" href="/fakultas">Jelajahi program</a>
+                            </div>
+                        </div>
+                        <aside class="o_triton_hero-panel" aria-label="Ringkasan capaian institusi">
+                            <span class="o_triton_eyebrow">Ringkasan institusi</span>
+                            <div class="o_triton_mini-card">
+                                <span class="o_triton_label">Rata-rata capaian CPL</span>
+                                <strong t-if="stats['institutional_average']"><t t-out="stats['institutional_average']"/>%</strong>
+                                <strong t-else="">Belum tersedia</strong>
+                            </div>
+                            <ul class="o_triton_list o_triton_hero-list">
+                                <li><strong t-out="stats['prodis']"/> program studi terpantau</li>
+                                <li><strong t-out="stats['cpl_count']"/> CPL tercatat</li>
+                                <li><strong t-out="stats['rps_final']"/> RPS final tersimpan</li>
+                            </ul>
+                        </aside>
+                    </div>
+                </section>
+
+                <section class="o_triton_section o_triton_stats-section" aria-label="Statistik akademik">
+                    <div class="o_triton_container">
+                        <div class="o_triton_summary-strip" aria-label="Ringkasan institusi">
+                            <article class="o_triton_summary-item"><span>Fakultas</span><strong t-out="stats['faculties']"/></article>
+                            <article class="o_triton_summary-item"><span>Program studi</span><strong t-out="stats['prodis']"/></article>
+                            <article class="o_triton_summary-item"><span>RPS final</span><strong t-out="stats['rps_final']"/></article>
+                            <article class="o_triton_summary-item"><span>CPL tercatat</span><strong t-out="stats['cpl_count']"/></article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <div class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">Analisis agregat</span>
+                                <h2>Perbandingan capaian belajar</h2>
+                                <p class="o_triton_subtitle">Data akademik dipetakan dari RPS final, bobot penilaian, dan KRS yang telah disetujui.</p>
+                            </div>
+                            <a class="o_triton_btn-ghost" href="/perbandingan-cpl">Buka analisis</a>
+                        </div>
+                        <t t-if="comparison['prodis']">
+                            <div class="o_triton_two-col">
+                                <article class="o_triton_panel">
+                                    <h3>Profil capaian CPL</h3>
+                                    <div class="o_triton_chart-bars" role="img" aria-label="Diagram batang rata-rata capaian CPL">
+                                        <t t-foreach="comparison['categories']" t-as="category">
+                                            <div class="o_triton_chart-bar">
+                                                <meter class="o_triton_chart_fill" min="0" max="100" t-att-value="comparison['prodis'][0]['scores'][category_index] or 0" t-att-aria-label="category['name']"/>
+                                                <span t-out="category['name']"/>
+                                                <strong t-if="comparison['prodis'][0]['scores'][category_index]"><t t-out="comparison['prodis'][0]['scores'][category_index]"/>%</strong>
+                                                <strong t-else="">—</strong>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <p class="o_triton_caption">Format ini menonjolkan pola capaian pada tiap kelompok CPL tanpa menghasilkan angka palsu untuk data yang belum lengkap.</p>
+                                </article>
+                                <article class="o_triton_panel">
+                                    <h3>Program studi terpantau</h3>
+                                    <ul class="o_triton_list">
+                                        <t t-foreach="comparison['prodis']" t-as="prodi">
+                                            <li>
+                                                <a t-att-href="'/prodi/%s' % prodi['id']"><strong t-out="prodi['name']"/></a>
+                                                <span class="o_triton_badge" t-out="prodi['kode']"/>
+                                                <p t-if="prodi['warning']" class="o_triton_warning">Data akademik masih belum lengkap untuk satu atau lebih komponen evaluasi.</p>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </article>
+                            </div>
+                        </t>
+                        <div t-else="" class="o_triton_empty">
+                            <h3>Data perbandingan belum tersedia</h3>
+                            <p>Belum ada data penawaran yang memenuhi kriteria RPS final, bobot lengkap, dan KRS yang disetujui pada periode terpilih.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="o_triton_section o_triton_alt-section">
+                    <div class="o_triton_container">
+                        <div class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow">Jelajah akademik</span><h2>Fakultas dan program studi</h2></div>
+                            <a href="/fakultas" class="o_triton_btn-ghost">Semua fakultas</a>
+                        </div>
+                        <div class="o_triton_grid-three">
+                            <t t-foreach="faculties" t-as="faculty">
+                                <article class="o_triton_result-card">
+                                    <span class="o_triton_badge" t-out="faculty['kode']"/>
+                                    <h3><a t-att-href="'/fakultas/%s' % faculty['id']" t-out="faculty['name']"/></h3>
+                                    <p>Jelajahi program studi dan ringkasan akademik fakultas.</p>
+                                </article>
+                            </t>
+                        </div>
+                        <div class="o_triton_grid-three o_triton_prodi-preview">
+                            <t t-foreach="featured_prodi" t-as="prodi">
+                                <article class="o_triton_result-card">
+                                    <span class="o_triton_badge" t-out="prodi['kode']"/>
+                                    <h3><a t-att-href="'/prodi/%s' % prodi['id']" t-out="prodi['name']"/></h3>
+                                    <p t-out="prodi['fakultas']"/>
+                                </article>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="o_triton_section">
+                    <div class="o_triton_container o_triton_two-col">
+                        <article class="o_triton_card">
+                            <span class="o_triton_eyebrow">Tentang OBE</span>
+                            <h2>Hasil pembelajaran yang dapat dipantau</h2>
+                            <p>Outcome-Based Education mengarahkan kurikulum, pembelajaran, dan penilaian pada capaian yang diharapkan. TRITON menghubungkan struktur akademik dengan pemetaan CPL, CPMK, dan RPS.</p>
+                            <a href="/tentang" class="o_triton_link">Pelajari tentang TRITON</a>
+                        </article>
+                        <article class="o_triton_cta-block">
+                            <div><h2>Masuk ke portal akademik</h2><p>Akses KRS, KHS, RPS, dan tugas sesuai peran dan kewenangan akun.</p></div>
+                            <a href="/my" class="o_triton_btn-secondary">Masuk portal</a>
+                        </article>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

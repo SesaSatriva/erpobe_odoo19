@@ -32,6 +32,8 @@ class TritonMain(http.Controller, TritonPublicHelpers):
         results = []
         totals = 0
         chosen = [category] if category != 'all' else list(models)
+        global_start = (page_number - 1) * _PAGE_SIZE
+        global_cursor = 0
         for key in chosen:
             if key in ('mahasiswa', 'dosen') and (not self._people_enabled()):
                 continue
@@ -50,8 +52,18 @@ class TritonMain(http.Controller, TritonPublicHelpers):
                     field = 'name'
                 domain.append((field, 'ilike', q))
             total = model.search_count(domain)
-            records = model.search(domain, order='name asc', limit=_PAGE_SIZE, offset=(page_number - 1) * _PAGE_SIZE)
+            overlap_start = max(global_start, global_cursor)
+            overlap_end = min(global_start + _PAGE_SIZE, global_cursor + total)
+            records = model.browse()
+            if overlap_end > overlap_start:
+                records = model.search(
+                    domain,
+                    order='name asc',
+                    limit=overlap_end - overlap_start,
+                    offset=overlap_start - global_cursor,
+                )
             totals += total
+            global_cursor += total
             for record in records:
                 if serializer:
                     item = serializer(record)
@@ -64,7 +76,21 @@ class TritonMain(http.Controller, TritonPublicHelpers):
                 item['category'] = key
                 item['category_label'] = dict((categories_item for categories_item in ((item['key'], item['label']) for item in categories))).get(key, key)
                 results.append(item)
-        return request.render('erpobe.triton_search_page', {'q': q, 'category': category, 'categories': categories, 'results': results, 'total': totals, 'page': page_number, 'people_enabled': self._people_enabled()})
+            if len(results) >= _PAGE_SIZE:
+                break
+        pager = self._pager('/cari', page_number, totals, {'q': q, 'category': category})
+        return request.render('erpobe.triton_search_page', {
+            'q': q,
+            'category': category,
+            'categories': categories,
+            'results': results,
+            'total': totals,
+            'page': pager['page'],
+            'page_count': pager['page_count'],
+            'previous_url': pager['previous'],
+            'next_url': pager['next'],
+            'people_enabled': self._people_enabled(),
+        })
 
     @http.route(['/tentang', '/triton/tentang'], type='http', auth='public', website=True)
     def triton_about(self, **kwargs):

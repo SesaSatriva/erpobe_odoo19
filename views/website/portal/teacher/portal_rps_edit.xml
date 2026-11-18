@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_rps_edit_page" name="Editor RPS Portal">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section"><div class="o_triton_container">
+                    <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen • RPS v<t t-out="rps.version"/></span><h1 t-out="line.matakuliah_id.name"/><p class="o_triton_subtitle"><t t-out="line.tahun_ajaran_id.tahun_ajaran"/> • <t t-out="line.tahun_ajaran_id.semester"/> • Status <t t-out="rps.status"/></p></div></header>
+                    <div t-if="error" class="o_triton_error" role="alert" t-out="error"/>
+                    <div t-if="message" class="o_triton_success" role="status" t-out="message"/>
+                    <form method="post" class="o_triton_panel o_triton_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <label>Deskripsi mata kuliah<textarea name="deskripsi_mk" rows="4" t-out="rps.deskripsi_mk"/></label>
+                        <div class="o_triton_form-row"><label>Media software<input name="media_software" t-att-value="rps.media_software or ''"/></label><label>Media hardware<input name="media_hardware" t-att-value="rps.media_hardware or ''"/></label></div>
+                        <fieldset><legend>Komponen penilaian</legend><div class="o_triton_grid-three"><t t-foreach="components" t-as="component"><label class="o_triton_checkbox"><input type="checkbox" name="komponen_ids" t-att-value="component.id" t-att-checked="component in rps.komponen_ids"/><t t-out="component.name"/></label></t></div></fieldset>
+                        <h2>Bobot CPMK → Mata Kuliah</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>CPMK</th><th>Bobot (%)</th></tr></thead><tbody><tr t-foreach="rps.bobot_cpmk_mk_ids" t-as="weight"><td t-out="weight.cpmk_id.name"/><td><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-name="'bobot_mk_%s' % weight.id" t-att-value="weight.bobot_cpmk_mk"/></td></tr></tbody></table></div>
+                        <h2>Bobot CPMK → CPL</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>CPMK</th><th>CPL</th><th>Bobot (%)</th></tr></thead><tbody><tr t-foreach="rps.bobot_cpmk_cpl_ids" t-as="weight"><td t-out="weight.cpmk_id.name"/><td t-out="weight.cpl_id.kode_cpl"/><td><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-name="'bobot_cpl_%s' % weight.id" t-att-value="weight.bobot_cpmk_cpl"/></td></tr></tbody></table></div>
+                        <h2>Bobot Komponen → CPMK</h2><div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Komponen</th><th>CPMK</th><th>Bobot (%)</th></tr></thead><tbody><tr t-foreach="rps.bobot_komponen_cpmk_ids" t-as="weight"><td t-out="weight.komponen_penilaian.name"/><td t-out="weight.cpmk_id.name"/><td><input class="o_triton_grade-input" type="number" min="0" max="100" step="0.01" t-att-name="'bobot_komponen_%s' % weight.id" t-att-value="weight.bobot_komponen_cpmk"/></td></tr></tbody></table></div>
+                        <div class="o_triton_hero-actions"><button class="o_triton_btn-ghost" type="submit" name="operation" value="draft">Simpan Draft</button><button class="o_triton_btn" type="submit" name="operation" value="review">Simpan dan ajukan tinjauan</button></div>
+                    </form>
+                </div></section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

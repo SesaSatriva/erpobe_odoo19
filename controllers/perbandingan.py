@@ -1,5 +1,6 @@
 import csv
 import io
+from urllib.parse import urlencode
 
 from odoo import http
 from odoo.http import request
@@ -17,7 +18,23 @@ class TritonPerbandingan(http.Controller, TritonPublicHelpers):
         comparison = self._comparison_data(**params)
         faculties = request.env['erpobe.master.fakultas'].sudo().search([('active', '=', True)], order='name asc')
         prodis = request.env['erpobe.master.prodi'].sudo().search([('active', '=', True)], order='name asc')
-        return request.render('erpobe.triton_comparison_page', {'comparison': comparison, 'faculties': [self._safe_faculty(item) for item in faculties], 'prodis': [self._safe_prodi(item) for item in prodis], 'cpl_types': [{'key': key, 'name': value} for key, value in _CPL_TYPES.items()], 'params': params})
+        csv_args = []
+        if params['year_start']:
+            csv_args.append(('tahun_awal', params['year_start']))
+        if params['year_end']:
+            csv_args.append(('tahun_akhir', params['year_end']))
+        if params['semester']:
+            csv_args.append(('semester', params['semester']))
+        if params['faculty_id']:
+            csv_args.append(('fakultas_id', params['faculty_id']))
+        for prodi_id in params['prodi_ids']:
+            csv_args.append(('prodi_id', prodi_id))
+        if params['jenis_cpl']:
+            csv_args.append(('jenis_cpl', params['jenis_cpl']))
+        csv_url = '/perbandingan-cpl.csv'
+        if csv_args:
+            csv_url += '?' + urlencode(csv_args)
+        return request.render('erpobe.triton_comparison_page', {'comparison': comparison, 'faculties': [self._safe_faculty(item) for item in faculties], 'prodis': [self._safe_prodi(item) for item in prodis], 'cpl_types': [{'key': key, 'name': value} for key, value in _CPL_TYPES.items()], 'params': params, 'csv_url': csv_url})
 
     @http.route('/triton/api/perbandingan-cpl', type='http', auth='public', website=True, methods=['GET'])
     def triton_comparison_json(self, **kwargs):

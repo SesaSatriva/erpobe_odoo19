@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_krs_page" name="KRS Mahasiswa">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Kartu Rencana Studi</h1><p class="o_triton_subtitle">Pilih penawaran aktif untuk rombel Anda. Validasi SKS, prasyarat, dan bentrok jadwal dilakukan server-side.</p></div></header>
+                        <div t-if="error" class="o_triton_error" role="alert" t-out="error"/>
+                        <div t-if="message" class="o_triton_error" role="alert" t-out="message"/>
+                        <div t-if="krs" class="o_triton_privacy-note">
+                            <strong>Status:</strong> <span class="o_triton_badge" t-out="dict(krs._fields['state'].selection).get(krs.state, krs.state)"/>
+                            <span> • Total <t t-out="krs.total_sks"/> / <t t-out="krs.max_sks_allowed"/> SKS</span>
+                            <p t-if="krs.advisor_note"><strong>Catatan dosen wali:</strong> <t t-out="krs.advisor_note"/></p>
+                        </div>
+                        <div t-if="offers" class="o_triton_portal-list">
+                            <t t-foreach="offers" t-as="offer">
+                                <article class="o_triton_panel">
+                                    <h2 t-out="offer['name']"/>
+                                    <form action="/my/krs" method="post">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="penawaran_id" t-att-value="offer['id']"/>
+                                        <div t-if="offer['lines']" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Pilih</th><th>Kode</th><th>Mata Kuliah</th><th>SKS</th></tr></thead><tbody><t t-foreach="offer['lines']" t-as="line"><tr><td><input type="checkbox" name="penawaran_line_ids" t-att-value="line['id']" t-att-checked="line['selected']" aria-label="Ambil mata kuliah"/></td><td t-out="line['kode']"/><td t-out="line['name']"/><td t-out="line['sks']"/></tr></t></tbody></table></div>
+                                        <p t-else="">Tidak ada mata kuliah yang ditawarkan untuk rombel Anda pada periode ini.</p>
+                                        <button class="o_triton_btn" type="submit" t-att-disabled="krs and krs.state not in ['draft', 'rejected']">Simpan pilihan</button>
+                                    </form>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada penawaran aktif</h2><p>Penawaran untuk rombel Anda belum tersedia.</p></div>
+                        <form t-if="krs and krs.state in ['draft', 'rejected']" t-att-action="'/my/krs/%s/submit' % krs.id" method="post" class="o_triton_section-heading">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <button class="o_triton_btn" type="submit">Kirim untuk persetujuan dosen wali</button>
+                        </form>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+</odoo>

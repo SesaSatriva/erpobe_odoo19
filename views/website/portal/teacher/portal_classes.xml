@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_teacher_classes_page" name="Kelas Dosen">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>Kelas yang diampu</h1></div></header><div t-if="classes" class="o_triton_grid-three"><t t-foreach="classes" t-as="class_item"><article class="o_triton_panel"><span class="o_triton_badge" t-out="class_item['year']"/><h2 t-out="class_item['course']"/><p t-out="class_item['code']"/><p><t t-out="len(class_item['students'])"/> peserta</p><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai' % class_item['line_id']">Input nilai komponen</a><h3>Peserta</h3><ul class="o_triton_list"><t t-foreach="class_item['students']" t-as="student"><li><t t-out="student['name']"/> • <t t-out="student['cohort']"/></li></t></ul></article></t></div><div t-else="" class="o_triton_empty"><p>Tidak ada kelas yang diampu.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+</odoo>

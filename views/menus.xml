@@ -2,7 +2,6 @@
 <odoo>
     <menuitem id="menu_erpobe_root" name="ERP OBE" groups="erpobe.group_admin,erpobe.group_superadmin,erpobe.group_dosen,erpobe.group_mahasiswa"/>
     <menuitem id="menu_erpobe_master_fakultas" name="Fakultas" parent="menu_erpobe_root" action="action_erpobe_master_fakultas" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>
-    <menuitem id="menu_erpobe_master_prodi" name="Program Studi" parent="menu_erpobe_master_fakultas" action="action_erpobe_master_prodi" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_academic_ops" name="Perkuliahan" parent="menu_erpobe_root" sequence="50" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_mahasiswa,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_krs" name="Kartu Rencana Studi" parent="menu_erpobe_academic_ops" action="action_erpobe_krs" sequence="30" groups="erpobe.group_admin,erpobe.group_mahasiswa,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_input_nilai" name="Input Nilai" parent="menu_erpobe_academic_ops" action="action_erpobe_input_nilai" sequence="40" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_superadmin"/>

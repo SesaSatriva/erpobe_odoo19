@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_erpobe_curriculum_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.kurikulum.search</field>
+        <field name="model">erpobe.akademik.kurikulum</field>
+        <field name="arch" type="xml">
+            <search string="Kurikulum">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="prodi_id"/>
+                <filter name="active" string="Aktif" domain="[('active', '=', True)]"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_curriculum_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.kurikulum.list</field>
+        <field name="model">erpobe.akademik.kurikulum</field>
+        <field name="arch" type="xml">
+            <list string="Kurikulum">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="prodi_id"/>
+                <field name="angkatan_mulai"/>
+                <field name="source_type" widget="badge"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_curriculum_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.kurikulum.form</field>
+        <field name="model">erpobe.akademik.kurikulum</field>
+        <field name="arch" type="xml">
+            <form string="Kurikulum">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="kode"/>
+                        <field name="prodi_id"/>
+                        <field name="angkatan_mulai"/>
+                        <field name="active"/>
+                        <field name="source_type"/>
+                    </group>
+                    <group string="Sumber dan Batasan Data">
+                        <field name="source_url" widget="url"/>
+                        <field name="source_note" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Mata Kuliah">
+                            <field name="matakuliah_ids" readonly="1">
+                                <list>
+                                    <field name="kode_mk"/>
+                                    <field name="name"/>
+                                    <field name="semester"/>
+                                    <field name="sks"/>
+                                    <field name="jenis_mk"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mahasiswa Angkatan">
+                            <field name="mahasiswa_ids" readonly="1">
+                                <list>
+                                    <field name="nim"/>
+                                    <field name="name"/>
+                                    <field name="rombel_id"/>
+                                    <field name="semester_saat_ini"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_curriculum" model="ir.actions.act_window">
+        <field name="name">Kurikulum</field>
+        <field name="res_model">erpobe.akademik.kurikulum</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_curriculum_search"/>
+    </record>
+
+    <record id="view_erpobe_subcpmk_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.subcpmk.search</field>
+        <field name="model">erpobe.akademik.subcpmk</field>
+        <field name="arch" type="xml">
+            <search string="Sub-CPMK">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="rps_id"/>
+                <field name="cpmk_id"/>
+                <filter name="group_rps" string="RPS" context="{'group_by': 'rps_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_subcpmk_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.subcpmk.list</field>
+        <field name="model">erpobe.akademik.subcpmk</field>
+        <field name="arch" type="xml">
+            <list string="Sub-CPMK">
+                <field name="rps_id"/>
+                <field name="minggu"/>
+                <field name="kode"/>
+                <field name="cpmk_id"/>
+                <field name="name"/>
+                <field name="target_nilai"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_subcpmk_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.subcpmk.form</field>
+        <field name="model">erpobe.akademik.subcpmk</field>
+        <field name="arch" type="xml">
+            <form string="Sub-CPMK">
+                <sheet>
+                    <group>
+                        <field name="rps_id"/>
+                        <field name="minggu"/>
+                        <field name="kode"/>
+                        <field name="cpmk_id"/>
+                        <field name="target_nilai"/>
+                    </group>
+                    <group string="Rumusan dan Indikator">
+                        <field name="name" nolabel="1"/>
+                        <field name="indikator" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_subcpmk" model="ir.actions.act_window">
+        <field name="name">Sub-CPMK</field>
+        <field name="res_model">erpobe.akademik.subcpmk</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_subcpmk_search"/>
+    </record>
+
+    <record id="view_erpobe_grade_subcpmk_search" model="ir.ui.view">
+        <field name="name">erpobe.grade.subcpmk.search</field>
+        <field name="model">erpobe.grade.subcpmk</field>
+        <field name="arch" type="xml">
+            <search string="Hasil Sub-CPMK">
+                <field name="mahasiswa_id"/>
+                <field name="matakuliah_id"/>
+                <field name="subcpmk_id"/>
+                <filter name="not_achieved" string="Belum Tercapai" domain="[('status_capaian', '=', 'belum')]"/>
+                <filter name="group_course" string="Mata Kuliah" context="{'group_by': 'matakuliah_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_grade_subcpmk_list" model="ir.ui.view">
+        <field name="name">erpobe.grade.subcpmk.list</field>
+        <field name="model">erpobe.grade.subcpmk</field>
+        <field name="arch" type="xml">
+            <list string="Hasil Pengukuran Sub-CPMK" create="0" edit="0" delete="0">
+                <field name="mahasiswa_id"/>
+                <field name="matakuliah_id"/>
+                <field name="subcpmk_id"/>
+                <field name="nilai"/>
+                <field name="target_nilai"/>
+                <field name="status_capaian" widget="badge"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_erpobe_grade_subcpmk" model="ir.actions.act_window">
+        <field name="name">Hasil Sub-CPMK</field>
+        <field name="res_model">erpobe.grade.subcpmk</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_erpobe_grade_subcpmk_search"/>
+    </record>
+
+    <record id="view_erpobe_fixture_source_list" model="ir.ui.view">
+        <field name="name">erpobe.akademik.fixture.source.list</field>
+        <field name="model">erpobe.akademik.fixture.source</field>
+        <field name="arch" type="xml">
+            <list string="Sumber Data Fixture" create="0" edit="0" delete="0">
+                <field name="name"/>
+                <field name="record_model"/>
+                <field name="record_id"/>
+                <field name="source_type" widget="badge"/>
+                <field name="source_url" widget="url"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_erpobe_fixture_source_form" model="ir.ui.view">
+        <field name="name">erpobe.akademik.fixture.source.form</field>
+        <field name="model">erpobe.akademik.fixture.source</field>
+        <field name="arch" type="xml">
+            <form string="Sumber Data Fixture" create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="source_type"/>
+                        <field name="record_model"/>
+                        <field name="record_id"/>
+                        <field name="source_url" widget="url"/>
+                        <field name="source_note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_erpobe_fixture_source" model="ir.actions.act_window">
+        <field name="name">Sumber Data Fixture</field>
+        <field name="res_model">erpobe.akademik.fixture.source</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

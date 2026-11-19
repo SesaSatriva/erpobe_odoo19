@@ -16,6 +16,8 @@ from . import akademik_krs
 from . import rps_lock
 from . import akademik_rps
 from . import akademik_tahunajaran
+from . import academic_fixture
+from . import fixture_seeder
 
 from . import bobot_cpmk_cpl
 from . import bobot_cpmk_mk

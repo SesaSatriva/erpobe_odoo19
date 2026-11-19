@@ -11,6 +11,8 @@ class ErpObeAkademikCpmk(models.Model):
     )
     kode_cpmk = fields.Char(required=True)
     name = fields.Text(string="Deskripsi CPMK", required=True)
+    indikator = fields.Text(string="Indikator CPMK")
+    target_nilai = fields.Float(string="Target Nilai", default=70.0, required=True)
 
     # Relasi ke CPL via Bridge Table
     cpl_mapping_ids = fields.One2many(

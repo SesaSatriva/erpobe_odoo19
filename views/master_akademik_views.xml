@@ -71,6 +71,7 @@
                 <field name="prodi_id"/>
                 <field name="semester"/>
                 <field name="koordinator_id"/>
+                <field name="kurikulum_id"/>
                 <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
                 <filter name="group_semester" string="Semester" context="{'group_by': 'semester'}"/>
                 <filter name="group_jenis" string="Jenis Mata Kuliah" context="{'group_by': 'jenis_mk'}"/>
@@ -87,6 +88,7 @@
                 <field name="prodi_id"/>
                 <field name="sks"/>
                 <field name="semester"/>
+                <field name="kurikulum_id"/>
                 <field name="koordinator_id" optional="show"/>
                 <field name="weight_status" widget="badge"/>
             </list>
@@ -111,6 +113,8 @@
                             <field name="weight_status" widget="badge" readonly="1"/>
                             <field name="sks"/>
                             <field name="semester"/>
+                            <field name="kurikulum_id"/>
+                            <field name="active"/>
                         </group>
                         <group string="Pengelolaan">
                             <field name="tipe_mk"/>

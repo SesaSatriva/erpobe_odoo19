@@ -32,6 +32,7 @@
                 <field name="nip"/>
                 <field name="name"/>
                 <field name="email"/>
+                <field name="bidang_keahlian"/>
                 <field name="prodi_ids" widget="many2many_tags" optional="show"/>
                 <field name="user_id" optional="hide"/>
             </list>
@@ -53,6 +54,7 @@
                         <group string="Identitas">
                             <field name="nip"/>
                             <field name="jabatan_fungsional"/>
+                            <field name="bidang_keahlian"/>
                             <field name="email"/>
                             <field name="phone"/>
                             <field name="is_public_visible"/>
@@ -95,6 +97,7 @@
                 <field name="prodi_id"/>
                 <field name="rombel_id"/>
                 <field name="angkatan" optional="show"/>
+                <field name="semester_saat_ini" optional="show"/>
             </list>
         </field>
     </record>
@@ -121,6 +124,8 @@
                             <field name="prodi_id" readonly="1"/>
                             <field name="rombel_id"/>
                             <field name="angkatan" readonly="1"/>
+                            <field name="kurikulum_id"/>
+                            <field name="semester_saat_ini"/>
                             <field name="status_akademik"/>
                             <field name="dosen_wali_id" domain="[('prodi_ids', 'in', prodi_id)]"/>
                             <field name="is_public_visible"/>
@@ -143,6 +148,8 @@
                                     <field name="cpmk_id"/>
                                     <field name="mk_id"/>
                                     <field name="nilai_cpmk"/>
+                                    <field name="target_nilai"/>
+                                    <field name="status_capaian" widget="badge"/>
                                 </list>
                             </field>
                         </page>

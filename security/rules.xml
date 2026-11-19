@@ -814,4 +814,64 @@
         <field name="domain_force">[(1, "=", 1)]</field>
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
+    <record id="erpobe_curriculum_prodi_scope" model="ir.rule">
+        <field name="name">erpobe.akademik.kurikulum: cakupan prodi</field>
+        <field name="model_id" ref="model_erpobe_akademik_kurikulum"/>
+        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_curriculum_superadmin_global" model="ir.rule">
+        <field name="name">erpobe.akademik.kurikulum: Superadmin global</field>
+        <field name="model_id" ref="model_erpobe_akademik_kurikulum"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_superadmin'))]"/>
+    </record>
+    <record id="erpobe_curriculum_settings_global" model="ir.rule">
+        <field name="name">erpobe.akademik.kurikulum: Administrator Settings global</field>
+        <field name="model_id" ref="model_erpobe_akademik_kurikulum"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+    <record id="erpobe_subcpmk_prodi_scope" model="ir.rule">
+        <field name="name">erpobe.akademik.subcpmk: cakupan prodi</field>
+        <field name="model_id" ref="model_erpobe_akademik_subcpmk"/>
+        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen')), (4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_subcpmk_superadmin_global" model="ir.rule">
+        <field name="name">erpobe.akademik.subcpmk: Superadmin global</field>
+        <field name="model_id" ref="model_erpobe_akademik_subcpmk"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_superadmin'))]"/>
+    </record>
+    <record id="erpobe_subcpmk_settings_global" model="ir.rule">
+        <field name="name">erpobe.akademik.subcpmk: Administrator Settings global</field>
+        <field name="model_id" ref="model_erpobe_akademik_subcpmk"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+    <record id="erpobe_grade_subcpmk_faculty_scope" model="ir.rule">
+        <field name="name">erpobe.grade.subcpmk: cakupan prodi</field>
+        <field name="model_id" ref="model_erpobe_grade_subcpmk"/>
+        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin')), (4, ref('erpobe.group_dosen'))]"/>
+    </record>
+    <record id="erpobe_grade_subcpmk_own" model="ir.rule">
+        <field name="name">erpobe.grade.subcpmk: data sendiri</field>
+        <field name="model_id" ref="model_erpobe_grade_subcpmk"/>
+        <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_grade_subcpmk_superadmin_global" model="ir.rule">
+        <field name="name">erpobe.grade.subcpmk: Superadmin global</field>
+        <field name="model_id" ref="model_erpobe_grade_subcpmk"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_superadmin'))]"/>
+    </record>
+    <record id="erpobe_grade_subcpmk_settings_global" model="ir.rule">
+        <field name="name">erpobe.grade.subcpmk: Administrator Settings global</field>
+        <field name="model_id" ref="model_erpobe_grade_subcpmk"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
 </odoo>

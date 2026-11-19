@@ -15,6 +15,13 @@ class ErpObeMasterMataKuliah(models.Model):
     kode_mk = fields.Char(string="Kode MK", required=True, index=True)
     sks = fields.Integer(required=True)
     semester = fields.Integer(required=True)
+    active = fields.Boolean(default=True)
+    kurikulum_id = fields.Many2one(
+        "erpobe.akademik.kurikulum",
+        string="Kurikulum",
+        ondelete="restrict",
+        index=True,
+    )
 
     tipe_mk = fields.Selection([("T", "Teori"), ("P", "Praktikum"), ("L", "Lapangan")])
     jenis_mk = fields.Selection(
@@ -76,9 +83,17 @@ class ErpObeMasterMataKuliah(models.Model):
         "tim_pengampu_ids",
         "rombel_ids",
         "mk_prasyarat_ids",
+        "kurikulum_id",
     )
     def _check_related_faculties(self):
         for record in self:
+            if (
+                record.kurikulum_id
+                and record.kurikulum_id.prodi_id != record.prodi_id
+            ):
+                raise ValidationError(
+                    "Kurikulum dan mata kuliah harus berasal dari prodi yang sama."
+                )
             if (
                 record.koordinator_id
                 and record.prodi_id not in record.koordinator_id.prodi_ids

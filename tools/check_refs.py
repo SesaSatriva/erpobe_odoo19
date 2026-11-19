@@ -25,7 +25,10 @@ def external_id(value):
 
 def manifest_files():
     manifest = ast.literal_eval((MODULE_DIR / "__manifest__.py").read_text(encoding="utf-8"))
-    return [MODULE_DIR / name for name in manifest.get("data", [])]
+    return [
+        MODULE_DIR / name
+        for name in (*manifest.get("data", []), *manifest.get("demo", []))
+    ]
 
 
 def check_xml_and_refs():

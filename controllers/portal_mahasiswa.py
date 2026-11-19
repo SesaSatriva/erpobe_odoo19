@@ -78,14 +78,17 @@ class TritonPortalMahasiswa(TritonPortalBase):
         for line in krs_lines:
             final_rps = line.penawaran_line_id.rps_ids.filtered(lambda record: record.status == 'final').sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]
             component_grades = request.env['erpobe.grade.komponen'].sudo().search([('krs_line_id', '=', line.id)])
-            courses.append({'name': line.matakuliah_id.name, 'kode': line.matakuliah_id.kode_mk, 'sks': line.sks, 'year': line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran, 'semester': line.penawaran_line_id.tahun_ajaran_id.semester, 'rps': bool(final_rps), 'components': [{'name': grade.komponen_id.name, 'score': grade.nilai} for grade in component_grades], 'cpmk': [{'name': cpmk.name, 'description': cpmk.name} for cpmk in (final_rps.cpmk_ids if final_rps else [])]})
+            subcpmk_grades = request.env['erpobe.grade.subcpmk'].sudo().search(
+                [('krs_line_id', '=', line.id)]
+            ).sorted(key=lambda grade: (grade.subcpmk_id.minggu, grade.subcpmk_id.id))
+            courses.append({'name': line.matakuliah_id.name, 'code': line.matakuliah_id.kode_mk, 'sks': line.sks, 'year': line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran, 'semester': line.penawaran_line_id.tahun_ajaran_id.semester, 'rps': bool(final_rps), 'components': [{'name': grade.komponen_id.name, 'score': grade.nilai} for grade in component_grades], 'cpmk': [{'name': cpmk.name, 'description': cpmk.name} for cpmk in (final_rps.cpmk_ids if final_rps else [])], 'subcpmk': [{'week': grade.subcpmk_id.minggu, 'name': grade.subcpmk_id.name, 'score': grade.nilai, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in subcpmk_grades]})
         return request.render('erpobe.triton_student_courses_page', {'courses': courses})
 
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)
     def triton_student_cpl(self, **kwargs):
         student = self._require_student()
         grades = request.env['erpobe.grade.cpl'].sudo().search([('mahasiswa_id', '=', student.id)], order='cpl_id asc')
-        values = [{'name': grade.cpl_id.kode_cpl, 'description': grade.cpl_id.name, 'score': grade.nilai_cpl, 'target': 75, 'met': grade.nilai_cpl >= 75} for grade in grades]
+        values = [{'name': grade.cpl_id.kode_cpl, 'description': grade.cpl_id.name, 'score': grade.nilai_cpl, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in grades]
         return request.render('erpobe.triton_student_cpl_page', {'grades': values})
 
     @http.route('/my/profil', type='http', auth='user', website=True, methods=['GET', 'POST'])

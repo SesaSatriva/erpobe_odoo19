@@ -1,3 +1,4 @@
+from . import test_academic_fixture
 from . import test_faculty_scope
 from . import test_demo_users
 from . import test_import_export

@@ -22,6 +22,7 @@
                 <field name="name"/>
                 <field name="jenis_cpl"/>
                 <field name="prodi_id"/>
+                <field name="target_nilai"/>
             </list>
         </field>
     </record>
@@ -41,6 +42,8 @@
                         <field name="prodi_id"/>
                         <field name="jenis_cpl"/>
                         <field name="name"/>
+                        <field name="indikator_capaian"/>
+                        <field name="target_nilai"/>
                     </group>
                     <notebook>
                         <page string="Pemetaan CPMK">

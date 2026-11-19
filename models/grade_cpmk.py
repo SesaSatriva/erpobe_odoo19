@@ -16,6 +16,15 @@ class ErpObeGradeCpmk(models.Model):
         digits=(16, 2),
         help="Dihitung dari rata-rata tertimbang Komponen terhadap CPMK berdasarkan RPS.",
     )
+    target_nilai = fields.Float(
+        related="cpmk_id.target_nilai", store=True, readonly=True
+    )
+    status_capaian = fields.Selection(
+        [("tercapai", "Tercapai"), ("belum", "Belum Tercapai")],
+        compute="_compute_status_capaian",
+        store=True,
+        string="Status Capaian",
+    )
 
     _uniq_mhs_cpmk_constraint = models.Constraint('unique(mahasiswa_id, cpmk_id)', 'Grade CPMK exist.')
 
@@ -26,6 +35,15 @@ class ErpObeGradeCpmk(models.Model):
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
+
+    @api.depends("nilai_cpmk", "target_nilai")
+    def _compute_status_capaian(self):
+        for record in self:
+            record.status_capaian = (
+                "tercapai"
+                if record.nilai_cpmk >= record.target_nilai
+                else "belum"
+            )
 
     @api.depends(
         "mahasiswa_id.grade_komponen_ids.nilai",

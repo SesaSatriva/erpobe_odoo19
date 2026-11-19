@@ -399,6 +399,12 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
         required=True,
         domain="[('mk_id', '=', parent.matakuliah_id)]",
     )
+    subcpmk_id = fields.Many2one(
+        "erpobe.akademik.subcpmk",
+        string="Sub-CPMK",
+        ondelete="restrict",
+        domain="[('rps_id', '=', parent.id)]",
+    )
 
     bahan_kajian = fields.Text(required=True)
     metode_pembelajaran_id = fields.Many2one(
@@ -429,12 +435,19 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.constrains("rps_id", "cpmk_id")
+    @api.constrains("rps_id", "cpmk_id", "subcpmk_id")
     def _check_activity_faculty(self):
         for record in self:
             if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
                     "CPMK kegiatan harus berasal dari mata kuliah pada RPS."
+                )
+            if record.subcpmk_id and (
+                record.subcpmk_id.rps_id != record.rps_id
+                or record.subcpmk_id.cpmk_id != record.cpmk_id
+            ):
+                raise ValidationError(
+                    "Sub-CPMK kegiatan harus sesuai dengan RPS dan CPMK."
                 )
 
 

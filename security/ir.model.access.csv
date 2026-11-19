@@ -1,4 +1,18 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_curriculum_settings,erpobe.akademik.kurikulum settings,model_erpobe_akademik_kurikulum,base.group_system,1,1,1,1
+access_curriculum_admin,erpobe.akademik.kurikulum admin,model_erpobe_akademik_kurikulum,erpobe.group_admin,1,1,1,1
+access_curriculum_dosen,erpobe.akademik.kurikulum dosen,model_erpobe_akademik_kurikulum,erpobe.group_dosen,1,0,0,0
+access_curriculum_mahasiswa,erpobe.akademik.kurikulum mahasiswa,model_erpobe_akademik_kurikulum,erpobe.group_mahasiswa,1,0,0,0
+access_subcpmk_settings,erpobe.akademik.subcpmk settings,model_erpobe_akademik_subcpmk,base.group_system,1,1,1,1
+access_subcpmk_admin,erpobe.akademik.subcpmk admin,model_erpobe_akademik_subcpmk,erpobe.group_admin,1,1,1,1
+access_subcpmk_dosen,erpobe.akademik.subcpmk dosen,model_erpobe_akademik_subcpmk,erpobe.group_dosen,1,1,1,1
+access_subcpmk_mahasiswa,erpobe.akademik.subcpmk mahasiswa,model_erpobe_akademik_subcpmk,erpobe.group_mahasiswa,1,0,0,0
+access_subcpmk_result_settings,erpobe.grade.subcpmk settings,model_erpobe_grade_subcpmk,base.group_system,1,1,1,1
+access_subcpmk_result_admin,erpobe.grade.subcpmk admin,model_erpobe_grade_subcpmk,erpobe.group_admin,1,1,1,1
+access_subcpmk_result_dosen,erpobe.grade.subcpmk dosen,model_erpobe_grade_subcpmk,erpobe.group_dosen,1,0,0,0
+access_subcpmk_result_mahasiswa,erpobe.grade.subcpmk mahasiswa,model_erpobe_grade_subcpmk,erpobe.group_mahasiswa,1,0,0,0
+access_fixture_source_settings,erpobe.akademik.fixture.source settings,model_erpobe_akademik_fixture_source,base.group_system,1,1,1,1
+access_fixture_source_admin,erpobe.akademik.fixture.source admin,model_erpobe_akademik_fixture_source,erpobe.group_admin,1,1,1,1
 access_partner_admin,access.partner.admin,base.model_res_partner,erpobe.group_admin,1,1,1,1
 access_partner_dosen,access.partner.dosen,base.model_res_partner,erpobe.group_dosen,1,1,1,1
 access_partner_mahasiswa,access.partner.mahasiswa,base.model_res_partner,erpobe.group_mahasiswa,1,0,0,0

@@ -7,6 +7,8 @@ class ErpObeAkademikCpl(models.Model):
 
     name = fields.Text(string="Deskripsi CPL", required=True)
     kode_cpl = fields.Char(string="Kode CPL", required=True, index=True)
+    indikator_capaian = fields.Text(string="Indikator Capaian")
+    target_nilai = fields.Float(string="Target Nilai", default=70.0, required=True)
     jenis_cpl = fields.Selection(
         [
             ("sikap", "Sikap"),

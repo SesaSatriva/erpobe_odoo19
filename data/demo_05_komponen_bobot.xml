@@ -1,11 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<odoo noupdate="1">
-    <record id="komponen_kognitif" model="erpobe.akademik.komponen">
-        <field name="name">Penilaian Kognitif</field>
-        <field name="tipe">kognitif</field>
-    </record>
-    <record id="komponen_partisipatif" model="erpobe.akademik.komponen">
-        <field name="name">Penilaian Partisipatif</field>
-        <field name="tipe">partisipatif</field>
-    </record>
-</odoo>
+<odoo noupdate="1"><record id="komponen_kognitif" model="erpobe.akademik.komponen"><field name="name">Penilaian Kognitif</field><field name="tipe">kognitif</field></record><record id="komponen_partisipatif" model="erpobe.akademik.komponen"><field name="name">Penilaian Partisipatif</field><field name="tipe">partisipatif</field></record><record id="fixture_component_project" model="erpobe.akademik.komponen"><field name="name">Penilaian Proyek</field><field name="tipe">partisipatif</field></record><record id="fixture_component_exam" model="erpobe.akademik.komponen"><field name="name">Ujian Akhir</field><field name="tipe">kognitif</field></record></odoo>

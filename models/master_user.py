@@ -215,6 +215,26 @@ class ResUsers(models.Model):
         if not prodis:
             return True
 
+        fixture_curricula = (
+            self.env["ir.model.data"]
+            .sudo()
+            .search(
+                [
+                    ("module", "=", "erpobe"),
+                    ("model", "=", "erpobe.akademik.kurikulum"),
+                    ("name", "=like", "fixture_curriculum_%"),
+                ]
+            )
+        )
+        fixture_prodi_ids = set(
+            self.env["erpobe.akademik.kurikulum"]
+            .sudo()
+            .browse(fixture_curricula.mapped("res_id"))
+            .exists()
+            .mapped("prodi_id")
+            .ids
+        )
+
         dosen_model = (
             self.env["erpobe.master.dosen"]
             .sudo()
@@ -243,6 +263,9 @@ class ResUsers(models.Model):
         account_ids = set()
         profile_by_user = {}
         for prodi in prodis:
+            if prodi.id in fixture_prodi_ids:
+                continue
+
             slug = slug_by_prodi[prodi.id]
             if slug_counts[slug] > 1:
                 slug = f"{slug}.p{prodi.id}"
@@ -491,7 +514,7 @@ class ResUsers(models.Model):
                 )
 
         final_account_ids = set()
-        for prodi in prodis:
+        for prodi, _, _, _, _ in plans:
             dosens = dosen_model.search(
                 [
                     ("prodi_ids", "in", prodi.id),
@@ -537,7 +560,7 @@ class ResUsers(models.Model):
             final_account_ids.update(role_account_ids)
 
         final_accounts = users.browse(sorted(final_account_ids))
-        if len(final_accounts) != 24 * len(prodis):
+        if len(final_accounts) != 24 * len(plans):
             raise ValidationError(
                 "Jumlah pengguna unik tidak sesuai dengan 24 akun per prodi fixture."
             )
@@ -603,6 +626,7 @@ class ErpobeDosen(models.Model):
     partner_id = fields.Many2one("res.partner", required=True, ondelete="cascade")
     nip = fields.Char(required=True)
     jabatan_fungsional = fields.Char(string="Jabatan Fungsional")
+    bidang_keahlian = fields.Char(string="Bidang Keahlian")
     is_public_visible = fields.Boolean(
         string="Tampil di halaman publik",
         default=True,
@@ -754,6 +778,17 @@ class ErpobeMahasiswa(models.Model):
 
     rombel_id = fields.Many2one("erpobe.master.rombel", required=True)
     angkatan = fields.Integer(related="rombel_id.angkatan", store=True, readonly=True)
+    kurikulum_id = fields.Many2one(
+        "erpobe.akademik.kurikulum",
+        string="Kurikulum",
+        ondelete="restrict",
+        index=True,
+    )
+    semester_saat_ini = fields.Integer(
+        string="Semester Akademik Saat Ini",
+        default=1,
+        help="Semester berjalan berdasarkan riwayat KRS mahasiswa.",
+    )
 
     grade_komponen_ids = fields.One2many("erpobe.grade.komponen", "mahasiswa_id")
     grade_cpmk_ids = fields.One2many("erpobe.grade.cpmk", "mahasiswa_id")
@@ -766,6 +801,16 @@ class ErpobeMahasiswa(models.Model):
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
+
+    @api.constrains("kurikulum_id", "prodi_id", "semester_saat_ini")
+    def _check_academic_program(self):
+        for record in self:
+            if record.kurikulum_id and record.kurikulum_id.prodi_id != record.prodi_id:
+                raise ValidationError(
+                    "Kurikulum mahasiswa harus berasal dari program studinya."
+                )
+            if record.semester_saat_ini < 1 or record.semester_saat_ini > 14:
+                raise ValidationError("Semester akademik harus berada pada rentang 1–14.")
 
     def write(self, vals):
         res = super().write(vals)

@@ -10,6 +10,15 @@ class ErpObeGradeCpl(models.Model):
     cpl_id = fields.Many2one("erpobe.akademik.cpl", required=True, index=True)
 
     nilai_cpl = fields.Float(compute="_compute_nilai_cpl", store=True, digits=(16, 2))
+    target_nilai = fields.Float(
+        related="cpl_id.target_nilai", store=True, readonly=True
+    )
+    status_capaian = fields.Selection(
+        [("tercapai", "Tercapai"), ("belum", "Belum Tercapai")],
+        compute="_compute_status_capaian",
+        store=True,
+        string="Status Capaian",
+    )
 
     _uniq_mhs_cpl_constraint = models.Constraint('unique(mahasiswa_id, cpl_id)', 'Nilai CPL exist.')
 
@@ -20,6 +29,13 @@ class ErpObeGradeCpl(models.Model):
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
+
+    @api.depends("nilai_cpl", "target_nilai")
+    def _compute_status_capaian(self):
+        for record in self:
+            record.status_capaian = (
+                "tercapai" if record.nilai_cpl >= record.target_nilai else "belum"
+            )
 
     @api.depends("mahasiswa_id.grade_cpmk_ids.nilai_cpmk")
     def _compute_nilai_cpl(self):
@@ -32,7 +48,6 @@ class ErpObeGradeCpl(models.Model):
         bobot_lines = BobotCpmkCpl.search([("cpl_id", "in", cpl_ids.ids)])
 
         weight_map = {}
-        total_weight_per_cpl = {} # Simpan total bobot penuh per CPL
         relevant_cpmk_ids = set()
 
         for b in bobot_lines:
@@ -42,13 +57,8 @@ class ErpObeGradeCpl(models.Model):
 
             if cpl_id not in weight_map:
                 weight_map[cpl_id] = {}
-                total_weight_per_cpl[cpl_id] = 0.0 # Init total bobot
-            
+
             weight_map[cpl_id][cpmk_id] = bobot
-            
-            # FIX: Akumulasi total bobot di sini (Full Denominator)
-            total_weight_per_cpl[cpl_id] += bobot
-            
             relevant_cpmk_ids.add(cpmk_id)
 
         # 2. Ambil Nilai Mahasiswa yang Relevan
@@ -67,27 +77,24 @@ class ErpObeGradeCpl(models.Model):
             # Kode ini mengambil record terakhir yang ditemukan (default Odoo order)
             student_map[mhs_id][g.cpmk_id.id] = g.nilai_cpmk
 
-        # 3. Hitung Nilai CPL Tertimbang
+        # 3. Hitung nilai hanya dari CPMK yang sudah diambil mahasiswa.
         for rec in self:
             rec.nilai_cpl = 0.0
 
             cpl_weights = weight_map.get(rec.cpl_id.id, {})
             student_scores = student_map.get(rec.mahasiswa_id.id, {})
-            
-            # FIX: Ambil total bobot penuh dari mapping, bukan yang taken saja
-            total_bobot_pembagi = total_weight_per_cpl.get(rec.cpl_id.id, 0.0)
-
-            if not cpl_weights or total_bobot_pembagi == 0:
+            assessed_weights = {
+                cpmk_id: bobot
+                for cpmk_id, bobot in cpl_weights.items()
+                if cpmk_id in student_scores
+            }
+            total_bobot_pembagi = sum(assessed_weights.values())
+            if not assessed_weights or not total_bobot_pembagi:
                 continue
 
             total_score_tertimbang = 0.0
-
-            for cpmk_id, bobot in cpl_weights.items():
-                # Jika mahasiswa punya nilai, hitung. Jika tidak, anggap 0 (karena belum ambil/kosong)
-                nilai = student_scores.get(cpmk_id, 0.0)
-                total_score_tertimbang += (nilai * bobot)
-
-            # Rumus: (Total Score * Bobot) / (Total Seluruh Bobot yang Ada)
+            for cpmk_id, bobot in assessed_weights.items():
+                total_score_tertimbang += student_scores[cpmk_id] * bobot
             rec.nilai_cpl = total_score_tertimbang / total_bobot_pembagi
 
     @api.constrains("mahasiswa_id", "cpl_id")

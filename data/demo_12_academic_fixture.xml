@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo><function model="erpobe.fixture.seeder" name="load_2022_cohort" /></odoo>

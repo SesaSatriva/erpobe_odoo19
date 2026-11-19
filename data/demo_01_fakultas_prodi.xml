@@ -5,8 +5,8 @@
         <field name="kode">FT</field>
     </record>
     <record id="prodi_ti" model="erpobe.master.prodi">
-        <field name="name">Teknik Informatika</field>
-        <field name="kode">IF</field>
+        <field name="name">Teknik Industri</field>
+        <field name="kode">IN</field>
         <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
     </record>
     <record id="prodi_si" model="erpobe.master.prodi">
@@ -14,19 +14,14 @@
         <field name="kode">SI</field>
         <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
     </record>
-    <record id="prodi_me" model="erpobe.master.prodi">
-        <field name="name">Teknik Mesin</field>
-        <field name="kode">ME</field>
+    <record id="prodi_mf" model="erpobe.master.prodi">
+        <field name="name">Teknik Manufaktur</field>
+        <field name="kode">MF</field>
         <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
     </record>
     <record id="prodi_el" model="erpobe.master.prodi">
         <field name="name">Teknik Elektro</field>
         <field name="kode">EL</field>
-        <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
-    </record>
-    <record id="prodi_ind" model="erpobe.master.prodi">
-        <field name="name">Teknik Industri</field>
-        <field name="kode">IN</field>
         <field name="fakultas_id" ref="erpobe.fakultas_teknik" />
     </record>
 </odoo>

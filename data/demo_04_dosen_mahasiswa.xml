@@ -1,579 +1,795 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo noupdate="1">
-    <record id="partner_ti_dosen_1" model="res.partner">
-        <field name="name">Dr. Rina Kumalasari</field>
-        <field name="email">dosen.if.01@example.test</field>
+    <record id="dosen_in_1" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]"/>
+        <field name="name">Dr. Dosen IN 1</field>
+        <field name="email">dosen.in.1@example.com</field>
+        <field name="nip">19840000101</field>
     </record>
-    <record id="dosen_ti_1" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_ti_dosen_1" />
-        <field name="name">Dr. Rina Kumalasari</field>
-        <field name="nip">1987001001</field>
-        <field name="jabatan_fungsional">Lektor Kepala</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="dosen_in_2" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]"/>
+        <field name="name">Dr. Dosen IN 2</field>
+        <field name="email">dosen.in.2@example.com</field>
+        <field name="nip">19840010101</field>
     </record>
-    <record id="partner_ti_dosen_2" model="res.partner">
-        <field name="name">Budi Santoso, S.T.</field>
-        <field name="email">dosen.if.02@example.test</field>
+    <record id="dosen_in_3" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]"/>
+        <field name="name">Dr. Dosen IN 3</field>
+        <field name="email">dosen.in.3@example.com</field>
+        <field name="nip">19840020101</field>
     </record>
-    <record id="dosen_ti_2" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_ti_dosen_2" />
-        <field name="name">Budi Santoso, S.T.</field>
-        <field name="nip">1987001002</field>
-        <field name="jabatan_fungsional">Asisten Ahli</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="dosen_in_4" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]"/>
+        <field name="name">Dr. Dosen IN 4</field>
+        <field name="email">dosen.in.4@example.com</field>
+        <field name="nip">19840030101</field>
     </record>
-    <record id="partner_ti_dosen_3" model="res.partner">
-        <field name="name">Ir. Damar Priyanto</field>
-        <field name="email">dosen.if.03@example.test</field>
-    </record>
-    <record id="dosen_ti_3" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_ti_dosen_3" />
-        <field name="name">Ir. Damar Priyanto</field>
-        <field name="nip">1987001003</field>
-        <field name="jabatan_fungsional">Guru Besar</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_ti_mhs_1" model="res.partner">
-        <field name="name">Anisa Putri</field>
-        <field name="email">mahasiswa.if.001@example.test</field>
-    </record>
-    <record id="mhs_ti_1" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ti_mhs_1" />
-        <field name="name">Anisa Putri</field>
-        <field name="nim">2026IF001</field>
-        <field name="status_akademik">lulus</field>
-        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_ti_mhs_2" model="res.partner">
-        <field name="name">Raka Pradana</field>
-        <field name="email">mahasiswa.if.002@example.test</field>
-    </record>
-    <record id="mhs_ti_2" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ti_mhs_2" />
-        <field name="name">Raka Pradana</field>
-        <field name="nim">2026IF002</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_ti_mhs_3" model="res.partner">
-        <field name="name">Lukman Hidayat</field>
-        <field name="email">mahasiswa.if.003@example.test</field>
-    </record>
-    <record id="mhs_ti_3" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ti_mhs_3" />
-        <field name="name">Lukman Hidayat</field>
-        <field name="nim">2026IF003</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_ti_mhs_4" model="res.partner">
-        <field name="name">Nadia Aulia</field>
-        <field name="email">mahasiswa.if.004@example.test</field>
-    </record>
-    <record id="mhs_ti_4" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ti_mhs_4" />
-        <field name="name">Nadia Aulia</field>
-        <field name="nim">2026IF004</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_ti_mhs_5" model="res.partner">
-        <field name="name">Farhan Wijaya</field>
-        <field name="email">mahasiswa.if.005@example.test</field>
-    </record>
-    <record id="mhs_ti_5" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ti_mhs_5" />
-        <field name="name">Farhan Wijaya</field>
-        <field name="nim">2026IF005</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="True" />
-    </record>
-    <record id="partner_ti_mhs_6" model="res.partner">
-        <field name="name">Salsa Putri</field>
-        <field name="email">mahasiswa.if.006@example.test</field>
-    </record>
-    <record id="mhs_ti_6" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ti_mhs_6" />
-        <field name="name">Salsa Putri</field>
-        <field name="nim">2026IF006</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_ti_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ti_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_si_dosen_1" model="res.partner">
-        <field name="name">Dr. Rina Kumalasari</field>
-        <field name="email">dosen.si.01@example.test</field>
+    <record id="dosen_in_5" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ti')])]"/>
+        <field name="name">Dr. Dosen IN 5</field>
+        <field name="email">dosen.in.5@example.com</field>
+        <field name="nip">19840040101</field>
     </record>
     <record id="dosen_si_1" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_si_dosen_1" />
-        <field name="name">Dr. Rina Kumalasari</field>
-        <field name="nip">1987001004</field>
-        <field name="jabatan_fungsional">Lektor Kepala</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_si_dosen_2" model="res.partner">
-        <field name="name">Budi Santoso, S.T.</field>
-        <field name="email">dosen.si.02@example.test</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]"/>
+        <field name="name">Dr. Dosen SI 1</field>
+        <field name="email">dosen.si.1@example.com</field>
+        <field name="nip">19840000201</field>
     </record>
     <record id="dosen_si_2" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_si_dosen_2" />
-        <field name="name">Budi Santoso, S.T.</field>
-        <field name="nip">1987001005</field>
-        <field name="jabatan_fungsional">Asisten Ahli</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_si_dosen_3" model="res.partner">
-        <field name="name">Ir. Damar Priyanto</field>
-        <field name="email">dosen.si.03@example.test</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]"/>
+        <field name="name">Dr. Dosen SI 2</field>
+        <field name="email">dosen.si.2@example.com</field>
+        <field name="nip">19840010201</field>
     </record>
     <record id="dosen_si_3" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_si_dosen_3" />
-        <field name="name">Ir. Damar Priyanto</field>
-        <field name="nip">1987001006</field>
-        <field name="jabatan_fungsional">Guru Besar</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]"/>
+        <field name="name">Dr. Dosen SI 3</field>
+        <field name="email">dosen.si.3@example.com</field>
+        <field name="nip">19840020201</field>
     </record>
-    <record id="partner_si_mhs_1" model="res.partner">
-        <field name="name">Gilang Permana</field>
-        <field name="email">mahasiswa.si.001@example.test</field>
+    <record id="dosen_si_4" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]"/>
+        <field name="name">Dr. Dosen SI 4</field>
+        <field name="email">dosen.si.4@example.com</field>
+        <field name="nip">19840030201</field>
     </record>
-    <record id="mhs_si_1" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_si_mhs_1" />
-        <field name="name">Gilang Permana</field>
-        <field name="nim">2026SI001</field>
-        <field name="status_akademik">lulus</field>
-        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
+    <record id="dosen_si_5" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_si')])]"/>
+        <field name="name">Dr. Dosen SI 5</field>
+        <field name="email">dosen.si.5@example.com</field>
+        <field name="nip">19840040201</field>
     </record>
-    <record id="partner_si_mhs_2" model="res.partner">
-        <field name="name">Maya Sari</field>
-        <field name="email">mahasiswa.si.002@example.test</field>
+    <record id="dosen_mf_1" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_mf')])]"/>
+        <field name="name">Dr. Dosen MF 1</field>
+        <field name="email">dosen.mf.1@example.com</field>
+        <field name="nip">19840000301</field>
     </record>
-    <record id="mhs_si_2" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_si_mhs_2" />
-        <field name="name">Maya Sari</field>
-        <field name="nim">2026SI002</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="dosen_mf_2" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_mf')])]"/>
+        <field name="name">Dr. Dosen MF 2</field>
+        <field name="email">dosen.mf.2@example.com</field>
+        <field name="nip">19840010301</field>
     </record>
-    <record id="partner_si_mhs_3" model="res.partner">
-        <field name="name">Rafi Kusuma</field>
-        <field name="email">mahasiswa.si.003@example.test</field>
+    <record id="dosen_mf_3" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_mf')])]"/>
+        <field name="name">Dr. Dosen MF 3</field>
+        <field name="email">dosen.mf.3@example.com</field>
+        <field name="nip">19840020301</field>
     </record>
-    <record id="mhs_si_3" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_si_mhs_3" />
-        <field name="name">Rafi Kusuma</field>
-        <field name="nim">2026SI003</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
+    <record id="dosen_mf_4" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_mf')])]"/>
+        <field name="name">Dr. Dosen MF 4</field>
+        <field name="email">dosen.mf.4@example.com</field>
+        <field name="nip">19840030301</field>
     </record>
-    <record id="partner_si_mhs_4" model="res.partner">
-        <field name="name">Della Putri</field>
-        <field name="email">mahasiswa.si.004@example.test</field>
-    </record>
-    <record id="mhs_si_4" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_si_mhs_4" />
-        <field name="name">Della Putri</field>
-        <field name="nim">2026SI004</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_si_mhs_5" model="res.partner">
-        <field name="name">Hafiz Rahman</field>
-        <field name="email">mahasiswa.si.005@example.test</field>
-    </record>
-    <record id="mhs_si_5" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_si_mhs_5" />
-        <field name="name">Hafiz Rahman</field>
-        <field name="nim">2026SI005</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="True" />
-    </record>
-    <record id="partner_si_mhs_6" model="res.partner">
-        <field name="name">Wulan Safitri</field>
-        <field name="email">mahasiswa.si.006@example.test</field>
-    </record>
-    <record id="mhs_si_6" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_si_mhs_6" />
-        <field name="name">Wulan Safitri</field>
-        <field name="nim">2026SI006</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_si_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_dosen_1" model="res.partner">
-        <field name="name">Ari Setiawan, M.T.</field>
-        <field name="email">dosen.me.01@example.test</field>
-    </record>
-    <record id="dosen_me_1" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_me_dosen_1" />
-        <field name="name">Ari Setiawan, M.T.</field>
-        <field name="nip">1987001007</field>
-        <field name="jabatan_fungsional">Lektor</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_me')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_dosen_2" model="res.partner">
-        <field name="name">Lina Mardiana, S.T.</field>
-        <field name="email">dosen.me.02@example.test</field>
-    </record>
-    <record id="dosen_me_2" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_me_dosen_2" />
-        <field name="name">Lina Mardiana, S.T.</field>
-        <field name="nip">1987001008</field>
-        <field name="jabatan_fungsional">Asisten Ahli</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_me')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_mhs_1" model="res.partner">
-        <field name="name">Dewi Lestari</field>
-        <field name="email">mahasiswa.me.001@example.test</field>
-    </record>
-    <record id="mhs_me_1" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_me_mhs_1" />
-        <field name="name">Dewi Lestari</field>
-        <field name="nim">2026ME001</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_mhs_2" model="res.partner">
-        <field name="name">Adit Pratama</field>
-        <field name="email">mahasiswa.me.002@example.test</field>
-    </record>
-    <record id="mhs_me_2" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_me_mhs_2" />
-        <field name="name">Adit Pratama</field>
-        <field name="nim">2026ME002</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_mhs_3" model="res.partner">
-        <field name="name">Santi Wulandari</field>
-        <field name="email">mahasiswa.me.003@example.test</field>
-    </record>
-    <record id="mhs_me_3" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_me_mhs_3" />
-        <field name="name">Santi Wulandari</field>
-        <field name="nim">2026ME003</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_mhs_4" model="res.partner">
-        <field name="name">Bram Setiawan</field>
-        <field name="email">mahasiswa.me.004@example.test</field>
-    </record>
-    <record id="mhs_me_4" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_me_mhs_4" />
-        <field name="name">Bram Setiawan</field>
-        <field name="nim">2026ME004</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_me_mhs_5" model="res.partner">
-        <field name="name">Nabil Ahmad</field>
-        <field name="email">mahasiswa.me.005@example.test</field>
-    </record>
-    <record id="mhs_me_5" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_me_mhs_5" />
-        <field name="name">Nabil Ahmad</field>
-        <field name="nim">2026ME005</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="True" />
-    </record>
-    <record id="partner_me_mhs_6" model="res.partner">
-        <field name="name">Yuliana Sari</field>
-        <field name="email">mahasiswa.me.006@example.test</field>
-    </record>
-    <record id="mhs_me_6" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_me_mhs_6" />
-        <field name="name">Yuliana Sari</field>
-        <field name="nim">2026ME006</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_me_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_me_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_el_dosen_1" model="res.partner">
-        <field name="name">Nadya Rahmawati, M.Eng.</field>
-        <field name="email">dosen.el.01@example.test</field>
+    <record id="dosen_mf_5" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_mf')])]"/>
+        <field name="name">Dr. Dosen MF 5</field>
+        <field name="email">dosen.mf.5@example.com</field>
+        <field name="nip">19840040301</field>
     </record>
     <record id="dosen_el_1" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_el_dosen_1" />
-        <field name="name">Nadya Rahmawati, M.Eng.</field>
-        <field name="nip">1987001009</field>
-        <field name="jabatan_fungsional">Lektor</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
-    </record>
-    <record id="partner_el_dosen_2" model="res.partner">
-        <field name="name">Rahmat Setiawan, S.T.</field>
-        <field name="email">dosen.el.02@example.test</field>
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]"/>
+        <field name="name">Dr. Dosen EL 1</field>
+        <field name="email">dosen.el.1@example.com</field>
+        <field name="nip">19840000401</field>
     </record>
     <record id="dosen_el_2" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_el_dosen_2" />
-        <field name="name">Rahmat Setiawan, S.T.</field>
-        <field name="nip">1987001010</field>
-        <field name="jabatan_fungsional">Asisten Ahli</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]"/>
+        <field name="name">Dr. Dosen EL 2</field>
+        <field name="email">dosen.el.2@example.com</field>
+        <field name="nip">19840010401</field>
     </record>
-    <record id="partner_el_mhs_1" model="res.partner">
-        <field name="name">Irfan Maulana</field>
-        <field name="email">mahasiswa.el.001@example.test</field>
+    <record id="dosen_el_3" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]"/>
+        <field name="name">Dr. Dosen EL 3</field>
+        <field name="email">dosen.el.3@example.com</field>
+        <field name="nip">19840020401</field>
     </record>
-    <record id="mhs_el_1" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_el_mhs_1" />
-        <field name="name">Irfan Maulana</field>
-        <field name="nim">2026EL001</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+    <record id="dosen_el_4" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]"/>
+        <field name="name">Dr. Dosen EL 4</field>
+        <field name="email">dosen.el.4@example.com</field>
+        <field name="nip">19840030401</field>
+    </record>
+    <record id="dosen_el_5" model="erpobe.master.dosen">
+        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_el')])]"/>
+        <field name="name">Dr. Dosen EL 5</field>
+        <field name="email">dosen.el.5@example.com</field>
+        <field name="nip">19840040401</field>
+    </record>
+    <record id="mhs_in_2022_001" model="erpobe.master.mahasiswa">
+        <field name="name">Ahmad Wijaya 2022</field>
+        <field name="nim">2022IN001</field>
+        <field name="email">mhs.in.2022.1@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_002" model="erpobe.master.mahasiswa">
+        <field name="name">Budi Wijaya 2022</field>
+        <field name="nim">2022IN002</field>
+        <field name="email">mhs.in.2022.2@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_003" model="erpobe.master.mahasiswa">
+        <field name="name">Citra Wijaya 2022</field>
+        <field name="nim">2022IN003</field>
+        <field name="email">mhs.in.2022.3@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_004" model="erpobe.master.mahasiswa">
+        <field name="name">Dedi Wijaya 2022</field>
+        <field name="nim">2022IN004</field>
+        <field name="email">mhs.in.2022.4@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_005" model="erpobe.master.mahasiswa">
+        <field name="name">Eka Wijaya 2022</field>
+        <field name="nim">2022IN005</field>
+        <field name="email">mhs.in.2022.5@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_006" model="erpobe.master.mahasiswa">
+        <field name="name">Fajar Wijaya 2022</field>
+        <field name="nim">2022IN006</field>
+        <field name="email">mhs.in.2022.6@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_007" model="erpobe.master.mahasiswa">
+        <field name="name">Galih Wijaya 2022</field>
+        <field name="nim">2022IN007</field>
+        <field name="email">mhs.in.2022.7@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_008" model="erpobe.master.mahasiswa">
+        <field name="name">Hesti Wijaya 2022</field>
+        <field name="nim">2022IN008</field>
+        <field name="email">mhs.in.2022.8@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_009" model="erpobe.master.mahasiswa">
+        <field name="name">Indra Wijaya 2022</field>
+        <field name="nim">2022IN009</field>
+        <field name="email">mhs.in.2022.9@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_010" model="erpobe.master.mahasiswa">
+        <field name="name">Joko Wijaya 2022</field>
+        <field name="nim">2022IN010</field>
+        <field name="email">mhs.in.2022.10@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_011" model="erpobe.master.mahasiswa">
+        <field name="name">Krisna Wijaya 2022</field>
+        <field name="nim">2022IN011</field>
+        <field name="email">mhs.in.2022.11@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_012" model="erpobe.master.mahasiswa">
+        <field name="name">Lestari Wijaya 2022</field>
+        <field name="nim">2022IN012</field>
+        <field name="email">mhs.in.2022.12@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_013" model="erpobe.master.mahasiswa">
+        <field name="name">Mahendra Wijaya 2022</field>
+        <field name="nim">2022IN013</field>
+        <field name="email">mhs.in.2022.13@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_014" model="erpobe.master.mahasiswa">
+        <field name="name">Nia Wijaya 2022</field>
+        <field name="nim">2022IN014</field>
+        <field name="email">mhs.in.2022.14@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_015" model="erpobe.master.mahasiswa">
+        <field name="name">Omar Wijaya 2022</field>
+        <field name="nim">2022IN015</field>
+        <field name="email">mhs.in.2022.15@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_016" model="erpobe.master.mahasiswa">
+        <field name="name">Putri Wijaya 2022</field>
+        <field name="nim">2022IN016</field>
+        <field name="email">mhs.in.2022.16@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_017" model="erpobe.master.mahasiswa">
+        <field name="name">Rizki Wijaya 2022</field>
+        <field name="nim">2022IN017</field>
+        <field name="email">mhs.in.2022.17@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_018" model="erpobe.master.mahasiswa">
+        <field name="name">Sari Wijaya 2022</field>
+        <field name="nim">2022IN018</field>
+        <field name="email">mhs.in.2022.18@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_019" model="erpobe.master.mahasiswa">
+        <field name="name">Taufik Wijaya 2022</field>
+        <field name="nim">2022IN019</field>
+        <field name="email">mhs.in.2022.19@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_020" model="erpobe.master.mahasiswa">
+        <field name="name">Winda Wijaya 2022</field>
+        <field name="nim">2022IN020</field>
+        <field name="email">mhs.in.2022.20@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_021" model="erpobe.master.mahasiswa">
+        <field name="name">Yoga Wijaya 2022</field>
+        <field name="nim">2022IN021</field>
+        <field name="email">mhs.in.2022.21@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_022" model="erpobe.master.mahasiswa">
+        <field name="name">Zahra Wijaya 2022</field>
+        <field name="nim">2022IN022</field>
+        <field name="email">mhs.in.2022.22@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_023" model="erpobe.master.mahasiswa">
+        <field name="name">Bagus Wijaya 2022</field>
+        <field name="nim">2022IN023</field>
+        <field name="email">mhs.in.2022.23@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_in_2022_024" model="erpobe.master.mahasiswa">
+        <field name="name">Dewi Wijaya 2022</field>
+        <field name="nim">2022IN024</field>
+        <field name="email">mhs.in.2022.24@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_in_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_in_1" />
+    </record>
+    <record id="mhs_si_2022_001" model="erpobe.master.mahasiswa">
+        <field name="name">Ahmad Wijaya 2022</field>
+        <field name="nim">2022SI001</field>
+        <field name="email">mhs.si.2022.1@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_002" model="erpobe.master.mahasiswa">
+        <field name="name">Budi Wijaya 2022</field>
+        <field name="nim">2022SI002</field>
+        <field name="email">mhs.si.2022.2@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_003" model="erpobe.master.mahasiswa">
+        <field name="name">Citra Wijaya 2022</field>
+        <field name="nim">2022SI003</field>
+        <field name="email">mhs.si.2022.3@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_004" model="erpobe.master.mahasiswa">
+        <field name="name">Dedi Wijaya 2022</field>
+        <field name="nim">2022SI004</field>
+        <field name="email">mhs.si.2022.4@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_005" model="erpobe.master.mahasiswa">
+        <field name="name">Eka Wijaya 2022</field>
+        <field name="nim">2022SI005</field>
+        <field name="email">mhs.si.2022.5@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_006" model="erpobe.master.mahasiswa">
+        <field name="name">Fajar Wijaya 2022</field>
+        <field name="nim">2022SI006</field>
+        <field name="email">mhs.si.2022.6@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_007" model="erpobe.master.mahasiswa">
+        <field name="name">Galih Wijaya 2022</field>
+        <field name="nim">2022SI007</field>
+        <field name="email">mhs.si.2022.7@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_008" model="erpobe.master.mahasiswa">
+        <field name="name">Hesti Wijaya 2022</field>
+        <field name="nim">2022SI008</field>
+        <field name="email">mhs.si.2022.8@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_009" model="erpobe.master.mahasiswa">
+        <field name="name">Indra Wijaya 2022</field>
+        <field name="nim">2022SI009</field>
+        <field name="email">mhs.si.2022.9@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_010" model="erpobe.master.mahasiswa">
+        <field name="name">Joko Wijaya 2022</field>
+        <field name="nim">2022SI010</field>
+        <field name="email">mhs.si.2022.10@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_011" model="erpobe.master.mahasiswa">
+        <field name="name">Krisna Wijaya 2022</field>
+        <field name="nim">2022SI011</field>
+        <field name="email">mhs.si.2022.11@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_012" model="erpobe.master.mahasiswa">
+        <field name="name">Lestari Wijaya 2022</field>
+        <field name="nim">2022SI012</field>
+        <field name="email">mhs.si.2022.12@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_013" model="erpobe.master.mahasiswa">
+        <field name="name">Mahendra Wijaya 2022</field>
+        <field name="nim">2022SI013</field>
+        <field name="email">mhs.si.2022.13@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_014" model="erpobe.master.mahasiswa">
+        <field name="name">Nia Wijaya 2022</field>
+        <field name="nim">2022SI014</field>
+        <field name="email">mhs.si.2022.14@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_015" model="erpobe.master.mahasiswa">
+        <field name="name">Omar Wijaya 2022</field>
+        <field name="nim">2022SI015</field>
+        <field name="email">mhs.si.2022.15@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_016" model="erpobe.master.mahasiswa">
+        <field name="name">Putri Wijaya 2022</field>
+        <field name="nim">2022SI016</field>
+        <field name="email">mhs.si.2022.16@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_017" model="erpobe.master.mahasiswa">
+        <field name="name">Rizki Wijaya 2022</field>
+        <field name="nim">2022SI017</field>
+        <field name="email">mhs.si.2022.17@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_018" model="erpobe.master.mahasiswa">
+        <field name="name">Sari Wijaya 2022</field>
+        <field name="nim">2022SI018</field>
+        <field name="email">mhs.si.2022.18@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_019" model="erpobe.master.mahasiswa">
+        <field name="name">Taufik Wijaya 2022</field>
+        <field name="nim">2022SI019</field>
+        <field name="email">mhs.si.2022.19@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_020" model="erpobe.master.mahasiswa">
+        <field name="name">Winda Wijaya 2022</field>
+        <field name="nim">2022SI020</field>
+        <field name="email">mhs.si.2022.20@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_021" model="erpobe.master.mahasiswa">
+        <field name="name">Yoga Wijaya 2022</field>
+        <field name="nim">2022SI021</field>
+        <field name="email">mhs.si.2022.21@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_022" model="erpobe.master.mahasiswa">
+        <field name="name">Zahra Wijaya 2022</field>
+        <field name="nim">2022SI022</field>
+        <field name="email">mhs.si.2022.22@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_023" model="erpobe.master.mahasiswa">
+        <field name="name">Bagus Wijaya 2022</field>
+        <field name="nim">2022SI023</field>
+        <field name="email">mhs.si.2022.23@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_si_2022_024" model="erpobe.master.mahasiswa">
+        <field name="name">Dewi Wijaya 2022</field>
+        <field name="nim">2022SI024</field>
+        <field name="email">mhs.si.2022.24@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_si_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_si_1" />
+    </record>
+    <record id="mhs_mf_2022_001" model="erpobe.master.mahasiswa">
+        <field name="name">Ahmad Wijaya 2022</field>
+        <field name="nim">2022MF001</field>
+        <field name="email">mhs.mf.2022.1@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_002" model="erpobe.master.mahasiswa">
+        <field name="name">Budi Wijaya 2022</field>
+        <field name="nim">2022MF002</field>
+        <field name="email">mhs.mf.2022.2@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_003" model="erpobe.master.mahasiswa">
+        <field name="name">Citra Wijaya 2022</field>
+        <field name="nim">2022MF003</field>
+        <field name="email">mhs.mf.2022.3@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_004" model="erpobe.master.mahasiswa">
+        <field name="name">Dedi Wijaya 2022</field>
+        <field name="nim">2022MF004</field>
+        <field name="email">mhs.mf.2022.4@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_005" model="erpobe.master.mahasiswa">
+        <field name="name">Eka Wijaya 2022</field>
+        <field name="nim">2022MF005</field>
+        <field name="email">mhs.mf.2022.5@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_006" model="erpobe.master.mahasiswa">
+        <field name="name">Fajar Wijaya 2022</field>
+        <field name="nim">2022MF006</field>
+        <field name="email">mhs.mf.2022.6@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_007" model="erpobe.master.mahasiswa">
+        <field name="name">Galih Wijaya 2022</field>
+        <field name="nim">2022MF007</field>
+        <field name="email">mhs.mf.2022.7@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_008" model="erpobe.master.mahasiswa">
+        <field name="name">Hesti Wijaya 2022</field>
+        <field name="nim">2022MF008</field>
+        <field name="email">mhs.mf.2022.8@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_009" model="erpobe.master.mahasiswa">
+        <field name="name">Indra Wijaya 2022</field>
+        <field name="nim">2022MF009</field>
+        <field name="email">mhs.mf.2022.9@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_010" model="erpobe.master.mahasiswa">
+        <field name="name">Joko Wijaya 2022</field>
+        <field name="nim">2022MF010</field>
+        <field name="email">mhs.mf.2022.10@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_011" model="erpobe.master.mahasiswa">
+        <field name="name">Krisna Wijaya 2022</field>
+        <field name="nim">2022MF011</field>
+        <field name="email">mhs.mf.2022.11@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_012" model="erpobe.master.mahasiswa">
+        <field name="name">Lestari Wijaya 2022</field>
+        <field name="nim">2022MF012</field>
+        <field name="email">mhs.mf.2022.12@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_013" model="erpobe.master.mahasiswa">
+        <field name="name">Mahendra Wijaya 2022</field>
+        <field name="nim">2022MF013</field>
+        <field name="email">mhs.mf.2022.13@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_014" model="erpobe.master.mahasiswa">
+        <field name="name">Nia Wijaya 2022</field>
+        <field name="nim">2022MF014</field>
+        <field name="email">mhs.mf.2022.14@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_015" model="erpobe.master.mahasiswa">
+        <field name="name">Omar Wijaya 2022</field>
+        <field name="nim">2022MF015</field>
+        <field name="email">mhs.mf.2022.15@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_016" model="erpobe.master.mahasiswa">
+        <field name="name">Putri Wijaya 2022</field>
+        <field name="nim">2022MF016</field>
+        <field name="email">mhs.mf.2022.16@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_017" model="erpobe.master.mahasiswa">
+        <field name="name">Rizki Wijaya 2022</field>
+        <field name="nim">2022MF017</field>
+        <field name="email">mhs.mf.2022.17@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_018" model="erpobe.master.mahasiswa">
+        <field name="name">Sari Wijaya 2022</field>
+        <field name="nim">2022MF018</field>
+        <field name="email">mhs.mf.2022.18@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_019" model="erpobe.master.mahasiswa">
+        <field name="name">Taufik Wijaya 2022</field>
+        <field name="nim">2022MF019</field>
+        <field name="email">mhs.mf.2022.19@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_020" model="erpobe.master.mahasiswa">
+        <field name="name">Winda Wijaya 2022</field>
+        <field name="nim">2022MF020</field>
+        <field name="email">mhs.mf.2022.20@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_021" model="erpobe.master.mahasiswa">
+        <field name="name">Yoga Wijaya 2022</field>
+        <field name="nim">2022MF021</field>
+        <field name="email">mhs.mf.2022.21@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_022" model="erpobe.master.mahasiswa">
+        <field name="name">Zahra Wijaya 2022</field>
+        <field name="nim">2022MF022</field>
+        <field name="email">mhs.mf.2022.22@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_023" model="erpobe.master.mahasiswa">
+        <field name="name">Bagus Wijaya 2022</field>
+        <field name="nim">2022MF023</field>
+        <field name="email">mhs.mf.2022.23@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_mf_2022_024" model="erpobe.master.mahasiswa">
+        <field name="name">Dewi Wijaya 2022</field>
+        <field name="nim">2022MF024</field>
+        <field name="email">mhs.mf.2022.24@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_mf_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_mf_1" />
+    </record>
+    <record id="mhs_el_2022_001" model="erpobe.master.mahasiswa">
+        <field name="name">Ahmad Wijaya 2022</field>
+        <field name="nim">2022EL001</field>
+        <field name="email">mhs.el.2022.1@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
         <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
     </record>
-    <record id="partner_el_mhs_2" model="res.partner">
-        <field name="name">Citra Lestari</field>
-        <field name="email">mahasiswa.el.002@example.test</field>
-    </record>
-    <record id="mhs_el_2" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_el_mhs_2" />
-        <field name="name">Citra Lestari</field>
-        <field name="nim">2026EL002</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+    <record id="mhs_el_2022_002" model="erpobe.master.mahasiswa">
+        <field name="name">Budi Wijaya 2022</field>
+        <field name="nim">2022EL002</field>
+        <field name="email">mhs.el.2022.2@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
         <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
     </record>
-    <record id="partner_el_mhs_3" model="res.partner">
-        <field name="name">Aditya Firmansyah</field>
-        <field name="email">mahasiswa.el.003@example.test</field>
-    </record>
-    <record id="mhs_el_3" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_el_mhs_3" />
-        <field name="name">Aditya Firmansyah</field>
-        <field name="nim">2026EL003</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+    <record id="mhs_el_2022_003" model="erpobe.master.mahasiswa">
+        <field name="name">Citra Wijaya 2022</field>
+        <field name="nim">2022EL003</field>
+        <field name="email">mhs.el.2022.3@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
         <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
     </record>
-    <record id="partner_el_mhs_4" model="res.partner">
-        <field name="name">Rizky Hidayat</field>
-        <field name="email">mahasiswa.el.004@example.test</field>
-    </record>
-    <record id="mhs_el_4" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_el_mhs_4" />
-        <field name="name">Rizky Hidayat</field>
-        <field name="nim">2026EL004</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+    <record id="mhs_el_2022_004" model="erpobe.master.mahasiswa">
+        <field name="name">Dedi Wijaya 2022</field>
+        <field name="nim">2022EL004</field>
+        <field name="email">mhs.el.2022.4@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
         <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
     </record>
-    <record id="partner_el_mhs_5" model="res.partner">
-        <field name="name">Sabrina Noor</field>
-        <field name="email">mahasiswa.el.005@example.test</field>
-    </record>
-    <record id="mhs_el_5" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_el_mhs_5" />
-        <field name="name">Sabrina Noor</field>
-        <field name="nim">2026EL005</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+    <record id="mhs_el_2022_005" model="erpobe.master.mahasiswa">
+        <field name="name">Eka Wijaya 2022</field>
+        <field name="nim">2022EL005</field>
+        <field name="email">mhs.el.2022.5@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
         <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="True" />
     </record>
-    <record id="partner_el_mhs_6" model="res.partner">
-        <field name="name">Vega Pratama</field>
-        <field name="email">mahasiswa.el.006@example.test</field>
-    </record>
-    <record id="mhs_el_6" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_el_mhs_6" />
-        <field name="name">Vega Pratama</field>
-        <field name="nim">2026EL006</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_el_2026_a" />
+    <record id="mhs_el_2022_006" model="erpobe.master.mahasiswa">
+        <field name="name">Fajar Wijaya 2022</field>
+        <field name="nim">2022EL006</field>
+        <field name="email">mhs.el.2022.6@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
         <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
     </record>
-    <record id="partner_ind_dosen_1" model="res.partner">
-        <field name="name">Fadli Nugraha, S.T.</field>
-        <field name="email">dosen.in.01@example.test</field>
+    <record id="mhs_el_2022_007" model="erpobe.master.mahasiswa">
+        <field name="name">Galih Wijaya 2022</field>
+        <field name="nim">2022EL007</field>
+        <field name="email">mhs.el.2022.7@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="dosen_ind_1" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_ind_dosen_1" />
-        <field name="name">Fadli Nugraha, S.T.</field>
-        <field name="nip">1987001011</field>
-        <field name="jabatan_fungsional">Asisten Ahli</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ind')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_008" model="erpobe.master.mahasiswa">
+        <field name="name">Hesti Wijaya 2022</field>
+        <field name="nim">2022EL008</field>
+        <field name="email">mhs.el.2022.8@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_dosen_2" model="res.partner">
-        <field name="name">Mira Lestari, M.T.</field>
-        <field name="email">dosen.in.02@example.test</field>
+    <record id="mhs_el_2022_009" model="erpobe.master.mahasiswa">
+        <field name="name">Indra Wijaya 2022</field>
+        <field name="nim">2022EL009</field>
+        <field name="email">mhs.el.2022.9@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="dosen_ind_2" model="erpobe.master.dosen">
-        <field name="partner_id" ref="erpobe.partner_ind_dosen_2" />
-        <field name="name">Mira Lestari, M.T.</field>
-        <field name="nip">1987001012</field>
-        <field name="jabatan_fungsional">Lektor</field>
-        <field name="prodi_ids" eval="[(6, 0, [ref('erpobe.prodi_ind')])]" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_010" model="erpobe.master.mahasiswa">
+        <field name="name">Joko Wijaya 2022</field>
+        <field name="nim">2022EL010</field>
+        <field name="email">mhs.el.2022.10@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_mhs_1" model="res.partner">
-        <field name="name">Maya Sari</field>
-        <field name="email">mahasiswa.in.001@example.test</field>
+    <record id="mhs_el_2022_011" model="erpobe.master.mahasiswa">
+        <field name="name">Krisna Wijaya 2022</field>
+        <field name="nim">2022EL011</field>
+        <field name="email">mhs.el.2022.11@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="mhs_ind_1" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ind_mhs_1" />
-        <field name="name">Maya Sari</field>
-        <field name="nim">2026IN001</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_012" model="erpobe.master.mahasiswa">
+        <field name="name">Lestari Wijaya 2022</field>
+        <field name="nim">2022EL012</field>
+        <field name="email">mhs.el.2022.12@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_a" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_mhs_2" model="res.partner">
-        <field name="name">Farel Nanda</field>
-        <field name="email">mahasiswa.in.002@example.test</field>
+    <record id="mhs_el_2022_013" model="erpobe.master.mahasiswa">
+        <field name="name">Mahendra Wijaya 2022</field>
+        <field name="nim">2022EL013</field>
+        <field name="email">mhs.el.2022.13@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="mhs_ind_2" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ind_mhs_2" />
-        <field name="name">Farel Nanda</field>
-        <field name="nim">2026IN002</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_014" model="erpobe.master.mahasiswa">
+        <field name="name">Nia Wijaya 2022</field>
+        <field name="nim">2022EL014</field>
+        <field name="email">mhs.el.2022.14@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_mhs_3" model="res.partner">
-        <field name="name">Hana Rahma</field>
-        <field name="email">mahasiswa.in.003@example.test</field>
+    <record id="mhs_el_2022_015" model="erpobe.master.mahasiswa">
+        <field name="name">Omar Wijaya 2022</field>
+        <field name="nim">2022EL015</field>
+        <field name="email">mhs.el.2022.15@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="mhs_ind_3" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ind_mhs_3" />
-        <field name="name">Hana Rahma</field>
-        <field name="nim">2026IN003</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_016" model="erpobe.master.mahasiswa">
+        <field name="name">Putri Wijaya 2022</field>
+        <field name="nim">2022EL016</field>
+        <field name="email">mhs.el.2022.16@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_mhs_4" model="res.partner">
-        <field name="name">Dimas Akbar</field>
-        <field name="email">mahasiswa.in.004@example.test</field>
+    <record id="mhs_el_2022_017" model="erpobe.master.mahasiswa">
+        <field name="name">Rizki Wijaya 2022</field>
+        <field name="nim">2022EL017</field>
+        <field name="email">mhs.el.2022.17@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="mhs_ind_4" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ind_mhs_4" />
-        <field name="name">Dimas Akbar</field>
-        <field name="nim">2026IN004</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_018" model="erpobe.master.mahasiswa">
+        <field name="name">Sari Wijaya 2022</field>
+        <field name="nim">2022EL018</field>
+        <field name="email">mhs.el.2022.18@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_mhs_5" model="res.partner">
-        <field name="name">Aisyah Putri</field>
-        <field name="email">mahasiswa.in.005@example.test</field>
+    <record id="mhs_el_2022_019" model="erpobe.master.mahasiswa">
+        <field name="name">Taufik Wijaya 2022</field>
+        <field name="nim">2022EL019</field>
+        <field name="email">mhs.el.2022.19@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="mhs_ind_5" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ind_mhs_5" />
-        <field name="name">Aisyah Putri</field>
-        <field name="nim">2026IN005</field>
-        <field name="status_akademik">aktif</field>
-        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
-        <field name="is_public_visible" eval="False" />
-        <field name="public_opt_out" eval="True" />
+    <record id="mhs_el_2022_020" model="erpobe.master.mahasiswa">
+        <field name="name">Winda Wijaya 2022</field>
+        <field name="nim">2022EL020</field>
+        <field name="email">mhs.el.2022.20@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="partner_ind_mhs_6" model="res.partner">
-        <field name="name">Yusuf Hadi</field>
-        <field name="email">mahasiswa.in.006@example.test</field>
+    <record id="mhs_el_2022_021" model="erpobe.master.mahasiswa">
+        <field name="name">Yoga Wijaya 2022</field>
+        <field name="nim">2022EL021</field>
+        <field name="email">mhs.el.2022.21@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
-    <record id="mhs_ind_6" model="erpobe.master.mahasiswa">
-        <field name="partner_id" ref="erpobe.partner_ind_mhs_6" />
-        <field name="name">Yusuf Hadi</field>
-        <field name="nim">2026IN006</field>
-        <field name="status_akademik">cuti</field>
-        <field name="rombel_id" ref="erpobe.rombel_ind_2026_a" />
-        <field name="dosen_wali_id" ref="erpobe.dosen_ind_1" />
-        <field name="is_public_visible" eval="True" />
-        <field name="public_opt_out" eval="False" />
+    <record id="mhs_el_2022_022" model="erpobe.master.mahasiswa">
+        <field name="name">Zahra Wijaya 2022</field>
+        <field name="nim">2022EL022</field>
+        <field name="email">mhs.el.2022.22@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+    </record>
+    <record id="mhs_el_2022_023" model="erpobe.master.mahasiswa">
+        <field name="name">Bagus Wijaya 2022</field>
+        <field name="nim">2022EL023</field>
+        <field name="email">mhs.el.2022.23@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
+    </record>
+    <record id="mhs_el_2022_024" model="erpobe.master.mahasiswa">
+        <field name="name">Dewi Wijaya 2022</field>
+        <field name="nim">2022EL024</field>
+        <field name="email">mhs.el.2022.24@example.com</field>
+        <field name="rombel_id" ref="erpobe.rombel_el_2022_b" />
+        <field name="dosen_wali_id" ref="erpobe.dosen_el_1" />
     </record>
 </odoo>

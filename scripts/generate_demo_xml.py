@@ -8,27 +8,6 @@ DATA_DIR = ROOT / 'data'
 DATA_DIR.mkdir(exist_ok=True)
 
 PRODIS = {
-    'ti': {
-        'name': 'Teknik Informatika',
-        'code': 'IF',
-        'cpls': [
-            ('CPL-01', 'Menunjukkan sikap religius, etis, dan bertanggung jawab dalam tugas akademik.', 'sikap'),
-            ('CPL-02', 'Menguasai konsep algoritma, struktur data, dan analisis sistem informasi.', 'pengetahuan'),
-            ('CPL-03', 'Merancang solusi perangkat lunak yang aman, terukur, dan ramah pengguna.', 'keterampilan_khusus'),
-            ('CPL-04', 'Menganalisis kebutuhan sistem lalu merumuskan spesifikasi fungsional.', 'keterampilan_umum'),
-            ('CPL-05', 'Mendesain dan menguji antarmuka serta fitur perangkat lunak.', 'keterampilan_khusus'),
-            ('CPL-06', 'Mengoperasikan basis data dan query SQL untuk kebutuhan bisnis.', 'pengetahuan'),
-            ('CPL-07', 'Memecahkan persoalan teknologi informasi dengan pendekatan ilmiah.', 'keterampilan_umum'),
-            ('CPL-08', 'Bekerja dalam tim dan menyampaikan hasil secara efektif.', 'sikap'),
-        ],
-        'courses': [
-            ('IF101', 'Algoritma dan Struktur Data', 3, 1, 'T'),
-            ('IF102', 'Basis Data', 3, 2, 'T'),
-            ('IF203', 'Rekayasa Perangkat Lunak', 4, 3, 'T'),
-            ('IF204', 'Jaringan Komputer', 3, 4, 'T'),
-            ('IF205', 'Kecerdasan Buatan', 3, 5, 'T'),
-        ],
-    },
     'si': {
         'name': 'Teknik Sipil',
         'code': 'SI',
@@ -50,9 +29,9 @@ PRODIS = {
             ('SI205', 'Transportasi dan Perkerasan', 3, 5, 'T'),
         ],
     },
-    'me': {
-        'name': 'Teknik Mesin',
-        'code': 'ME',
+    'mf': {
+        'name': 'Teknik Manufaktur',
+        'code': 'MF',
         'cpls': [
             ('CPL-01', 'Menunjukkan sikap profesional dan bertanggung jawab dalam praktik mekanik.', 'sikap'),
             ('CPL-02', 'Menguasai prinsip termodinamika dan mekanika fluida.', 'pengetahuan'),
@@ -64,11 +43,11 @@ PRODIS = {
             ('CPL-08', 'Mengkomunikasikan hasil desain teknis secara efektif.', 'sikap'),
         ],
         'courses': [
-            ('ME101', 'Termodinamika', 3, 2, 'T'),
-            ('ME102', 'Mekanika Fluida', 3, 2, 'T'),
-            ('ME203', 'Desain Mesin', 4, 3, 'T'),
-            ('ME204', 'Proses Manufaktur', 3, 4, 'T'),
-            ('ME205', 'CAD/CAM', 3, 5, 'T'),
+            ('MF101', 'Termodinamika', 3, 2, 'T'),
+            ('MF102', 'Mekanika Fluida', 3, 2, 'T'),
+            ('MF203', 'Desain Mesin', 4, 3, 'T'),
+            ('MF204', 'Proses Manufaktur', 3, 4, 'T'),
+            ('MF205', 'CAD/CAM', 3, 5, 'T'),
         ],
     },
     'el': {

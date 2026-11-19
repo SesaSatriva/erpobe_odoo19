@@ -50,14 +50,44 @@
         <field name="semester">genap</field>
         <field name="aktif" eval="False" />
     </record>
-    <record id="rombel_ti_2026_a" model="erpobe.master.rombel">
+    <record id="rombel_in_2026_a" model="erpobe.master.rombel">
         <field name="name">A</field>
         <field name="angkatan">2026</field>
         <field name="prodi_id" ref="erpobe.prodi_ti" />
     </record>
-    <record id="rombel_ti_2025_a" model="erpobe.master.rombel">
+    <record id="rombel_in_2022_a" model="erpobe.master.rombel">
         <field name="name">A</field>
-        <field name="angkatan">2025</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_in_2026_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_in_2022_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_in_2026_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_in_2022_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_in_2026_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_ti" />
+    </record>
+    <record id="rombel_in_2022_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2022</field>
         <field name="prodi_id" ref="erpobe.prodi_ti" />
     </record>
     <record id="rombel_si_2026_a" model="erpobe.master.rombel">
@@ -65,39 +95,119 @@
         <field name="angkatan">2026</field>
         <field name="prodi_id" ref="erpobe.prodi_si" />
     </record>
-    <record id="rombel_si_2025_a" model="erpobe.master.rombel">
+    <record id="rombel_si_2022_a" model="erpobe.master.rombel">
         <field name="name">A</field>
-        <field name="angkatan">2025</field>
+        <field name="angkatan">2022</field>
         <field name="prodi_id" ref="erpobe.prodi_si" />
     </record>
-    <record id="rombel_me_2026_a" model="erpobe.master.rombel">
+    <record id="rombel_si_2026_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_si_2022_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_si_2026_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_si_2022_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_si_2026_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_si_2022_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_si" />
+    </record>
+    <record id="rombel_mf_2026_a" model="erpobe.master.rombel">
         <field name="name">A</field>
         <field name="angkatan">2026</field>
-        <field name="prodi_id" ref="erpobe.prodi_me" />
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
     </record>
-    <record id="rombel_me_2025_a" model="erpobe.master.rombel">
+    <record id="rombel_mf_2022_a" model="erpobe.master.rombel">
         <field name="name">A</field>
-        <field name="angkatan">2025</field>
-        <field name="prodi_id" ref="erpobe.prodi_me" />
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
+    </record>
+    <record id="rombel_mf_2026_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
+    </record>
+    <record id="rombel_mf_2022_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
+    </record>
+    <record id="rombel_mf_2026_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
+    </record>
+    <record id="rombel_mf_2022_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
+    </record>
+    <record id="rombel_mf_2026_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
+    </record>
+    <record id="rombel_mf_2022_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_mf" />
     </record>
     <record id="rombel_el_2026_a" model="erpobe.master.rombel">
         <field name="name">A</field>
         <field name="angkatan">2026</field>
         <field name="prodi_id" ref="erpobe.prodi_el" />
     </record>
-    <record id="rombel_el_2025_a" model="erpobe.master.rombel">
+    <record id="rombel_el_2022_a" model="erpobe.master.rombel">
         <field name="name">A</field>
-        <field name="angkatan">2025</field>
+        <field name="angkatan">2022</field>
         <field name="prodi_id" ref="erpobe.prodi_el" />
     </record>
-    <record id="rombel_ind_2026_a" model="erpobe.master.rombel">
-        <field name="name">A</field>
+    <record id="rombel_el_2026_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
         <field name="angkatan">2026</field>
-        <field name="prodi_id" ref="erpobe.prodi_ind" />
+        <field name="prodi_id" ref="erpobe.prodi_el" />
     </record>
-    <record id="rombel_ind_2025_a" model="erpobe.master.rombel">
-        <field name="name">A</field>
-        <field name="angkatan">2025</field>
-        <field name="prodi_id" ref="erpobe.prodi_ind" />
+    <record id="rombel_el_2022_b" model="erpobe.master.rombel">
+        <field name="name">B</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="rombel_el_2026_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="rombel_el_2022_c" model="erpobe.master.rombel">
+        <field name="name">C</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="rombel_el_2026_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2026</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
+    </record>
+    <record id="rombel_el_2022_d" model="erpobe.master.rombel">
+        <field name="name">D</field>
+        <field name="angkatan">2022</field>
+        <field name="prodi_id" ref="erpobe.prodi_el" />
     </record>
 </odoo>

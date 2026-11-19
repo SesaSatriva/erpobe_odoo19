@@ -1,6 +1,6 @@
 {
     "name": "OBE Management",
-    "version": "19.0.2.1.0",
+    "version": "19.0.2.2.0",
     "category": "Education",
     "author": "Sesa Nugroho Satriva",
     "license": "LGPL-3",

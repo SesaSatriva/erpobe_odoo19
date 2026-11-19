@@ -1,7 +1,3 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo noupdate="1">
-    <record id="grade_cpl_demo_ti_1" model="erpobe.grade.cpl">
-        <field name="mahasiswa_id" ref="erpobe.mhs_ti_1" />
-        <field name="cpl_id" ref="erpobe.cpl_ti_01" />
-    </record>
 </odoo>

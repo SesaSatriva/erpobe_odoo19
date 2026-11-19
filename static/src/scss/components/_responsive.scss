@@ -46,6 +46,10 @@
   .o_triton_filter-grid {
     grid-template-columns: 1fr;
   }
+  .o_triton_brand-logo {
+    width: 150px;
+    height: 54px;
+  }
   .o_triton_nav-inner {
     flex-wrap: wrap;
     padding: 16px 0;
@@ -95,6 +99,10 @@
 }
 
 @media (max-width: 980px) {
+  .o_triton_profile-grid {
+    grid-template-columns: 1fr;
+  }
+
   .o_triton_desktop-links {
     display: none;
   }
@@ -140,6 +148,44 @@
 @media (max-width: 640px) {
   .o_triton_container {
     width: calc(100% - 24px);
+  }
+
+  .o_triton_portal-nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 10px 12px;
+  }
+
+  .o_triton_portal-nav > .o_triton_brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .o_triton_portal-nav > .o_triton_btn-ghost {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    min-height: 36px;
+    padding: 7px 10px;
+  }
+
+  .o_triton_portal-links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 14px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .o_triton_portal-links a {
+    flex: 0 0 auto;
   }
 
   .o_triton_hero {

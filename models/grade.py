@@ -235,3 +235,75 @@ class ErpObeGradeKomponen(models.Model):
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
+
+    def write(self, vals):
+        if "nilai" in vals:
+            Audit = self.env["erpobe.grade.komponen.audit"].sudo()
+            for grade in self:
+                old_value = grade.nilai
+                new_value = float(vals["nilai"])
+                if old_value != new_value:
+                    Audit.create({
+                        "grade_id": grade.id,
+                        "krs_line_id": grade.krs_line_id.id,
+                        "komponen_id": grade.komponen_id.id,
+                        "mahasiswa_id": grade.mahasiswa_id.id,
+                        "penawaran_line_id": grade.krs_line_id.penawaran_line_id.id,
+                        "user_id": self.env.user.id,
+                        "old_value": old_value,
+                        "new_value": new_value,
+                        "reason": vals.get("audit_reason", ""),
+                    })
+        vals.pop("audit_reason", None)
+        return super().write(vals)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        Audit = self.env["erpobe.grade.komponen.audit"].sudo()
+        for grade in records:
+            if grade.nilai:
+                Audit.create({
+                    "grade_id": grade.id,
+                    "krs_line_id": grade.krs_line_id.id,
+                    "komponen_id": grade.komponen_id.id,
+                    "mahasiswa_id": grade.mahasiswa_id.id,
+                    "penawaran_line_id": grade.krs_line_id.penawaran_line_id.id,
+                    "user_id": self.env.user.id,
+                    "old_value": 0.0,
+                    "new_value": grade.nilai,
+                    "reason": "Initial grade entry",
+                })
+        return records
+
+
+class ErpObeGradeKomponenAudit(models.Model):
+    _name = "erpobe.grade.komponen.audit"
+    _description = "Riwayat Perubahan Nilai Komponen"
+    _order = "create_date desc, id desc"
+
+    grade_id = fields.Many2one(
+        "erpobe.grade.komponen", required=True, ondelete="restrict", readonly=True
+    )
+    krs_line_id = fields.Many2one(
+        "erpobe.akademik.krs.line", required=True, ondelete="restrict", readonly=True
+    )
+    penawaran_line_id = fields.Many2one(
+        "erpobe.akademik.penawaran.line", required=True, ondelete="restrict", readonly=True
+    )
+    komponen_id = fields.Many2one(
+        "erpobe.akademik.komponen", required=True, ondelete="restrict", readonly=True
+    )
+    mahasiswa_id = fields.Many2one(
+        "erpobe.master.mahasiswa", required=True, ondelete="restrict", readonly=True
+    )
+    user_id = fields.Many2one("res.users", required=True, readonly=True)
+    old_value = fields.Float(digits=(16, 2), readonly=True)
+    new_value = fields.Float(digits=(16, 2), readonly=True)
+    reason = fields.Char(readonly=True)
+
+    def write(self, vals):
+        raise ValidationError("Riwayat penilaian bersifat immutable.")
+
+    def unlink(self):
+        raise ValidationError("Riwayat penilaian tidak boleh dihapus.")

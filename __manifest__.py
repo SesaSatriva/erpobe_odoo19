@@ -11,6 +11,7 @@
             "erpobe/static/src/scss/primary_variables.scss",
         ],
         "web.assets_frontend": [
+            ("include", "web.chartjs_lib"),
             "erpobe/static/src/scss/_tokens.scss",
             "erpobe/static/src/scss/components/_navigation.scss",
             "erpobe/static/src/scss/components/_hero.scss",
@@ -21,6 +22,7 @@
             "erpobe/static/src/scss/components/_responsive.scss",
             "erpobe/static/src/scss/pages/_professional.scss",
             "erpobe/static/src/js/print.js",
+            "erpobe/static/src/js/portal_dashboard.js",
         ],
     },
     "data": [
@@ -36,6 +38,7 @@
         "views/master_grade_views.xml",
         "views/website/components/website_navigation.xml",
         "views/website/components/portal_navigation.xml",
+        "views/website/components/login_branding.xml",
         "views/website/public/website_about.xml",
         "views/website/public/website_comparison.xml",
         "views/website/public/website_contact.xml",

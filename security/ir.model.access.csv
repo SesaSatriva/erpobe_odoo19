@@ -113,6 +113,9 @@ access_erpobe_grade_cpmk_admin,access.erpobe.grade.cpmk.admin,model_erpobe_grade
 access_erpobe_grade_cpmk_dosen,access.erpobe.grade.cpmk.dosen,model_erpobe_grade_cpmk,erpobe.group_dosen,1,1,1,1
 access_erpobe_grade_cpmk_mahasiswa,access.erpobe.grade.cpmk.mahasiswa,model_erpobe_grade_cpmk,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_grade_komponen_settings,erpobe.grade.komponen settings,model_erpobe_grade_komponen,base.group_system,1,1,1,1
+access_erpobe_grade_komponen_audit_settings,erpobe.grade.komponen.audit settings,model_erpobe_grade_komponen_audit,base.group_system,1,0,0,0
+access_erpobe_grade_komponen_audit_admin,erpobe.grade.komponen.audit admin,model_erpobe_grade_komponen_audit,erpobe.group_admin,1,0,0,0
+access_erpobe_grade_komponen_audit_dosen,erpobe.grade.komponen.audit dosen,model_erpobe_grade_komponen_audit,erpobe.group_dosen,1,0,1,0
 access_erpobe_grade_komponen_admin,access.erpobe.grade.komponen.admin,model_erpobe_grade_komponen,erpobe.group_admin,1,1,1,1
 access_erpobe_grade_komponen_dosen,access.erpobe.grade.komponen.dosen,model_erpobe_grade_komponen,erpobe.group_dosen,1,1,1,1
 access_erpobe_grade_mk_settings,erpobe.grade.mk settings,model_erpobe_grade_mk,base.group_system,1,1,1,1

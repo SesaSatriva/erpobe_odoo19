@@ -9,6 +9,23 @@ from .portal_base import TritonPortalBase
 
 class TritonPortalDosen(TritonPortalBase):
 
+    @http.route('/my/riwayat-nilai', type='http', auth='user', website=True)
+    def triton_grade_history(self, **kwargs):
+        teacher = self._require_teacher()
+        line_ids = self._teacher_lines(teacher).ids
+        Audit = request.env['erpobe.grade.komponen.audit'].sudo()
+        records = Audit.search([('penawaran_line_id', 'in', line_ids)], order='create_date desc, id desc')
+        data = [{
+            'time': record.create_date,
+            'user': record.user_id.name,
+            'student': record.mahasiswa_id.name,
+            'component': record.komponen_id.name,
+            'old': record.old_value,
+            'new': record.new_value,
+            'reason': record.reason or '',
+        } for record in records]
+        return request.render('erpobe.triton_grade_history_page', {'history': data})
+
     @http.route('/my/rps', type='http', auth='user', website=True)
     def triton_teacher_rps(self, **kwargs):
         teacher = self._require_teacher()

@@ -30,16 +30,22 @@
   text-decoration: none;
 }
 
-.o_triton_brand-mark {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 6px;
-  background: var(--triton-primary);
-  box-shadow: none;
-  font-size: 14px;
-  color: #fff;
+.o_triton_brand-logo {
+  display: block;
+  width: 180px;
+  max-width: 52vw;
+  height: 64px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.o_triton_login-logo {
+  display: inline-block;
+  width: 180px;
+  max-width: 80vw;
+  height: 64px;
+  object-fit: contain;
+  object-position: center;
 }
 
 .o_triton_nav-links {

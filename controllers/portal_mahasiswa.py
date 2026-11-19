@@ -98,8 +98,40 @@ class TritonPortalMahasiswa(TritonPortalBase):
         if not student and (not teacher):
             raise AccessError('Akun ini tidak terhubung ke profil akademik.')
         message = ''
+        error = ''
         if request.httprequest.method == 'POST':
             profile = student or teacher
-            profile.sudo().write({'public_opt_out': request.httprequest.form.get('public_opt_out') == '1'})
-            message = 'Preferensi privasi berhasil disimpan.'
-        return request.render('erpobe.triton_student_profile_page', {'student': student, 'teacher': teacher, 'message': message})
+            form = request.httprequest.form
+            allowed_partner_vals = {
+                'name': form.get('name', '').strip(),
+                'email': form.get('email', '').strip(),
+                'phone': form.get('phone', '').strip(),
+                'street': form.get('street', '').strip(),
+                'city': form.get('city', '').strip(),
+            }
+            if not allowed_partner_vals['name']:
+                error = 'Nama tidak boleh kosong.'
+            elif not allowed_partner_vals['email']:
+                error = 'Email tidak boleh kosong.'
+            else:
+                try:
+                    with request.env.cr.savepoint():
+                        profile.partner_id.sudo().write(allowed_partner_vals)
+                        profile.sudo().write({
+                            'public_opt_out': form.get('public_opt_out') == '1',
+                        })
+                        profile.user_id.sudo().with_context(skip_sync_user_type=True).write({
+                            'name': allowed_partner_vals['name'],
+                            'email': allowed_partner_vals['email'],
+                        })
+                    message = 'Profil dan preferensi privasi berhasil disimpan.'
+                except (ValidationError, UserError) as exc:
+                    error = str(exc)
+        profile_partner = (student or teacher).partner_id
+        return request.render('erpobe.triton_student_profile_page', {
+            'student': student,
+            'teacher': teacher,
+            'profile_partner': profile_partner,
+            'message': message,
+            'error': error,
+        })

@@ -3,44 +3,197 @@
     <template id="triton_portal_home_page" name="Beranda Portal">
         <t t-call="website.layout">
             <t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
-            <main class="o_triton_page o_triton_portal-page">
+            <main class="o_triton_page o_triton_portal-page o_triton_dashboard">
                 <t t-call="erpobe.triton_portal_nav"/>
                 <section class="o_triton_section">
                     <div class="o_triton_container">
-                        <header class="o_triton_heading">
-                            <div><span class="o_triton_eyebrow">Portal <t t-out="role"/></span><h1>Selamat datang, <t t-out="user_name"/></h1><p class="o_triton_subtitle">Ikhtisar aktivitas akademik Anda dan akses cepat ke fitur yang relevan.</p></div>
+                        <header class="o_triton_dashboard-header">
+                            <div>
+                                <span class="o_triton_eyebrow">Ruang kerja <t t-out="role"/></span>
+                                <h1>Selamat datang, <t t-out="user_name"/></h1>
+                                <p class="o_triton_subtitle" t-if="role == 'Mahasiswa'">Ringkasan studi dan tindak lanjut akademik Anda.</p>
+                                <p class="o_triton_subtitle" t-elif="role == 'Dosen'">Kelas, penilaian, dan tindak lanjut pengajaran dalam satu ruang kerja.</p>
+                                <p class="o_triton_subtitle" t-else="">Akun ini belum terhubung ke profil akademik.</p>
+                            </div>
+                            <span t-if="role == 'Mahasiswa' and dashboard['krs_label']" class="o_triton_dashboard-term">
+                                <span>Periode aktif</span>
+                                <strong t-out="dashboard['krs_label']"/>
+                            </span>
                         </header>
-                        <div class="o_triton_stat-grid o_triton_section-heading">
-                            <article class="o_triton_stat-card">
-                                <span>Peran</span>
-                                <strong t-out="role"/>
-                            </article>
-                            <article class="o_triton_stat-card">
-                                <span>Status akun</span>
-                                <strong t-out="summary['profile_status']"/>
-                            </article>
-                            <article class="o_triton_stat-card">
-                                <span>Tugas tertunda</span>
-                                <strong t-out="summary['pending_tasks']"/>
-                            </article>
-                            <article class="o_triton_stat-card">
-                                <span>Rangkuman</span>
-                                <strong t-out="summary['detail']"/>
-                            </article>
-                        </div>
-                        <div t-if="tasks" class="o_triton_grid-three o_triton_section-heading">
-                            <t t-foreach="tasks" t-as="task"><article class="o_triton_task-card"><span class="o_triton_badge o_triton_badge-warning">Perlu ditindaklanjuti</span><h2 t-out="task['title']"/><p t-out="task['description']"/><a class="o_triton_link" t-att-href="task['url']">Buka tugas</a></article></t>
-                        </div>
-                        <div t-else="" class="o_triton_empty"><h2>Tidak ada tugas aktif</h2><p>Semua tugas yang tersedia telah ditindaklanjuti.</p></div>
-                        <nav class="o_triton_portal-shortcuts" aria-label="Menu portal">
-                            <a href="/my/krs">Kelola KRS</a><a href="/my/khs">Lihat KHS</a><a href="/my/mata-kuliah">Mata Kuliah Saya</a><a href="/my/capaian-cpl">Capaian CPL</a>
-                            <a t-if="role == 'Dosen'" href="/my/rps">Kelola RPS</a><a t-if="role == 'Dosen'" href="/my/kelas">Kelas yang Diampu</a><a t-if="role == 'Dosen'" href="/my/perwalian">Perwalian</a>
-                        </nav>
+
+                        <t t-if="role == 'Mahasiswa'">
+                            <section class="o_triton_dashboard-metrics" aria-label="Ikhtisar akademik">
+                                <article>
+                                    <span>IPK kumulatif</span>
+                                    <strong t-if="dashboard['ipk'] is not None" t-out="'%.2f' % dashboard['ipk']"/>
+                                    <strong t-else="">—</strong>
+                                    <small t-if="dashboard['ipk'] is None">Belum ada transkrip</small>
+                                </article>
+                                <article>
+                                    <span>SKS lulus</span>
+                                    <strong t-if="dashboard['credits_passed'] is not None" t-out="dashboard['credits_passed']"/>
+                                    <strong t-else="">—</strong>
+                                    <small t-if="dashboard['credits_passed'] is None">Data KHS belum tersedia</small>
+                                </article>
+                                <article>
+                                    <span>SKS KRS aktif</span>
+                                    <strong t-if="dashboard['krs_credits'] is not None" t-out="dashboard['krs_credits']"/>
+                                    <strong t-else="">—</strong>
+                                    <small t-if="dashboard['krs_credits'] is None">Belum ada KRS periode aktif</small>
+                                </article>
+                                <article>
+                                    <span>IPS semester aktif</span>
+                                    <strong>—</strong>
+                                    <small>Nilai belum terhubung ke periode KRS</small>
+                                </article>
+                            </section>
+
+                            <div class="o_triton_dashboard-grid">
+                                <section class="o_triton_dashboard-panel o_triton_dashboard-courses">
+                                    <header class="o_triton_dashboard-section-heading">
+                                        <div><span class="o_triton_eyebrow">Perkuliahan</span><h2>Mata kuliah semester aktif</h2></div>
+                                        <a href="/my/krs">Kelola KRS <span aria-hidden="true">→</span></a>
+                                    </header>
+                                    <div t-if="dashboard['courses']" class="o_triton_dashboard-course-list">
+                                        <article t-foreach="dashboard['courses']" t-as="course">
+                                            <div><strong t-out="course['name']"/><span t-if="course['code']" t-out="course['code']"/></div>
+                                            <span><t t-out="course['sks']"/> SKS</span>
+                                        </article>
+                                    </div>
+                                    <div t-else="" class="o_triton_dashboard-empty">
+                                        <strong>Belum ada mata kuliah untuk periode aktif</strong>
+                                        <p>Periksa status penawaran atau riwayat KRS Anda.</p>
+                                    </div>
+                                    <div class="o_triton_dashboard-links">
+                                        <a href="/my/khs">Buka transkrip <span aria-hidden="true">→</span></a>
+                                        <a href="/my/mata-kuliah">Lihat mata kuliah <span aria-hidden="true">→</span></a>
+                                    </div>
+                                </section>
+
+                                <section class="o_triton_dashboard-panel o_triton_dashboard-followup">
+                                    <header class="o_triton_dashboard-section-heading">
+                                        <div><span class="o_triton_eyebrow">Agenda</span><h2>Perlu ditindaklanjuti</h2></div>
+                                    </header>
+                                    <div t-if="tasks" class="o_triton_dashboard-task-list">
+                                        <article t-foreach="tasks" t-as="task">
+                                            <span class="o_triton_dashboard-task-mark" aria-hidden="true">!</span>
+                                            <div><strong t-out="task['title']"/><p t-out="task['description']"/></div>
+                                            <a t-att-href="task['url']" t-att-aria-label="'Buka ' + task['title']">→</a>
+                                        </article>
+                                    </div>
+                                    <div t-else="" class="o_triton_dashboard-empty">
+                                        <strong>Tidak ada tindak lanjut</strong><p>Belum ada aktivitas yang memerlukan perhatian.</p>
+                                    </div>
+                                    <div class="o_triton_dashboard-announcement">
+                                        <span class="o_triton_eyebrow">Informasi akademik</span>
+                                        <p>Sumber pengumuman belum terhubung ke dashboard ini.</p>
+                                    </div>
+                                </section>
+
+                                <section class="o_triton_dashboard-panel o_triton_dashboard-chart-panel">
+                                    <header class="o_triton_dashboard-section-heading">
+                                        <div><span class="o_triton_eyebrow">Rekam hasil</span><h2>Distribusi nilai mata kuliah</h2></div>
+                                        <a href="/my/khs">Lihat KHS <span aria-hidden="true">→</span></a>
+                                    </header>
+                                    <div t-if="dashboard['grade_labels_json'] != '[]'" class="o_triton_dashboard-chart-wrap">
+                                        <canvas class="o_triton_dashboard-chart" data-chart-kind="grades"
+                                            t-att-data-chart-labels="dashboard['grade_labels_json']"
+                                            t-att-data-chart-values="dashboard['grade_values_json']"
+                                            role="img" aria-label="Grafik distribusi nilai mata kuliah"/>
+                                    </div>
+                                    <div t-else="" class="o_triton_dashboard-empty">
+                                        <strong>Belum ada nilai pada transkrip</strong><p>Grafik akan tersedia setelah nilai mata kuliah tercatat.</p>
+                                    </div>
+                                    <p class="o_triton_dashboard-note">Distribusi dari nilai huruf pada transkrip saat ini.</p>
+                                </section>
+
+                                <section class="o_triton_dashboard-panel o_triton_dashboard-chart-panel">
+                                    <header class="o_triton_dashboard-section-heading">
+                                        <div><span class="o_triton_eyebrow">Outcome-based education</span><h2>Capaian CPL</h2></div>
+                                        <a href="/my/capaian-cpl">Detail CPL <span aria-hidden="true">→</span></a>
+                                    </header>
+                                    <div t-if="dashboard['cpl_labels_json'] != '[]'" class="o_triton_dashboard-chart-wrap o_triton_dashboard-chart-wrap--cpl">
+                                        <canvas class="o_triton_dashboard-chart" data-chart-kind="cpl"
+                                            t-att-data-chart-labels="dashboard['cpl_labels_json']"
+                                            t-att-data-chart-values="dashboard['cpl_values_json']"
+                                            role="img" aria-label="Grafik capaian CPL mahasiswa"/>
+                                    </div>
+                                    <div t-else="" class="o_triton_dashboard-empty">
+                                        <strong>Belum ada capaian CPL terukur</strong><p>Nilai akan ditampilkan setelah penilaian pada mata kuliah yang dipetakan tersedia.</p>
+                                    </div>
+                                    <p class="o_triton_dashboard-note">CPL tanpa penilaian yang terhubung tidak ditampilkan sebagai nol.</p>
+                                </section>
+                            </div>
+                        </t>
+
+                        <t t-elif="role == 'Dosen'">
+                            <section class="o_triton_dashboard-metrics o_triton_dashboard-metrics--teacher" aria-label="Ikhtisar pengajaran">
+                                <article><span>Mata kuliah diampu</span><strong t-out="dashboard['course_count']"/></article>
+                                <article><span>Kelas/penawaran</span><strong t-out="dashboard['class_count']"/></article>
+                                <article><span>Mahasiswa terdaftar</span><strong t-out="dashboard['student_count']"/></article>
+                                <article><span>Penilaian selesai</span><strong t-out="dashboard['completed_assessments']"/></article>
+                                <article><span>Penilaian belum lengkap</span><strong t-out="dashboard['pending_assessments']"/></article>
+                            </section>
+                            <div class="o_triton_dashboard-grid o_triton_dashboard-grid--teacher">
+                                <section class="o_triton_dashboard-panel o_triton_dashboard-courses">
+                                    <header class="o_triton_dashboard-section-heading">
+                                        <div><span class="o_triton_eyebrow">Teaching workspace</span><h2>Kelas yang diampu</h2></div>
+                                        <a href="/my/kelas">Semua kelas <span aria-hidden="true">→</span></a>
+                                    </header>
+                                    <div t-if="dashboard['classes']" class="o_triton_table-wrap">
+                                        <table class="o_triton_table o_triton_dashboard-teacher-table">
+                                            <thead><tr><th>Mata kuliah</th><th>Periode</th><th>Mahasiswa</th><th>Nilai lengkap</th><th>Rata-rata</th><th>Aksi</th></tr></thead>
+                                            <tbody>
+                                                <tr t-foreach="dashboard['classes']" t-as="class_row">
+                                                    <td><strong t-out="class_row['name']"/><small t-out="class_row['code']"/></td>
+                                                    <td t-out="class_row['term']"/>
+                                                    <td t-out="class_row['students']"/>
+                                                    <td><t t-out="class_row['graded']"/> / <t t-out="class_row['students']"/></td>
+                                                    <td t-if="class_row['average'] is not None" t-out="'%.1f' % class_row['average']"/>
+                                                    <td t-else="">Belum ada nilai</td>
+                                                    <td><a t-if="class_row['can_grade']" t-att-href="'/my/kelas/%s/nilai' % class_row['line_id']">Input nilai</a><a t-else="" t-att-href="'/my/kelas/%s/nilai' % class_row['line_id']">Buka kelas</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div t-else="" class="o_triton_dashboard-empty">
+                                        <strong>Belum ada kelas yang diampu</strong><p>Penawaran yang ditugaskan kepada Anda akan muncul di sini.</p>
+                                    </div>
+                                </section>
+                                <aside class="o_triton_dashboard-panel o_triton_dashboard-followup">
+                                    <header class="o_triton_dashboard-section-heading">
+                                        <div><span class="o_triton_eyebrow">Tindakan cepat</span><h2>Ruang kerja pengajaran</h2></div>
+                                    </header>
+                                    <nav class="o_triton_dashboard-action-list" aria-label="Tindakan dosen">
+                                        <a href="/my/kelas"><span>01</span><div><strong>Input nilai</strong><small>Masuk ke penilaian kelas yang diampu</small></div><b aria-hidden="true">→</b></a>
+                                        <a href="/my/rps"><span>02</span><div><strong>Kelola RPS</strong><small>Lengkapi rencana pembelajaran semester</small></div><b aria-hidden="true">→</b></a>
+                                        <a href="/my/perwalian"><span>03</span><div><strong>Persetujuan KRS</strong><small>Tinjau KRS mahasiswa bimbingan</small></div><b aria-hidden="true">→</b></a>
+                                        <a href="/my/riwayat-nilai"><span>04</span><div><strong>Riwayat penilaian</strong><small>Lihat perubahan nilai yang tercatat</small></div><b aria-hidden="true">→</b></a>
+                                    </nav>
+                                </aside>
+                                <section class="o_triton_dashboard-panel o_triton_dashboard-chart-panel">
+                                    <header class="o_triton_dashboard-section-heading"><div><span class="o_triton_eyebrow">Perkembangan kelas</span><h2>Rata-rata nilai per kelas</h2></div></header>
+                                    <div t-if="dashboard['class_averages_json'] != '[]'" class="o_triton_dashboard-chart-wrap">
+                                        <canvas class="o_triton_dashboard-chart" data-chart-kind="teacher"
+                                            t-att-data-chart-labels="dashboard['class_labels_json']"
+                                            t-att-data-chart-values="dashboard['class_averages_json']"
+                                            role="img" aria-label="Grafik rata-rata nilai kelas yang diampu"/>
+                                    </div>
+                                    <div t-else="" class="o_triton_dashboard-empty"><strong>Belum ada nilai yang dapat diringkas</strong><p>Rata-rata kelas tampil setelah hasil penilaian tersimpan.</p></div>
+                                </section>
+                            </div>
+                        </t>
+
+                        <t t-else="">
+                            <div class="o_triton_dashboard-empty o_triton_dashboard-unlinked">
+                                <strong>Profil akademik belum terhubung</strong>
+                                <p>Hubungi administrator agar akun ini ditautkan ke profil mahasiswa atau dosen.</p>
+                            </div>
+                        </t>
                     </div>
                 </section>
                 <t t-call="erpobe.triton_footer"/>
             </main>
         </t>
     </template>
-
 </odoo>

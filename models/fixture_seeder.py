@@ -165,6 +165,8 @@ SOURCE_KIND = {
     "dummy": "dummy",
     "derived": "derived",
 }
+FIXTURE_SEED_VERSION = "1"
+FIXTURE_SEED_VERSION_PARAM = "erpobe.fixture.2022_cohort_seed_version"
 
 
 class ErpObeFixtureSeeder(models.AbstractModel):
@@ -173,6 +175,39 @@ class ErpObeFixtureSeeder(models.AbstractModel):
 
     @api.model
     def load_2022_cohort(self):
+        params = self.env["ir.config_parameter"].sudo()
+        force_seed = self.env.context.get("force_fixture_seed")
+        if not force_seed:
+            if params.get_param(FIXTURE_SEED_VERSION_PARAM) == FIXTURE_SEED_VERSION:
+                return True
+
+            imd_model = self.env["ir.model.data"].sudo()
+            final_grade = imd_model.search(
+                [
+                    ("module", "=", "erpobe"),
+                    ("model", "=", "erpobe.grade.cpl"),
+                    ("name", "=", "fixture_grade_cpl_mf_2022_025_12"),
+                ],
+                limit=1,
+            )
+            final_student = imd_model.search(
+                [
+                    ("module", "=", "erpobe"),
+                    ("model", "=", "erpobe.master.mahasiswa"),
+                    ("name", "=", "fixture_student_mf_2022_025"),
+                ],
+                limit=1,
+            )
+            if final_grade and final_student:
+                report_exists = self.env["erpobe.report.khs"].sudo().search_count(
+                    [("mahasiswa_id", "=", final_student.res_id)]
+                )
+                if report_exists:
+                    params.set_param(
+                        FIXTURE_SEED_VERSION_PARAM, FIXTURE_SEED_VERSION
+                    )
+                    return True
+
         source_text = self._read_program_document()
         program_data = self._prepare_program_data(source_text)
         component_ids = self._ensure_components()
@@ -199,6 +234,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         self.env["erpobe.report.khs"].sudo().action_generate_khs(
             [student.id for student in all_students]
         )
+        params.set_param(FIXTURE_SEED_VERSION_PARAM, FIXTURE_SEED_VERSION)
         return True
 
     def _read_program_document(self):
@@ -466,7 +502,10 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             [("module", "=", "erpobe"), ("name", "in", keys)]
         )
         data_by_key = {record.name: record for record in existing_data}
-        model = self.env[model_name].sudo().with_context(install_mode=True)
+        model_context = {"install_mode": True}
+        if model_name == "erpobe.akademik.krs.line":
+            model_context["defer_offer_student_sync"] = True
+        model = self.env[model_name].sudo().with_context(**model_context)
         records = {}
         new_items = []
 
@@ -1246,6 +1285,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         component_ids = list(component_ids)
         grade_cpmk_items = []
         grade_mk_items = []
+        students_by_offer_line = {}
 
         for slug, program in programs.items():
             courses_by_semester = {}
@@ -1309,6 +1349,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                         )
                         course_line_keys[course["code"]] = line_key
                         selected_courses.append(course)
+                        students_by_offer_line.setdefault(
+                            course["offer_line"].id, set()
+                        ).add(student.id)
                         line_items.append(
                             (
                                 line_key,
@@ -1390,6 +1433,16 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                         )
                     )
                 self._upsert_many("erpobe.grade.subcpmk", sub_items)
+
+        offer_line_model = self.env["erpobe.akademik.penawaran.line"].sudo()
+        for offer_line_id, student_ids in students_by_offer_line.items():
+            offer_line_model.browse(offer_line_id).write(
+                {
+                    "mahasiswa_ids": [
+                        Command.link(student_id) for student_id in sorted(student_ids)
+                    ]
+                }
+            )
 
         self._upsert_many("erpobe.grade.cpmk", grade_cpmk_items)
         self._upsert_many("erpobe.grade.mk", grade_mk_items)

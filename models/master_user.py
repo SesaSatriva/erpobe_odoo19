@@ -39,8 +39,8 @@ def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_f
             f"Kontak {partner.display_name} terhubung ke lebih dari satu akun."
         )
 
-    is_new_user = not bool(user)
     is_fixture_load = profile.env.context.get("install_mode")
+    is_new_user = not bool(user)
     if user:
         linked_dosen = profile.env["erpobe.master.dosen"].sudo().search(
             [("user_id", "=", user.id)], limit=1
@@ -84,9 +84,7 @@ def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_f
             {
                 "name": profile.name,
                 "login": login,
-                "password": (
-                    FIXTURE_USER_PASSWORD if is_fixture_load else identifier
-                ),
+                "password": identifier,
                 identifier_field: identifier,
                 "partner_id": partner.id,
                 "active": True,
@@ -260,10 +258,15 @@ class ResUsers(models.Model):
             slug_counts[slug] = slug_counts.get(slug, 0) + 1
 
         plans = []
+        fixture_only_prodis = []
         account_ids = set()
         profile_by_user = {}
         for prodi in prodis:
             if prodi.id in fixture_prodi_ids:
+                slug = slug_by_prodi[prodi.id]
+                if slug_counts[slug] > 1:
+                    slug = f"{slug}.p{prodi.id}"
+                fixture_only_prodis.append((prodi, slug))
                 continue
 
             slug = slug_by_prodi[prodi.id]
@@ -292,10 +295,7 @@ class ResUsers(models.Model):
                 )
 
             scoped_users = users.search(
-                [
-                    ("erpobe_prodi_ids", "in", prodi.id),
-                    ("active", "=", True),
-                ]
+                [("erpobe_prodi_ids", "in", prodi.id)]
             )
             admins = scoped_users.filtered(
                 lambda user: user.has_group("erpobe.group_admin")
@@ -426,6 +426,42 @@ class ResUsers(models.Model):
             used_identifiers.add(identifier)
             return identifier
 
+        for prodi, slug in fixture_only_prodis:
+            scoped_users = users.search(
+                [("erpobe_prodi_ids", "in", prodi.id)]
+            )
+            admins = scoped_users.filtered(
+                lambda user: user.has_group("erpobe.group_admin")
+                and not user.has_group("erpobe.group_superadmin")
+                and not user.has_group("base.group_system")
+                and set(user.erpobe_prodi_ids.ids) == {prodi.id}
+                and not user.has_group("erpobe.group_dosen")
+                and not user.has_group("erpobe.group_mahasiswa")
+            )
+            if len(admins) > 1:
+                raise ValidationError(
+                    f"Prodi {prodi.display_name} sudah memiliki lebih dari "
+                    "satu Admin Prodi; seeder fixture tidak mengubah akun lama."
+                )
+            if admins and not admins.active:
+                raise ValidationError(
+                    f"Akun Admin Prodi {admins.display_name} tidak aktif dan "
+                    "tidak akan diganti."
+                )
+            if not admins:
+                login, email = reserve_identity(f"admin.{slug}", prodi)
+                users.with_context(no_reset_password=True).create(
+                    {
+                        "name": f"Admin Prodi {prodi.name}",
+                        "login": login,
+                        "email": email,
+                        "password": FIXTURE_USER_PASSWORD,
+                        "group_ids": [Command.set([group_admin.id])],
+                        "erpobe_prodi_ids": [Command.link(prodi.id)],
+                        "active": True,
+                    }
+                )
+
         for prodi, slug, dosens, mahasiswa, admins in plans:
             if not admins:
                 login, email = reserve_identity(f"admin.{slug}", prodi)
@@ -463,7 +499,7 @@ class ResUsers(models.Model):
                     }
                 )
                 dosen.user_id.with_context(skip_sync_user_type=True).write(
-                    {"login": login, "password": FIXTURE_USER_PASSWORD}
+                    {"login": login, "password": dosen.nip}
                 )
 
             dosens = dosen_model.search(
@@ -510,7 +546,7 @@ class ResUsers(models.Model):
                     }
                 )
                 student.user_id.with_context(skip_sync_user_type=True).write(
-                    {"login": login, "password": FIXTURE_USER_PASSWORD}
+                    {"login": login, "password": student.nim}
                 )
 
         final_account_ids = set()

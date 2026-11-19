@@ -129,6 +129,64 @@ class TestTritonKrsWorkflows(TransactionCase):
                 {"krs_id": krs.id, "penawaran_line_id": offer_line.id}
             )
 
+    def test_bulk_krs_line_create_links_each_student_to_offer_line(self):
+        second_student = self._create_student(
+            "Mahasiswa Batch", f"NB{self.suffix}", self.rombel
+        )
+        first_krs = self._new_krs()
+        second_krs = self._new_krs(second_student)
+
+        self.KrsLine.create(
+            [
+                {
+                    "krs_id": first_krs.id,
+                    "penawaran_line_id": self.offer_line.id,
+                },
+                {
+                    "krs_id": second_krs.id,
+                    "penawaran_line_id": self.offer_line.id,
+                },
+            ]
+        )
+
+        self.assertEqual(
+            self.offer_line.mahasiswa_ids,
+            self.student | second_student,
+        )
+
+    def test_bulk_krs_line_change_moves_students_between_offer_lines(self):
+        second_student = self._create_student(
+            "Mahasiswa Pindah Batch", f"NC{self.suffix}", self.rombel
+        )
+        first_krs = self._new_krs()
+        second_krs = self._new_krs(second_student)
+        lines = self.KrsLine.create(
+            [
+                {
+                    "krs_id": first_krs.id,
+                    "penawaran_line_id": self.offer_line.id,
+                },
+                {
+                    "krs_id": second_krs.id,
+                    "penawaran_line_id": self.offer_line.id,
+                },
+            ]
+        )
+        second_course = self._create_course(
+            "Mata Kuliah Pindahan", f"MPD{self.suffix}", 3
+        )
+        second_offer_line = self._create_offer_line(second_course)
+
+        lines.write({"penawaran_line_id": second_offer_line.id})
+
+        self.assertFalse(
+            self.offer_line.mahasiswa_ids & (self.student | second_student)
+        )
+        self.assertEqual(
+            second_offer_line.mahasiswa_ids,
+            self.student | second_student,
+        )
+
     def test_schedule_conflict_is_rejected(self):
         other_course = self._create_course(
             "Mata Kuliah Bentrok", f"MB{self.suffix}", 2
@@ -357,6 +415,8 @@ class TestTritonPublicRoutes(HttpCase):
 
     def test_portal_routes_require_authentication(self):
         for route in (
+            "/my",
+            "/my/home",
             "/my/triton",
             "/my/krs",
             "/my/khs",
@@ -397,6 +457,10 @@ class TestTritonPublicRoutes(HttpCase):
             }
         )
         self.authenticate(email, student.nim)
+
+        portal_home = self.url_open("/my")
+        self.assertEqual(portal_home.status_code, 200)
+        self.assertIn("Selamat datang", portal_home.text)
 
         response = self.url_open("/my/mata-kuliah")
 

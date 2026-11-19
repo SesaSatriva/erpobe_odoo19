@@ -327,10 +327,24 @@ class ErpObeAkademikKrsLine(models.Model):
             ):
                 raise ValidationError("Anda hanya dapat menambah mata kuliah pada KRS sendiri.")
         records = super().create(vals_list)
-        for rec in records:
-            if rec.penawaran_line_id and rec.mahasiswa_id:
-                rec.penawaran_line_id.write(
-                    {"mahasiswa_ids": [Command.link(rec.mahasiswa_id.id)]}
+        if not self.env.context.get("defer_offer_student_sync"):
+            offer_lines = {}
+            students_by_offer_line = {}
+            for rec in records:
+                if rec.penawaran_line_id and rec.mahasiswa_id:
+                    offer_line_id = rec.penawaran_line_id.id
+                    offer_lines[offer_line_id] = rec.penawaran_line_id
+                    students_by_offer_line.setdefault(offer_line_id, set()).add(
+                        rec.mahasiswa_id.id
+                    )
+            for offer_line_id, student_ids in students_by_offer_line.items():
+                offer_lines[offer_line_id].write(
+                    {
+                        "mahasiswa_ids": [
+                            Command.link(student_id)
+                            for student_id in sorted(student_ids)
+                        ]
+                    }
                 )
         return records
 
@@ -348,20 +362,43 @@ class ErpObeAkademikKrsLine(models.Model):
 
         res = super().write(vals)
 
-        # Jika user pindah kelas
         if "penawaran_line_id" in vals:
+            kelas_by_id = {}
+            students_to_unlink = {}
+            students_to_link = {}
             for rec in self:
                 old_kelas = old_kelas_map.get(rec.id)
                 new_kelas = rec.penawaran_line_id
-                mhs_id = rec.mahasiswa_id.id
+                if old_kelas == new_kelas or not rec.mahasiswa_id:
+                    continue
 
-                if old_kelas and old_kelas != new_kelas:
-                    # Hapus dari kelas lama
-                    old_kelas.write({"mahasiswa_ids": [Command.unlink(mhs_id)]})
+                student_id = rec.mahasiswa_id.id
+                if old_kelas:
+                    kelas_by_id[old_kelas.id] = old_kelas
+                    students_to_unlink.setdefault(old_kelas.id, set()).add(student_id)
 
                 if new_kelas:
-                    # Masukkan ke kelas baru
-                    new_kelas.write({"mahasiswa_ids": [Command.link(mhs_id)]})
+                    kelas_by_id[new_kelas.id] = new_kelas
+                    students_to_link.setdefault(new_kelas.id, set()).add(student_id)
+
+            for kelas_id, student_ids in students_to_unlink.items():
+                kelas_by_id[kelas_id].write(
+                    {
+                        "mahasiswa_ids": [
+                            Command.unlink(student_id)
+                            for student_id in sorted(student_ids)
+                        ]
+                    }
+                )
+            for kelas_id, student_ids in students_to_link.items():
+                kelas_by_id[kelas_id].write(
+                    {
+                        "mahasiswa_ids": [
+                            Command.link(student_id)
+                            for student_id in sorted(student_ids)
+                        ]
+                    }
+                )
 
         return res
 

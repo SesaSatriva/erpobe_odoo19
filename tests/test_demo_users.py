@@ -41,11 +41,74 @@ class TestErpObeFixtureUsers(TransactionCase):
             {
                 "type": "password",
                 "login": "dosen.fup.01",
-                "password": "Demo123!",
+                "password": "FIXTURE-USER-NIP",
             },
             {"interactive": True},
         )
         self.assertEqual(result["uid"], dosen.user_id.id)
+        result = self.env["res.users"].authenticate(
+            {
+                "type": "password",
+                "login": "FIXTURE-USER-NIP",
+                "password": "FIXTURE-USER-NIP",
+            },
+            {"interactive": True},
+        )
+        self.assertEqual(result["uid"], dosen.user_id.id)
+
+    def test_curriculum_fixture_program_gets_admin_user(self):
+        faculty = self.env["erpobe.master.fakultas"].sudo().create(
+            {"name": "Admin Fixture Faculty", "kode": "AFF"}
+        )
+        prodi = self.env["erpobe.master.prodi"].sudo().create(
+            {
+                "name": "Admin Fixture Program",
+                "kode": "AFP",
+                "fakultas_id": faculty.id,
+            }
+        )
+        curriculum = self.env["erpobe.akademik.kurikulum"].sudo().create(
+            {
+                "name": "Admin Fixture Curriculum",
+                "kode": "AFC-2022",
+                "prodi_id": prodi.id,
+            }
+        )
+        self.env["ir.model.data"].sudo().create(
+            [
+                {
+                    "module": "erpobe",
+                    "name": "test_admin_fixture_program",
+                    "model": prodi._name,
+                    "res_id": prodi.id,
+                    "noupdate": True,
+                },
+                {
+                    "module": "erpobe",
+                    "name": "fixture_curriculum_test_admin_fixture_program",
+                    "model": curriculum._name,
+                    "res_id": curriculum.id,
+                    "noupdate": True,
+                },
+            ]
+        )
+
+        self.env["res.users"].load_erpobe_fixture_users()
+
+        admins = prodi.user_ids.filtered(
+            lambda user: user.has_group("erpobe.group_admin")
+        )
+        self.assertEqual(len(admins), 1)
+        self.assertEqual(admins.erpobe_prodi_ids, prodi)
+        admin_id = admins.id
+
+        self.env["res.users"].load_erpobe_fixture_users()
+
+        admins = prodi.user_ids.filtered(
+            lambda user: user.has_group("erpobe.group_admin")
+        )
+        self.assertEqual(len(admins), 1)
+        self.assertEqual(admins.id, admin_id)
 
     def test_dynamic_fixture_users_are_scoped_and_idempotent(self):
         Faculty = self.env["erpobe.master.fakultas"].sudo()
@@ -186,16 +249,16 @@ class TestErpObeFixtureUsers(TransactionCase):
         self.assertFalse(student_a.user_id.has_group("erpobe.group_admin"))
         self.assertFalse(dosen_a.user_id.has_group("erpobe.group_admin"))
 
-        for user in (
-            accounts[0],
-            dosen_a.user_id,
-            student_a.user_id,
+        for user, password in (
+            (accounts[0], "Demo123!"),
+            (dosen_a.user_id, dosen_a.nip),
+            (student_a.user_id, student_a.nim),
         ):
             result = Users.authenticate(
                 {
                     "type": "password",
                     "login": user.login,
-                    "password": "Demo123!",
+                    "password": password,
                 },
                 {"interactive": True},
             )

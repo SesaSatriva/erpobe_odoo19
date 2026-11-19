@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.tests import TransactionCase, tagged
 
 
@@ -28,6 +30,16 @@ class TestErpObeAcademicFixture(TransactionCase):
         if not students:
             self.skipTest("Academic fixture data is not installed")
         return students
+
+    def test_completed_fixture_seed_skips_rebuild(self):
+        params = self.env["ir.config_parameter"].sudo()
+        params.set_param("erpobe.fixture.2022_cohort_seed_version", "1")
+        seeder = self.env["erpobe.fixture.seeder"]
+
+        with patch.object(
+            type(seeder), "_read_program_document", side_effect=AssertionError
+        ):
+            self.assertTrue(seeder.load_2022_cohort())
 
     def test_program_cohort_counts_and_student_isolation(self):
         students = self._require_fixture()

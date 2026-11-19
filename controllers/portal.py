@@ -9,6 +9,10 @@ from .portal_base import TritonPortalBase
 
 class TritonPortalHome(TritonPortalBase):
 
+    @http.route()
+    def home(self, **kwargs):
+        return request.redirect('/my/triton')
+
     @http.route('/my/triton', type='http', auth='user', website=True)
     def triton_portal_home(self, **kwargs):
         student = self._student()

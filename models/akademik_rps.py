@@ -97,6 +97,12 @@ class ErpObeAkademikRps(models.Model):
         string="Komponen Penilaian",
         help="Pilih komponen penilaian yang digunakan dalam semester ini.",
     )
+    rps_komponen_ids = fields.One2many(
+        "erpobe.akademik.rps.komponen",
+        "rps_id",
+        string="Snapshot Komponen",
+        copy=True,
+    )
 
     cpmk_ids = fields.Many2many(
         "erpobe.akademik.cpmk",
@@ -216,6 +222,38 @@ class ErpObeAkademikRps(models.Model):
         Hanya menambah baris baru atau menghapus baris yang validitasnya hilang.
         """
         for rps in self:
+            # Snapshot komponen for exact RPS lineage. Existing master selections remain for compatibility.
+            catalog_ids = set(rps.komponen_ids.ids)
+            existing_catalog_ids = {
+                line.komponen_id.id
+                for line in rps.rps_komponen_ids
+                if line.komponen_id
+            }
+            snapshot_commands = []
+            for component in rps.komponen_ids:
+                if component.id not in existing_catalog_ids:
+                    snapshot_commands.append(
+                        Command.create(
+                            {
+                                "komponen_id": component.id,
+                                "name": component.name,
+                                "description": getattr(component, "description", False),
+                                "source": "catalog",
+                                "aktif": True,
+                            }
+                        )
+                    )
+            obsolete_snapshots = rps.rps_komponen_ids.filtered(
+                lambda line: line.komponen_id
+                and line.komponen_id.id not in catalog_ids
+                and line.source == "catalog"
+            )
+            snapshot_commands.extend(
+                Command.delete(line.id) for line in obsolete_snapshots
+            )
+            if snapshot_commands:
+                rps.write({"rps_komponen_ids": snapshot_commands})
+
             # --- A. Sync Bobot CPMK -> MK ---
             existing_cpmk_mk = rps.bobot_cpmk_mk_ids.mapped("cpmk_id")
             new_cpmk = rps.cpmk_ids - existing_cpmk_mk
@@ -287,11 +325,15 @@ class ErpObeAkademikRps(models.Model):
             # Add New
             for cpmk_id, komp_id in valid_komp_cpmk:
                 if (cpmk_id, komp_id) not in existing_komp_cpmk:
+                    snapshot = rps.rps_komponen_ids.filtered(
+                        lambda line: line.komponen_id.id == komp_id
+                    )[:1]
                     cmds_komp.append(
                         Command.create(
                             {
                                 "cpmk_id": cpmk_id,
                                 "komponen_penilaian": komp_id,
+                                "rps_komponen_id": snapshot.id if snapshot else False,
                                 "bobot_komponen_cpmk": 0.0,
                             }
                         )
@@ -366,7 +408,7 @@ class ErpObeAkademikRps(models.Model):
             validation = self.env["erpobe.weight.validation"].validate_rps(rps)
             if not validation["complete"]:
                 messages = [
-                    f"{item['item_name']}: {item['total']:.2f}% "
+                    f"{item['relation']} / {item['item_name']}: {item['total']:.2f}% "
                     f"({'kurang' if item['difference'] > 0 else 'lebih'} "
                     f"{abs(item['difference']):.2f}%)"
                     for item in validation["problems"][:10]

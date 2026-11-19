@@ -8,6 +8,14 @@
     </record>
 
     <template id="triton_main_nav" name="Navigasi TRITON">
+        <t t-set="public_path" t-value="request.httprequest.path.rstrip('/') or '/'"/>
+        <t t-set="public_links" t-value="[
+            ('Beranda', '/'),
+            ('Fakultas &amp; Prodi', '/fakultas'),
+            ('Perbandingan CPL', '/perbandingan-cpl'),
+            ('Tracking', '/tracking'),
+            ('Tentang', '/tentang')
+        ]"/>
         <nav class="o_triton_navbar" aria-label="Navigasi utama TRITON">
             <div class="o_triton_nav-inner">
                 <a class="o_triton_brand" href="/" aria-label="TRITON, beranda">
@@ -16,21 +24,21 @@
                 <details class="o_triton_mobile-menu">
                     <summary aria-label="Buka menu">Menu</summary>
                     <div class="o_triton_nav-links">
-                        <a href="/">Beranda</a>
-                        <a href="/fakultas">Fakultas &amp; Prodi</a>
-                        <a href="/perbandingan-cpl">Perbandingan CPL</a>
-                        <a href="/tracking">Tracking</a>
-                        <a href="/tentang">Tentang</a>
-                        <a href="/panduan">Panduan</a>
-                        <a href="/faq">FAQ</a>
+                        <a t-foreach="public_links" t-as="link" t-att-href="link[1]"
+                            t-att-class="'o_triton_nav-link' + (' is-active' if public_path == link[1] or (link[1] != '/' and public_path.startswith(link[1] + '/')) or (link[1] == '/fakultas' and public_path.startswith('/prodi/')) else '')"
+                            t-att-aria-current="'page' if public_path == link[1] or (link[1] != '/' and public_path.startswith(link[1] + '/')) or (link[1] == '/fakultas' and public_path.startswith('/prodi/')) else None"
+                            t-out="link[0]"/>
+                        <a href="/panduan" t-att-class="'o_triton_nav-link' + (' is-active' if public_path == '/panduan' else '')"
+                            t-att-aria-current="'page' if public_path == '/panduan' else None">Panduan</a>
+                        <a href="/faq" t-att-class="'o_triton_nav-link' + (' is-active' if public_path == '/faq' else '')"
+                            t-att-aria-current="'page' if public_path == '/faq' else None">FAQ</a>
                     </div>
                 </details>
                 <div class="o_triton_desktop-links o_triton_nav-links">
-                    <a href="/">Beranda</a>
-                    <a href="/fakultas">Fakultas &amp; Prodi</a>
-                    <a href="/perbandingan-cpl">Perbandingan CPL</a>
-                    <a href="/tracking">Tracking</a>
-                    <a href="/tentang">Tentang</a>
+                    <a t-foreach="public_links" t-as="link" t-att-href="link[1]"
+                        t-att-class="'o_triton_nav-link' + (' is-active' if public_path == link[1] or (link[1] != '/' and public_path.startswith(link[1] + '/')) or (link[1] == '/fakultas' and public_path.startswith('/prodi/')) else '')"
+                        t-att-aria-current="'page' if public_path == link[1] or (link[1] != '/' and public_path.startswith(link[1] + '/')) or (link[1] == '/fakultas' and public_path.startswith('/prodi/')) else None"
+                        t-out="link[0]"/>
                 </div>
                 <a href="/my" class="o_triton_btn-secondary">Masuk Portal</a>
             </div>

@@ -297,9 +297,16 @@ class ErpObeAkademikPenawaranLine(models.Model):
     @api.depends("rps_ids.version", "rps_ids.status", "rps_ids.write_date")
     def _compute_rps_status(self):
         for line in self:
-            latest = line.rps_ids.sorted(
-                key=lambda record: (record.version, record.id), reverse=True
-            )[:1]
+            final_rps = line.rps_ids.filtered(lambda record: record.status == "final")
+            latest = (
+                final_rps.sorted(
+                    key=lambda record: (record.version, record.id), reverse=True
+                )[:1]
+                if final_rps
+                else line.rps_ids.sorted(
+                    key=lambda record: (record.version, record.id), reverse=True
+                )[:1]
+            )
             line.latest_rps_id = latest
             line.rps_status = latest.status if latest else "missing"
 

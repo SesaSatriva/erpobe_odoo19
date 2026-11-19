@@ -8,6 +8,12 @@ class ErpObeGradeCpmk(models.Model):
 
     mahasiswa_id = fields.Many2one("erpobe.master.mahasiswa", required=True, index=True)
     cpmk_id = fields.Many2one("erpobe.akademik.cpmk", required=True, index=True)
+    krs_line_id = fields.Many2one(
+        "erpobe.akademik.krs.line", string="Attempt KRS", ondelete="restrict", index=True
+    )
+    rps_id = fields.Many2one(
+        "erpobe.akademik.rps", string="RPS Digunakan", ondelete="restrict", index=True
+    )
     mk_id = fields.Many2one(related="cpmk_id.mk_id", store=True, string="Mata Kuliah")
 
     nilai_cpmk = fields.Float(
@@ -54,13 +60,45 @@ class ErpObeGradeCpmk(models.Model):
         BobotKomp = self.env["erpobe.bobot.komponen.cpmk"]
         GradeKomp = self.env["erpobe.grade.komponen"]
 
-        mk_ids = self.mapped("cpmk_id.mk_id")
+        for rec in self.filtered(lambda grade: grade.rps_id and grade.krs_line_id):
+            rps = rec.rps_id
+            allocations = BobotKomp.search([
+                ("rps_id", "=", rps.id),
+                ("cpmk_id", "=", rec.cpmk_id.id),
+                ("rps_komponen_id", "!=", False),
+            ])
+            weighted_total = 0.0
+            denominator = 0.0
+            for allocation in allocations:
+                snapshot = allocation.rps_komponen_id
+                if not snapshot.aktif:
+                    continue
+                grade = GradeKomp.search([
+                    ("krs_line_id", "=", rec.krs_line_id.id),
+                    ("rps_id", "=", rps.id),
+                    ("rps_komponen_id", "=", snapshot.id),
+                    ("is_graded", "=", True),
+                    ("origin", "=", "actual"),
+                ], limit=1)
+                if not grade:
+                    continue
+                attribution = snapshot.bobot * allocation.bobot_komponen_cpmk / 100.0
+                weighted_total += grade.nilai * attribution
+                denominator += attribution
+            rec.nilai_cpmk = weighted_total / denominator if denominator else 0.0
+
+        # Compatibility path for historical records that have no exact RPS/kRS lineage.
+        legacy_records = self.filtered(lambda grade: not grade.rps_id or not grade.krs_line_id)
+        if not legacy_records:
+            return
+
+        mk_ids = legacy_records.mapped("cpmk_id.mk_id")
 
         # Ambil RPS Terbaru
         rps_records = Rps.search([("matakuliah_id", "in", mk_ids.ids)], order="id desc")
 
         weight_map = {}
-        target_cpmk_ids = self.mapped("cpmk_id").ids
+        target_cpmk_ids = legacy_records.mapped("cpmk_id").ids
 
         bobot_lines = BobotKomp.search(
             [("rps_id", "in", rps_records.ids), ("cpmk_id", "in", target_cpmk_ids)]
@@ -71,7 +109,7 @@ class ErpObeGradeCpmk(models.Model):
                 weight_map[b.cpmk_id.id] = {}
             weight_map[b.cpmk_id.id][b.komponen_penilaian.id] = b.bobot_komponen_cpmk
 
-        mhs_ids = self.mapped("mahasiswa_id")
+        mhs_ids = legacy_records.mapped("mahasiswa_id")
         student_grades = GradeKomp.search(
             [
                 ("mahasiswa_id", "in", mhs_ids.ids),
@@ -89,7 +127,7 @@ class ErpObeGradeCpmk(models.Model):
                 grade_map[m_id][k_mk_id] = {}
             grade_map[m_id][k_mk_id][g.komponen_id.id] = g.nilai
 
-        for rec in self:
+        for rec in legacy_records:
             rec.nilai_cpmk = 0.0
 
             cpmk_weights = weight_map.get(rec.cpmk_id.id, {})

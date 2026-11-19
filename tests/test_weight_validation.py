@@ -62,6 +62,29 @@ class TestErpObeWeightValidation(TransactionCase):
         self.assertEqual(_weight_status(99.99)[0], "complete")
         self.assertEqual(_weight_status(100.011)[0], "over")
 
+    def test_rps_snapshot_component_weights_are_validated(self):
+        rps = self._create_rps()
+        snapshot = rps.rps_komponen_ids[:1]
+        self.assertTrue(snapshot)
+        snapshot.write({"bobot": 50.0, "aktif": True})
+
+        summary = self.Validator.get_rps_summary(rps)
+        component_total = next(
+            group for group in summary if group["relation"] == "rps_component_total"
+        )
+        self.assertEqual(component_total["status"], "under")
+        self.assertEqual(component_total["total"], 50.0)
+
+        snapshot.write({"bobot": 100.0})
+        allocation = snapshot.allocation_ids[:1]
+        if allocation:
+            allocation.write({"bobot_komponen_cpmk": 100.0})
+        summary = self.Validator.get_rps_summary(rps)
+        component_total = next(
+            group for group in summary if group["relation"] == "rps_component_total"
+        )
+        self.assertEqual(component_total["status"], "complete")
+
     def test_draft_groups_allow_incomplete_weights_and_report_totals(self):
         rps = self._create_rps()
         summary = self.Validator.get_rps_summary(rps)

@@ -23,8 +23,14 @@ class ErpObeBobotKomponenCpmk(models.Model):
 
     komponen_penilaian = fields.Many2one(
         "erpobe.akademik.komponen",
-        required=True,
+        required=False,
         ondelete="restrict",
+    )
+    rps_komponen_id = fields.Many2one(
+        "erpobe.akademik.rps.komponen",
+        string="Snapshot Komponen RPS",
+        ondelete="cascade",
+        index=True,
     )
 
     bobot_komponen_cpmk = fields.Float(

@@ -102,3 +102,29 @@ Status: PASS, FAIL, BLOCKED, NOT TESTED.
 - [ ] NOT TESTED — Lecturer before screenshot; no baseline capture was available.
 - [ ] NOT TESTED — KHS detail, CPL detail/analytics, grade-input performance and
   audit-reason flows; covered by later Phase 2 slices, not this dashboard change.
+
+## Phase 1 — shared navigation and responsive shell
+
+- [x] PASS — Portal lecturer dashboard route returns HTTP 200; desktop navigation
+  and breadcrumb render at the measured 1440×900 CSS viewport with no document
+  horizontal overflow.
+- [x] PASS — Grade-entry route returns HTTP 200, marks `Kelas` active, and shows
+  the nested breadcrumb `Beranda / Pengajaran / Kelas / Input nilai`.
+- [x] PASS — Lecturer mobile menu opens at 390×844 and exposes role navigation,
+  profile/settings, public site, and logout links without document overflow.
+- [x] PASS — Public mobile menu opens at 390×844 and 360×800; both measured
+  viewports have no document horizontal overflow.
+- [x] PASS — Lecturer account dropdown opens with profile/settings and logout.
+- [x] PASS — Clicking logout returns to `/`; a later `/my/triton` request redirects
+  to the login page.
+- [x] PASS — Official logo static URL returns HTTP 200 `image/jpeg`; portal
+  navbar/footer use the same static asset.
+- [x] PASS — `erpobe` module upgrade completed after a readable database backup.
+  The upgrade loaded the whole module, including pending RPS/grade model changes
+  outside this phase; those source files were not edited in this follow-up.
+- [ ] NOT TESTED — Student-role shell and navigation; the authenticated browser
+  account used for this run was a lecturer.
+- [ ] BLOCKED — Permanent Phase 1 before/after screenshots. Captures rendered
+  only a narrow page slice despite the requested viewport; unreliable files
+  were discarded.
+- [ ] NOT TESTED — Desktop visual comparison and student-role shell screenshot.

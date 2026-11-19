@@ -43,22 +43,40 @@
 }
 
 @media (max-width: 640px) {
-  .o_triton_filter-grid {
-    grid-template-columns: 1fr;
-  }
-  .o_triton_brand-logo {
-    width: 150px;
-    height: 54px;
-  }
-  .o_triton_nav-inner {
-    flex-wrap: wrap;
-    padding: 16px 0;
+  .o_triton_hero .o_triton_container,
+  .o_triton_two-col,
+  .o_triton_grid-three,
+  .o_triton_score-grid,
+  .o_triton_feature-grid,
+  .o_triton_footer-grid,
+  .o_triton_visual-grid,
+  .o_triton_filter-grid,
+  .o_triton_stat-grid,
+  .o_triton_summary-strip,
+  .o_triton_summary-bar {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .o_triton_nav-links,
+  .o_triton_two-col > *,
+  .o_triton_grid-three > *,
+  .o_triton_score-grid > *,
+  .o_triton_feature-grid > *,
+  .o_triton_footer-grid > * {
+    min-width: 0;
+  }
+
+  .o_triton_brand-logo {
+    width: 128px;
+    height: 48px;
+  }
+
+  .o_triton_nav-inner {
+    gap: 8px;
+    min-height: 64px;
+  }
+
   .o_triton_nav-actions {
-    width: 100%;
-    justify-content: space-between;
+    width: auto;
   }
 
   .o_triton_stat-grid,
@@ -110,38 +128,83 @@
   .o_triton_mobile-menu {
     position: relative;
     display: block;
+    margin-left: auto;
   }
 
-  .o_triton_mobile-menu summary {
+  .o_triton_mobile-menu > summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 10px;
-    padding: 10px 14px;
-    color: #fff;
-    font-weight: 700;
+    border: 1px solid var(--triton-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    background: var(--triton-surface);
+    color: var(--triton-primary);
+    font-weight: 650;
     list-style: none;
   }
 
-  .o_triton_mobile-menu summary::-webkit-details-marker {
+  .o_triton_mobile-menu > summary::-webkit-details-marker {
     display: none;
   }
 
   .o_triton_mobile-menu[open] .o_triton_nav-links {
     position: absolute;
     top: calc(100% + 8px);
-    left: 0;
+    right: 0;
+    left: auto;
     z-index: 30;
     display: grid;
-    min-width: 230px;
-    padding: 12px;
-    border-radius: 12px;
-    background: var(--triton-deep-ocean);
-    box-shadow: var(--triton-shadow-soft);
+    width: 280px;
+    max-width: calc(100vw - 32px);
+    padding: 8px;
+    border: 1px solid var(--triton-border);
+    border-radius: 6px;
+    background: var(--triton-surface);
+    box-shadow: 0 12px 28px rgba(11, 45, 66, 0.12);
   }
 
-  .o_triton_portal-nav {
-    align-items: flex-start;
-    flex-direction: column;
+  .o_triton_mobile-menu .o_triton_nav-link {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 8px 10px;
+    border-radius: 4px;
+  }
+
+  .o_triton_mobile-menu .o_triton_nav-link:hover,
+  .o_triton_mobile-menu .o_triton_nav-link.is-active {
+    background: var(--triton-primary-soft);
+    color: var(--triton-primary);
+  }
+
+  .o_triton_portal-nav-inner {
+    gap: 12px;
+  }
+
+  .o_triton_portal-links--desktop,
+  .o_triton_portal-nav-actions {
+    display: none;
+  }
+
+  .o_triton_portal-mobile-menu {
+    display: block;
+    margin-left: auto;
+  }
+
+  .o_triton_portal-mobile-menu > summary {
+    min-width: 76px;
+    justify-content: center;
+  }
+
+  .o_triton_portal-mobile-panel {
+    width: 280px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .o_triton_portal-breadcrumb {
+    padding-top: 12px;
   }
 }
 
@@ -150,42 +213,89 @@
     width: calc(100% - 24px);
   }
 
-  .o_triton_portal-nav {
+  .o_triton_nav-inner {
+    position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
-    gap: 8px 12px;
-    padding: 10px 12px;
+    gap: 8px;
+    width: calc(100% - 24px);
   }
 
-  .o_triton_portal-nav > .o_triton_brand {
+  .o_triton_nav-inner > .o_triton_brand {
     grid-column: 1;
     grid-row: 1;
   }
 
-  .o_triton_portal-nav > .o_triton_btn-ghost {
+  .o_triton_nav-inner > .o_triton_mobile-menu {
     grid-column: 2;
     grid-row: 1;
-    justify-self: end;
-    min-height: 36px;
+    margin-left: 0;
+    position: static;
+  }
+
+  .o_triton_nav-inner > .o_triton_btn-secondary {
+    grid-column: 3;
+    grid-row: 1;
+    min-height: 40px;
     padding: 7px 10px;
+    font-size: 0.75rem;
   }
 
-  .o_triton_portal-links {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 14px;
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
+  .o_triton_mobile-menu > summary {
+    min-height: 40px;
+    padding: 7px 10px;
+    font-size: 0.8125rem;
   }
 
-  .o_triton_portal-links a {
-    flex: 0 0 auto;
+  .o_triton_portal-nav-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    width: calc(100% - 24px);
+    min-height: 64px;
+  }
+
+  .o_triton_portal-nav .o_triton_brand-logo {
+    width: 128px;
+    max-width: 100%;
+    height: 48px;
+  }
+
+  .o_triton_portal-mobile-menu > summary {
+    min-width: 68px;
+    min-height: 40px;
+    padding: 7px 10px;
+    font-size: 0.8125rem;
+  }
+
+  .o_triton_portal-breadcrumb {
+    width: calc(100% - 24px);
+  }
+
+  .o_triton_portal-page .o_triton_section {
+    padding-top: 22px;
+  }
+
+  .o_triton_portal-page .o_triton_heading h1 {
+    font-size: 1.75rem;
+  }
+
+  .o_triton_dashboard-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .o_triton_dashboard-header h1 {
+    font-size: 1.9rem;
+    overflow-wrap: anywhere;
+  }
+
+  .o_triton_dashboard-term {
+    min-width: 0;
+    padding: 0 0 0 12px;
+    border-left-width: 2px;
   }
 
   .o_triton_hero {

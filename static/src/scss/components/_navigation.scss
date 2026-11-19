@@ -51,17 +51,38 @@
 .o_triton_nav-links {
   display: flex;
   align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
+  gap: 4px;
 }
 
-.o_triton_nav-links a, .o_triton_nav-actions a {
+.o_triton_nav-links a,
+.o_triton_nav-actions a {
   color: var(--triton-primary);
   text-decoration: none;
   font-weight: 600;
 }
 
-.o_triton_nav-links a:hover, .o_triton_nav-actions a:hover {
+.o_triton_nav-links .o_triton_nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--triton-muted);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.o_triton_nav-links .o_triton_nav-link:hover,
+.o_triton_nav-links .o_triton_nav-link.is-active {
+  background: var(--triton-primary-soft);
+  color: var(--triton-primary);
+}
+
+.o_triton_nav-links .o_triton_nav-link.is-active {
+  font-weight: 700;
+}
+
+.o_triton_nav-actions a:hover {
   color: var(--triton-cyan);
 }
 

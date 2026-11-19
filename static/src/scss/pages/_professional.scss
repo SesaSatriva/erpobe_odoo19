@@ -1,26 +1,41 @@
 :root {
-  --triton-deep-ocean: #172D3D;
-  --triton-primary: #123C56;
-  --triton-primary-soft: #EDF3F6;
+  --triton-deep-ocean: #0B2D42;
+  --triton-primary: #123F59;
+  --triton-primary-soft: #EEF3F6;
+  --triton-secondary: #F2D15B;
+  --triton-accent: #D4B24C;
   --triton-cyan: #087F8C;
   --triton-emerald: #087F8C;
-  --triton-slate: #657786;
-  --triton-bg: #F5F7F8;
+  --triton-slate: #718096;
+  --triton-bg: #F5F7F9;
   --triton-gradient: none;
-  --triton-border: #D9E1E7;
-  --triton-shadow-soft: 0 4px 14px rgba(23, 45, 61, 0.06);
+  --triton-border: #E2E8F0;
+  --triton-shadow-soft: 0 4px 14px rgba(11, 45, 66, 0.06);
   --triton-success-soft: #EDF6F4;
   --triton-warning-soft: #FBF4E8;
   --triton-error-soft: #FBEFEE;
-  --triton-text: var(--triton-slate);
-  --triton-muted: #526174;
+  --triton-text: #263746;
+  --triton-muted: #718096;
   --triton-surface: #fff;
-  --triton-focus: var(--triton-cyan);
-  --triton-radius: 8px;
-  --triton-space: clamp(20px, 4vw, 36px);
+  --triton-focus: var(--triton-primary);
+  --triton-radius: 6px;
+  --triton-space: clamp(16px, 2.4vw, 32px);
+  --triton-font-display: clamp(2rem, 3.5vw, 2.5rem);
+  --triton-font-title: clamp(1.75rem, 2.4vw, 2.125rem);
+  --triton-font-section: 1.25rem;
+  --triton-font-body: 1rem;
+  --triton-font-caption: 0.8125rem;
+  --triton-font-table: 0.875rem;
+  --triton-space-1: 0.25rem;
+  --triton-space-2: 0.5rem;
+  --triton-space-3: 0.75rem;
+  --triton-space-4: 1rem;
+  --triton-space-6: 1.5rem;
+  --triton-space-8: 2rem;
 }
 
 .o_triton_page {
+  overflow-x: clip;
   min-height: 100vh;
   background: var(--triton-bg);
   color: var(--triton-text);
@@ -44,23 +59,21 @@
   margin-inline: auto;
 }
 
-.o_triton_navbar,
-.o_triton_portal-nav {
-  position: relative;
-  z-index: 2;
+.o_triton_navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   background: var(--triton-surface);
   color: var(--triton-primary);
   border-bottom: 1px solid var(--triton-border);
   box-shadow: var(--triton-shadow-soft);
 }
 
-.o_triton_navbar a,
-.o_triton_portal-nav a {
+.o_triton_navbar a {
   color: var(--triton-deep-ocean);
 }
 
-.o_triton_navbar .o_triton_brand-copy small,
-.o_triton_portal-nav .o_triton_brand-copy small {
+.o_triton_navbar .o_triton_brand-copy small {
   color: var(--triton-muted);
 }
 
@@ -275,7 +288,7 @@
   .o_triton_score-grid,
   .o_triton_feature-grid,
   .o_triton_footer-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .o_triton_mobile-menu {

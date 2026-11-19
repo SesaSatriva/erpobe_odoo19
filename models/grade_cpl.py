@@ -8,6 +8,12 @@ class ErpObeGradeCpl(models.Model):
 
     mahasiswa_id = fields.Many2one("erpobe.master.mahasiswa", required=True, index=True)
     cpl_id = fields.Many2one("erpobe.akademik.cpl", required=True, index=True)
+    krs_line_id = fields.Many2one(
+        "erpobe.akademik.krs.line", string="Attempt KRS", ondelete="restrict", index=True
+    )
+    rps_id = fields.Many2one(
+        "erpobe.akademik.rps", string="RPS Digunakan", ondelete="restrict", index=True
+    )
 
     nilai_cpl = fields.Float(compute="_compute_nilai_cpl", store=True, digits=(16, 2))
     target_nilai = fields.Float(
@@ -42,7 +48,26 @@ class ErpObeGradeCpl(models.Model):
         BobotCpmkCpl = self.env["erpobe.bobot.cpmk.cpl"]
         GradeCpmk = self.env["erpobe.grade.cpmk"]
 
-        cpl_ids = self.mapped("cpl_id")
+        exact_records = self.filtered(lambda grade: grade.rps_id and grade.krs_line_id)
+        for rec in exact_records:
+            mapped_cpmks = rec.cpl_id.cpmk_mapping_ids.mapped("cpmk_id")
+            grades = GradeCpmk.search([
+                ("mahasiswa_id", "=", rec.mahasiswa_id.id),
+                ("krs_line_id", "=", rec.krs_line_id.id),
+                ("rps_id", "=", rec.rps_id.id),
+                ("cpmk_id", "in", mapped_cpmks.ids),
+            ])
+            assessed = grades.filtered(lambda grade: grade.nilai_cpmk is not False)
+            rec.nilai_cpl = (
+                sum(assessed.mapped("nilai_cpmk")) / len(assessed)
+                if assessed else 0.0
+            )
+
+        legacy_records = self.filtered(lambda grade: not grade.rps_id or not grade.krs_line_id)
+        if not legacy_records:
+            return
+
+        cpl_ids = legacy_records.mapped("cpl_id")
         
         # 1. Ambil Peta Bobot (Mapping CPL -> CPMK & Bobotnya)
         bobot_lines = BobotCpmkCpl.search([("cpl_id", "in", cpl_ids.ids)])
@@ -62,7 +87,7 @@ class ErpObeGradeCpl(models.Model):
             relevant_cpmk_ids.add(cpmk_id)
 
         # 2. Ambil Nilai Mahasiswa yang Relevan
-        mhs_ids = self.mapped("mahasiswa_id")
+        mhs_ids = legacy_records.mapped("mahasiswa_id")
         cpmk_grades = GradeCpmk.search([
             ("mahasiswa_id", "in", mhs_ids.ids),
             ("cpmk_id", "in", list(relevant_cpmk_ids)),
@@ -78,7 +103,7 @@ class ErpObeGradeCpl(models.Model):
             student_map[mhs_id][g.cpmk_id.id] = g.nilai_cpmk
 
         # 3. Hitung nilai hanya dari CPMK yang sudah diambil mahasiswa.
-        for rec in self:
+        for rec in legacy_records:
             rec.nilai_cpl = 0.0
 
             cpl_weights = weight_map.get(rec.cpl_id.id, {})

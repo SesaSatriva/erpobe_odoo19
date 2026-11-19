@@ -216,3 +216,57 @@ Responsive mahasiswa: [tablet](screenshots/student-dashboard-tablet.jpg),
   foto/password profil, RPS/perwalian, website publik, dan permanent Playwright
   suite masih belum diuji atau diselesaikan.
 - Dashboard dosen sebelum perubahan belum memiliki screenshot pembanding.
+
+## 18. Phase 1 — shared navigation and responsive shell follow-up
+
+### Implemented
+
+- Portal navigation is role-aware, marks the active route, and provides a compact
+  mobile menu, account menu, profile/settings link, public-site link, and logout.
+- Portal breadcrumbs are derived from the current route, including nested grade,
+  RPS edit, and KRS detail routes.
+- Public navigation has an active state and an accessible mobile menu. Shared
+  TRITON design tokens and responsive shell rules are used across the portal and
+  public website.
+- The official logo remains the same static module asset in public and portal
+  templates; no filesystem path is used in browser URLs.
+
+### Runtime verification
+
+- `erpobe` was upgraded on the development database after creating a readable
+  PostgreSQL backup archive. The upgrade completed and loaded the module registry.
+- The upgrade loads the whole current module, not only navigation templates. The
+  worktree also contained pending RPS/grade model changes outside this phase;
+  those source files were not edited in this follow-up. The pre-upgrade archive
+  remains at `/tmp/erpobe_phase1_before_shell.dump` for recovery if needed.
+- The authenticated lecturer dashboard `/my/triton` returned HTTP 200. At the
+  measured 1440×900 CSS viewport, desktop navigation was visible, the mobile menu
+  was hidden, the breadcrumb rendered, the logo was present in the navbar/footer,
+  and the document had no horizontal overflow.
+- `/my/kelas/1/nilai` returned HTTP 200, marked `Kelas` active, and rendered
+  `Beranda / Pengajaran / Kelas / Input nilai` in the breadcrumb.
+- At 390×844, the lecturer mobile menu opened and exposed role links, profile,
+  public site, and logout. Its links remained inside the measured viewport and
+  the document did not overflow horizontally.
+- The public homepage mobile menu opened at 390×844 and 360×800, with no measured
+  document overflow. Permanent mobile captures are linked below.
+- The lecturer account menu opened and exposed profile/settings and logout.
+  Clicking logout returned to `/`; a subsequent request for `/my/triton` was
+  redirected to the login page.
+- The public logo URL returned HTTP 200 with `image/jpeg`. The portal rendered
+  the same TRITON asset in its navbar and footer.
+- Post-upgrade browser smoke checks found no JavaScript page errors. A test
+  `HEAD` request was cancelled by the immediately following navigation; a
+  separate static asset `GET` returned HTTP 200 with `image/jpeg`. A `curl`
+  request without an Odoo database-selection cookie redirects to the database
+  selector; browser checks used the selected development database.
+
+### Screenshot evidence and limitation
+
+The public and lecturer portal pages were opened and inspected in the browser.
+However, the saved captures rendered only a narrow portion of the page despite
+the browser reporting the requested CSS viewport. The unreliable files were
+discarded rather than presented as screenshot evidence. No valid permanent
+Phase 1 before/after screenshot was saved; desktop visual comparison and a
+student-role shell screenshot remain NOT TESTED. The authenticated account
+available for this run was a lecturer.

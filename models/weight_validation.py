@@ -27,6 +27,44 @@ class ErpObeWeightValidation(models.AbstractModel):
         rps.ensure_one()
         groups = []
 
+        snapshot_is_configured = bool(
+            rps.rps_komponen_ids
+            and any(component.bobot for component in rps.rps_komponen_ids)
+        )
+        if snapshot_is_configured:
+            active_components = rps.rps_komponen_ids.filtered(
+                lambda component: component.aktif
+            )
+            component_total = sum(active_components.mapped("bobot"))
+            status, difference = _weight_status(component_total)
+            groups.append(
+                self._group_result(
+                    rps,
+                    "rps_component_total",
+                    rps.matakuliah_id.display_name,
+                    component_total,
+                    difference,
+                    status,
+                    mk_id=rps.matakuliah_id.id,
+                )
+            )
+            for component in active_components:
+                allocation_total = sum(
+                    component.allocation_ids.mapped("bobot_komponen_cpmk")
+                )
+                status, difference = _weight_status(allocation_total)
+                groups.append(
+                    self._group_result(
+                        rps,
+                        "rps_component_cpmk",
+                        component.name,
+                        allocation_total,
+                        difference,
+                        status,
+                        rps_komponen_id=component.id,
+                    )
+                )
+
         for cpmk in rps.cpmk_ids:
             lines = rps.bobot_cpmk_cpl_ids.filtered(
                 lambda line: line.cpmk_id == cpmk

@@ -8,6 +8,12 @@ class ErpObeGradeMk(models.Model):
 
     mahasiswa_id = fields.Many2one("erpobe.master.mahasiswa", required=True, index=True)
     mk_id = fields.Many2one("erpobe.master.matakuliah", required=True, index=True)
+    krs_line_id = fields.Many2one(
+        "erpobe.akademik.krs.line", string="Attempt KRS", ondelete="restrict", index=True
+    )
+    rps_id = fields.Many2one(
+        "erpobe.akademik.rps", string="RPS Digunakan", ondelete="restrict", index=True
+    )
     semester = fields.Integer(related="mk_id.semester", store=True, string="Semester")
     kode_mk = fields.Char(related="mk_id.kode_mk", store=True, string="Kode MK")
     nilai_mk = fields.Float(compute="_compute_nilai_mk", store=True, digits=(16, 2))
@@ -74,9 +80,35 @@ class ErpObeGradeMk(models.Model):
         Rps = self.env["erpobe.akademik.rps"]
         BobotCpmkMk = self.env["erpobe.bobot.cpmk.mk"]
         GradeCpmk = self.env["erpobe.grade.cpmk"]
+        GradeKomp = self.env["erpobe.grade.komponen"]
+
+        exact_records = self.filtered(lambda grade: grade.rps_id and grade.krs_line_id)
+        for rec in exact_records:
+            active_snapshots = rec.rps_id.rps_komponen_ids.filtered(
+                lambda snapshot: snapshot.aktif
+            )
+            total_score = 0.0
+            total_weight = 0.0
+            for snapshot in active_snapshots:
+                grade = GradeKomp.search([
+                    ("krs_line_id", "=", rec.krs_line_id.id),
+                    ("rps_id", "=", rec.rps_id.id),
+                    ("rps_komponen_id", "=", snapshot.id),
+                    ("is_graded", "=", True),
+                    ("origin", "=", "actual"),
+                ], limit=1)
+                if not grade:
+                    continue
+                total_score += grade.nilai * snapshot.bobot / 100.0
+                total_weight += snapshot.bobot
+            rec.nilai_mk = total_score if abs(total_weight - 100.0) <= 0.01 or total_weight == 100.0 else total_score
+
+        legacy_records = self.filtered(lambda grade: not grade.rps_id or not grade.krs_line_id)
+        if not legacy_records:
+            return
 
         # 1. Prepare Data
-        mk_ids = self.mapped("mk_id")
+        mk_ids = legacy_records.mapped("mk_id")
 
         # Ambil RPS Terbaru (id desc) untuk MK terkait
         rps_records = Rps.search([("matakuliah_id", "in", mk_ids.ids)], order="id desc")
@@ -94,7 +126,7 @@ class ErpObeGradeMk(models.Model):
             weight_map[mk][b.cpmk_id.id] = b.bobot_cpmk_mk
 
         # 2. Get Nilai CPMK Mahasiswa
-        mhs_ids = self.mapped("mahasiswa_id")
+        mhs_ids = legacy_records.mapped("mahasiswa_id")
         cpmk_grades = GradeCpmk.search(
             [
                 ("mahasiswa_id", "in", mhs_ids.ids),
@@ -110,7 +142,7 @@ class ErpObeGradeMk(models.Model):
             grade_map[g.mahasiswa_id.id][g.cpmk_id.id] = g.nilai_cpmk
 
         # 3. Calculate
-        for rec in self:
+        for rec in legacy_records:
             rec.nilai_mk = 0.0
 
             weights = weight_map.get(rec.mk_id.id, {})

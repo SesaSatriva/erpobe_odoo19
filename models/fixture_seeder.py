@@ -1142,6 +1142,10 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             bobot_mk.write({"bobot_cpmk_mk": 50.0})
         rps.bobot_cpmk_cpl_ids.write({"bobot_cpmk_cpl": 50.0})
         rps.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 25.0})
+        rps.rps_komponen_ids.write({"bobot": 25.0, "aktif": True})
+        rps.bobot_komponen_cpmk_ids.filtered(
+            lambda line: line.rps_komponen_id
+        ).write({"bobot_komponen_cpmk": 25.0})
 
         sub_items = []
         for week in range(1, 17):
@@ -1368,6 +1372,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 for course in selected_courses:
                     line = lines[course_line_keys[course["code"]]]
                     for component_index, component in enumerate(component_ids):
+                        snapshot = course["rps"].rps_komponen_ids.filtered(
+                            lambda item: item.komponen_id == component
+                        )[:1]
                         grade_key = (
                             f"fixture_grade_{student_key}_{course['spec']['key']}_"
                             f"{component_index + 1:02d}"
@@ -1379,6 +1386,10 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                                     "input_nilai_id": course["input_nilai"].id,
                                     "krs_line_id": line.id,
                                     "komponen_id": component.id,
+                                    "rps_id": course["rps"].id,
+                                    "rps_komponen_id": snapshot.id if snapshot else False,
+                                    "origin": "simulated",
+                                    "is_graded": True,
                                     "nilai": self._simulated_score(
                                         student_index,
                                         course["spec"]["sequence"],

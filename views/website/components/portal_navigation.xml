@@ -1,33 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_portal_nav" name="Navigasi Portal TRITON">
+        <t t-set="portal_path" t-value="request.httprequest.path.rstrip('/') or '/'"/>
+        <t t-set="is_teacher" t-value="request.env.user.has_group('erpobe.group_dosen')"/>
+        <t t-set="is_student" t-value="request.env.user.has_group('erpobe.group_mahasiswa')"/>
+        <t t-set="portal_links" t-value="[
+            ('Beranda', '/my/triton'),
+            ('RPS', '/my/rps'),
+            ('Kelas', '/my/kelas'),
+            ('Perwalian', '/my/perwalian'),
+            ('Analisis', '/my/analisis'),
+            ('Riwayat nilai', '/my/riwayat-nilai')
+        ] if is_teacher else [
+            ('Beranda', '/my/triton'),
+            ('KRS', '/my/krs'),
+            ('KHS', '/my/khs'),
+            ('Mata kuliah', '/my/mata-kuliah'),
+            ('Capaian CPL', '/my/capaian-cpl')
+        ] if is_student else [
+            ('Beranda', '/my/triton'),
+            ('Profil', '/my/profil')
+        ]"/>
         <nav class="o_triton_portal-nav" aria-label="Navigasi portal">
-            <a href="/my/triton" class="o_triton_brand" aria-label="TRITON, beranda portal">
-                <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.jpeg" alt="TRITON"/>
-            </a>
-            <div class="o_triton_portal-links" t-if="request.env.user and request.env.user.has_group('erpobe.group_dosen')">
-                <a href="/my/triton">Beranda</a>
-                <a href="/my/rps">RPS</a>
-                <a href="/my/kelas">Kelas</a>
-                <a href="/my/perwalian">Perwalian</a>
-                <a href="/my/analisis">Analisis</a>
-                <a href="/my/riwayat-nilai">Riwayat Nilai</a>
-                <a href="/my/profil">Profil</a>
+            <div class="o_triton_portal-nav-inner">
+                <a href="/my/triton" class="o_triton_brand" aria-label="TRITON, beranda portal">
+                    <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.jpeg" alt="TRITON"/>
+                </a>
+                <div class="o_triton_portal-links o_triton_portal-links--desktop">
+                    <a t-foreach="portal_links" t-as="link" t-att-href="link[1]"
+                        t-att-class="'o_triton_portal-link' + (' is-active' if portal_path == link[1] or (link[1] != '/my/triton' and portal_path.startswith(link[1] + '/')) else '')"
+                        t-att-aria-current="'page' if portal_path == link[1] or (link[1] != '/my/triton' and portal_path.startswith(link[1] + '/')) else None"
+                        t-out="link[0]"/>
+                </div>
+                <details class="o_triton_portal-mobile-menu">
+                    <summary aria-label="Buka navigasi portal">Menu</summary>
+                    <div class="o_triton_portal-mobile-panel">
+                        <a t-foreach="portal_links" t-as="link" t-att-href="link[1]"
+                            t-att-class="'o_triton_portal-link' + (' is-active' if portal_path == link[1] or (link[1] != '/my/triton' and portal_path.startswith(link[1] + '/')) else '')"
+                            t-att-aria-current="'page' if portal_path == link[1] or (link[1] != '/my/triton' and portal_path.startswith(link[1] + '/')) else None"
+                            t-out="link[0]"/>
+                        <span class="o_triton_portal-menu-divider" aria-hidden="true"/>
+                        <a href="/my/profil">Profil dan pengaturan</a>
+                        <a href="/">Situs publik</a>
+                        <a href="/web/session/logout?redirect=/">Keluar</a>
+                    </div>
+                </details>
+                <div class="o_triton_portal-nav-actions">
+                    <a href="/" class="o_triton_portal-public-link">Situs publik</a>
+                    <details class="o_triton_user-menu">
+                        <summary t-att-aria-label="'Menu akun ' + request.env.user.name">
+                            <span class="o_triton_user-avatar" aria-hidden="true">
+                                <t t-out="request.env.user.name[:1].upper()"/>
+                            </span>
+                            <span class="o_triton_user-name" t-out="request.env.user.name"/>
+                            <span class="o_triton_user-chevron" aria-hidden="true">⌄</span>
+                        </summary>
+                        <div class="o_triton_user-menu-panel">
+                            <a href="/my/profil">Profil dan pengaturan</a>
+                            <a href="/web/session/logout?redirect=/">Keluar</a>
+                        </div>
+                    </details>
+                </div>
             </div>
-            <div class="o_triton_portal-links" t-elif="request.env.user and request.env.user.has_group('erpobe.group_mahasiswa')">
-                <a href="/my/triton">Beranda</a>
-                <a href="/my/krs">KRS</a>
-                <a href="/my/khs">KHS</a>
-                <a href="/my/mata-kuliah">Mata Kuliah</a>
-                <a href="/my/capaian-cpl">Capaian CPL</a>
-                <a href="/my/profil">Profil</a>
-            </div>
-            <div class="o_triton_portal-links" t-else="">
-                <a href="/my/triton">Beranda</a>
-                <a href="/my/profil">Profil</a>
-            </div>
-            <a href="/" class="o_triton_btn-ghost">Situs publik</a>
+        </nav>
+        <t t-set="is_rps_edit" t-value="portal_path.startswith('/my/rps/') and portal_path.endswith('/edit')"/>
+        <t t-set="is_grade_entry" t-value="portal_path.startswith('/my/kelas/') and portal_path.endswith('/nilai')"/>
+        <t t-set="is_krs_detail" t-value="portal_path.startswith('/my/krs/')"/>
+        <t t-set="breadcrumb" t-value="{
+            '/my/triton': ('', '', '', ''),
+            '/my/krs': ('Akademik', '', '', 'KRS'),
+            '/my/khs': ('Akademik', '', '', 'KHS'),
+            '/my/mata-kuliah': ('Akademik', '', '', 'Mata kuliah'),
+            '/my/capaian-cpl': ('Outcome-based education', '', '', 'Capaian CPL'),
+            '/my/profil': ('Akun', '', '', 'Profil'),
+            '/my/kelas': ('Pengajaran', '', '', 'Kelas'),
+            '/my/perwalian': ('Pengajaran', '', '', 'Perwalian'),
+            '/my/analisis': ('Pengajaran', '', '', 'Analisis kelas'),
+            '/my/riwayat-nilai': ('Penilaian', '', '', 'Riwayat nilai'),
+            '/my/rps': ('Pembelajaran', '', '', 'RPS')
+        }.get(portal_path, ('', '', '', ''))"/>
+        <t t-if="is_rps_edit">
+            <t t-set="breadcrumb" t-value="('Pembelajaran', 'RPS', '/my/rps', 'Edit RPS')"/>
+        </t>
+        <t t-elif="is_grade_entry">
+            <t t-set="breadcrumb" t-value="('Pengajaran', 'Kelas', '/my/kelas', 'Input nilai')"/>
+        </t>
+        <t t-elif="is_krs_detail">
+            <t t-set="breadcrumb" t-value="('Akademik', 'KRS', '/my/krs', 'Detail KRS')"/>
+        </t>
+        <nav t-if="portal_path == '/my/triton' or breadcrumb[3]" class="o_triton_breadcrumb o_triton_portal-breadcrumb" aria-label="Breadcrumb">
+            <ol>
+                <li t-if="portal_path == '/my/triton'" aria-current="page"><span>Beranda</span></li>
+                <li t-else=""><a href="/my/triton">Beranda</a></li>
+                <li t-if="breadcrumb[0]"><span t-out="breadcrumb[0]"/></li>
+                <li t-if="breadcrumb[1]"><a t-att-href="breadcrumb[2]" t-out="breadcrumb[1]"/></li>
+                <li t-if="breadcrumb[3] and portal_path != '/my/triton'" aria-current="page"><span t-out="breadcrumb[3]"/></li>
+            </ol>
         </nav>
     </template>
-
 </odoo>

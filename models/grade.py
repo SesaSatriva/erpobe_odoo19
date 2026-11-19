@@ -56,9 +56,20 @@ class ErpObeInputNilai(models.Model):
                 _("Tidak ada data mahasiswa (KRS) di kelas ini untuk dihitung.")
             )
 
-        # 2. Validasi RPS
+        # 2. Validasi RPS: gunakan RPS yang melekat pada kelas, bukan RPS terbaru lintas kelas.
         current_mk_id = self.penawaran_line_id.matakuliah_id.id
-        rps = Rps.search([("matakuliah_id", "=", current_mk_id)], limit=1)
+        rps = self.penawaran_line_id.latest_rps_id
+        if rps and rps.status == "final":
+            rps = rps
+        else:
+            rps = Rps.search(
+                [
+                    ("penawaran_line_id", "=", self.penawaran_line_id.id),
+                    ("status", "=", "final"),
+                ],
+                order="version desc, id desc",
+                limit=1,
+            )
 
         if not rps:
             raise ValidationError(
@@ -87,36 +98,69 @@ class ErpObeInputNilai(models.Model):
             # a. Ensure Grade CPMK
             for cpmk in cpmk_list:
                 g_cpmk = GradeCpmk.search(
-                    [("mahasiswa_id", "=", mahasiswa.id), ("cpmk_id", "=", cpmk.id)],
+                    [
+                        ("mahasiswa_id", "=", mahasiswa.id),
+                        ("cpmk_id", "=", cpmk.id),
+                        ("krs_line_id", "=", krs.id),
+                    ],
                     limit=1,
                 )
                 if not g_cpmk:
                     g_cpmk = GradeCpmk.create(
-                        {"mahasiswa_id": mahasiswa.id, "cpmk_id": cpmk.id}
+                        {
+                            "mahasiswa_id": mahasiswa.id,
+                            "cpmk_id": cpmk.id,
+                            "krs_line_id": krs.id,
+                            "rps_id": rps.id,
+                        }
                     )
+                else:
+                    g_cpmk.write({"krs_line_id": krs.id, "rps_id": rps.id})
                 recompute_cpmk += g_cpmk  # Kumpulkan record
 
             # b. Ensure Grade MK
             g_mk = GradeMk.search(
-                [("mahasiswa_id", "=", mahasiswa.id), ("mk_id", "=", current_mk_id)],
+                [
+                    ("mahasiswa_id", "=", mahasiswa.id),
+                    ("mk_id", "=", current_mk_id),
+                    ("krs_line_id", "=", krs.id),
+                ],
                 limit=1,
             )
             if not g_mk:
                 g_mk = GradeMk.create(
-                    {"mahasiswa_id": mahasiswa.id, "mk_id": current_mk_id}
+                    {
+                        "mahasiswa_id": mahasiswa.id,
+                        "mk_id": current_mk_id,
+                        "krs_line_id": krs.id,
+                        "rps_id": rps.id,
+                    }
                 )
+            else:
+                g_mk.write({"krs_line_id": krs.id, "rps_id": rps.id})
             recompute_mk += g_mk  # Kumpulkan record
 
             # c. Ensure Grade CPL
             for cpl in relevant_cpls:
                 g_cpl = GradeCpl.search(
-                    [("mahasiswa_id", "=", mahasiswa.id), ("cpl_id", "=", cpl.id)],
+                    [
+                        ("mahasiswa_id", "=", mahasiswa.id),
+                        ("cpl_id", "=", cpl.id),
+                        ("krs_line_id", "=", krs.id),
+                    ],
                     limit=1,
                 )
                 if not g_cpl:
                     g_cpl = GradeCpl.create(
-                        {"mahasiswa_id": mahasiswa.id, "cpl_id": cpl.id}
+                        {
+                            "mahasiswa_id": mahasiswa.id,
+                            "cpl_id": cpl.id,
+                            "krs_line_id": krs.id,
+                            "rps_id": rps.id,
+                        }
                     )
+                else:
+                    g_cpl.write({"krs_line_id": krs.id, "rps_id": rps.id})
                 recompute_cpl += g_cpl  # Kumpulkan record
 
         # === FORCE RECOMPUTE (SOLUSI UTAMA) ===
@@ -163,6 +207,7 @@ class ErpObeInputNilai(models.Model):
 
         Komponen = self.env["erpobe.akademik.komponen"]
         active_components = Komponen.search([("aktif", "=", True)])
+        rps = self.penawaran_line_id.latest_rps_id
 
         if not active_components:
             return
@@ -178,9 +223,19 @@ class ErpObeInputNilai(models.Model):
         new_lines = [Command.clear()]
         for krs in krs_lines:
             for comp in active_components:
+                snapshot = (
+                    rps.rps_komponen_ids.filtered(
+                        lambda item: item.komponen_id == comp
+                    )[:1]
+                    if rps else self.env["erpobe.akademik.rps.komponen"]
+                )
                 # Cek database: Apakah mahasiswa ini sudah punya nilai komponen ini?
                 existing_grade = GradeKomponen.search(
-                    [("krs_line_id", "=", krs.id), ("komponen_id", "=", comp.id)],
+                    [
+                        ("krs_line_id", "=", krs.id),
+                        ("komponen_id", "=", comp.id),
+                        ("rps_id", "=", rps.id if rps else False),
+                    ],
                     limit=1,
                 )
 
@@ -201,6 +256,8 @@ class ErpObeInputNilai(models.Model):
                             "krs_line_id": krs.id,
                             "komponen_id": comp.id,
                             "nilai": val_nilai,  # Gunakan nilai cerdas
+                            "rps_id": rps.id if rps else False,
+                            "rps_komponen_id": snapshot.id if snapshot else False,
                         }
                     )
                 )
@@ -225,8 +282,34 @@ class ErpObeGradeKomponen(models.Model):
     # Core Data
     komponen_id = fields.Many2one("erpobe.akademik.komponen", required=True, index=True)
     nilai = fields.Float(string="Nilai Angka", default=0.0, digits=(16, 2))
+    rps_id = fields.Many2one(
+        "erpobe.akademik.rps", string="RPS Penilaian", ondelete="restrict", index=True
+    )
+    rps_komponen_id = fields.Many2one(
+        "erpobe.akademik.rps.komponen",
+        string="Komponen RPS",
+        ondelete="restrict",
+        index=True,
+    )
+    origin = fields.Selection(
+        [
+            ("legacy", "Legacy"),
+            ("actual", "Nilai Aktual"),
+            ("simulated", "Nilai Simulasi"),
+        ],
+        default="actual",
+        required=True,
+        index=True,
+    )
+    is_graded = fields.Boolean(
+        string="Sudah Dinilai", default=True, index=True
+    )
 
     _uniq_nilai_komp_constraint = models.Constraint('unique(krs_line_id, komponen_id)', 'Nilai komponen duplikat untuk mahasiswa ini.')
+    _nilai_range_constraint = models.Constraint(
+        "CHECK(nilai >= 0 AND nilai <= 100)",
+        "Nilai komponen harus berada pada rentang 0–100.",
+    )
 
     prodi_id = fields.Many2one(
         related="mahasiswa_id.prodi_id", store=True, readonly=True, index=True

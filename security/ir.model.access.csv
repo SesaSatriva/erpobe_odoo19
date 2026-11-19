@@ -68,6 +68,10 @@ access_erpobe_akademik_rps_settings,erpobe.akademik.rps settings,model_erpobe_ak
 access_rps_admin,access.rps.admin,model_erpobe_akademik_rps,erpobe.group_admin,1,1,1,1
 access_rps_dosen,access.rps.dosen,model_erpobe_akademik_rps,erpobe.group_dosen,1,1,1,0
 access_rps_mahasiswa,access.rps.mahasiswa,model_erpobe_akademik_rps,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_akademik_rps_komponen_settings,erpobe.akademik.rps.komponen settings,model_erpobe_akademik_rps_komponen,base.group_system,1,1,1,1
+access_rps_komponen_admin,erpobe.akademik.rps.komponen admin,model_erpobe_akademik_rps_komponen,erpobe.group_admin,1,1,1,1
+access_rps_komponen_dosen,erpobe.akademik.rps.komponen dosen,model_erpobe_akademik_rps_komponen,erpobe.group_dosen,1,1,1,0
+access_rps_komponen_mahasiswa,erpobe.akademik.rps.komponen mahasiswa,model_erpobe_akademik_rps_komponen,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_akademik_rubrik_penilaian_settings,erpobe.akademik.rubrik.penilaian settings,model_erpobe_akademik_rubrik_penilaian,base.group_system,1,1,1,1
 access_rubrik_admin,access.rubrik.admin,model_erpobe_akademik_rubrik_penilaian,erpobe.group_admin,1,1,1,1
 access_rubrik_dosen,access.rubrik.dosen,model_erpobe_akademik_rubrik_penilaian,erpobe.group_dosen,1,1,1,1

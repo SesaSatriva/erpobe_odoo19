@@ -15,6 +15,7 @@ from . import akademik_penawaran
 from . import akademik_krs
 from . import rps_lock
 from . import akademik_rps
+from . import rps_komponen
 from . import akademik_tahunajaran
 from . import academic_fixture
 from . import fixture_seeder

@@ -132,10 +132,27 @@ class TritonPortalDosen(TritonPortalBase):
                             if value < 0 or value > 100:
                                 raise ValidationError('Nilai harus berada pada rentang 0–100.')
                             grade = Grade.search([('krs_line_id', '=', krs_line.id), ('komponen_id', '=', component.id)], limit=1)
+                            snapshot = rps.rps_komponen_ids.filtered(
+                                lambda item: item.komponen_id == component
+                            )[:1]
                             if grade:
-                                grade.write({'nilai': value})
+                                grade.write({
+                                    'nilai': value,
+                                    'rps_id': rps.id,
+                                    'rps_komponen_id': snapshot.id if snapshot else False,
+                                    'origin': 'actual',
+                                    'is_graded': True,
+                                })
                             else:
-                                Grade.create({'krs_line_id': krs_line.id, 'komponen_id': component.id, 'nilai': value})
+                                Grade.create({
+                                    'krs_line_id': krs_line.id,
+                                    'komponen_id': component.id,
+                                    'nilai': value,
+                                    'rps_id': rps.id,
+                                    'rps_komponen_id': snapshot.id if snapshot else False,
+                                    'origin': 'actual',
+                                    'is_graded': True,
+                                })
                     Input = request.env['erpobe.input.nilai'].sudo()
                     input_record = Input.search([('penawaran_line_id', '=', line.id)], limit=1)
                     if not input_record:

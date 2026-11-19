@@ -46,10 +46,10 @@ class TestErpObeRpsVersioning(TransactionCase):
             {"name": "Komponen Versi", "tipe": "kognitif"}
         )
         cls.old_year = cls.Year.create(
-            {"tahun_ajaran": "2024/2025", "semester": "ganjil"}
+            {"tahun_ajaran": "2097/2098", "semester": "ganjil"}
         )
         cls.new_year = cls.Year.create(
-            {"tahun_ajaran": "2025/2026", "semester": "ganjil"}
+            {"tahun_ajaran": "2098/2099", "semester": "ganjil"}
         )
         cls.old_offer = cls.Offer.create({"tahun_ajaran": cls.old_year.id})
         cls.new_offer = cls.Offer.create({"tahun_ajaran": cls.new_year.id})

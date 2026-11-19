@@ -1,4 +1,4 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo noupdate="0">
-    <function model="res.users" name="load_erpobe_demo_users" />
+    <function model="res.users" name="load_erpobe_fixture_users" />
 </odoo>

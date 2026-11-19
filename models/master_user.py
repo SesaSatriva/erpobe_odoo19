@@ -22,7 +22,7 @@ class ErpObeResConfigSettings(models.TransientModel):
     )
 
 
-DEMO_USER_PASSWORD = "Demo123!"
+FIXTURE_USER_PASSWORD = "Demo123!"
 
 
 def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_field):
@@ -32,46 +32,64 @@ def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_f
             "Email wajib diisi pada kontak dosen/mahasiswa untuk membuat login."
         )
 
-    is_demo = profile.env.context.get("install_demo")
     users = profile.env["res.users"].sudo().with_context(active_test=False)
-    user = users.search([("partner_id", "=", partner.id)], limit=1)
-    values = {
-        "name": profile.name,
-        "login": (
-            partner.email.partition("@")[0]
-            if is_demo and "@" in partner.email
-            else partner.email
-        ),
-        "password": DEMO_USER_PASSWORD if is_demo else identifier,
-        identifier_field: identifier,
-        "partner_id": partner.id,
-        "active": True,
-    }
-    existing_demo_user = bool(user and is_demo)
+    user = users.search([("partner_id", "=", partner.id)], limit=2)
+    if len(user) > 1:
+        raise ValidationError(
+            f"Kontak {partner.display_name} terhubung ke lebih dari satu akun."
+        )
+
+    is_new_user = not bool(user)
+    is_fixture_load = profile.env.context.get("install_mode")
     if user:
-        if is_demo:
-            profile_prodis = (
-                profile.prodi_ids
-                if profile._name == "erpobe.master.dosen"
-                else profile.prodi_id
+        linked_dosen = profile.env["erpobe.master.dosen"].sudo().search(
+            [("user_id", "=", user.id)], limit=1
+        )
+        linked_mahasiswa = profile.env["erpobe.master.mahasiswa"].sudo().search(
+            [("user_id", "=", user.id)], limit=1
+        )
+        profile_prodis = (
+            profile.prodi_ids
+            if profile._name == "erpobe.master.dosen"
+            else profile.prodi_id
+        )
+        if (
+            linked_dosen
+            or linked_mahasiswa
+            or not user.active
+            or not user.has_group(role_xmlid)
+            or user.has_group("erpobe.group_admin")
+            or user.has_group("erpobe.group_superadmin")
+            or user.has_group("base.group_system")
+            or set(user.erpobe_prodi_ids.ids) != set(profile_prodis.ids)
+        ):
+            raise ValidationError(
+                f"Akun yang sudah ada untuk {profile.name} tidak sesuai "
+                "dengan role/cakupan profil; akun tidak diubah."
             )
-            if (
-                not user.has_group(role_xmlid)
-                or user.has_group("erpobe.group_admin")
-                or user.has_group("erpobe.group_superadmin")
-                or user.has_group("base.group_system")
-                or set(user.erpobe_prodi_ids.ids) != set(profile_prodis.ids)
-            ):
-                raise ValidationError(
-                    f"Akun yang sudah ada untuk {profile.name} tidak sesuai "
-                    "dengan role/cakupan profil; akun tidak diubah."
-                )
-        else:
-            user.write(values)
     else:
-        user = users.with_context(skip_sync_user_type=True).create(
+        login = (
+            partner.email.partition("@")[0]
+            if is_fixture_load
+            else partner.email
+        )
+        if users.search([("login", "=ilike", login)], limit=1):
+            raise ValidationError(f"Login {login} sudah digunakan.")
+        if users.search([("email", "=ilike", partner.email)], limit=1):
+            raise ValidationError(f"Email {partner.email} sudah digunakan.")
+        user = users.with_context(
+            skip_sync_user_type=True,
+            no_reset_password=True,
+        ).create(
             {
-                **values,
+                "name": profile.name,
+                "login": login,
+                "password": (
+                    FIXTURE_USER_PASSWORD if is_fixture_load else identifier
+                ),
+                identifier_field: identifier,
+                "partner_id": partner.id,
+                "active": True,
                 "group_ids": [
                     Command.link(profile.env.ref("base.group_portal").id),
                     Command.link(profile.env.ref(role_xmlid).id),
@@ -80,7 +98,7 @@ def _create_or_update_profile_user(profile, identifier, role_xmlid, identifier_f
         )
 
     profile.user_id = user.id
-    if not existing_demo_user:
+    if is_new_user:
         profile.env["res.users"].browse(user.id)._sync_user_type()
 
 # RES USERS
@@ -174,13 +192,25 @@ class ResUsers(models.Model):
                 )
 
     @api.model
-    def load_erpobe_demo_users(self):
+    def load_erpobe_fixture_users(self):
         users = self.sudo().with_context(active_test=False)
         prodis = (
             self.env["erpobe.master.prodi"]
             .sudo()
             .with_context(active_test=False)
-            .search([], order="id")
+            .browse(
+                self.env["ir.model.data"]
+                .sudo()
+                .search(
+                    [
+                        ("module", "=", "erpobe"),
+                        ("model", "=", "erpobe.master.prodi"),
+                    ],
+                    order="name",
+                )
+                .mapped("res_id")
+            )
+            .exists()
         )
         if not prodis:
             return True
@@ -188,12 +218,12 @@ class ResUsers(models.Model):
         dosen_model = (
             self.env["erpobe.master.dosen"]
             .sudo()
-            .with_context(active_test=False, install_demo=True)
+            .with_context(active_test=False)
         )
         mahasiswa_model = (
             self.env["erpobe.master.mahasiswa"]
             .sudo()
-            .with_context(active_test=False, install_demo=True)
+            .with_context(active_test=False)
         )
         rombel_model = (
             self.env["erpobe.master.rombel"]
@@ -218,30 +248,44 @@ class ResUsers(models.Model):
                 slug = f"{slug}.p{prodi.id}"
 
             dosens = dosen_model.search(
-                [("prodi_ids", "in", prodi.id)], order="id"
+                [
+                    ("prodi_ids", "in", prodi.id),
+                    ("active", "=", True),
+                ],
+                order="id",
             )
             mahasiswa = mahasiswa_model.search(
-                [("prodi_id", "=", prodi.id)], order="id"
+                [
+                    ("prodi_id", "=", prodi.id),
+                    ("active", "=", True),
+                ],
+                order="id",
             )
             if len(dosens) > 3 or len(mahasiswa) > 20:
                 raise ValidationError(
                     f"Prodi {prodi.display_name} sudah memiliki {len(dosens)} "
-                    f"dosen dan {len(mahasiswa)} mahasiswa. Seeder demo tidak "
+                    f"dosen dan {len(mahasiswa)} mahasiswa. Seeder fixture tidak "
                     "akan menghapus atau mengubah profil yang sudah ada."
                 )
 
             scoped_users = users.search(
-                [("erpobe_prodi_ids", "in", prodi.id)]
+                [
+                    ("erpobe_prodi_ids", "in", prodi.id),
+                    ("active", "=", True),
+                ]
             )
             admins = scoped_users.filtered(
                 lambda user: user.has_group("erpobe.group_admin")
                 and not user.has_group("erpobe.group_superadmin")
                 and not user.has_group("base.group_system")
+                and set(user.erpobe_prodi_ids.ids) == {prodi.id}
+                and not user.has_group("erpobe.group_dosen")
+                and not user.has_group("erpobe.group_mahasiswa")
             )
             if len(admins) > 1:
                 raise ValidationError(
                     f"Prodi {prodi.display_name} sudah memiliki lebih dari "
-                    "satu Admin Prodi; seeder demo tidak mengubah akun lama."
+                    "satu Admin Prodi; seeder fixture tidak mengubah akun lama."
                 )
             if admins:
                 admin = admins[0]
@@ -249,17 +293,6 @@ class ResUsers(models.Model):
                     raise ValidationError(
                         f"Akun Admin Prodi {admin.display_name} tidak aktif dan "
                         "tidak akan diubah."
-                    )
-                if set(admin.erpobe_prodi_ids.ids) != {prodi.id}:
-                    raise ValidationError(
-                        f"Akun Admin Prodi {admin.display_name} memiliki cakupan "
-                        "lebih dari satu prodi dan tidak akan diubah."
-                    )
-                if admin.has_group("erpobe.group_dosen") or admin.has_group(
-                    "erpobe.group_mahasiswa"
-                ):
-                    raise ValidationError(
-                        f"Akun {admin.display_name} memiliki lebih dari satu role."
                     )
                 account_ids.add(admin.id)
 
@@ -280,10 +313,8 @@ class ResUsers(models.Model):
                 for profile in profiles:
                     user = profile.user_id
                     if not user:
-                        raise ValidationError(
-                            f"Profil {role_name} {profile.display_name} belum "
-                            "terhubung ke akun pengguna."
-                        )
+                        profile._create_or_update_user()
+                        user = profile.user_id
                     if not profile.active or not user.active:
                         raise ValidationError(
                             f"Profil {role_name} {profile.display_name} atau "
@@ -326,11 +357,11 @@ class ResUsers(models.Model):
         emails = [user.email.casefold() for user in accounts if user.email]
         if len(logins) != len(accounts) or len(set(logins)) != len(accounts):
             raise ValidationError(
-                "Akun demo yang sudah ada memiliki login kosong atau duplikat."
+                "Akun fixture yang sudah ada memiliki login kosong atau duplikat."
             )
         if len(emails) != len(accounts) or len(set(emails)) != len(accounts):
             raise ValidationError(
-                "Akun demo yang sudah ada memiliki email kosong atau duplikat."
+                "Akun fixture yang sudah ada memiliki email kosong atau duplikat."
             )
 
         reserved_logins = {
@@ -360,7 +391,7 @@ class ResUsers(models.Model):
                     reserved_emails.add(normalized_email)
                     return login, email
             raise ValidationError(
-                f"Login demo untuk {base} berbenturan dengan akun yang sudah ada."
+                f"Login fixture untuk {base} berbenturan dengan akun yang sudah ada."
             )
 
         def reserve_identifier(base, used_identifiers):
@@ -380,7 +411,7 @@ class ResUsers(models.Model):
                         "name": f"Admin Prodi {prodi.name}",
                         "login": login,
                         "email": email,
-                        "password": DEMO_USER_PASSWORD,
+                        "password": FIXTURE_USER_PASSWORD,
                         "group_ids": [Command.set([group_admin.id])],
                         "erpobe_prodi_ids": [Command.link(prodi.id)],
                         "active": True,
@@ -409,7 +440,7 @@ class ResUsers(models.Model):
                     }
                 )
                 dosen.user_id.with_context(skip_sync_user_type=True).write(
-                    {"login": login, "password": DEMO_USER_PASSWORD}
+                    {"login": login, "password": FIXTURE_USER_PASSWORD}
                 )
 
             dosens = dosen_model.search(
@@ -456,27 +487,41 @@ class ResUsers(models.Model):
                     }
                 )
                 student.user_id.with_context(skip_sync_user_type=True).write(
-                    {"login": login, "password": DEMO_USER_PASSWORD}
+                    {"login": login, "password": FIXTURE_USER_PASSWORD}
                 )
 
         final_account_ids = set()
         for prodi in prodis:
             dosens = dosen_model.search(
-                [("prodi_ids", "in", prodi.id)], order="id"
+                [
+                    ("prodi_ids", "in", prodi.id),
+                    ("active", "=", True),
+                ],
+                order="id",
             )
             mahasiswa = mahasiswa_model.search(
-                [("prodi_id", "=", prodi.id)], order="id"
+                [
+                    ("prodi_id", "=", prodi.id),
+                    ("active", "=", True),
+                ],
+                order="id",
             )
             admins = users.search(
-                [("erpobe_prodi_ids", "in", prodi.id)]
+                [
+                    ("erpobe_prodi_ids", "in", prodi.id),
+                    ("active", "=", True),
+                ]
             ).filtered(
                 lambda user: user.has_group("erpobe.group_admin")
                 and not user.has_group("erpobe.group_superadmin")
                 and not user.has_group("base.group_system")
+                and set(user.erpobe_prodi_ids.ids) == {prodi.id}
+                and not user.has_group("erpobe.group_dosen")
+                and not user.has_group("erpobe.group_mahasiswa")
             )
             if len(dosens) != 3 or len(mahasiswa) != 20 or len(admins) != 1:
                 raise ValidationError(
-                    f"Jumlah akun demo untuk {prodi.display_name} tidak sesuai "
+                    f"Jumlah akun fixture untuk {prodi.display_name} tidak sesuai "
                     "target 1 Admin Prodi, 3 dosen, dan 20 mahasiswa."
                 )
             role_account_ids = (
@@ -486,24 +531,28 @@ class ResUsers(models.Model):
             )
             if len(set(role_account_ids)) != 24:
                 raise ValidationError(
-                    f"Akun demo pada {prodi.display_name} tidak terhubung ke "
+                    f"Akun fixture pada {prodi.display_name} tidak terhubung ke "
                     "24 pengguna yang berbeda."
                 )
             final_account_ids.update(role_account_ids)
 
         final_accounts = users.browse(sorted(final_account_ids))
+        if len(final_accounts) != 24 * len(prodis):
+            raise ValidationError(
+                "Jumlah pengguna unik tidak sesuai dengan 24 akun per prodi fixture."
+            )
         final_logins = [user.login.casefold() for user in final_accounts if user.login]
         final_emails = [user.email.casefold() for user in final_accounts if user.email]
         if (
             len(final_logins) != len(final_accounts)
             or len(set(final_logins)) != len(final_accounts)
         ):
-            raise ValidationError("Login akun demo kosong atau tidak unik.")
+            raise ValidationError("Login akun fixture kosong atau tidak unik.")
         if (
             len(final_emails) != len(final_accounts)
             or len(set(final_emails)) != len(final_accounts)
         ):
-            raise ValidationError("Email akun demo kosong atau tidak unik.")
+            raise ValidationError("Email akun fixture kosong atau tidak unik.")
 
         return True
 

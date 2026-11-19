@@ -793,6 +793,15 @@
         <field name="domain_force">['|', ('id', '=', user.id), ('erpobe_prodi_ids', 'in', user.erpobe_prodi_ids.ids)]</field>
         <field name="groups" eval="[(4, ref('erpobe.group_admin'))]"/>
     </record>
+    <record id="res_partner_dosen_student_scope" model="ir.rule">
+        <field name="name">Kontak mahasiswa: cakupan prodi dosen</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain_force">[('user_ids.nim', '!=', False), ('user_ids.erpobe_prodi_ids', 'in', user.erpobe_prodi_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_dosen'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
     <record id="res_users_superadmin_global" model="ir.rule">
         <field name="name">Users: Superadmin global</field>
         <field name="model_id" ref="base.model_res_users"/>

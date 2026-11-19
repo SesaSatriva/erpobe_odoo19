@@ -2,8 +2,52 @@ from odoo.tests import TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
-class TestErpObeDemoUsers(TransactionCase):
-    def test_dynamic_demo_users_are_scoped_and_idempotent(self):
+class TestErpObeFixtureUsers(TransactionCase):
+    def test_fixture_profile_creates_standard_user(self):
+        faculty = self.env["erpobe.master.fakultas"].sudo().create(
+            {"name": "Fixture User Faculty", "kode": "FUF"}
+        )
+        prodi = self.env["erpobe.master.prodi"].sudo().create(
+            {
+                "name": "Fixture User Program",
+                "kode": "FUP",
+                "fakultas_id": faculty.id,
+            }
+        )
+        partner = self.env["res.partner"].sudo().create(
+            {
+                "name": "Fixture User Teacher",
+                "email": "dosen.fup.01@example.test",
+            }
+        )
+        dosen = (
+            self.env["erpobe.master.dosen"]
+            .sudo()
+            .with_context(install_mode=True)
+            .create(
+                {
+                    "partner_id": partner.id,
+                    "nip": "FIXTURE-USER-NIP",
+                    "prodi_ids": [(4, prodi.id)],
+                }
+            )
+        )
+
+        self.assertEqual(dosen.user_id.login, "dosen.fup.01")
+        self.assertEqual(dosen.user_id.email, "dosen.fup.01@example.test")
+        self.assertTrue(dosen.user_id.has_group("erpobe.group_dosen"))
+        self.assertEqual(dosen.user_id.erpobe_prodi_ids, prodi)
+        result = self.env["res.users"].authenticate(
+            {
+                "type": "password",
+                "login": "dosen.fup.01",
+                "password": "Demo123!",
+            },
+            {"interactive": True},
+        )
+        self.assertEqual(result["uid"], dosen.user_id.id)
+
+    def test_dynamic_fixture_users_are_scoped_and_idempotent(self):
         Faculty = self.env["erpobe.master.fakultas"].sudo()
         Prodi = self.env["erpobe.master.prodi"].sudo()
         Users = self.env["res.users"]
@@ -20,8 +64,26 @@ class TestErpObeDemoUsers(TransactionCase):
         prodi_b = Prodi.create(
             {"name": "Demo User Program B", "kode": "DU", "fakultas_id": faculty_b.id}
         )
+        self.env["ir.model.data"].sudo().create(
+            [
+                {
+                    "module": "erpobe",
+                    "name": "test_demo_user_program_a",
+                    "model": prodi_a._name,
+                    "res_id": prodi_a.id,
+                    "noupdate": True,
+                },
+                {
+                    "module": "erpobe",
+                    "name": "test_demo_user_program_b",
+                    "model": prodi_b._name,
+                    "res_id": prodi_b.id,
+                    "noupdate": True,
+                },
+            ]
+        )
 
-        Users.load_erpobe_demo_users()
+        Users.load_erpobe_fixture_users()
 
         accounts = []
         account_ids_before = set()
@@ -73,8 +135,10 @@ class TestErpObeDemoUsers(TransactionCase):
                 )
             )
 
-            role_accounts = [admin] + dosens.mapped("user_id") + mahasiswa.mapped(
-                "user_id"
+            role_accounts = (
+                [admin]
+                + list(dosens.mapped("user_id"))
+                + list(mahasiswa.mapped("user_id"))
             )
             logins = [user.login.casefold() for user in role_accounts]
             emails = [user.email.casefold() for user in role_accounts]
@@ -137,8 +201,27 @@ class TestErpObeDemoUsers(TransactionCase):
             )
             self.assertEqual(result["uid"], user.id)
 
-        Users.load_erpobe_demo_users()
+        preserved_user = student_a.user_id.sudo()
+        previous_email = preserved_user.email
+        preserved_user.write(
+            {
+                "login": "preserved.demo.student@example.test",
+                "password": "Preserve-Strong-57",
+            }
+        )
+        Users.load_erpobe_fixture_users()
         account_ids_after = set()
         for prodi in (prodi_a, prodi_b):
             account_ids_after.update(prodi.user_ids.ids)
         self.assertEqual(account_ids_after, account_ids_before)
+        self.assertEqual(preserved_user.login, "preserved.demo.student@example.test")
+        self.assertEqual(preserved_user.email, previous_email)
+        result = Users.authenticate(
+            {
+                "type": "password",
+                "login": "preserved.demo.student@example.test",
+                "password": "Preserve-Strong-57",
+            },
+            {"interactive": True},
+        )
+        self.assertEqual(result["uid"], preserved_user.id)

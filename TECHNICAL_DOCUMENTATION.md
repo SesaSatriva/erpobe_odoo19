@@ -162,50 +162,40 @@ Ini adalah modul fitur penuh, bukan hanya ekstensi kecil. Modul ini memanfaatkan
 Kode mengikuti pola Odoo yang umum:
 1. `__init__.py` meng-import controller, model, dan wizard.
 2. `models/__init__.py` meng-import seluruh modul domain sesuai kelompok logis.
-3. `views/*.xml` dan `security/*.xml` dimuat sebagai data Odoo lewat manifest.
-4. data demo dimuat setelah definisi keamanan dan master data.
+3. `security/*.xml` dan seluruh fixture akademik dimuat lewat key manifest `data`.
+4. Fixture akademik dimuat setelah grup, ACL, dan record rules.
 5. impor/ekspor dan route portal merupakan concern runtime yang terpisah dari model utama.
 
-### Loading demo data pada Odoo 19
+### Fixture akademik dan akun pengguna
 
-File pada key manifest `demo` hanya dimuat ketika database baru dibuat dengan demo aktif
-(opsi `--with-demo`). Saat upgrade, Odoo memuat ulang demo untuk modul yang status
-`demo`-nya aktif; `--with-demo` sendiri tidak mengaktifkan demo pada database yang sudah
-ada. Jika pemuatan demo sebelumnya gagal, Odoo dapat menandai modul tanpa demo sehingga
-`-u erpobe` saja tidak mencoba ulang. Setelah memastikan database yang benar, status demo
-modul dapat diaktifkan kembali lewat Odoo shell lalu modul di-upgrade:
+Sebelas berkas XML fixture masih menggunakan nama lama berawalan `demo_`, tetapi
+seluruhnya didaftarkan pada key manifest `data`; modul tidak mendeklarasikan key `demo`.
+Karena itu, fixture dimuat pada instalasi biasa tanpa mengaktifkan demo database. XML
+fixture menggunakan external ID stabil dan `noupdate` untuk menjaga data yang telah
+diinstal agar upgrade tidak menimpa perubahan database.
+
+`demo_06_akun_akses.xml` memanggil
+`res.users.load_erpobe_fixture_users`. Seeder membatasi cakupan ke program studi yang
+memiliki external ID fixture modul, kemudian memastikan satu Admin Prodi, tiga profil
+dosen, dan dua puluh profil mahasiswa per prodi. Akun dosen/mahasiswa terkait ke profil
+dan prodi yang sudah ada; mahasiswa memakai rombel prodi yang tersedia. Seeder
+idempoten dan hanya membuat kekurangan. Kredensial, relasi, dan hak akses yang sudah ada
+tidak ditimpa; tautan user yang memang belum ada hanya dibuat jika akun terkait tidak
+memiliki relasi profil lain dan role/cakupannya cocok. Data yang konflik dihentikan dengan
+validasi.
+
+Akun yang baru dibuat seeder menggunakan password awal `Demo123!`, yang disimpan melalui
+mekanisme standar Odoo. Nama login mengikuti kode prodi, misalnya `admin.if`,
+`dosen.if.01`, dan `mahasiswa.if.001` untuk kode `IF`. Akun `demo_admin_erpobe` lama,
+termasuk yang belum memiliki cakupan prodi, tidak diubah atau dihapus; fixture baru tidak
+membuat akun global tersebut.
+
+Instalasi baru maupun upgrade dapat dijalankan tanpa opsi demo:
 
 ```sh
-./odoo-bin shell -c <odoo.conf> -d <database> <<'PY'
-module = env['ir.module.module'].search([('name', '=', 'erpobe')], limit=1)
-if not module:
-    raise RuntimeError("Modul erpobe tidak ditemukan")
-module.write({'demo': True})
-env.cr.commit()
-PY
+./odoo-bin -c <odoo.conf> -d <database> -i erpobe --stop-after-init
 ./odoo-bin -c <odoo.conf> -d <database> -u erpobe --stop-after-init
 ```
-
-Untuk database development baru, gunakan `-i erpobe --with-demo` sebagai pengganti
-perintah upgrade. Jangan gunakan langkah ini pada database produksi tanpa meninjau isi data
-demo terlebih dahulu.
-
-### Akun pengguna demo
-
-`demo_06_akun_akses.xml` memanggil `res.users.load_erpobe_demo_users`, yang berjalan
-untuk setiap prodi yang terdaftar ketika data demo dimuat. Seeder memastikan satu Admin
-Prodi, tiga profil dosen, dan dua puluh profil mahasiswa per prodi. Dosen dan mahasiswa
-menggunakan model profil yang sudah ada; mahasiswa ditempatkan ke rombel prodi yang ada,
-atau rombel demo dibuat jika prodi belum memilikinya. Login memakai kode prodi, misalnya
-`admin.if`, `dosen.if.01`, dan `mahasiswa.if.001` untuk kode `IF`.
-
-Password awal akun yang dibuat pada pemuatan demo adalah `Demo123!`. Odoo menyimpan
-password melalui mekanisme standar `res.users`. Seeder idempoten dan tidak mengubah atau
-menghapus akun/profil yang sudah ada. Jika jumlah profil melebihi target atau akun lama
-memiliki role/cakupan yang bertentangan, pemuatan berhenti dengan pesan validasi alih-alih
-menghapus atau mengubah data. Akun `demo_admin_erpobe` lama yang mungkin sudah ada pada
-database sebelumnya tanpa cakupan prodi juga dibiarkan tanpa perubahan; file generator
-tidak lagi membuat akun global tersebut pada instalasi baru.
 
 ## 3. Inventaris Fitur Fungsional
 

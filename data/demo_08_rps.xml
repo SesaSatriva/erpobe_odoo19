@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<odoo noupdate="0">
+<odoo noupdate="1">
     <data noupdate="1">
         <record id="rps_ti_1" model="erpobe.akademik.rps">
             <field name="matakuliah_id" ref="erpobe.mk_ti_01" />
@@ -2851,1080 +2851,1080 @@
             <field name="komponen_penilaian" ref="erpobe.komp_praktikum" />
             <field name="bobot_komponen_cpmk">5</field>
         </record>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_1')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_1')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_2')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_2')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_3')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_3')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_4')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_4')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_5')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_5')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_1')), ('cpl_id', '=', ref('erpobe.cpl_si_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_1')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_2')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_2')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_3')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_3')), ('cpl_id', '=', ref('erpobe.cpl_si_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_1')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_1')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_1')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_1')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_2')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_2')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_3')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_3')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_2')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_2')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_1')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_1')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_2')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_2')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_3')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_3')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_3')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_3')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_1')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_1')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_2')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_2')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_3')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_3')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_4')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_4')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_1')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_1')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_2')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_2')), ('cpl_id', '=', ref('erpobe.cpl_si_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_3')), ('cpl_id', '=', ref('erpobe.cpl_si_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_3')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_5')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_5')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_1')), ('cpl_id', '=', ref('erpobe.cpl_me_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_1')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_2')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_2')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_3')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_3')), ('cpl_id', '=', ref('erpobe.cpl_me_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_1')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_1')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_1')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_1')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_2')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_2')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_3')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_3')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_2')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_2')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_1')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_1')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_2')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_2')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_3')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_3')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_3')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_3')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_1')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_1')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_2')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_2')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_3')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_3')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_4')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_4')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_1')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_1')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_2')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_2')), ('cpl_id', '=', ref('erpobe.cpl_me_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_3')), ('cpl_id', '=', ref('erpobe.cpl_me_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_3')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_5')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_5')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_1')), ('cpl_id', '=', ref('erpobe.cpl_el_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_1')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_2')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_2')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_3')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_3')), ('cpl_id', '=', ref('erpobe.cpl_el_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_1')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_1')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_1')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_1')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_2')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_2')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_3')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_3')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_2')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_2')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_1')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_1')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_2')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_2')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_3')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_3')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_3')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_3')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_1')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_1')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_2')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_2')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_3')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_3')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_4')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_4')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_1')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_1')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_2')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_2')), ('cpl_id', '=', ref('erpobe.cpl_el_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_3')), ('cpl_id', '=', ref('erpobe.cpl_el_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_3')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_5')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_5')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_01')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_1')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_1')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_2')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_2')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_3')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_3')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_4')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_4')), ('status', '=', 'review')]]" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_1')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_2')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 35}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.mk" name="write">
+            <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_3')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_mk': 30}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_07')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 60}" />
+        </function>
+        <function model="erpobe.bobot.cpmk.cpl" name="write">
+            <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
+            <value eval="{'bobot_cpmk_cpl': 40}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="write">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_5')), ('status', '=', 'review')]]" />
+            <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
+        </function>
+        <function model="erpobe.akademik.rps" name="action_finalize">
+            <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_5')), ('status', '=', 'review')]]" />
+        </function>
     </data>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if101_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_1')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_1')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if102_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_2')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_2')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if203_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_3')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_3')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if204_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_4')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_4')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_1')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_2')), ('cpl_id', '=', ref('erpobe.cpl_ti_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ti_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ti_if205_3')), ('cpl_id', '=', ref('erpobe.cpl_ti_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_5')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ti_5')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_1')), ('cpl_id', '=', ref('erpobe.cpl_si_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_1')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_2')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_2')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_3')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_1')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si101_3')), ('cpl_id', '=', ref('erpobe.cpl_si_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_1')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_1')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_1')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_1')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_2')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_2')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_3')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_2')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si102_3')), ('cpl_id', '=', ref('erpobe.cpl_si_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_2')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_2')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_1')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_1')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_2')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_2')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_3')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_3')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si103_3')), ('cpl_id', '=', ref('erpobe.cpl_si_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_3')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_3')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_1')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_1')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_2')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_2')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_3')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_4')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si204_3')), ('cpl_id', '=', ref('erpobe.cpl_si_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_4')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_4')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_1')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_1')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_2')), ('cpl_id', '=', ref('erpobe.cpl_si_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_2')), ('cpl_id', '=', ref('erpobe.cpl_si_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_3')), ('cpl_id', '=', ref('erpobe.cpl_si_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_si_5')), ('cpmk_id', '=', ref('erpobe.cpmk_si_si205_3')), ('cpl_id', '=', ref('erpobe.cpl_si_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_5')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_si_5')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_1')), ('cpl_id', '=', ref('erpobe.cpl_me_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_1')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_2')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_2')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_3')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_1')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me101_3')), ('cpl_id', '=', ref('erpobe.cpl_me_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_1')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_1')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_1')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_1')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_2')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_2')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_3')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_2')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me102_3')), ('cpl_id', '=', ref('erpobe.cpl_me_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_2')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_2')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_1')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_1')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_2')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_2')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_3')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_3')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me203_3')), ('cpl_id', '=', ref('erpobe.cpl_me_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_3')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_3')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_1')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_1')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_2')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_2')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_3')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_4')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me204_3')), ('cpl_id', '=', ref('erpobe.cpl_me_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_4')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_4')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_1')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_1')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_2')), ('cpl_id', '=', ref('erpobe.cpl_me_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_2')), ('cpl_id', '=', ref('erpobe.cpl_me_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_3')), ('cpl_id', '=', ref('erpobe.cpl_me_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_me_5')), ('cpmk_id', '=', ref('erpobe.cpmk_me_me205_3')), ('cpl_id', '=', ref('erpobe.cpl_me_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_5')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_me_5')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_1')), ('cpl_id', '=', ref('erpobe.cpl_el_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_1')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_2')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_2')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_3')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_1')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el101_3')), ('cpl_id', '=', ref('erpobe.cpl_el_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_1')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_1')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_1')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_1')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_2')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_2')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_3')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_2')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el102_3')), ('cpl_id', '=', ref('erpobe.cpl_el_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_2')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_2')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_1')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_1')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_2')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_2')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_3')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_3')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el203_3')), ('cpl_id', '=', ref('erpobe.cpl_el_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_3')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_3')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_1')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_1')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_2')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_2')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_3')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_4')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el204_3')), ('cpl_id', '=', ref('erpobe.cpl_el_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_4')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_4')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_1')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_1')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_2')), ('cpl_id', '=', ref('erpobe.cpl_el_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_2')), ('cpl_id', '=', ref('erpobe.cpl_el_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_3')), ('cpl_id', '=', ref('erpobe.cpl_el_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_el_5')), ('cpmk_id', '=', ref('erpobe.cpmk_el_el205_3')), ('cpl_id', '=', ref('erpobe.cpl_el_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_5')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_el_5')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_1')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in101_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_01')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_1')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_1')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_2')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in102_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_02')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_2')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_2')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_3')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in203_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_03')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_3')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_3')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_4')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in204_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_04')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_4')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_4')), ('status', '=', 'review')]]" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_1')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_2')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 35}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.mk" name="write">
-        <function model="erpobe.bobot.cpmk.mk" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_3')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_mk': 30}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_1')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_06')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_2')), ('cpl_id', '=', ref('erpobe.cpl_ind_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_07')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 60}" />
-    </function>
-    <function model="erpobe.bobot.cpmk.cpl" name="write">
-        <function model="erpobe.bobot.cpmk.cpl" name="search" eval="[[('rps_id', '=', ref('erpobe.rps_ind_5')), ('cpmk_id', '=', ref('erpobe.cpmk_ind_in205_3')), ('cpl_id', '=', ref('erpobe.cpl_ind_05')), ('rps_id.status', '=', 'review')]]" />
-        <value eval="{'bobot_cpmk_cpl': 40}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="write">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_5')), ('status', '=', 'review')]]" />
-        <value eval="{'komponen_ids': [(6, 0, [ref('erpobe.komp_tugas'), ref('erpobe.komp_kuis'), ref('erpobe.komp_uts'), ref('erpobe.komp_uas'), ref('erpobe.komp_proyek'), ref('erpobe.komp_praktikum')])]}" />
-    </function>
-    <function model="erpobe.akademik.rps" name="action_finalize">
-        <function model="erpobe.akademik.rps" name="search" eval="[[('id', '=', ref('erpobe.rps_ind_5')), ('status', '=', 'review')]]" />
-    </function>
 </odoo>

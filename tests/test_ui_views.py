@@ -39,7 +39,12 @@ class TestErpObeUiViews(TransactionCase):
             field_names,
             {"active", "kode", "name", "prodi_ids"},
         )
+        root_menu = self.env.ref("erpobe.menu_erpobe_root")
+        self.assertEqual(
+            self.env.ref("erpobe.menu_erpobe_master_fakultas").parent_id,
+            root_menu,
+        )
         self.assertEqual(
             self.env.ref("erpobe.menu_erpobe_master_prodi").parent_id,
-            self.env.ref("erpobe.menu_erpobe_master_fakultas"),
+            root_menu,
         )

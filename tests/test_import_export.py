@@ -227,7 +227,7 @@ class TestErpObeFacultyImportExport(TransactionCase):
             }
         )
         tahunajaran = self.env["erpobe.akademik.tahunajaran"].create(
-            {"tahun_ajaran": "2025/2026", "semester": "ganjil"}
+            {"tahun_ajaran": "2098/2099", "semester": "ganjil"}
         )
         komponen = self.env["erpobe.akademik.komponen"].create(
             {

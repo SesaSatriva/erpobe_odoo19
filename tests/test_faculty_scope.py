@@ -228,7 +228,7 @@ class TestErpObeFacultyScope(TransactionCase):
 
     def test_fakultas_access_rights_and_delete_restrict(self):
         faculty = self.Faculty.with_user(self.superadmin).create(
-            {"name": "Fakultas sementara", "kode": "FT"}
+            {"name": "Fakultas sementara", "kode": "FT-TEST"}
         )
         faculty.with_user(self.superadmin).write({"name": "Fakultas uji"})
         faculty.with_user(self.superadmin).unlink()

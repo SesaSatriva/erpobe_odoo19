@@ -203,7 +203,7 @@ def append_search_write(root, model, domain, values_eval):
     root.append(function)
 
 
-def generate_demo_files():
+def generate_fixture_files():
     # 01: faculty + prodi
     faculty_records = []
     faculty_records.append(('erpobe.master.fakultas', 'fakultas_teknik', {'name': 'Fakultas Teknik', 'kode': 'FT'}))
@@ -365,15 +365,15 @@ def generate_demo_files():
         comp_records.append(('erpobe.akademik.komponen', xml_id, {'name': name, 'tipe': tipe, 'aktif': True, 'color': 0}))
     write_file('demo_05_komponen_bobot.xml', build_records(comp_records))
 
-    # 06: create role accounts dynamically for every registered program
-    demo_users = ET.Element('odoo', {'noupdate': '0'})
-    demo_users.append(
+    # 06: create role accounts dynamically for fixture programs
+    fixture_users = ET.Element('odoo', {'noupdate': '0'})
+    fixture_users.append(
         ET.Element(
             'function',
-            {'model': 'res.users', 'name': 'load_erpobe_demo_users'},
+            {'model': 'res.users', 'name': 'load_erpobe_fixture_users'},
         )
     )
-    write_file('demo_06_akun_akses.xml', demo_users)
+    write_file('demo_06_akun_akses.xml', fixture_users)
 
     # 07: offerings for active year and some previous years
     offer_records = []
@@ -505,12 +505,12 @@ def generate_demo_files():
                 },
             )
             rps_functions.append(finalize)
-    rps_root = ET.Element('odoo', {'noupdate': '0'})
+    rps_root = ET.Element('odoo', {'noupdate': '1'})
     rps_data = ET.SubElement(rps_root, 'data', {'noupdate': '1'})
     for record in build_records(rps_records):
         rps_data.append(record)
     for function in rps_functions:
-        rps_root.append(function)
+        rps_data.append(function)
     write_file('demo_08_rps.xml', rps_root)
 
     # 09: KRS for current students across active offering
@@ -566,8 +566,8 @@ def generate_demo_files():
 
 
 def main():
-    generate_demo_files()
-    print(f'Generated demo files under {DATA_DIR}')
+    generate_fixture_files()
+    print(f'Generated fixture files under {DATA_DIR}')
 
 
 if __name__ == '__main__':

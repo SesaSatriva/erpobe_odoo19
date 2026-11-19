@@ -36,17 +36,10 @@ custom_module/erpobe/
 │   ├── profil.py
 │   └── tracking.py
 ├── data/
-│   ├── demo_01_fakultas_prodi.xml
-│   ├── demo_02_tahun_ajaran_rombels.xml
-│   ├── demo_03_cpl_matakuliah_cpmk.xml
-│   ├── demo_04_dosen_mahasiswa.xml
-│   ├── demo_05_komponen_bobot.xml
-│   ├── demo_06_akun_akses.xml
-│   ├── demo_07_penawaran.xml
-│   ├── demo_08_rps.xml
-│   ├── demo_09_krs.xml
-│   ├── demo_10_nilai.xml
-│   └── demo_11_capaian.xml
+│   ├── fixture_01_fakultas_prodi.xml
+│   ├── fixture_02_tahun_ajaran_rombels.xml
+│   ├── fixture_05_komponen_bobot.xml
+│   └── fixture_12_academic_fixture.xml
 ├── migrations/
 │   └── 19.0.2.1.0/
 │       ├── README.md

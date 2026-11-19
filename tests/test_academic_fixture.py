@@ -26,7 +26,7 @@ class TestErpObeAcademicFixture(TransactionCase):
             "erpobe.master.mahasiswa", "fixture_student_"
         )
         if not students:
-            self.skipTest("Academic demo fixture is not installed")
+            self.skipTest("Academic fixture data is not installed")
         return students
 
     def test_program_cohort_counts_and_student_isolation(self):

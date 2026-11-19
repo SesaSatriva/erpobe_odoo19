@@ -515,22 +515,45 @@ class ErpObeFixtureSeeder(models.AbstractModel):
 
     @api.model
     def _mark_source(self, record, source_type, note, source_url=None):
-        fixture_key = f"{record._name}:{record.id}"
+        self._mark_sources([(record, source_type, note, source_url)])
+
+    @api.model
+    def _mark_sources(self, items):
+        items = list(items)
+        if not items:
+            return
+
+        source_items = []
+        for record, source_type, note, source_url in items:
+            source_items.append(
+                (
+                    f"{record._name}:{record.id}",
+                    {
+                        "name": record.display_name,
+                        "record_model": record._name,
+                        "record_id": record.id,
+                        "source_type": SOURCE_KIND[source_type],
+                        "source_note": note,
+                        "source_url": source_url or False,
+                    },
+                )
+            )
+
         model = self.env["erpobe.akademik.fixture.source"].sudo()
-        source = model.search([("fixture_key", "=", fixture_key)], limit=1)
-        values = {
-            "name": record.display_name,
-            "fixture_key": fixture_key,
-            "record_model": record._name,
-            "record_id": record.id,
-            "source_type": SOURCE_KIND[source_type],
-            "source_note": note,
-            "source_url": source_url or False,
-        }
-        if source:
-            source.write(values)
-        else:
-            model.create(values)
+        keys = [key for key, _values in source_items]
+        existing_sources = model.search([("fixture_key", "in", keys)])
+        source_by_key = {source.fixture_key: source for source in existing_sources}
+        new_values = []
+        for key, values in source_items:
+            values["fixture_key"] = key
+            source = source_by_key.get(key)
+            if not source:
+                new_values.append(values)
+                continue
+            if any(source[field] != value for field, value in values.items()):
+                source.write(values)
+        if new_values:
+            model.create(new_values)
 
     @api.model
     def _ensure_components(self):
@@ -652,21 +675,25 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             )
         teachers = self._upsert_many("erpobe.master.dosen", items)
         result = {}
+        source_items = []
         for key, row in by_key.items():
             teacher = teachers[f"fixture_teacher_{self._slug(key)}"]
             dummy = row["dummy"]
-            self._mark_source(
-                teacher,
-                "dummy" if dummy else "mixed",
+            source_items.append(
                 (
-                    "Profil dosen simulasi; nama dan bidang belum diverifikasi pada sumber prodi."
-                    if dummy
-                    else "Nama/bidang diringkas dari docs/data_prodi.md; NIP dan email adalah simulasi. "
-                    "Muhamad Ali dideduplikasi lintas Teknik Industri dan Teknik Elektro."
+                    teacher,
+                    "dummy" if dummy else "mixed",
+                    (
+                        "Profil dosen simulasi; nama dan bidang belum diverifikasi pada sumber prodi."
+                        if dummy
+                        else "Nama/bidang diringkas dari docs/data_prodi.md; NIP dan email adalah simulasi. "
+                        "Muhamad Ali dideduplikasi lintas Teknik Industri dan Teknik Elektro."
+                    ),
+                    next(iter(sorted(row["urls"])), None),
                 ),
-                next(iter(sorted(row["urls"])), None),
             )
             result[key] = teacher
+        self._mark_sources(source_items)
         return result
 
     @api.model
@@ -784,6 +811,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             )
         records = self._upsert_many("erpobe.akademik.cpl", items)
         result = []
+        source_items = []
         for index, (description, aspect) in enumerate(cpl_specs, start=1):
             record = records[f"fixture_cpl_{config['slug']}_{index:02d}"]
             kind = "dummy" if config["slug"] == "si" else "mixed"
@@ -793,8 +821,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 else "Rumusan merupakan parafrase pada docs/data_prodi.md, bukan teks CPL resmi. "
                 "Indikator dan target nilai adalah simulasi."
             )
-            self._mark_source(record, kind, note, config["source_url"])
+            source_items.append((record, kind, note, config["source_url"]))
             result.append(record)
+        self._mark_sources(source_items)
         return result
 
     @api.model
@@ -824,16 +853,21 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             )
         records = self._upsert_many("erpobe.master.mahasiswa", items)
         students = []
+        source_items = []
         for index in range(1, 26):
             student = records[
                 f"fixture_student_{config['slug']}_2022_{index:03d}"
             ]
-            self._mark_source(
-                student,
-                "dummy",
-                "Identitas, NIM, email, angkatan, dan status akademik dibuat untuk pengujian; bukan data mahasiswa nyata.",
+            source_items.append(
+                (
+                    student,
+                    "dummy",
+                    "Identitas, NIM, email, angkatan, dan status akademik dibuat untuk pengujian; bukan data mahasiswa nyata.",
+                    None,
+                )
             )
             students.append(student)
+        self._mark_sources(source_items)
         return students
 
     @api.model
@@ -886,12 +920,10 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             )
 
         course_records = self._upsert_many("erpobe.master.matakuliah", items)
-        result = []
-        for sequence, spec in enumerate(specs, start=1):
+        cpmk_items = []
+        for spec in specs:
             course_key = f"fixture_course_{config['slug']}_{spec['key']}"
             course = course_records[course_key]
-            cpmk_items = []
-            cpmks = []
             for number in (1, 2):
                 cpmk_key = f"fixture_cpmk_{spec['key']}_{number:02d}"
                 cpmk_items.append(
@@ -912,35 +944,48 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                         },
                     )
                 )
-            cpmk_records = self._upsert_many("erpobe.akademik.cpmk", cpmk_items)
+        cpmk_records = self._upsert_many("erpobe.akademik.cpmk", cpmk_items)
+
+        mapping_items = []
+        source_items = []
+        result = []
+        for spec in specs:
+            course_key = f"fixture_course_{config['slug']}_{spec['key']}"
+            course = course_records[course_key]
+            cpmks = []
             for number in (1, 2):
                 cpmk = cpmk_records[f"fixture_cpmk_{spec['key']}_{number:02d}"]
                 cpmks.append(cpmk)
-                self._mark_source(
-                    cpmk,
-                    "dummy",
-                    "Rumusan, kode, indikator, dan target CPMK dibuat untuk simulasi.",
+                source_items.append(
+                    (
+                        cpmk,
+                        "dummy",
+                        "Rumusan, kode, indikator, dan target CPMK dibuat untuk simulasi.",
+                        None,
+                    )
                 )
                 for cpl_index, cpl in enumerate(spec["cpls"], start=1):
                     mapping_key = (
                         f"fixture_mapping_{spec['key']}_{number:02d}_{cpl_index:02d}"
                     )
-                    mapping = self._upsert(
-                        "erpobe.akademik.cpl.mk.cpmk",
-                        mapping_key,
-                        {"cpl_id": cpl.id, "cpmk_id": cpmk.id},
+                    mapping_items.append(
+                        (
+                            mapping_key,
+                            {"cpl_id": cpl.id, "cpmk_id": cpmk.id},
+                        )
                     )
-                    del mapping
-            self._mark_source(
-                course,
-                spec["source_type"],
+            source_items.append(
                 (
-                    "Nama mata kuliah dirujuk dari docs/data_prodi.md; kode, seluruh nilai SKS, "
-                    "penempatan semester pilihan, dan deskripsi merupakan simulasi."
-                    if spec["source_type"] == "mixed"
-                    else "Mata kuliah dan penempatannya dibuat untuk melengkapi fixture; bukan daftar resmi."
+                    course,
+                    spec["source_type"],
+                    (
+                        "Nama mata kuliah dirujuk dari docs/data_prodi.md; kode, seluruh nilai SKS, "
+                        "penempatan semester pilihan, dan deskripsi merupakan simulasi."
+                        if spec["source_type"] == "mixed"
+                        else "Mata kuliah dan penempatannya dibuat untuk melengkapi fixture; bukan daftar resmi."
+                    ),
+                    config["source_url"],
                 ),
-                config["source_url"],
             )
             result.append(
                 {
@@ -951,6 +996,8 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                     "cpls": spec["cpls"],
                 }
             )
+        self._upsert_many("erpobe.akademik.cpl.mk.cpmk", mapping_items)
+        self._mark_sources(source_items)
         return result
 
     @api.model
@@ -962,6 +1009,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             term_groups[year_id.id]["courses"].append(course)
 
         offers = {}
+        input_items = []
         for group in term_groups.values():
             year = group["year"]
             year_slug = year.tahun_ajaran.replace("/", "_") + f"_{year.semester}"
@@ -1000,19 +1048,26 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 line = lines[
                     f"fixture_offerline_{config['slug']}_{course['spec']['key']}"
                 ]
-                input_record = self._upsert(
-                    "erpobe.input.nilai",
-                    f"fixture_input_{config['slug']}_{course['spec']['key']}",
-                    {
-                        "penawaran_id": offer.id,
-                        "penawaran_line_id": line.id,
-                    },
+                input_key = (
+                    f"fixture_input_{config['slug']}_{course['spec']['key']}"
+                )
+                input_items.append(
+                    (
+                        input_key,
+                        {
+                            "penawaran_id": offer.id,
+                            "penawaran_line_id": line.id,
+                        },
+                    )
                 )
                 offers[course["code"]] = {
                     "offer": offer,
                     "line": line,
-                    "input": input_record,
+                    "input_key": input_key,
                 }
+        inputs = self._upsert_many("erpobe.input.nilai", input_items)
+        for course in offers.values():
+            course["input"] = inputs.pop(course.pop("input_key"))
         return offers
 
     @api.model
@@ -1049,102 +1104,130 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         rps.bobot_cpmk_cpl_ids.write({"bobot_cpmk_cpl": 50.0})
         rps.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 25.0})
 
-        subcpmks = []
+        sub_items = []
         for week in range(1, 17):
             cpmk = course["cpmks"][(week - 1) % len(course["cpmks"])]
             sub_key = f"fixture_subcpmk_{spec['key']}_{week:02d}"
-            sub = self._upsert(
-                "erpobe.akademik.subcpmk",
-                sub_key,
-                {
-                    "rps_id": rps.id,
-                    "cpmk_id": cpmk.id,
-                    "kode": f"SUB-{week:02d}",
-                    "name": (
-                        f"Mahasiswa mampu menjelaskan, menerapkan, dan mengevaluasi "
-                        f"{WEEK_TOPICS[week - 1]} pada {spec['name']}."
-                    ),
-                    "indikator": (
-                        f"Bukti kinerja simulasi minggu {week}: {WEEK_TOPICS[week - 1]}."
-                    ),
-                    "minggu": week,
-                    "target_nilai": 70.0,
-                },
-            )
-            subcpmks.append(sub)
-            activity_key = f"fixture_activity_{spec['key']}_{week:02d}"
-            activity = self._upsert(
-                "erpobe.akademik.kegiatan.perkuliahan",
-                activity_key,
-                {
-                    "rps_id": rps.id,
-                    "minggu": week,
-                    "cpmk_id": cpmk.id,
-                    "subcpmk_id": sub.id,
-                    "bahan_kajian": f"Minggu {week}: {spec['name']} - {WEEK_TOPICS[week - 1]}.",
-                    "metode_pembelajaran_id": methods[(week - 1) % len(methods)].id,
-                    "pengalaman_belajar": (
-                        "Mahasiswa mengerjakan latihan/studi kasus, mendiskusikan "
-                        "hasil, dan menyusun bukti belajar (simulasi)."
-                    ),
-                    "indikator_penilaian": sub.indikator,
-                    "estimasi_waktu": 170,
-                    "referensi_ids": [
-                        Command.set([course["reference"].id])
-                    ],
-                    "teknik_penilaian": (
-                        "Ujian Tengah Semester" if week == 8 else
-                        "Ujian Akhir Semester" if week == 16 else
-                        "Tugas/observasi/rubrik"
-                    ),
-                },
-            )
-            del activity
-            self._mark_source(
-                sub,
-                "dummy",
-                "Rumusan dan indikator Sub-CPMK adalah materi simulasi untuk pengujian, bukan dokumen akademik resmi.",
-                config["source_url"],
+            sub_items.append(
+                (
+                    sub_key,
+                    {
+                        "rps_id": rps.id,
+                        "cpmk_id": cpmk.id,
+                        "kode": f"SUB-{week:02d}",
+                        "name": (
+                            f"Mahasiswa mampu menjelaskan, menerapkan, dan mengevaluasi "
+                            f"{WEEK_TOPICS[week - 1]} pada {spec['name']}."
+                        ),
+                        "indikator": (
+                            f"Bukti kinerja simulasi minggu {week}: {WEEK_TOPICS[week - 1]}."
+                        ),
+                        "minggu": week,
+                        "target_nilai": 70.0,
+                    },
+                )
             )
 
+        sub_records = self._upsert_many("erpobe.akademik.subcpmk", sub_items)
+        subcpmks = [sub_records[key] for key, _values in sub_items]
+        activity_items = []
+        for week in range(1, 17):
+            cpmk = course["cpmks"][(week - 1) % len(course["cpmks"])]
+            sub = sub_records[f"fixture_subcpmk_{spec['key']}_{week:02d}"]
+            activity_key = f"fixture_activity_{spec['key']}_{week:02d}"
+            activity_items.append(
+                (
+                    activity_key,
+                    {
+                        "rps_id": rps.id,
+                        "minggu": week,
+                        "cpmk_id": cpmk.id,
+                        "subcpmk_id": sub.id,
+                        "bahan_kajian": f"Minggu {week}: {spec['name']} - {WEEK_TOPICS[week - 1]}.",
+                        "metode_pembelajaran_id": methods[(week - 1) % len(methods)].id,
+                        "pengalaman_belajar": (
+                            "Mahasiswa mengerjakan latihan/studi kasus, mendiskusikan "
+                            "hasil, dan menyusun bukti belajar (simulasi)."
+                        ),
+                        "indikator_penilaian": sub.indikator,
+                        "estimasi_waktu": 170,
+                        "referensi_ids": [
+                            Command.set([course["reference"].id])
+                        ],
+                        "teknik_penilaian": (
+                            "Ujian Tengah Semester" if week == 8 else
+                            "Ujian Akhir Semester" if week == 16 else
+                            "Tugas/observasi/rubrik"
+                        ),
+                    },
+                )
+            )
+        self._upsert_many("erpobe.akademik.kegiatan.perkuliahan", activity_items)
+        self._mark_sources(
+            [
+                (
+                    sub,
+                    "dummy",
+                    "Rumusan dan indikator Sub-CPMK adalah materi simulasi untuk pengujian, bukan dokumen akademik resmi.",
+                    config["source_url"],
+                )
+                for sub in subcpmks
+            ]
+        )
+
         rubric_sequence = 0
+        rubric_items = []
         for component in component_ids:
             for cpmk in course["cpmks"]:
                 rubric_sequence += 1
                 rubric_key = (
                     f"fixture_rubric_{spec['key']}_{component.id}_{cpmk.id}"
                 )
-                rubric = self._upsert(
-                    "erpobe.akademik.rubrik.penilaian",
-                    rubric_key,
-                    {
-                        "rps_id": rps.id,
-                        "sequence": rubric_sequence * 10,
-                        "materi_soal": (
-                            f"Penilaian {component.name} untuk {spec['name']} "
-                            f"(CPMK {cpmk.kode_cpmk}, simulasi)."
-                        ),
-                        "komponen_id": component.id,
-                        "cpmk_id": cpmk.id,
-                        "bobot": 12.5,
-                    },
+                rubric_items.append(
+                    (
+                        rubric_key,
+                        {
+                            "rps_id": rps.id,
+                            "sequence": rubric_sequence * 10,
+                            "materi_soal": (
+                                f"Penilaian {component.name} untuk {spec['name']} "
+                                f"(CPMK {cpmk.kode_cpmk}, simulasi)."
+                            ),
+                            "komponen_id": component.id,
+                            "cpmk_id": cpmk.id,
+                            "bobot": 12.5,
+                        },
+                    )
                 )
+        rubrics = self._upsert_many(
+            "erpobe.akademik.rubrik.penilaian", rubric_items
+        )
+
+        criterion_items = []
+        for component in component_ids:
+            for cpmk in course["cpmks"]:
+                rubric_key = (
+                    f"fixture_rubric_{spec['key']}_{component.id}_{cpmk.id}"
+                )
+                rubric = rubrics[rubric_key]
                 for grade in grades:
                     criterion_key = (
                         f"fixture_criterion_{spec['key']}_{component.id}_{cpmk.id}_{grade.id}"
                     )
-                    self._upsert(
-                        "erpobe.akademik.kriteria",
-                        criterion_key,
-                        {
-                            "rubrik_id": rubric.id,
-                            "grade_id": grade.id,
-                            "deskripsi": (
-                                f"{grade.name}: {grade.keterangan_standar} "
-                                "Deskripsi kriteria ini adalah simulasi."
-                            ),
-                        },
+                    criterion_items.append(
+                        (
+                            criterion_key,
+                            {
+                                "rubrik_id": rubric.id,
+                                "grade_id": grade.id,
+                                "deskripsi": (
+                                    f"{grade.name}: {grade.keterangan_standar} "
+                                    "Deskripsi kriteria ini adalah simulasi."
+                                ),
+                            },
+                        )
                     )
+        self._upsert_many("erpobe.akademik.kriteria", criterion_items)
 
         if rps.status != "final":
             rps.action_mark_for_review()
@@ -1172,6 +1255,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 )
 
             for student_index, student in enumerate(program["students"]):
+                student_key = f"{slug}_2022_{student_index + 1:03d}"
+                semester_selections = []
+                krs_items = []
                 for semester in range(1, 9):
                     selected_courses = self._select_courses(
                         courses_by_semester.get(semester, []),
@@ -1189,25 +1275,43 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                         )
                     year = self._year_for_semester(semester)
                     semester_key = f"s{semester:02d}"
-                    student_key = f"{slug}_2022_{student_index + 1:03d}"
-                    krs = self._upsert(
-                        "erpobe.akademik.krs",
-                        f"fixture_krs_{student_key}_{semester_key}",
-                        {
-                            "mahasiswa_id": student.id,
-                            "penawaran_id": self._offer_for_course(
-                                selected_courses[0], year
-                            ).id,
-                            "state": "approved",
-                            "max_sks_allowed": 24,
-                            "advisor_note": "KRS simulasi; persetujuan otomatis untuk data uji.",
-                        },
+                    krs_key = f"fixture_krs_{student_key}_{semester_key}"
+                    krs_items.append(
+                        (
+                            krs_key,
+                            {
+                                "mahasiswa_id": student.id,
+                                "penawaran_id": self._offer_for_course(
+                                    selected_courses[0], year
+                                ).id,
+                                "state": "approved",
+                                "max_sks_allowed": 24,
+                                "advisor_note": "KRS simulasi; persetujuan otomatis untuk data uji.",
+                            },
+                        )
                     )
-                    line_items = []
-                    for course in selected_courses:
+                    semester_selections.append(
+                        {
+                            "krs_key": krs_key,
+                            "courses": selected_courses,
+                        }
+                    )
+
+                krs_records = self._upsert_many("erpobe.akademik.krs", krs_items)
+                line_items = []
+                course_line_keys = {}
+                selected_courses = []
+                for selection in semester_selections:
+                    krs = krs_records[selection["krs_key"]]
+                    for course in selection["courses"]:
+                        line_key = (
+                            f"fixture_krsline_{student_key}_{course['spec']['key']}"
+                        )
+                        course_line_keys[course["code"]] = line_key
+                        selected_courses.append(course)
                         line_items.append(
                             (
-                                f"fixture_krsline_{student_key}_{course['spec']['key']}",
+                                line_key,
                                 {
                                     "krs_id": krs.id,
                                     "penawaran_line_id": course["offer_line"].id,
@@ -1215,92 +1319,77 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                                 },
                             )
                         )
-                    lines = self._upsert_many(
-                        "erpobe.akademik.krs.line", line_items
-                    )
+                lines = self._upsert_many("erpobe.akademik.krs.line", line_items)
 
-                    component_items = []
-                    line_by_course = {}
-                    grade_by_line_component = {}
-                    for course in selected_courses:
-                        line_key = (
-                            f"fixture_krsline_{student_key}_{course['spec']['key']}"
+                component_items = []
+                for course in selected_courses:
+                    line = lines[course_line_keys[course["code"]]]
+                    for component_index, component in enumerate(component_ids):
+                        grade_key = (
+                            f"fixture_grade_{student_key}_{course['spec']['key']}_"
+                            f"{component_index + 1:02d}"
                         )
-                        line = lines[line_key]
-                        line_by_course[course["code"]] = line
-                        for component_index, component in enumerate(component_ids):
-                            grade_key = (
-                                f"fixture_grade_{student_key}_{course['spec']['key']}_"
-                                f"{component_index + 1:02d}"
-                            )
-                            score = self._simulated_score(
-                                student_index,
-                                course["spec"]["sequence"],
-                                component_index,
-                            )
-                            component_items.append(
-                                (
-                                    grade_key,
-                                    {
-                                        "input_nilai_id": course["input_nilai"].id,
-                                        "krs_line_id": line.id,
-                                        "komponen_id": component.id,
-                                        "nilai": score,
-                                    },
-                                )
-                            )
-                    grades = self._upsert_many(
-                        "erpobe.grade.komponen", component_items
-                    )
-                    for course in selected_courses:
-                        line = line_by_course[course["code"]]
-                        for component_index, component in enumerate(component_ids):
-                            grade_key = (
-                                f"fixture_grade_{student_key}_{course['spec']['key']}_"
-                                f"{component_index + 1:02d}"
-                            )
-                            grade = grades[grade_key]
-                            grade_by_line_component[(line.id, component.id)] = grade
-
-                        sub_items = []
-                        for sub in course["subcpmks"]:
-                            component = component_ids[(sub.minggu - 1) % len(component_ids)]
-                            source_grade = grade_by_line_component[
-                                (line.id, component.id)
-                            ]
-                            sub_items.append(
-                                (
-                                    f"fixture_subresult_{student_key}_{course['spec']['key']}_{sub.minggu:02d}",
-                                    {
-                                        "krs_line_id": line.id,
-                                        "subcpmk_id": sub.id,
-                                        "source_grade_komponen_ids": [
-                                            Command.set([source_grade.id])
-                                        ],
-                                    },
-                                )
-                            )
-                        self._upsert_many("erpobe.grade.subcpmk", sub_items)
-
-                        for cpmk in course["cpmks"]:
-                            grade_cpmk_items.append(
-                                (
-                                    f"fixture_grade_cpmk_{student_key}_{course['spec']['key']}_{cpmk.id}",
-                                    {
-                                        "mahasiswa_id": student.id,
-                                        "cpmk_id": cpmk.id,
-                                    },
-                                )
-                            )
-                        grade_mk_items.append(
+                        component_items.append(
                             (
-                                f"fixture_grade_mk_{student_key}_{course['spec']['key']}",
+                                grade_key,
                                 {
-                                    "mahasiswa_id": student.id,
-                                    "mk_id": course["course"].id,
+                                    "input_nilai_id": course["input_nilai"].id,
+                                    "krs_line_id": line.id,
+                                    "komponen_id": component.id,
+                                    "nilai": self._simulated_score(
+                                        student_index,
+                                        course["spec"]["sequence"],
+                                        component_index,
+                                    ),
                                 },
                             )
                         )
+                grades = self._upsert_many(
+                    "erpobe.grade.komponen", component_items
+                )
+
+                sub_items = []
+                for course in selected_courses:
+                    line = lines[course_line_keys[course["code"]]]
+                    for sub in course["subcpmks"]:
+                        component_index = (sub.minggu - 1) % len(component_ids)
+                        grade_key = (
+                            f"fixture_grade_{student_key}_{course['spec']['key']}_"
+                            f"{component_index + 1:02d}"
+                        )
+                        source_grade = grades[grade_key]
+                        sub_items.append(
+                            (
+                                f"fixture_subresult_{student_key}_{course['spec']['key']}_{sub.minggu:02d}",
+                                {
+                                    "krs_line_id": line.id,
+                                    "subcpmk_id": sub.id,
+                                    "source_grade_komponen_ids": [
+                                        Command.set([source_grade.id])
+                                    ],
+                                },
+                            )
+                        )
+                    for cpmk in course["cpmks"]:
+                        grade_cpmk_items.append(
+                            (
+                                f"fixture_grade_cpmk_{student_key}_{course['spec']['key']}_{cpmk.id}",
+                                {
+                                    "mahasiswa_id": student.id,
+                                    "cpmk_id": cpmk.id,
+                                },
+                            )
+                        )
+                    grade_mk_items.append(
+                        (
+                            f"fixture_grade_mk_{student_key}_{course['spec']['key']}",
+                            {
+                                "mahasiswa_id": student.id,
+                                "mk_id": course["course"].id,
+                            },
+                        )
+                    )
+                self._upsert_many("erpobe.grade.subcpmk", sub_items)
 
         self._upsert_many("erpobe.grade.cpmk", grade_cpmk_items)
         self._upsert_many("erpobe.grade.mk", grade_mk_items)

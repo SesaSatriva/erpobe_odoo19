@@ -1,14 +1,15 @@
-# Academic test fixture
+# Academic fixture data
 
-The academic cohort is demo data, not official university data. It is loaded
-only when Odoo loads the module's `demo` section. Keep demo loading disabled for
-production databases.
+The academic fixture is loaded as required module data during installation and
+module upgrade, even when Odoo demo loading is disabled. It includes simulated
+academic records and is not official university data.
 
 ## What is generated
 
-`tools/generate_demo_data.py` writes the small bootstrap XML files. During demo
-loading, `erpobe.fixture.seeder.load_2022_cohort` creates an idempotent fixture
-for Teknik Industri, Teknik Elektro, Teknik Sipil, and Teknik Manufaktur:
+`tools/generate_demo_data.py` writes the bootstrap XML files. The module data
+loader calls `erpobe.fixture.seeder.load_2022_cohort`, which creates an
+idempotent fixture for Teknik Industri, Teknik Elektro, Teknik Sipil, and
+Teknik Manufaktur:
 
 - 25 explicitly simulated students per program, assigned to the 2022 A/B
   rombels, with generated NIMs, email addresses, and portal accounts.
@@ -41,8 +42,16 @@ test measurements; they are not student records or official assessment data.
 ## Safety and repeatability
 
 Generated records use `fixture_*` external IDs and are updated in place when
-the demo seeder runs again. The seeder does not delete records or clean up
-unmarked data. Install and update this fixture only in a disposable database
-whose name starts with `erpobe_test`; do not load module demo data into a
-production database. Reconcile or remove obsolete fixture records only through
-a reviewed migration, never by deleting unrelated records.
+the seeder runs again. The seeder does not delete records or clean up unmarked
+data. Because this fixture is required module data, every database that installs
+or upgrades `erpobe` receives the simulated cohort, test accounts, KRS, grades,
+and reports. Do not install or upgrade this module in a production database
+until the fixture is replaced with approved official data or separated from
+required module data. Validate changes in a disposable database whose name
+starts with `erpobe_test`. Reconcile or remove obsolete fixture records only
+through a reviewed migration, never by deleting unrelated records.
+
+The initial fixture load creates tens of thousands of assessment records and can
+take several minutes. Upgrade an existing database from the Odoo CLI with
+`--stop-after-init` rather than through the UI request, which may exceed the
+HTTP worker time limit.

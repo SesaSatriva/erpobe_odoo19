@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the small demo bootstrap XML; academic records are seeded by Odoo."""
+"""Generate mandatory fixture bootstrap XML; academic records are seeded by Odoo."""
 
 from pathlib import Path
 from xml.etree import ElementTree
@@ -126,10 +126,10 @@ def generate_fixture_loader():
 def main():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     files = {
-        "demo_01_fakultas_prodi.xml": generate_programs(),
-        "demo_02_tahun_ajaran_rombels.xml": generate_years_and_classes(),
-        "demo_05_komponen_bobot.xml": generate_assessment_components(),
-        "demo_12_academic_fixture.xml": generate_fixture_loader(),
+        "fixture_01_fakultas_prodi.xml": generate_programs(),
+        "fixture_02_tahun_ajaran_rombels.xml": generate_years_and_classes(),
+        "fixture_05_komponen_bobot.xml": generate_assessment_components(),
+        "fixture_12_academic_fixture.xml": generate_fixture_loader(),
     }
     for filename, content in files.items():
         (DATA_DIR / filename).write_text(content + "\n", encoding="utf-8")

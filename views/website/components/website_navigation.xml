@@ -19,7 +19,7 @@
         <nav class="o_triton_navbar" aria-label="Navigasi utama TRITON">
             <div class="o_triton_nav-inner">
                 <a class="o_triton_brand" href="/" aria-label="TRITON, beranda">
-                    <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.jpeg" alt="TRITON"/>
+                    <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.png" alt="TRITON"/>
                 </a>
                 <details class="o_triton_mobile-menu">
                     <summary aria-label="Buka menu">Menu</summary>
@@ -50,7 +50,7 @@
             <div class="o_triton_container o_triton_footer-grid">
                 <div>
                     <a class="o_triton_brand" href="/">
-                        <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.jpeg" alt="TRITON"/>
+                        <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.png" alt="TRITON"/>
                     </a>
                     <p>Tracking, Reporting, and Integrated Technology for Outcome-based Education Network.</p>
                 </div>

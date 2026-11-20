@@ -24,7 +24,7 @@
         <nav class="o_triton_portal-nav" aria-label="Navigasi portal">
             <div class="o_triton_portal-nav-inner">
                 <a href="/my/triton" class="o_triton_brand" aria-label="TRITON, beranda portal">
-                    <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.jpeg" alt="TRITON"/>
+                    <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.png" alt="TRITON"/>
                 </a>
                 <div class="o_triton_portal-links o_triton_portal-links--desktop">
                     <a t-foreach="portal_links" t-as="link" t-att-href="link[1]"

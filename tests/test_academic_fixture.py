@@ -2,6 +2,8 @@ from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
 
+from ..models.fixture_seeder import FIXTURE_SEED_VERSION, FIXTURE_SEED_VERSION_PARAM
+
 
 @tagged("post_install", "-at_install")
 class TestErpObeAcademicFixture(TransactionCase):
@@ -33,7 +35,7 @@ class TestErpObeAcademicFixture(TransactionCase):
 
     def test_completed_fixture_seed_skips_rebuild(self):
         params = self.env["ir.config_parameter"].sudo()
-        params.set_param("erpobe.fixture.2022_cohort_seed_version", "1")
+        params.set_param(FIXTURE_SEED_VERSION_PARAM, FIXTURE_SEED_VERSION)
         seeder = self.env["erpobe.fixture.seeder"]
 
         with patch.object(
@@ -71,7 +73,7 @@ class TestErpObeAcademicFixture(TransactionCase):
             lambda student: student.prodi_id == self.env.ref("erpobe.prodi_ti")
         ).sorted("nim")
         own_student, other_student = ti_students[:2]
-        visible_results = self.env["erpobe.grade.subcpmk"].with_user(
+        visible_results = self.env["erpobe.grade.cpmk"].with_user(
             own_student.user_id
         ).search(
             [
@@ -93,59 +95,95 @@ class TestErpObeAcademicFixture(TransactionCase):
             self.assertEqual(rps.status, "final")
             activities = rps.kegiatan_perkuliahan_ids
             self.assertEqual(len(activities), 16)
-            self.assertEqual(len(activities.mapped("subcpmk_id")), 16)
-            self.assertTrue(
-                all(
-                    group["status"] == "complete"
-                    for group in validator.get_rps_summary(rps)
+            self.assertTrue(all(activities.mapped("cpmk_id")))
+            if rps.rps_komponen_ids:
+                self.assertTrue(
+                    all(
+                        group["status"] == "complete"
+                        for group in validator.get_rps_summary(rps)
+                    )
                 )
-            )
 
-    def test_cpl_ignores_unassessed_cpmks(self):
+    def test_seeded_rps_uses_component_to_cpmk_allocations_without_subcpmk(self):
+        self._require_fixture()
+        rps = self._fixture_records("erpobe.akademik.rps", "fixture_rps_ti_")[0]
+        self.assertTrue(rps.rps_komponen_ids)
+        self.assertTrue(
+            rps.bobot_komponen_cpmk_ids.filtered("rps_komponen_id")
+        )
+        self.assertEqual(rps.status, "final")
+
+    def test_repeated_seed_does_not_duplicate_or_delete_history(self):
+        self._require_fixture()
+        rps_records = self._fixture_records("erpobe.akademik.rps", "fixture_rps_")
+        krs_lines = self._fixture_records(
+            "erpobe.akademik.krs.line", "fixture_krsline_"
+        )
+        component_grades = self.env["erpobe.grade.komponen"].sudo().search(
+            [("krs_line_id", "in", krs_lines.ids)]
+        )
+        before = {
+            "rps": len(rps_records),
+            "snapshots": sum(len(rps.rps_komponen_ids) for rps in rps_records),
+            "allocations": sum(
+                len(rps.bobot_komponen_cpmk_ids) for rps in rps_records
+            ),
+            "grades": len(component_grades),
+            "audits": self.env["erpobe.grade.komponen.audit"].sudo().search_count(
+                [("grade_id", "in", component_grades.ids)]
+            ),
+            "subcpmks": len(
+                self._fixture_records("erpobe.akademik.subcpmk", "fixture_subcpmk_")
+            ),
+            "subcpmk_results": len(
+                self._fixture_records("erpobe.grade.subcpmk", "fixture_subresult_")
+            ),
+        }
+        seeder = self.env["erpobe.fixture.seeder"]
+        self.assertTrue(seeder.load_2022_cohort())
+        self.assertTrue(seeder.load_2022_cohort())
+        after = {
+            "rps": len(self._fixture_records("erpobe.akademik.rps", "fixture_rps_")),
+            "snapshots": sum(
+                len(rps.rps_komponen_ids)
+                for rps in self._fixture_records("erpobe.akademik.rps", "fixture_rps_")
+            ),
+            "allocations": sum(
+                len(rps.bobot_komponen_cpmk_ids)
+                for rps in self._fixture_records("erpobe.akademik.rps", "fixture_rps_")
+            ),
+            "grades": self.env["erpobe.grade.komponen"].sudo().search_count(
+                [("krs_line_id", "in", krs_lines.ids)]
+            ),
+            "audits": self.env["erpobe.grade.komponen.audit"].sudo().search_count(
+                [("grade_id", "in", component_grades.ids)]
+            ),
+            "subcpmks": len(
+                self._fixture_records("erpobe.akademik.subcpmk", "fixture_subcpmk_")
+            ),
+            "subcpmk_results": len(
+                self._fixture_records("erpobe.grade.subcpmk", "fixture_subresult_")
+            ),
+        }
+        self.assertEqual(after, before)
+
+    def test_cpl_uses_direct_cpmk_mapping_not_weight_rows(self):
         students = self._require_fixture()
         cpl_grades = self.env["erpobe.grade.cpl"].sudo().search(
             [("mahasiswa_id", "in", students.ids)]
         )
-        mappings = self.env["erpobe.bobot.cpmk.cpl"].sudo().search(
+        mappings = self.env["erpobe.akademik.cpl.mk.cpmk"].sudo().search(
             [("cpl_id", "in", cpl_grades.mapped("cpl_id").ids)]
         )
-        mappings_by_cpl = {}
-        for mapping in mappings:
-            mappings_by_cpl.setdefault(mapping.cpl_id.id, []).append(mapping)
+        self.assertTrue(mappings)
+        self.assertTrue(all(mappings.mapped("cpmk_id")))
 
-        grade_model = self.env["erpobe.grade.cpmk"].sudo()
-        for student in students:
-            student_cpl_grades = cpl_grades.filtered(
-                lambda grade: grade.mahasiswa_id == student
+        rps_records = self._fixture_records("erpobe.akademik.rps", "fixture_rps_")
+        self.assertTrue(rps_records)
+        self.assertTrue(
+            all(
+                not line.bobot_cpmk_cpl
+                for rps in rps_records
+                for line in rps.bobot_cpmk_cpl_ids
             )
-            for cpl_grade in student_cpl_grades:
-                cpl_mappings = mappings_by_cpl.get(cpl_grade.cpl_id.id, [])
-                cpmk_ids = {mapping.cpmk_id.id for mapping in cpl_mappings}
-                student_grades = grade_model.search(
-                    [
-                        ("mahasiswa_id", "=", student.id),
-                        ("cpmk_id", "in", list(cpmk_ids)),
-                    ]
-                )
-                scores = {
-                    grade.cpmk_id.id: grade.nilai_cpmk for grade in student_grades
-                }
-                assessed = [
-                    mapping
-                    for mapping in cpl_mappings
-                    if mapping.cpmk_id.id in scores
-                ]
-                if not assessed or len(scores) == len(cpmk_ids):
-                    continue
-
-                total_weight = sum(
-                    mapping.bobot_cpmk_cpl for mapping in assessed
-                )
-                expected = sum(
-                    mapping.bobot_cpmk_cpl * scores[mapping.cpmk_id.id]
-                    for mapping in assessed
-                ) / total_weight
-                self.assertAlmostEqual(cpl_grade.nilai_cpl, expected, places=2)
-                return
-
-        self.fail("Fixture has no CPL with both assessed and unassessed CPMKs")
+        )

@@ -187,6 +187,9 @@ class ErpObeAkademikRps(models.Model):
         "bobot_cpmk_mk_ids.bobot_cpmk_mk",
         "bobot_komponen_cpmk_ids.cpmk_id",
         "bobot_komponen_cpmk_ids.bobot_komponen_cpmk",
+        "rps_komponen_ids.aktif",
+        "rps_komponen_ids.bobot",
+        "rps_komponen_ids.allocation_ids.bobot_komponen_cpmk",
         "komponen_ids",
     )
     def _compute_weight_status(self):
@@ -309,40 +312,64 @@ class ErpObeAkademikRps(models.Model):
             if cmds_cpl:
                 rps.write({"bobot_cpmk_cpl_ids": cmds_cpl})
 
-            # --- C. Sync Bobot Komponen -> CPMK ---
-            # Cross Product: CPMK Terpilih x Komponen Terpilih (komponen_ids)
-            valid_komp_cpmk = set()
-            for cpmk in rps.cpmk_ids:
-                for komp in rps.komponen_ids:
-                    valid_komp_cpmk.add((cpmk.id, komp.id))
-
-            existing_komp_cpmk = {
-                (l.cpmk_id.id, l.komponen_penilaian.id)
-                for l in rps.bobot_komponen_cpmk_ids
+            # --- C. Reconcile component allocations and their RPS snapshots ---
+            desired_snapshots = rps.rps_komponen_ids
+            desired_pairs = {
+                (snapshot.id, cpmk.id)
+                for snapshot in desired_snapshots
+                for cpmk in rps.cpmk_ids
             }
-
+            allocations = rps.bobot_komponen_cpmk_ids
+            allocation_by_snapshot_cpmk = {
+                (line.rps_komponen_id.id, line.cpmk_id.id): line
+                for line in allocations
+                if line.rps_komponen_id
+            }
+            allocation_by_catalog_cpmk = {
+                (line.komponen_penilaian.id, line.cpmk_id.id): line
+                for line in allocations
+                if line.komponen_penilaian
+            }
             cmds_komp = []
-            # Add New
-            for cpmk_id, komp_id in valid_komp_cpmk:
-                if (cpmk_id, komp_id) not in existing_komp_cpmk:
-                    snapshot = rps.rps_komponen_ids.filtered(
-                        lambda line: line.komponen_id.id == komp_id
-                    )[:1]
-                    cmds_komp.append(
-                        Command.create(
-                            {
-                                "cpmk_id": cpmk_id,
-                                "komponen_penilaian": komp_id,
-                                "rps_komponen_id": snapshot.id if snapshot else False,
-                                "bobot_komponen_cpmk": 0.0,
-                            }
-                        )
+            for snapshot in desired_snapshots:
+                for cpmk in rps.cpmk_ids:
+                    line = allocation_by_snapshot_cpmk.get(
+                        (snapshot.id, cpmk.id)
                     )
-            # Remove Obsolete
-            for line in rps.bobot_komponen_cpmk_ids:
-                if (line.cpmk_id.id, line.komponen_penilaian.id) not in valid_komp_cpmk:
-                    cmds_komp.append(Command.delete(line.id))
+                    if not line and snapshot.komponen_id:
+                        line = allocation_by_catalog_cpmk.get(
+                            (snapshot.komponen_id.id, cpmk.id)
+                        )
+                    if line:
+                        if line.rps_komponen_id != snapshot:
+                            line.write({"rps_komponen_id": snapshot.id})
+                    else:
+                        cmds_komp.append(
+                            Command.create(
+                                {
+                                    "cpmk_id": cpmk.id,
+                                    "komponen_penilaian": snapshot.komponen_id.id,
+                                    "rps_komponen_id": snapshot.id,
+                                    "bobot_komponen_cpmk": 0.0,
+                                }
+                            )
+                        )
 
+            obsolete = allocations.filtered(
+                lambda line: (
+                    line.rps_komponen_id
+                    and (
+                        line.rps_komponen_id not in desired_snapshots
+                        or (line.rps_komponen_id.id, line.cpmk_id.id)
+                        not in desired_pairs
+                    )
+                )
+                or (
+                    line.komponen_penilaian
+                    and line.komponen_penilaian not in rps.komponen_ids
+                )
+            )
+            cmds_komp.extend(Command.delete(line.id) for line in obsolete)
             if cmds_komp:
                 rps.write({"bobot_komponen_cpmk_ids": cmds_komp})
 
@@ -418,6 +445,24 @@ class ErpObeAkademikRps(models.Model):
                     + "\n".join(messages)
                 )
             rps.write({"status": "final"})
+
+    def _link_finalized_to_offer(self, penawaran_line):
+        self.ensure_one()
+        if self.status != "final":
+            raise UserError("RPS harus difinalisasi sebelum dihubungkan ke penawaran.")
+        if penawaran_line.matakuliah_id != self.matakuliah_id:
+            raise ValidationError(
+                "Mata kuliah pada penawaran harus sama dengan mata kuliah RPS."
+            )
+        if self.penawaran_line_id:
+            if self.penawaran_line_id != penawaran_line:
+                raise ValidationError(
+                    "RPS final sudah terhubung ke penawaran mata kuliah lain."
+                )
+            return
+        super(ErpObeAkademikRps, self).write(
+            {"penawaran_line_id": penawaran_line.id}
+        )
 
     def action_mark_for_review(self):
         for rps in self:

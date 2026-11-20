@@ -78,6 +78,10 @@ class TestErpObeRpsVersioning(TransactionCase):
         source.bobot_cpmk_cpl_ids.write({"bobot_cpmk_cpl": 100.0})
         source.bobot_cpmk_mk_ids.write({"bobot_cpmk_mk": 100.0})
         source.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 100.0})
+        source.rps_komponen_ids.write({"bobot": 100.0})
+        source.rps_komponen_ids.mapped("allocation_ids").write(
+            {"bobot_komponen_cpmk": 100.0}
+        )
         source.action_mark_for_review()
         source.action_finalize()
         return source
@@ -126,6 +130,26 @@ class TestErpObeRpsVersioning(TransactionCase):
         rps.action_mark_for_review()
         with self.assertRaises(UserError):
             rps.action_finalize()
+
+    def test_rps_can_finalize_without_subcpmk_before_offer_link(self):
+        rps = self.RPS.create(
+            {
+                "matakuliah_id": self.course.id,
+                "version": 1,
+                "komponen_ids": [Command.set([self.component.id])],
+            }
+        )
+        rps.rps_komponen_ids.write({"bobot": 100.0})
+        rps.rps_komponen_ids.mapped("allocation_ids").write(
+            {"bobot_komponen_cpmk": 100.0}
+        )
+        rps.action_mark_for_review()
+        rps.action_finalize()
+
+        self.assertFalse(rps.kegiatan_perkuliahan_ids)
+        self.assertFalse(rps.penawaran_line_id)
+        rps._link_finalized_to_offer(self.old_line)
+        self.assertEqual(rps.penawaran_line_id, self.old_line)
 
     def test_bulk_copy_requires_confirmation_and_previews_sources(self):
         source = self._final_rps()

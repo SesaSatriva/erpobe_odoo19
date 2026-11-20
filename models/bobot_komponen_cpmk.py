@@ -39,10 +39,10 @@ class ErpObeBobotKomponenCpmk(models.Model):
     )
 
     total_bobot = fields.Float(
-        string="Total bobot CPMK (%)", compute="_compute_validitas", digits=(5, 2)
+        string="Total alokasi (%)", compute="_compute_validitas", digits=(5, 2)
     )
     remaining_bobot = fields.Float(
-        string="Sisa bobot CPMK (%)",
+        string="Sisa alokasi (%)",
         compute="_compute_validitas",
         digits=(5, 2),
     )
@@ -68,18 +68,25 @@ class ErpObeBobotKomponenCpmk(models.Model):
 
     @api.depends(
         "bobot_komponen_cpmk",
+        "rps_komponen_id",
         "rps_id.bobot_komponen_cpmk_ids.bobot_komponen_cpmk",
         "rps_id.bobot_komponen_cpmk_ids.cpmk_id",
+        "rps_id.bobot_komponen_cpmk_ids.rps_komponen_id",
     )
     def _compute_validitas(self):
         for rec in self:
-            lines_cpmk = rec.rps_id.bobot_komponen_cpmk_ids.filtered(
-                lambda line: line.cpmk_id == rec.cpmk_id
-            )
-            total_cpmk = sum(lines_cpmk.mapped("bobot_komponen_cpmk"))
-            rec.total_bobot = total_cpmk
-            rec.remaining_bobot = 100.0 - total_cpmk
-            rec.weight_status = _weight_status(total_cpmk)[0]
+            if rec.rps_komponen_id:
+                allocations = rec.rps_komponen_id.allocation_ids.filtered(
+                    lambda line: line.rps_id == rec.rps_id
+                )
+            else:
+                allocations = rec.rps_id.bobot_komponen_cpmk_ids.filtered(
+                    lambda line: line.cpmk_id == rec.cpmk_id
+                )
+            total = sum(allocations.mapped("bobot_komponen_cpmk"))
+            rec.total_bobot = total
+            rec.remaining_bobot = 100.0 - total
+            rec.weight_status = _weight_status(total)[0]
 
     @api.constrains("rps_id", "cpmk_id")
     def _check_cpmk_faculty(self):
@@ -87,4 +94,30 @@ class ErpObeBobotKomponenCpmk(models.Model):
             if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
                     "CPMK bobot harus berasal dari mata kuliah pada RPS."
+                )
+            if record.rps_komponen_id and (
+                record.rps_komponen_id.rps_id != record.rps_id
+                or (
+                    record.rps_komponen_id.komponen_id
+                    and record.rps_komponen_id.komponen_id
+                    != record.komponen_penilaian
+                )
+            ):
+                raise ValidationError(
+                    "Alokasi harus mengacu pada snapshot komponen dan RPS yang sama."
+                )
+
+    @api.constrains("rps_id", "rps_komponen_id", "cpmk_id")
+    def _check_unique_snapshot_allocation(self):
+        for record in self.filtered("rps_komponen_id"):
+            duplicates = self.search_count(
+                [
+                    ("id", "!=", record.id),
+                    ("rps_komponen_id", "=", record.rps_komponen_id.id),
+                    ("cpmk_id", "=", record.cpmk_id.id),
+                ]
+            )
+            if duplicates:
+                raise ValidationError(
+                    "Kombinasi snapshot komponen–CPMK tidak boleh duplikat."
                 )

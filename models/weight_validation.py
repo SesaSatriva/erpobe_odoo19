@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN
 
 from odoo import api, models
 
@@ -8,14 +8,26 @@ WEIGHT_TOLERANCE = 0.01
 
 
 def _weight_status(total):
-    difference = WEIGHT_TARGET - total
-    if abs(Decimal(str(total)) - Decimal(str(WEIGHT_TARGET))) <= Decimal(
+    total_decimal = Decimal(str(total))
+    difference = float(Decimal(str(WEIGHT_TARGET)) - total_decimal)
+    if abs(total_decimal - Decimal(str(WEIGHT_TARGET))) <= Decimal(
         str(WEIGHT_TOLERANCE)
     ):
         return "complete", difference
     if difference < 0:
         return "over", difference
     return "under", difference
+
+
+def _distribute_percent(total, count, precision=2):
+    if count <= 0:
+        raise ValueError("count must be positive")
+    quantum = Decimal(1).scaleb(-precision)
+    total_decimal = Decimal(str(total))
+    base = (total_decimal / count).quantize(quantum, rounding=ROUND_DOWN)
+    values = [base] * (count - 1)
+    values.append(total_decimal - sum(values, Decimal("0")))
+    return [float(value) for value in values]
 
 
 class ErpObeWeightValidation(models.AbstractModel):
@@ -27,11 +39,7 @@ class ErpObeWeightValidation(models.AbstractModel):
         rps.ensure_one()
         groups = []
 
-        snapshot_is_configured = bool(
-            rps.rps_komponen_ids
-            and any(component.bobot for component in rps.rps_komponen_ids)
-        )
-        if snapshot_is_configured:
+        if rps.rps_komponen_ids:
             active_components = rps.rps_komponen_ids.filtered(
                 lambda component: component.aktif
             )
@@ -49,8 +57,14 @@ class ErpObeWeightValidation(models.AbstractModel):
                 )
             )
             for component in active_components:
+                allocations = component.allocation_ids.filtered(
+                    lambda line: line.rps_id == rps
+                )
                 allocation_total = sum(
-                    component.allocation_ids.mapped("bobot_komponen_cpmk")
+                    (Decimal(str(value)) for value in allocations.mapped(
+                        "bobot_komponen_cpmk"
+                    )),
+                    Decimal("0"),
                 )
                 status, difference = _weight_status(allocation_total)
                 groups.append(
@@ -64,6 +78,7 @@ class ErpObeWeightValidation(models.AbstractModel):
                         rps_komponen_id=component.id,
                     )
                 )
+            return groups
 
         for cpmk in rps.cpmk_ids:
             lines = rps.bobot_cpmk_cpl_ids.filtered(

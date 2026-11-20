@@ -5,6 +5,8 @@ from pathlib import Path
 from odoo import Command, api, models
 from odoo.exceptions import UserError, ValidationError
 
+from .weight_validation import _distribute_percent
+
 
 PROGRAMS = (
     {
@@ -165,7 +167,7 @@ SOURCE_KIND = {
     "dummy": "dummy",
     "derived": "derived",
 }
-FIXTURE_SEED_VERSION = "1"
+FIXTURE_SEED_VERSION = "2"
 FIXTURE_SEED_VERSION_PARAM = "erpobe.fixture.2022_cohort_seed_version"
 
 
@@ -198,7 +200,11 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 ],
                 limit=1,
             )
-            if final_grade and final_student:
+            if (
+                not params.get_param(FIXTURE_SEED_VERSION_PARAM)
+                and final_grade
+                and final_student
+            ):
                 report_exists = self.env["erpobe.report.khs"].sudo().search_count(
                     [("mahasiswa_id", "=", final_student.res_id)]
                 )
@@ -809,7 +815,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         for course in courses:
             course["offer_line"] = offers[course["code"]]["line"]
             course["input_nilai"] = offers[course["code"]]["input"]
-            course["rps"], course["subcpmks"] = self._ensure_rps(
+            course["rps"] = self._ensure_rps(
                 config,
                 course,
                 component_ids,
@@ -1122,61 +1128,59 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             if not rps:
                 raise ValidationError(f"XML ID erpobe.{rps_key} tidak memiliki RPS.")
             if rps.status == "final":
-                subcpmks = rps.kegiatan_perkuliahan_ids.mapped("subcpmk_id")
-                return rps, subcpmks
+                rps._link_finalized_to_offer(course["offer_line"])
+                return rps
         else:
             rps = self._upsert(
                 "erpobe.akademik.rps",
                 rps_key,
                 {
                     "matakuliah_id": course["course"].id,
-                    "penawaran_line_id": course["offer_line"].id,
+                    "version": max(
+                        course["offer_line"].rps_ids.mapped("version"),
+                        default=0,
+                    ) + 1,
                     "komponen_ids": [Command.set([item.id for item in component_ids])],
                     "media_software": "Perangkat lunak sesuai topik (simulasi)",
                     "media_hardware": "Laboratorium/perangkat praktik (simulasi)",
                 },
             )
 
-        bobot_mk = rps.bobot_cpmk_mk_ids
-        if bobot_mk:
-            bobot_mk.write({"bobot_cpmk_mk": 50.0})
-        rps.bobot_cpmk_cpl_ids.write({"bobot_cpmk_cpl": 50.0})
-        rps.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 25.0})
-        rps.rps_komponen_ids.write({"bobot": 25.0, "aktif": True})
-        rps.bobot_komponen_cpmk_ids.filtered(
-            lambda line: line.rps_komponen_id
-        ).write({"bobot_komponen_cpmk": 25.0})
-
-        sub_items = []
-        for week in range(1, 17):
-            cpmk = course["cpmks"][(week - 1) % len(course["cpmks"])]
-            sub_key = f"fixture_subcpmk_{spec['key']}_{week:02d}"
-            sub_items.append(
-                (
-                    sub_key,
-                    {
-                        "rps_id": rps.id,
-                        "cpmk_id": cpmk.id,
-                        "kode": f"SUB-{week:02d}",
-                        "name": (
-                            f"Mahasiswa mampu menjelaskan, menerapkan, dan mengevaluasi "
-                            f"{WEEK_TOPICS[week - 1]} pada {spec['name']}."
-                        ),
-                        "indikator": (
-                            f"Bukti kinerja simulasi minggu {week}: {WEEK_TOPICS[week - 1]}."
-                        ),
-                        "minggu": week,
-                        "target_nilai": 70.0,
-                    },
-                )
+        rps._sync_bobot_tables()
+        if not course["cpmks"]:
+            raise ValidationError(
+                f"RPS fixture {spec['name']} tidak memiliki CPMK untuk dialokasikan."
             )
+        snapshots = rps.rps_komponen_ids.filtered("aktif").sorted(
+            key=lambda component: (component.sequence, component.id)
+        )
+        if not snapshots:
+            raise ValidationError(
+                f"RPS fixture {spec['name']} tidak memiliki komponen penilaian aktif."
+            )
+        component_weights = _distribute_percent(100, len(snapshots))
+        for snapshot, weight in zip(snapshots, component_weights):
+            snapshot.write({"bobot": weight, "aktif": True})
 
-        sub_records = self._upsert_many("erpobe.akademik.subcpmk", sub_items)
-        subcpmks = [sub_records[key] for key, _values in sub_items]
+        for snapshot in snapshots:
+            allocations = snapshot.allocation_ids.filtered(
+                lambda line: line.rps_id == rps
+                and line.cpmk_id in course["cpmks"]
+            ).sorted(key=lambda line: (line.cpmk_id.id, line.id))
+            if {line.cpmk_id.id for line in allocations} != {
+                cpmk.id for cpmk in course["cpmks"]
+            }:
+                raise ValidationError(
+                    f"Alokasi komponen {snapshot.name} pada RPS {spec['name']} "
+                    "belum mencakup semua CPMK yang dikonfigurasi."
+                )
+            allocation_weights = _distribute_percent(100, len(allocations))
+            for allocation, weight in zip(allocations, allocation_weights):
+                allocation.write({"bobot_komponen_cpmk": weight})
+
         activity_items = []
         for week in range(1, 17):
             cpmk = course["cpmks"][(week - 1) % len(course["cpmks"])]
-            sub = sub_records[f"fixture_subcpmk_{spec['key']}_{week:02d}"]
             activity_key = f"fixture_activity_{spec['key']}_{week:02d}"
             activity_items.append(
                 (
@@ -1185,14 +1189,13 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                         "rps_id": rps.id,
                         "minggu": week,
                         "cpmk_id": cpmk.id,
-                        "subcpmk_id": sub.id,
                         "bahan_kajian": f"Minggu {week}: {spec['name']} - {WEEK_TOPICS[week - 1]}.",
                         "metode_pembelajaran_id": methods[(week - 1) % len(methods)].id,
                         "pengalaman_belajar": (
                             "Mahasiswa mengerjakan latihan/studi kasus, mendiskusikan "
                             "hasil, dan menyusun bukti belajar (simulasi)."
                         ),
-                        "indikator_penilaian": sub.indikator,
+                        "indikator_penilaian": cpmk.indikator,
                         "estimasi_waktu": 170,
                         "referensi_ids": [
                             Command.set([course["reference"].id])
@@ -1206,17 +1209,6 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 )
             )
         self._upsert_many("erpobe.akademik.kegiatan.perkuliahan", activity_items)
-        self._mark_sources(
-            [
-                (
-                    sub,
-                    "dummy",
-                    "Rumusan dan indikator Sub-CPMK adalah materi simulasi untuk pengujian, bukan dokumen akademik resmi.",
-                    config["source_url"],
-                )
-                for sub in subcpmks
-            ]
-        )
 
         rubric_sequence = 0
         rubric_items = []
@@ -1273,16 +1265,26 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         self._upsert_many("erpobe.akademik.kriteria", criterion_items)
 
         if rps.status != "final":
+            validation = self.env["erpobe.weight.validation"].validate_rps(rps)
+            if not validation["complete"]:
+                details = "; ".join(
+                    f"{item['item_name']} ({item['relation']}): {item['total']:.2f}%"
+                    for item in validation["problems"]
+                )
+                raise ValidationError(
+                    f"Konfigurasi bobot RPS {spec['name']} belum valid: {details}"
+                )
             rps.action_mark_for_review()
             rps.action_finalize()
+        rps._link_finalized_to_offer(course["offer_line"])
         self._mark_source(
             rps,
             "dummy",
-            "Seluruh isi RPS, bobot, rubrik, kegiatan, dan Sub-CPMK dibuat untuk simulasi; "
+            "Seluruh isi RPS, bobot, rubrik, dan kegiatan dibuat untuk simulasi; "
             "RPS final ini bukan RPS resmi atau pengesahan program studi.",
             config["source_url"],
         )
-        return rps, subcpmks
+        return rps
 
     @api.model
     def _create_enrollments(self, programs, component_ids):
@@ -1398,32 +1400,10 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                                 },
                             )
                         )
-                grades = self._upsert_many(
-                    "erpobe.grade.komponen", component_items
-                )
+                self._upsert_many("erpobe.grade.komponen", component_items)
 
-                sub_items = []
                 for course in selected_courses:
                     line = lines[course_line_keys[course["code"]]]
-                    for sub in course["subcpmks"]:
-                        component_index = (sub.minggu - 1) % len(component_ids)
-                        grade_key = (
-                            f"fixture_grade_{student_key}_{course['spec']['key']}_"
-                            f"{component_index + 1:02d}"
-                        )
-                        source_grade = grades[grade_key]
-                        sub_items.append(
-                            (
-                                f"fixture_subresult_{student_key}_{course['spec']['key']}_{sub.minggu:02d}",
-                                {
-                                    "krs_line_id": line.id,
-                                    "subcpmk_id": sub.id,
-                                    "source_grade_komponen_ids": [
-                                        Command.set([source_grade.id])
-                                    ],
-                                },
-                            )
-                        )
                     for cpmk in course["cpmks"]:
                         grade_cpmk_items.append(
                             (
@@ -1443,7 +1423,6 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                             },
                         )
                     )
-                self._upsert_many("erpobe.grade.subcpmk", sub_items)
 
         offer_line_model = self.env["erpobe.akademik.penawaran.line"].sudo()
         for offer_line_id, student_ids in students_by_offer_line.items():

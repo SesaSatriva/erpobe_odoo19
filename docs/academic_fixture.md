@@ -20,9 +20,13 @@ Teknik Manufaktur:
 - Curriculum, course offerings, student KRS records, four assessment
   components, numeric component scores, computed CPMK/MK/CPL results, and
   KHS reports.
-- Two simulated CPMKs per course and 16 weekly Sub-CPMK/activity records per
-  RPS. RPS weights and rubrics are complete for testing and marked final, but
-  this does not mean they were reviewed or approved by a program.
+- Two simulated CPMKs per course, linked directly to CPLs, and 16 weekly
+  course-activity records mapped directly to CPMKs. Each RPS has component
+  weights totaling 100% and component-to-CPMK allocations totaling 100%.
+  Sub-CPMK records from earlier fixture versions remain historical data and
+  are not created or used by the current seeder. RPS weights and rubrics are
+  marked final for testing, but this does not mean they were reviewed or
+  approved by a program.
 
 ## Source and simulation boundaries
 

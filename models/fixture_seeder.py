@@ -167,8 +167,23 @@ SOURCE_KIND = {
     "dummy": "dummy",
     "derived": "derived",
 }
-FIXTURE_SEED_VERSION = "2"
+FIXTURE_SEED_VERSION = "4"
 FIXTURE_SEED_VERSION_PARAM = "erpobe.fixture.2022_cohort_seed_version"
+FIXTURE_COMPONENTS = (
+    ("komponen_partisipatif", "Kehadiran", "attendance", 10.0),
+    ("fixture_component_quiz", "Kuis", "quiz", 10.0),
+    ("komponen_kognitif", "Tugas", "assignment", 15.0),
+    ("fixture_component_midterm", "UTS", "midterm", 25.0),
+    ("fixture_component_exam", "UAS", "final_exam", 30.0),
+    ("fixture_component_presentation", "Presentasi", "presentation", 10.0),
+)
+ADDITIONAL_COMPONENTS = (
+    ("fixture_component_project", "Proyek", "project"),
+    ("fixture_component_practicum", "Praktikum", "practicum"),
+    ("fixture_component_case_study", "Studi Kasus", "case_study"),
+    ("fixture_component_tbp", "TBP", "tbp"),
+    ("fixture_component_other", "Aktivitas Penilaian Khusus", "other"),
+)
 
 
 class ErpObeFixtureSeeder(models.AbstractModel):
@@ -200,10 +215,15 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 ],
                 limit=1,
             )
+            current_components = self.env.ref(
+                "erpobe.fixture_component_midterm", raise_if_not_found=False
+            )
             if (
                 not params.get_param(FIXTURE_SEED_VERSION_PARAM)
                 and final_grade
                 and final_student
+                and current_components
+                and current_components.tipe == "midterm"
             ):
                 report_exists = self.env["erpobe.report.khs"].sudo().search_count(
                     [("mahasiswa_id", "=", final_student.res_id)]
@@ -532,7 +552,8 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             if model_name == "erpobe.akademik.rps" and record.status == "final":
                 records[key] = record
                 continue
-            record.write(values)
+            if not self._record_matches_values(record, values):
+                record.write(values)
             records[key] = record
 
         if new_items:
@@ -553,6 +574,30 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 ]
             )
         return records
+
+    @api.model
+    def _record_matches_values(self, record, values):
+        for field_name, expected in values.items():
+            field = record._fields[field_name]
+            current = record[field_name]
+            if field.type == "many2one":
+                expected_id = expected.id if hasattr(expected, "id") else expected
+                if current.id != (expected_id or False):
+                    return False
+            elif field.type in ("many2many", "one2many"):
+                if not expected:
+                    if current:
+                        return False
+                    continue
+                if (
+                    len(expected) != 1
+                    or expected[0][0] != Command.SET
+                    or set(current.ids) != set(expected[0][2])
+                ):
+                    return False
+            elif current != expected:
+                return False
+        return True
 
     @api.model
     def _upsert(self, model_name, key, values):
@@ -602,26 +647,20 @@ class ErpObeFixtureSeeder(models.AbstractModel):
 
     @api.model
     def _ensure_components(self):
-        existing = [
-            self.env.ref("erpobe.komponen_kognitif"),
-            self.env.ref("erpobe.komponen_partisipatif"),
-        ]
-        additional = self._upsert_many(
+        entries = [
+            (key, name, kind)
+            for key, name, kind, _weight in FIXTURE_COMPONENTS
+        ] + list(ADDITIONAL_COMPONENTS)
+        records = self._upsert_many(
             "erpobe.akademik.komponen",
             [
-                (
-                    "fixture_component_project",
-                    {"name": "Penilaian Proyek", "tipe": "partisipatif"},
-                ),
-                (
-                    "fixture_component_exam",
-                    {"name": "Ujian Akhir", "tipe": "kognitif"},
-                ),
+                (key, {"name": name, "tipe": kind, "aktif": True})
+                for key, name, kind in entries
             ],
         )
-        return existing + [
-            additional["fixture_component_project"],
-            additional["fixture_component_exam"],
+        return [
+            records[key]
+            for key, _name, _kind, _weight in FIXTURE_COMPONENTS
         ]
 
     @api.model
@@ -997,10 +1036,8 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         for spec in specs:
             course_key = f"fixture_course_{config['slug']}_{spec['key']}"
             course = course_records[course_key]
-            cpmks = []
             for number in (1, 2):
                 cpmk = cpmk_records[f"fixture_cpmk_{spec['key']}_{number:02d}"]
-                cpmks.append(cpmk)
                 source_items.append(
                     (
                         cpmk,
@@ -1032,6 +1069,33 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                     config["source_url"],
                 ),
             )
+        self._upsert_many("erpobe.akademik.cpl.mk.cpmk", mapping_items)
+        mk_cpl_items = []
+        for spec in specs:
+            course = course_records[
+                f"fixture_course_{config['slug']}_{spec['key']}"
+            ]
+            for cpl in spec["cpls"]:
+                mk_cpl_items.append(
+                    (
+                        f"fixture_mk_cpl_{config['slug']}_{spec['key']}_{cpl.id}",
+                        {
+                            "mk_id": course.id,
+                            "cpl_id": cpl.id,
+                        },
+                    )
+                )
+        mk_cpl_records = self._upsert_many(
+            "erpobe.akademik.mk.cpl", mk_cpl_items
+        )
+        for spec in specs:
+            course = course_records[
+                f"fixture_course_{config['slug']}_{spec['key']}"
+            ]
+            cpmks = [
+                cpmk_records[f"fixture_cpmk_{spec['key']}_{number:02d}"]
+                for number in (1, 2)
+            ]
             result.append(
                 {
                     "spec": spec,
@@ -1039,9 +1103,14 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                     "code": spec["code"],
                     "cpmks": cpmks,
                     "cpls": spec["cpls"],
+                    "mk_cpl_mappings": [
+                        mk_cpl_records[
+                            f"fixture_mk_cpl_{config['slug']}_{spec['key']}_{cpl.id}"
+                        ]
+                        for cpl in spec["cpls"]
+                    ],
                 }
             )
-        self._upsert_many("erpobe.akademik.cpl.mk.cpmk", mapping_items)
         self._mark_sources(source_items)
         return result
 
@@ -1146,6 +1215,20 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 },
             )
 
+        legacy_project = self.env.ref("erpobe.fixture_component_project")
+        rps.write({
+            "komponen_ids": [
+                Command.set([component.id for component in component_ids] + [legacy_project.id])
+            ],
+            "referensi_ids": [Command.set([course["reference"].id])],
+            "tujuan_pembelajaran": (
+                f"Mahasiswa mampu mencapai CPMK pada {spec['name']} (simulasi)."
+            ),
+            "materi_pembelajaran": (
+                f"Materi pembelajaran disusun mengikuti topik mingguan {spec['name']}."
+            ),
+            "sumber_belajar": course["reference"].judul,
+        })
         rps._sync_bobot_tables()
         if not course["cpmks"]:
             raise ValidationError(
@@ -1158,9 +1241,44 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             raise ValidationError(
                 f"RPS fixture {spec['name']} tidak memiliki komponen penilaian aktif."
             )
-        component_weights = _distribute_percent(100, len(snapshots))
-        for snapshot, weight in zip(snapshots, component_weights):
-            snapshot.write({"bobot": weight, "aktif": True})
+        fixture_weights = {
+            kind: weight for _key, _name, kind, weight in FIXTURE_COMPONENTS
+        }
+        for snapshot in rps.rps_komponen_ids:
+            component_type = (
+                snapshot.komponen_id.tipe if snapshot.komponen_id else snapshot.tipe
+            )
+            if component_type == "project":
+                snapshot.write({
+                    "tipe": component_type,
+                    "name": snapshot.komponen_id.name,
+                    "bobot": 0.0,
+                    "aktif": False,
+                })
+                continue
+            weight = fixture_weights.get(component_type)
+            if weight is None:
+                snapshot.write({
+                    "tipe": component_type,
+                    "name": snapshot.komponen_id.name if snapshot.komponen_id else snapshot.name,
+                    "bobot": 0.0,
+                    "aktif": False,
+                })
+                continue
+            snapshot.write({
+                "tipe": component_type,
+                "name": snapshot.komponen_id.name,
+                "description": snapshot.komponen_id.description,
+                "bobot": weight,
+                "aktif": True,
+            })
+
+        cpmk_weights = _distribute_percent(100, len(course["cpmks"]))
+        for line, weight in zip(
+            rps.bobot_cpmk_mk_ids.sorted("cpmk_id"),
+            cpmk_weights,
+        ):
+            line.write({"bobot_cpmk_mk": weight})
 
         for snapshot in snapshots:
             allocations = snapshot.allocation_ids.filtered(
@@ -1289,9 +1407,8 @@ class ErpObeFixtureSeeder(models.AbstractModel):
     @api.model
     def _create_enrollments(self, programs, component_ids):
         component_ids = list(component_ids)
-        grade_cpmk_items = []
-        grade_mk_items = []
         students_by_offer_line = {}
+        course_krs_lines = {}
 
         for slug, program in programs.items():
             courses_by_semester = {}
@@ -1373,23 +1490,24 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 component_items = []
                 for course in selected_courses:
                     line = lines[course_line_keys[course["code"]]]
+                    course_krs_lines.setdefault(course["code"], self.env[
+                        "erpobe.akademik.krs.line"
+                    ])
+                    course_krs_lines[course["code"]] |= line
                     for component_index, component in enumerate(component_ids):
                         snapshot = course["rps"].rps_komponen_ids.filtered(
-                            lambda item: item.komponen_id == component
+                            lambda item: item.komponen_id == component and item.aktif
                         )[:1]
-                        grade_key = (
-                            f"fixture_grade_{student_key}_{course['spec']['key']}_"
-                            f"{component_index + 1:02d}"
-                        )
                         component_items.append(
                             (
-                                grade_key,
+                                f"fixture_grade_{student_key}_{course['spec']['key']}_"
+                                f"{component_index + 1:02d}",
                                 {
                                     "input_nilai_id": course["input_nilai"].id,
                                     "krs_line_id": line.id,
                                     "komponen_id": component.id,
                                     "rps_id": course["rps"].id,
-                                    "rps_komponen_id": snapshot.id if snapshot else False,
+                                    "rps_komponen_id": snapshot.id,
                                     "origin": "simulated",
                                     "is_graded": True,
                                     "nilai": self._simulated_score(
@@ -1400,29 +1518,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                                 },
                             )
                         )
-                self._upsert_many("erpobe.grade.komponen", component_items)
-
-                for course in selected_courses:
-                    line = lines[course_line_keys[course["code"]]]
-                    for cpmk in course["cpmks"]:
-                        grade_cpmk_items.append(
-                            (
-                                f"fixture_grade_cpmk_{student_key}_{course['spec']['key']}_{cpmk.id}",
-                                {
-                                    "mahasiswa_id": student.id,
-                                    "cpmk_id": cpmk.id,
-                                },
-                            )
-                        )
-                    grade_mk_items.append(
-                        (
-                            f"fixture_grade_mk_{student_key}_{course['spec']['key']}",
-                            {
-                                "mahasiswa_id": student.id,
-                                "mk_id": course["course"].id,
-                            },
-                        )
-                    )
+                self._upsert_component_grades(component_items)
 
         offer_line_model = self.env["erpobe.akademik.penawaran.line"].sudo()
         for offer_line_id, student_ids in students_by_offer_line.items():
@@ -1434,8 +1530,67 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 }
             )
 
-        self._upsert_many("erpobe.grade.cpmk", grade_cpmk_items)
-        self._upsert_many("erpobe.grade.mk", grade_mk_items)
+        for program in programs.values():
+            for course in program["courses"]:
+                enrolled_lines = course_krs_lines.get(course["code"])
+                if enrolled_lines:
+                    course["input_nilai"].with_context(
+                        skip_khs_refresh=True
+                    ).action_calculate_grades_and_khs(enrolled_lines)
+
+    @api.model
+    def _upsert_component_grades(self, items):
+        items = list(items)
+        if not items:
+            return
+
+        Grade = self.env["erpobe.grade.komponen"].sudo()
+        relational_fields = {
+            "input_nilai_id",
+            "krs_line_id",
+            "komponen_id",
+            "rps_id",
+            "rps_komponen_id",
+        }
+        existing_grades = Grade.search([
+            (
+                "krs_line_id",
+                "in",
+                sorted({values["krs_line_id"] for _, values in items}),
+            ),
+            (
+                "komponen_id",
+                "in",
+                sorted({values["komponen_id"] for _, values in items}),
+            ),
+        ])
+        grades_by_key = {
+            (grade.krs_line_id.id, grade.komponen_id.id): grade
+            for grade in existing_grades
+        }
+        create_values = []
+        for _key, values in items:
+            grade = grades_by_key.get(
+                (values["krs_line_id"], values["komponen_id"])
+            )
+            if grade:
+                if grade.origin != "simulated":
+                    continue
+                if all(
+                    (
+                        grade[field].id == value
+                        if field in relational_fields
+                        else grade[field] == value
+                    )
+                    for field, value in values.items()
+                ):
+                    continue
+                grade.write(values)
+            else:
+                create_values.append(values)
+        if create_values:
+            for start in range(0, len(create_values), 1000):
+                Grade.create(create_values[start : start + 1000])
 
     @api.model
     def _create_cpl_results(self, programs):

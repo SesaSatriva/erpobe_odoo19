@@ -57,7 +57,6 @@ custom_module/erpobe/
 │   ├── akademik_penawaran.py
 │   ├── akademik_rps.py
 │   ├── akademik_tahunajaran.py
-│   ├── bobot_cpmk_cpl.py
 │   ├── bobot_cpmk_mk.py
 │   ├── bobot_komponen_cpmk.py
 │   ├── faculty_access.py
@@ -252,7 +251,7 @@ Instalasi baru maupun upgrade dapat dijalankan tanpa opsi demo:
   - versi baru dibuat lewat salin/duplicate
   - mata kuliah pada RPS harus sama dengan mata kuliah pada penawaran
   - finalisasi hanya diperbolehkan bila total bobot lengkap dan sesuai toleransi `100 ± 0.01`
-- Field kunci: `status`, `version`, `source_rps_id`, `komponen_ids`, `cpmk_ids`, `bobot_cpmk_mk_ids`, `bobot_cpmk_cpl_ids`, `bobot_komponen_cpmk_ids`
+- Field kunci: `status`, `version`, `source_rps_id`, `komponen_ids`, `cpmk_ids`, `bobot_cpmk_mk_ids`, `bobot_komponen_cpmk_ids`
 
 ### 3.5 Validasi bobot dan monitoring kelengkapan
 
@@ -372,7 +371,6 @@ Instalasi baru maupun upgrade dapat dijalankan tanpa opsi demo:
 | `erpobe.akademik.penawaran.line` | `ErpObeAkademikPenawaranLine` | `models/akademik_penawaran.py` | Detail kelas penawaran |
 | `erpobe.akademik.rps` | `ErpObeAkademikRps` | `models/akademik_rps.py` | Rencana pembelajaran semester |
 | `erpobe.bobot.cpmk.mk` | `ErpObeBobotCpmkMk` | `models/bobot_cpmk_mk.py` | Bobot CPMK ke MK |
-| `erpobe.bobot.cpmk.cpl` | `ErpObeBobotCpmkCpl` | `models/bobot_cpmk_cpl.py` | Bobot CPMK ke CPL |
 | `erpobe.bobot.komponen.cpmk` | `ErpObeBobotKomponenCpmk` | `models/bobot_komponen_cpmk.py` | Bobot komponen ke CPMK |
 | `erpobe.akademik.krs` | `ErpObeAkademikKrs` | `models/akademik_krs.py` | Data KRS mahasiswa |
 | `erpobe.akademik.krs.line` | `ErpObeAkademikKrsLine` | `models/akademik_krs.py` | Baris mata kuliah KRS |
@@ -412,9 +410,8 @@ Instalasi baru maupun upgrade dapat dijalankan tanpa opsi demo:
 
 | Model | Contoh field |
 | --- | --- |
-| `erpobe.akademik.rps` | `matakuliah_id`, `penawaran_line_id`, `tahun_ajaran_id`, `version`, `status`, `weight_status`, `komponen_ids`, `cpmk_ids`, `cpl_ids`, `bobot_cpmk_mk_ids`, `bobot_cpmk_cpl_ids`, `bobot_komponen_cpmk_ids` |
+| `erpobe.akademik.rps` | `matakuliah_id`, `penawaran_line_id`, `tahun_ajaran_id`, `version`, `status`, `weight_status`, `komponen_ids`, `cpmk_ids`, `cpl_ids`, `bobot_cpmk_mk_ids`, `bobot_komponen_cpmk_ids` |
 | `erpobe.bobot.cpmk.mk` | `rps_id`, `cpmk_id`, `mk_id`, `bobot_cpmk_mk` |
-| `erpobe.bobot.cpmk.cpl` | `rps_id`, `cpmk_id`, `cpl_id`, `bobot_cpmk_cpl` |
 | `erpobe.bobot.komponen.cpmk` | `rps_id`, `cpmk_id`, `komponen_penilaian`, `bobot_komponen_cpmk` |
 
 #### Enroll dan penilaian

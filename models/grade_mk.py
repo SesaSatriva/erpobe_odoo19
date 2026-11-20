@@ -17,6 +17,9 @@ class ErpObeGradeMk(models.Model):
     semester = fields.Integer(related="mk_id.semester", store=True, string="Semester")
     kode_mk = fields.Char(related="mk_id.kode_mk", store=True, string="Kode MK")
     nilai_mk = fields.Float(compute="_compute_nilai_mk", store=True, digits=(16, 2))
+    is_available = fields.Boolean(
+        string="Data Tersedia", compute="_compute_nilai_mk", store=True
+    )
 
     _uniq_mhs_mk_constraint = models.Constraint('unique(mahasiswa_id, mk_id)', 'Nilai MK exist.')
 
@@ -59,6 +62,9 @@ class ErpObeGradeMk(models.Model):
         Memaksa Report KHS untuk refresh saat ada nilai MK baru/berubah.
         Ini memastikan mata kuliah baru langsung muncul di transkrip.
         """
+        if self.env.context.get("skip_khs_refresh"):
+            return
+
         # Cari Report KHS milik mahasiswa yang terdampak
         mhs_ids = records.mapped("mahasiswa_id.id")
         if not mhs_ids:
@@ -75,33 +81,61 @@ class ErpObeGradeMk(models.Model):
             report._sync_from_grades()
 
     # === COMPUTE LOGIC ===
-    @api.depends("mahasiswa_id.grade_cpmk_ids.nilai_cpmk")
+    @api.depends(
+        "mahasiswa_id.grade_cpmk_ids.nilai_cpmk",
+        "mahasiswa_id.grade_cpmk_ids.is_available",
+        "rps_id.bobot_cpmk_mk_ids.bobot_cpmk_mk",
+    )
     def _compute_nilai_mk(self):
         Rps = self.env["erpobe.akademik.rps"]
         BobotCpmkMk = self.env["erpobe.bobot.cpmk.mk"]
         GradeCpmk = self.env["erpobe.grade.cpmk"]
-        GradeKomp = self.env["erpobe.grade.komponen"]
 
-        exact_records = self.filtered(lambda grade: grade.rps_id and grade.krs_line_id)
+        exact_records = self.filtered(
+            lambda grade: grade.rps_id and grade.krs_line_id
+        )
+        weight_lines = BobotCpmkMk.search([
+            ("rps_id", "in", exact_records.mapped("rps_id").ids),
+        ])
+        weights_by_rps = {}
+        for weight_line in weight_lines:
+            weights_by_rps.setdefault(weight_line.rps_id.id, []).append(weight_line)
+
+        cpmk_grades = GradeCpmk.search([
+            ("mahasiswa_id", "in", exact_records.mapped("mahasiswa_id").ids),
+            ("krs_line_id", "in", exact_records.mapped("krs_line_id").ids),
+            ("rps_id", "in", exact_records.mapped("rps_id").ids),
+            ("is_available", "=", True),
+        ])
+        grade_map = {
+            (
+                grade.mahasiswa_id.id,
+                grade.krs_line_id.id,
+                grade.rps_id.id,
+                grade.cpmk_id.id,
+            ): grade
+            for grade in cpmk_grades
+        }
         for rec in exact_records:
-            active_snapshots = rec.rps_id.rps_komponen_ids.filtered(
-                lambda snapshot: snapshot.aktif
-            )
             total_score = 0.0
             total_weight = 0.0
-            for snapshot in active_snapshots:
-                grade = GradeKomp.search([
-                    ("krs_line_id", "=", rec.krs_line_id.id),
-                    ("rps_id", "=", rec.rps_id.id),
-                    ("rps_komponen_id", "=", snapshot.id),
-                    ("is_graded", "=", True),
-                    ("origin", "=", "actual"),
-                ], limit=1)
-                if not grade:
+            for weight_line in weights_by_rps.get(rec.rps_id.id, []):
+                grade = grade_map.get(
+                    (
+                        rec.mahasiswa_id.id,
+                        rec.krs_line_id.id,
+                        rec.rps_id.id,
+                        weight_line.cpmk_id.id,
+                    )
+                )
+                if not grade or weight_line.bobot_cpmk_mk <= 0:
                     continue
-                total_score += grade.nilai * snapshot.bobot / 100.0
-                total_weight += snapshot.bobot
-            rec.nilai_mk = total_score if abs(total_weight - 100.0) <= 0.01 or total_weight == 100.0 else total_score
+                total_score += grade.nilai_cpmk * weight_line.bobot_cpmk_mk / 100.0
+                total_weight += weight_line.bobot_cpmk_mk / 100.0
+            rec.is_available = bool(total_weight)
+            rec.nilai_mk = (
+                total_score / total_weight if total_weight else 0.0
+            )
 
         legacy_records = self.filtered(lambda grade: not grade.rps_id or not grade.krs_line_id)
         if not legacy_records:
@@ -144,16 +178,21 @@ class ErpObeGradeMk(models.Model):
         # 3. Calculate
         for rec in legacy_records:
             rec.nilai_mk = 0.0
+            rec.is_available = False
 
             weights = weight_map.get(rec.mk_id.id, {})
             student_scores = grade_map.get(rec.mahasiswa_id.id, {})
 
             final_score = 0.0
+            denominator = 0.0
             for cpmk_id, bobot in weights.items():
                 s_cpmk = student_scores.get(cpmk_id, 0.0)
+                if cpmk_id not in student_scores or bobot <= 0:
+                    continue
                 final_score += s_cpmk * (bobot / 100.0)
-
-            rec.nilai_mk = final_score
+                denominator += bobot / 100.0
+            rec.is_available = bool(denominator)
+            rec.nilai_mk = final_score / denominator if denominator else 0.0
 
 
 class ErpObeGradeMkRombel(models.Model):

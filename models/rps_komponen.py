@@ -1,6 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+from .akademik_komponen import ASSESSMENT_TYPE_SELECTION
+
 
 class ErpObeAkademikRpsKomponen(models.Model):
     _name = "erpobe.akademik.rps.komponen"
@@ -13,6 +15,13 @@ class ErpObeAkademikRpsKomponen(models.Model):
     )
     komponen_id = fields.Many2one(
         "erpobe.akademik.komponen", ondelete="set null", index=True
+    )
+    tipe = fields.Selection(
+        ASSESSMENT_TYPE_SELECTION,
+        string="Jenis Aktivitas",
+        required=True,
+        default="other",
+        readonly=True,
     )
     name = fields.Char(string="Nama Komponen", required=True)
     description = fields.Text(string="Deskripsi")

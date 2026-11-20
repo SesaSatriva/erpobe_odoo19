@@ -167,23 +167,22 @@ class TritonPublicHelpers(TritonListHelpers):
             component_weights = {}
             for row in rps.bobot_komponen_cpmk_ids:
                 component_weights.setdefault(row.cpmk_id.id, []).append((row.komponen_penilaian.id, row.bobot_komponen_cpmk))
-            cpl_weights = {}
-            for row in rps.bobot_cpmk_cpl_ids:
-                cpl_weights.setdefault(row.cpl_id.id, []).append((row.cpmk_id.id, row.bobot_cpmk_cpl))
-            cpls = env['erpobe.akademik.cpl'].sudo().browse(list(cpl_weights))
+            cpl_grades = env['erpobe.grade.cpl'].sudo().search([
+                ('mahasiswa_id', 'in', krs_lines.mapped('mahasiswa_id').ids),
+                ('is_available', '=', True),
+            ])
+            cpls = cpl_grades.mapped('cpl_id')
             cpl_types = {row['id']: row['jenis_cpl'] for row in cpls.read(['jenis_cpl'])}
             year_name = line.tahun_ajaran_id.tahun_ajaran
             year_accumulators.setdefault(year_name, {})
             for krs_line in krs_lines:
                 student_grades = grades_by_line.get(krs_line.id, {})
-                cpmk_scores = {}
-                for cpmk_id, weights in component_weights.items():
-                    cpmk_scores[cpmk_id] = sum((student_grades.get(component_id, 0.0) * weight / 100.0 for component_id, weight in weights))
-                for cpl_id, weights in cpl_weights.items():
-                    total_weight = sum((weight for _, weight in weights))
-                    if not total_weight:
-                        continue
-                    score = sum((cpmk_scores.get(cpmk_id, 0.0) * weight for cpmk_id, weight in weights)) / total_weight
+                student_cpl_grades = cpl_grades.filtered(
+                    lambda grade: grade.mahasiswa_id == krs_line.mahasiswa_id
+                )
+                for grade in student_cpl_grades:
+                    cpl_id = grade.cpl_id.id
+                    score = grade.nilai_cpl
                     kind = cpl_types.get(cpl_id) or 'lainnya'
                     if jenis_cpl and kind != jenis_cpl:
                         continue
@@ -212,7 +211,7 @@ class TritonPublicHelpers(TritonListHelpers):
             year_values = [score for (prodi_id, kind), values in year_accumulators[year].items() if prodi_id in candidates.ids and (not jenis_cpl or kind == jenis_cpl) for score in values]
             if year_values:
                 trend.append({'year': year, 'average': round(sum(year_values) / len(year_values), 2)})
-        return {'prodis': prodi_results, 'categories': categories, 'warnings': [result['name'] for result in prodi_results if result['warning']], 'years': available_years, 'year_start': year_start or '', 'year_end': year_end or '', 'semester': semester or '', 'faculty_id': int(faculty_id) if str(faculty_id or '').isdigit() else 0, 'prodi_ids': candidates.ids, 'jenis_cpl': jenis_cpl or '', 'trend': trend, 'target': 75, 'methodology': 'Nilai CPMK dihitung dari jumlah nilai komponen dikalikan bobot komponen pada RPS final. Nilai CPL dihitung dengan rumus Σ(nilai CPMK × bobot CPMK→CPL) / Σ bobot. Hanya RPS dengan seluruh kelompok bobot 100% dan KRS berstatus disetujui yang dihitung; agregat prodi adalah rata-rata pengamatan mahasiswa pada penawaran yang terpilih.'}
+        return {'prodis': prodi_results, 'categories': categories, 'warnings': [result['name'] for result in prodi_results if result['warning']], 'years': available_years, 'year_start': year_start or '', 'year_end': year_end or '', 'semester': semester or '', 'faculty_id': int(faculty_id) if str(faculty_id or '').isdigit() else 0, 'prodi_ids': candidates.ids, 'jenis_cpl': jenis_cpl or '', 'trend': trend, 'target': 75, 'methodology': 'Nilai CPMK dihitung dari nilai komponen yang dinormalisasi terhadap alokasi CPMK pada RPS. Nilai akhir mata kuliah dihitung dari CPMK berbobot untuk hasil mata kuliah, tetapi tidak menjadi sumber nilai CPL. Nilai CPL adalah rata-rata tanpa bobot dari CPMK tersedia yang dipetakan; pemetaan MK-CPL hanya menentukan keterkaitan.'}
 
     def _mask_identifier(self, value):
         text = (value or '').strip()

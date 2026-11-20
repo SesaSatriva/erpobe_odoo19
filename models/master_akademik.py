@@ -43,6 +43,9 @@ class ErpObeMasterMataKuliah(models.Model):
 
     # CPMK langsung link ke MK (Parent-Child)
     cpmk_ids = fields.One2many("erpobe.akademik.cpmk", "mk_id", string="Daftar CPMK")
+    cpl_mapping_ids = fields.One2many(
+        "erpobe.akademik.mk.cpl", "mk_id", string="Kontribusi CPL"
+    )
     rps_ids = fields.One2many(
         "erpobe.akademik.rps", "matakuliah_id", string="Versi RPS"
     )

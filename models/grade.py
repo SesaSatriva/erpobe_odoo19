@@ -37,6 +37,62 @@ class ErpObeInputNilai(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
+    def action_generate_simulated_component_grades(self):
+        for input_record in self:
+            rps = input_record.penawaran_line_id.latest_rps_id
+            if not rps:
+                raise ValidationError(
+                    _("RPS final untuk kelas ini belum tersedia.")
+                )
+            krs_lines = input_record.grade_komponen_ids.mapped("krs_line_id")
+            if not krs_lines:
+                krs_lines = self.env["erpobe.akademik.krs.line"].search([
+                    ("penawaran_line_id", "=", input_record.penawaran_line_id.id)
+                ])
+            import random
+            rng = random.SystemRandom()
+            for student_index, krs in enumerate(krs_lines.sorted("id")):
+                band = rng.choice((93, 82, 72, 61))
+                for component_index, snapshot in enumerate(
+                    rps.rps_komponen_ids.filtered("aktif").sorted("sequence")
+                ):
+                    if not snapshot.komponen_id:
+                        continue
+                    grade = self.env["erpobe.grade.komponen"].search([
+                        ("krs_line_id", "=", krs.id),
+                        ("rps_komponen_id", "=", snapshot.id),
+                    ], limit=1)
+                    if grade and grade.origin == "actual" and grade.is_graded:
+                        continue
+                    score = max(
+                        0,
+                        min(
+                            100,
+                            round(
+                                band
+                                + rng.randint(-12, 12)
+                                + ((student_index + component_index) % 5),
+                                2,
+                            ),
+                        ),
+                    )
+                    vals = {
+                        "krs_line_id": krs.id,
+                        "komponen_id": snapshot.komponen_id.id,
+                        "rps_id": rps.id,
+                        "rps_komponen_id": snapshot.id,
+                        "nilai": score,
+                        "origin": "simulated",
+                        "is_graded": True,
+                    }
+                    if grade:
+                        grade.with_context(skip_simulation_confirm=True).write(vals)
+                    else:
+                        vals["input_nilai_id"] = input_record.id
+                        self.env["erpobe.grade.komponen"].create(vals)
+            input_record.action_calculate_grades_and_khs(krs_lines)
+        return True
+
     def action_calculate_grades_and_khs(self, krs_lines=None):
         """
         Orchestrator: Memastikan record Grade tersedia & MEMAKSA hitung ulang (Recompute).
@@ -44,7 +100,6 @@ class ErpObeInputNilai(models.Model):
         GradeCpmk = self.env["erpobe.grade.cpmk"]
         GradeMk = self.env["erpobe.grade.mk"]
         GradeCpl = self.env["erpobe.grade.cpl"]
-        BobotCpmkCpl = self.env["erpobe.bobot.cpmk.cpl"]
         Rps = self.env["erpobe.akademik.rps"]
 
         # 1. Fallback Data KRS
@@ -82,8 +137,7 @@ class ErpObeInputNilai(models.Model):
         # 3. Preparasi Data
         mahasiswa_to_update = set()
         cpmk_list = rps.cpmk_ids
-        bobot_cpl_lines = BobotCpmkCpl.search([("cpmk_id", "in", cpmk_list.ids)])
-        relevant_cpls = bobot_cpl_lines.mapped("cpl_id")
+        relevant_cpls = cpmk_list.mapped("cpl_mapping_ids.cpl_id")
 
         # Container untuk record yang perlu di-recompute
         recompute_cpmk = self.env["erpobe.grade.cpmk"]
@@ -101,7 +155,6 @@ class ErpObeInputNilai(models.Model):
                     [
                         ("mahasiswa_id", "=", mahasiswa.id),
                         ("cpmk_id", "=", cpmk.id),
-                        ("krs_line_id", "=", krs.id),
                     ],
                     limit=1,
                 )
@@ -114,7 +167,10 @@ class ErpObeInputNilai(models.Model):
                             "rps_id": rps.id,
                         }
                     )
-                else:
+                elif (
+                    g_cpmk.krs_line_id != krs
+                    or g_cpmk.rps_id != rps
+                ):
                     g_cpmk.write({"krs_line_id": krs.id, "rps_id": rps.id})
                 recompute_cpmk += g_cpmk  # Kumpulkan record
 
@@ -123,7 +179,6 @@ class ErpObeInputNilai(models.Model):
                 [
                     ("mahasiswa_id", "=", mahasiswa.id),
                     ("mk_id", "=", current_mk_id),
-                    ("krs_line_id", "=", krs.id),
                 ],
                 limit=1,
             )
@@ -136,7 +191,7 @@ class ErpObeInputNilai(models.Model):
                         "rps_id": rps.id,
                     }
                 )
-            else:
+            elif g_mk.krs_line_id != krs or g_mk.rps_id != rps:
                 g_mk.write({"krs_line_id": krs.id, "rps_id": rps.id})
             recompute_mk += g_mk  # Kumpulkan record
 
@@ -146,7 +201,6 @@ class ErpObeInputNilai(models.Model):
                     [
                         ("mahasiswa_id", "=", mahasiswa.id),
                         ("cpl_id", "=", cpl.id),
-                        ("krs_line_id", "=", krs.id),
                     ],
                     limit=1,
                 )
@@ -155,12 +209,8 @@ class ErpObeInputNilai(models.Model):
                         {
                             "mahasiswa_id": mahasiswa.id,
                             "cpl_id": cpl.id,
-                            "krs_line_id": krs.id,
-                            "rps_id": rps.id,
                         }
                     )
-                else:
-                    g_cpl.write({"krs_line_id": krs.id, "rps_id": rps.id})
                 recompute_cpl += g_cpl  # Kumpulkan record
 
         # === FORCE RECOMPUTE (SOLUSI UTAMA) ===
@@ -174,7 +224,7 @@ class ErpObeInputNilai(models.Model):
             recompute_cpl._compute_nilai_cpl()
 
         # 5. Trigger Update Report KHS
-        if mahasiswa_to_update:
+        if mahasiswa_to_update and not self.env.context.get("skip_khs_refresh"):
             mhs_ids_list = list(mahasiswa_to_update)
             if "erpobe.report.khs" in self.env:
                 self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids_list)
@@ -205,10 +255,8 @@ class ErpObeInputNilai(models.Model):
             self.grade_komponen_ids = [Command.clear()]
             return
 
-        Komponen = self.env["erpobe.akademik.komponen"]
-        active_components = Komponen.search([("aktif", "=", True)])
         rps = self.penawaran_line_id.latest_rps_id
-
+        active_components = rps.rps_komponen_ids.filtered("aktif") if rps else self.env["erpobe.akademik.rps.komponen"]
         if not active_components:
             return
 
@@ -222,13 +270,10 @@ class ErpObeInputNilai(models.Model):
 
         new_lines = [Command.clear()]
         for krs in krs_lines:
-            for comp in active_components:
-                snapshot = (
-                    rps.rps_komponen_ids.filtered(
-                        lambda item: item.komponen_id == comp
-                    )[:1]
-                    if rps else self.env["erpobe.akademik.rps.komponen"]
-                )
+            for snapshot in active_components:
+                comp = snapshot.komponen_id
+                if not comp:
+                    continue
                 # Cek database: Apakah mahasiswa ini sudah punya nilai komponen ini?
                 existing_grade = GradeKomponen.search(
                     [
@@ -246,9 +291,10 @@ class ErpObeInputNilai(models.Model):
                     # Jika user save, dia akan update record tersebut atau membuat baru (tergantung constraint).
                     # Dengan struktur InputNilai yang 'unique per kelas', ini aman.
                     val_nilai = existing_grade.nilai
+                    is_graded = existing_grade.is_graded
                 else:
-                    # KASUS 2: Data Baru -> 0.0
-                    val_nilai = 0.0
+                    val_nilai = False
+                    is_graded = False
 
                 new_lines.append(
                     Command.create(
@@ -258,6 +304,7 @@ class ErpObeInputNilai(models.Model):
                             "nilai": val_nilai,  # Gunakan nilai cerdas
                             "rps_id": rps.id if rps else False,
                             "rps_komponen_id": snapshot.id if snapshot else False,
+                            "is_graded": is_graded,
                         }
                     )
                 )

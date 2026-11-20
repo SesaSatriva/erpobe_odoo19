@@ -98,10 +98,17 @@ def generate_years_and_classes():
 def generate_assessment_components():
     root = ElementTree.Element("odoo", {"noupdate": "1"})
     components = (
-        ("komponen_kognitif", "Penilaian Kognitif", "kognitif"),
-        ("komponen_partisipatif", "Penilaian Partisipatif", "partisipatif"),
-        ("fixture_component_project", "Penilaian Proyek", "partisipatif"),
-        ("fixture_component_exam", "Ujian Akhir", "kognitif"),
+        ("komponen_kognitif", "Tugas", "assignment"),
+        ("komponen_partisipatif", "Kehadiran", "attendance"),
+        ("fixture_component_project", "Proyek", "project"),
+        ("fixture_component_exam", "UAS", "final_exam"),
+        ("fixture_component_quiz", "Kuis", "quiz"),
+        ("fixture_component_midterm", "UTS", "midterm"),
+        ("fixture_component_presentation", "Presentasi", "presentation"),
+        ("fixture_component_practicum", "Praktikum", "practicum"),
+        ("fixture_component_case_study", "Studi Kasus", "case_study"),
+        ("fixture_component_tbp", "TBP", "tbp"),
+        ("fixture_component_other", "Aktivitas Penilaian Khusus", "other"),
     )
     for xmlid, name, kind in components:
         _record(

@@ -43,6 +43,46 @@ class TestErpObeUiViews(TransactionCase):
             for view_type in view_types:
                 self.assertIn(view_type, result["views"], action.display_name)
 
+    def test_cpmk_and_cpl_analytics_can_filter_by_cohort_and_class(self):
+        for action_xmlid, model_name in (
+            ("erpobe.action_erpobe_summary_cpmk", "erpobe.summary.cpmk"),
+            ("erpobe.action_erpobe_summary_cpl", "erpobe.summary.cpl"),
+        ):
+            result = self.env[model_name].get_views(
+                [(False, "search")],
+                options={"action_id": self.env.ref(action_xmlid).id},
+            )
+            arch = etree.fromstring(result["views"]["search"]["arch"].encode())
+            fields = set(arch.xpath("//field/@name"))
+            self.assertTrue({"angkatan", "rombel_id"} <= fields, model_name)
+
+    def test_analytics_menu_opens_student_khs_with_all_grade_tabs(self):
+        menu = self.env.ref("erpobe.menu_erpobe_results")
+        action = self.env.ref("erpobe.action_erpobe_khs")
+        self.assertEqual(menu.action, action)
+        self.assertEqual(action.res_model, "erpobe.report.khs")
+
+        views = self.env["erpobe.report.khs"].get_views(
+            [(False, "list"), (False, "form"), (False, "search")],
+            options={"action_id": action.id},
+        )["views"]
+        list_arch = etree.fromstring(views["list"]["arch"].encode())
+        form_arch = etree.fromstring(views["form"]["arch"].encode())
+        search_arch = etree.fromstring(views["search"]["arch"].encode())
+
+        self.assertIn("mahasiswa_id", list_arch.xpath("//field/@name"))
+        self.assertTrue(
+            {"angkatan", "rombel_id"} <= set(search_arch.xpath("//field/@name"))
+        )
+        self.assertEqual(
+            form_arch.xpath("//notebook/page/@string"),
+            ["Capaian CPL", "Capaian CPMK", "Nilai MK", "Nilai Komponen"],
+        )
+        self.assertIn(
+            "komponen_line_ids",
+            form_arch.xpath("//page[@string='Nilai Komponen']/field/@name"),
+        )
+
     def test_faculty_form_only_contains_program_studies(self):
         action = self.env.ref("erpobe.action_erpobe_master_fakultas")
         result = self.env["erpobe.master.fakultas"].get_views(

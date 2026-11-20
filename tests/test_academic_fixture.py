@@ -104,7 +104,7 @@ class TestErpObeAcademicFixture(TransactionCase):
                     )
                 )
 
-    def test_seeded_rps_uses_component_to_cpmk_allocations_without_subcpmk(self):
+    def test_seeded_rps_uses_component_to_cpmk_allocations(self):
         self._require_fixture()
         rps = self._fixture_records("erpobe.akademik.rps", "fixture_rps_ti_")[0]
         self.assertTrue(rps.rps_komponen_ids)
@@ -112,6 +112,198 @@ class TestErpObeAcademicFixture(TransactionCase):
             rps.bobot_komponen_cpmk_ids.filtered("rps_komponen_id")
         )
         self.assertEqual(rps.status, "final")
+        self.assertEqual(
+            sum(rps.rps_komponen_ids.filtered("aktif").mapped("bobot")),
+            100.0,
+        )
+        self.assertEqual(
+            sum(rps.bobot_cpmk_mk_ids.mapped("bobot_cpmk_mk")),
+            100.0,
+        )
+        self.assertEqual(
+            {line.tipe for line in rps.rps_komponen_ids.filtered("aktif")},
+            {"attendance", "quiz", "assignment", "midterm", "final_exam", "presentation"},
+        )
+
+    def test_fixture_grades_are_component_level_and_computed_results_are_available(self):
+        students = self._require_fixture()
+        grades = self.env["erpobe.grade.komponen"].sudo().search([
+            ("mahasiswa_id", "in", students.ids),
+            ("origin", "=", "simulated"),
+            ("is_graded", "=", True),
+        ])
+        self.assertTrue(grades)
+        self.assertTrue(all(0 <= score <= 100 for score in grades.mapped("nilai")))
+        self.assertGreater(len(set(grades.mapped("nilai"))), 1)
+        self.assertTrue(all(
+            grade.krs_line_id
+            and grade.krs_line_id.mahasiswa_id == grade.mahasiswa_id
+            and grade.krs_line_id.matakuliah_id == grade.rps_id.matakuliah_id
+            and grade.rps_komponen_id.rps_id == grade.rps_id
+            and grade.rps_komponen_id.komponen_id == grade.komponen_id
+            and grade.rps_komponen_id.tipe
+            for grade in grades
+        ))
+
+        cpmk_results = self.env["erpobe.grade.cpmk"].sudo().search([
+            ("mahasiswa_id", "in", students.ids),
+            ("is_available", "=", True),
+        ])
+        course_results = self.env["erpobe.grade.mk"].sudo().search([
+            ("mahasiswa_id", "in", students.ids),
+            ("is_available", "=", True),
+        ])
+        cpl_results = self.env["erpobe.grade.cpl"].sudo().search([
+            ("mahasiswa_id", "in", students.ids),
+            ("is_available", "=", True),
+        ])
+        self.assertTrue(cpmk_results)
+        self.assertTrue(course_results)
+        self.assertTrue(cpl_results)
+        self.assertTrue(all(0 <= score <= 100 for score in cpmk_results.mapped("nilai_cpmk")))
+        self.assertTrue(all(0 <= score <= 100 for score in course_results.mapped("nilai_mk")))
+        self.assertTrue(all(0 <= score <= 100 for score in cpl_results.mapped("nilai_cpl")))
+
+        components = self._fixture_records(
+            "erpobe.akademik.komponen", "fixture_component_"
+        ) | self.env.ref("erpobe.komponen_kognitif") | self.env.ref(
+            "erpobe.komponen_partisipatif"
+        )
+        self.assertTrue(all(component.tipe not in ("kognitif", "partisipatif") for component in components))
+
+        for cpl in self._fixture_records("erpobe.akademik.cpl", "fixture_cpl_"):
+            mappings = cpl.mk_mapping_ids
+            self.assertTrue(mappings)
+            mapped_course_ids = set(mappings.mapped("mk_id").ids)
+            cpmk_course_ids = set(cpl.cpmk_mapping_ids.mapped("cpmk_id.mk_id").ids)
+            self.assertTrue(mapped_course_ids <= cpmk_course_ids)
+        self.assertNotIn(
+            "bobot_mk_cpl",
+            self.env["erpobe.akademik.mk.cpl"]._fields,
+        )
+
+    def test_fixture_calculation_uses_unweighted_cpl_mapping(self):
+        students = self._require_fixture()
+        component_grade = self.env["erpobe.grade.komponen"].sudo().search(
+            [
+                ("mahasiswa_id", "in", students.ids),
+                ("origin", "=", "simulated"),
+                ("is_graded", "=", True),
+            ],
+            limit=1,
+        )
+        rps = component_grade.rps_id
+        cpmk = rps.cpmk_ids[0]
+        allocations = rps.bobot_komponen_cpmk_ids.filtered(
+            lambda line: line.cpmk_id == cpmk
+            and line.rps_komponen_id.aktif
+        )
+        cpmk_result = self.env["erpobe.grade.cpmk"].sudo().search(
+            [
+                ("mahasiswa_id", "=", component_grade.mahasiswa_id.id),
+                ("cpmk_id", "=", cpmk.id),
+                ("krs_line_id", "=", component_grade.krs_line_id.id),
+                ("rps_id", "=", rps.id),
+            ],
+            limit=1,
+        )
+        cpmk_scores = self.env["erpobe.grade.komponen"].sudo().search(
+            [
+                ("krs_line_id", "=", component_grade.krs_line_id.id),
+                ("rps_id", "=", rps.id),
+                ("rps_komponen_id", "in", allocations.mapped("rps_komponen_id").ids),
+                ("is_graded", "=", True),
+            ]
+        )
+        component_total = sum(
+            score.nilai
+            * score.rps_komponen_id.bobot
+            * score.rps_komponen_id.allocation_ids.filtered(
+                lambda line: line.cpmk_id == cpmk
+            ).bobot_komponen_cpmk
+            / 100
+            for score in cpmk_scores
+        )
+        component_weight = sum(
+            score.rps_komponen_id.bobot
+            * score.rps_komponen_id.allocation_ids.filtered(
+                lambda line: line.cpmk_id == cpmk
+            ).bobot_komponen_cpmk
+            / 100
+            for score in cpmk_scores
+        )
+        self.assertEqual(
+            cpmk_result.nilai_cpmk,
+            round(component_total / component_weight, 2),
+        )
+
+        course_result = self.env["erpobe.grade.mk"].sudo().search(
+            [
+                ("mahasiswa_id", "=", component_grade.mahasiswa_id.id),
+                ("mk_id", "=", rps.matakuliah_id.id),
+                ("krs_line_id", "=", component_grade.krs_line_id.id),
+                ("rps_id", "=", rps.id),
+            ],
+            limit=1,
+        )
+        course_scores = cpmk_result.search(
+            [
+                ("mahasiswa_id", "=", component_grade.mahasiswa_id.id),
+                ("mk_id", "=", rps.matakuliah_id.id),
+                ("krs_line_id", "=", component_grade.krs_line_id.id),
+                ("rps_id", "=", rps.id),
+                ("is_available", "=", True),
+            ]
+        )
+        course_weights = {
+            line.cpmk_id.id: line.bobot_cpmk_mk
+            for line in rps.bobot_cpmk_mk_ids
+        }
+        expected_course = sum(
+            result.nilai_cpmk * course_weights[result.cpmk_id.id]
+            for result in course_scores
+        ) / sum(course_weights[result.cpmk_id.id] for result in course_scores)
+        self.assertEqual(course_result.nilai_mk, round(expected_course, 2))
+
+        cpl = cpmk.cpl_mapping_ids[:1].cpl_id
+        cpl_result = self.env["erpobe.grade.cpl"].sudo().search(
+            [
+                ("mahasiswa_id", "=", component_grade.mahasiswa_id.id),
+                ("cpl_id", "=", cpl.id),
+            ],
+            limit=1,
+        )
+        mapped_cpmks = cpl.cpmk_mapping_ids.mapped("cpmk_id")
+        contributing_cpmks = self.env["erpobe.grade.cpmk"].sudo().search(
+            [
+                ("mahasiswa_id", "=", component_grade.mahasiswa_id.id),
+                ("cpmk_id", "in", mapped_cpmks.ids),
+                ("is_available", "=", True),
+            ]
+        )
+        matrix = cpl.mk_mapping_ids
+        mapped_course_ids = set(matrix.mapped("mk_id").ids)
+        if mapped_course_ids:
+            contributing_cpmks = contributing_cpmks.filtered(
+                lambda result: result.cpmk_id.mk_id.id in mapped_course_ids
+            )
+        expected_cpl = sum(
+            result.nilai_cpmk for result in contributing_cpmks
+        ) / len(contributing_cpmks)
+        self.assertEqual(cpl_result.nilai_cpl, round(expected_cpl, 2))
+
+    def test_fixture_regeneration_preserves_manually_entered_component_grades(self):
+        self._require_fixture()
+        grade = self.env["erpobe.grade.komponen"].sudo().search(
+            [("origin", "=", "simulated"), ("is_graded", "=", True)],
+            limit=1,
+        )
+        grade.write({"nilai": 91.0, "origin": "actual"})
+        self.env["erpobe.fixture.seeder"].with_context(
+            force_fixture_seed=True
+        ).load_2022_cohort()
+        self.assertEqual(grade.nilai, 91.0)
+        self.assertEqual(grade.origin, "actual")
 
     def test_repeated_seed_does_not_duplicate_or_delete_history(self):
         self._require_fixture()
@@ -132,16 +324,11 @@ class TestErpObeAcademicFixture(TransactionCase):
             "audits": self.env["erpobe.grade.komponen.audit"].sudo().search_count(
                 [("grade_id", "in", component_grades.ids)]
             ),
-            "subcpmks": len(
-                self._fixture_records("erpobe.akademik.subcpmk", "fixture_subcpmk_")
-            ),
-            "subcpmk_results": len(
-                self._fixture_records("erpobe.grade.subcpmk", "fixture_subresult_")
-            ),
         }
         seeder = self.env["erpobe.fixture.seeder"]
-        self.assertTrue(seeder.load_2022_cohort())
-        self.assertTrue(seeder.load_2022_cohort())
+        force_seeder = seeder.with_context(force_fixture_seed=True)
+        self.assertTrue(force_seeder.load_2022_cohort())
+        self.assertTrue(force_seeder.load_2022_cohort())
         after = {
             "rps": len(self._fixture_records("erpobe.akademik.rps", "fixture_rps_")),
             "snapshots": sum(
@@ -157,12 +344,6 @@ class TestErpObeAcademicFixture(TransactionCase):
             ),
             "audits": self.env["erpobe.grade.komponen.audit"].sudo().search_count(
                 [("grade_id", "in", component_grades.ids)]
-            ),
-            "subcpmks": len(
-                self._fixture_records("erpobe.akademik.subcpmk", "fixture_subcpmk_")
-            ),
-            "subcpmk_results": len(
-                self._fixture_records("erpobe.grade.subcpmk", "fixture_subresult_")
             ),
         }
         self.assertEqual(after, before)
@@ -180,10 +361,3 @@ class TestErpObeAcademicFixture(TransactionCase):
 
         rps_records = self._fixture_records("erpobe.akademik.rps", "fixture_rps_")
         self.assertTrue(rps_records)
-        self.assertTrue(
-            all(
-                not line.bobot_cpmk_cpl
-                for rps in rps_records
-                for line in rps.bobot_cpmk_cpl_ids
-            )
-        )

@@ -42,7 +42,7 @@ class TestErpObeWeightValidation(TransactionCase):
             {"cpl_id": cls.cpl.id, "cpmk_id": cls.cpmk.id}
         )
         cls.component = cls.Component.create(
-            {"name": "Komponen Bobot", "tipe": "kognitif"}
+            {"name": "Komponen Bobot", "tipe": "assignment"}
         )
 
     def _create_course_with_cpmks(self, count, suffix):
@@ -75,6 +75,11 @@ class TestErpObeWeightValidation(TransactionCase):
             }
         )
         rps._sync_bobot_tables()
+        cpmk_weights = _distribute_percent(100, len(rps.bobot_cpmk_mk_ids))
+        for line, weight in zip(
+            rps.bobot_cpmk_mk_ids.sorted("cpmk_id"), cpmk_weights
+        ):
+            line.write({"bobot_cpmk_mk": weight})
         return rps
 
     def test_exact_under_over_and_decimal_tolerance(self):

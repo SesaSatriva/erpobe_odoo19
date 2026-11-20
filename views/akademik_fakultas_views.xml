@@ -122,11 +122,6 @@
                         </page>
                         <page string="Bobot">
                             <group>
-                                <field name="bobot_cpmk_cpl_ids" readonly="1">
-                                    <list create="0" edit="0" delete="0">
-                                        <field name="display_name"/>
-                                    </list>
-                                </field>
                                 <field name="bobot_cpmk_mk_ids" readonly="1">
                                     <list create="0" edit="0" delete="0">
                                         <field name="display_name"/>

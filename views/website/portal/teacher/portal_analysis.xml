@@ -1,7 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_teacher_analysis_page" name="Analisis Kelas Dosen">
-        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Analisis kelas</span><h1>Ringkasan capaian CPMK</h1><p class="o_triton_subtitle">Agregat dibatasi pada kelas yang diampu akun ini.</p></div></header><t t-call="erpobe.triton_portal_list_controls"/><div t-if="analysis" class="o_triton_grid-three"><t t-foreach="analysis" t-as="class_item"><article class="o_triton_panel"><h2 t-out="class_item['course']"/><span class="o_triton_badge" t-out="class_item['year']"/><ul class="o_triton_list"><t t-foreach="class_item['results']" t-as="result"><li><strong t-out="result['name']"/><br/>Rata-rata <t t-out="result['average']"/>% • <t t-out="result['below_target']"/> mahasiswa di bawah target 75%</li></t></ul></article></t></div><div t-else="" class="o_triton_empty"><p>Belum ada hasil penilaian yang cocok dengan pencarian Anda.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">Analisis kelas</span>
+                                <h1>Ringkasan capaian CPMK dan CPL</h1>
+                                <p class="o_triton_subtitle">Agregat dibatasi pada mahasiswa dalam kelas yang diampu akun ini.</p>
+                            </div>
+                        </header>
+                        <t t-call="erpobe.triton_portal_list_controls"/>
+                        <section class="o_triton_section-heading">
+                            <h2>Capaian CPMK per mata kuliah</h2>
+                            <div t-if="analysis" class="o_triton_grid-three">
+                                <t t-foreach="analysis" t-as="class_item">
+                                    <article class="o_triton_panel">
+                                        <h3 t-out="class_item['course']"/>
+                                        <span class="o_triton_badge" t-out="class_item['year']"/>
+                                        <ul t-if="class_item['results']" class="o_triton_list">
+                                            <t t-foreach="class_item['results']" t-as="result">
+                                                <li>
+                                                    <strong t-out="result['code']"/>:
+                                                    <t t-out="result['description']"/>
+                                                    <br/>
+                                                    Rata-rata <t t-out="result['average']"/>%
+                                                    • <t t-out="result['below_target']"/> mahasiswa
+                                                    di bawah target <t t-out="result['target']"/>%
+                                                </li>
+                                            </t>
+                                        </ul>
+                                        <p t-else="" class="o_triton_caption">Belum ada nilai CPMK tersedia.</p>
+                                    </article>
+                                </t>
+                            </div>
+                            <div t-else="" class="o_triton_empty">
+                                <p>Belum ada hasil CPMK yang cocok dengan filter.</p>
+                            </div>
+                        </section>
+                        <section class="o_triton_section-heading">
+                            <h2>Capaian CPL</h2>
+                            <div t-if="cpl_analysis" class="o_triton_table-wrap">
+                                <table class="o_triton_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode dan keterangan CPL</th>
+                                            <th>Rata-rata</th>
+                                            <th>Mahasiswa di bawah target</th>
+                                            <th>Jumlah mahasiswa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="cpl_analysis" t-as="result">
+                                            <th>
+                                                <strong t-out="result['code']"/>:
+                                                <t t-out="result['description']"/>
+                                            </th>
+                                            <td><t t-out="result['average']"/>%</td>
+                                            <td><t t-out="result['below_target']"/></td>
+                                            <td><t t-out="result['student_count']"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div t-else="" class="o_triton_empty">
+                                <p>Belum ada nilai CPL tersedia untuk mahasiswa pada filter ini.</p>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
     </template>
-
 </odoo>

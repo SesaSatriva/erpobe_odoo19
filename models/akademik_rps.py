@@ -89,6 +89,21 @@ class ErpObeAkademikRps(models.Model):
     )
     media_software = fields.Char(string="Media software")
     media_hardware = fields.Char(string="Media Hardware")
+    tujuan_pembelajaran = fields.Text(string="Tujuan Pembelajaran")
+    materi_pembelajaran = fields.Text(string="Materi Pembelajaran")
+    sumber_belajar = fields.Text(string="Sumber Belajar")
+    referensi_ids = fields.Many2many(
+        "erpobe.akademik.referensi",
+        "erpobe_rps_referensi_rel",
+        "rps_id",
+        "referensi_id",
+        string="Referensi Utama dan Pendukung",
+    )
+    mk_cpl_mapping_ids = fields.One2many(
+        related="matakuliah_id.cpl_mapping_ids",
+        string="Kontribusi Mata Kuliah terhadap CPL",
+        readonly=True,
+    )
 
     # === 2. Komponen & CPMK ===
     # Komponen Penilaian yang dipakai di RPS ini
@@ -180,9 +195,6 @@ class ErpObeAkademikRps(models.Model):
     @api.depends(
         "cpmk_ids",
         "cpl_ids",
-        "bobot_cpmk_cpl_ids.cpmk_id",
-        "bobot_cpmk_cpl_ids.cpl_id",
-        "bobot_cpmk_cpl_ids.bobot_cpmk_cpl",
         "bobot_cpmk_mk_ids.cpmk_id",
         "bobot_cpmk_mk_ids.bobot_cpmk_mk",
         "bobot_komponen_cpmk_ids.cpmk_id",
@@ -202,9 +214,6 @@ class ErpObeAkademikRps(models.Model):
 
     bobot_cpmk_mk_ids = fields.One2many(
         "erpobe.bobot.cpmk.mk", "rps_id", string="Bobot CPMK -> MK"
-    )
-    bobot_cpmk_cpl_ids = fields.One2many(
-        "erpobe.bobot.cpmk.cpl", "rps_id", string="Bobot CPMK -> CPL"
     )
     bobot_komponen_cpmk_ids = fields.One2many(
         "erpobe.bobot.komponen.cpmk", "rps_id", string="Bobot Komponen -> CPMK"
@@ -240,6 +249,7 @@ class ErpObeAkademikRps(models.Model):
                             {
                                 "komponen_id": component.id,
                                 "name": component.name,
+                                "tipe": component.tipe,
                                 "description": getattr(component, "description", False),
                                 "source": "catalog",
                                 "aktif": True,
@@ -277,40 +287,6 @@ class ErpObeAkademikRps(models.Model):
                 cmds_mk.extend([Command.delete(l.id) for l in to_remove])
             if cmds_mk:
                 rps.write({"bobot_cpmk_mk_ids": cmds_mk})
-
-            # --- B. Sync Bobot CPMK -> CPL ---
-            # Cari mapping valid: {(cpmk_id, cpl_id)} berdasarkan CPMK terpilih
-            valid_mappings = set()
-            for cpmk in rps.cpmk_ids:
-                for mapping in (
-                    cpmk.cpl_mapping_ids
-                ):  # Asumsi ada field One2many di CPMK ke mapping
-                    valid_mappings.add((cpmk.id, mapping.cpl_id.id))
-
-            existing_mappings = {
-                (l.cpmk_id.id, l.cpl_id.id) for l in rps.bobot_cpmk_cpl_ids
-            }
-
-            cmds_cpl = []
-            # Add New
-            for cpmk_id, cpl_id in valid_mappings:
-                if (cpmk_id, cpl_id) not in existing_mappings:
-                    cmds_cpl.append(
-                        Command.create(
-                            {
-                                "cpmk_id": cpmk_id,
-                                "cpl_id": cpl_id,
-                                "bobot_cpmk_cpl": 0.0,
-                            }
-                        )
-                    )
-            # Remove Obsolete
-            for line in rps.bobot_cpmk_cpl_ids:
-                if (line.cpmk_id.id, line.cpl_id.id) not in valid_mappings:
-                    cmds_cpl.append(Command.delete(line.id))
-
-            if cmds_cpl:
-                rps.write({"bobot_cpmk_cpl_ids": cmds_cpl})
 
             # --- C. Reconcile component allocations and their RPS snapshots ---
             desired_snapshots = rps.rps_komponen_ids
@@ -470,6 +446,19 @@ class ErpObeAkademikRps(models.Model):
                 raise UserError("RPS Final tidak dapat ditinjau ulang; salin versinya.")
             rps.write({"status": "review"})
 
+    def action_revise(self):
+        for rps in self:
+            if rps.status != "final":
+                raise UserError("Hanya RPS Final yang dapat dibuat revisinya.")
+            revised = rps.copy()
+            return {
+                "type": "ir.actions.act_window",
+                "res_model": "erpobe.akademik.rps",
+                "res_id": revised.id,
+                "view_mode": "form",
+                "target": "current",
+            }
+
 
 class ErpObeAkademikKegiatanPerkuliahan(models.Model):
     _name = "erpobe.akademik.kegiatan.perkuliahan"
@@ -486,13 +475,6 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
         required=True,
         domain="[('mk_id', '=', parent.matakuliah_id)]",
     )
-    subcpmk_id = fields.Many2one(
-        "erpobe.akademik.subcpmk",
-        string="Sub-CPMK",
-        ondelete="restrict",
-        domain="[('rps_id', '=', parent.id)]",
-    )
-
     bahan_kajian = fields.Text(required=True)
     metode_pembelajaran_id = fields.Many2one(
         "erpobe.akademik.metode.pembelajaran", required=True
@@ -522,19 +504,12 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.constrains("rps_id", "cpmk_id", "subcpmk_id")
+    @api.constrains("rps_id", "cpmk_id")
     def _check_activity_faculty(self):
         for record in self:
             if record.cpmk_id.mk_id != record.rps_id.matakuliah_id:
                 raise ValidationError(
                     "CPMK kegiatan harus berasal dari mata kuliah pada RPS."
-                )
-            if record.subcpmk_id and (
-                record.subcpmk_id.rps_id != record.rps_id
-                or record.subcpmk_id.cpmk_id != record.cpmk_id
-            ):
-                raise ValidationError(
-                    "Sub-CPMK kegiatan harus sesuai dengan RPS dan CPMK."
                 )
 
 

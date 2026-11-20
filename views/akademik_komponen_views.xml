@@ -19,6 +19,7 @@
             <list string="Komponen Penilaian">
                 <field name="name"/>
                 <field name="tipe"/>
+                <field name="description" optional="hide"/>
                 <field name="aktif"/>
             </list>
         </field>
@@ -32,6 +33,7 @@
                     <group>
                         <field name="name"/>
                         <field name="tipe"/>
+                        <field name="description" invisible="tipe != 'other'"/>
                         <field name="aktif"/>
                         <field name="color"/>
                     </group>

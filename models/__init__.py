@@ -20,7 +20,6 @@ from . import akademik_tahunajaran
 from . import academic_fixture
 from . import fixture_seeder
 
-from . import bobot_cpmk_cpl
 from . import bobot_cpmk_mk
 from . import bobot_komponen_cpmk
 from . import weight_validation

@@ -43,7 +43,7 @@ class TestErpObeRpsVersioning(TransactionCase):
             {"cpl_id": cpl.id, "cpmk_id": cpmk.id}
         )
         cls.component = cls.Component.create(
-            {"name": "Komponen Versi", "tipe": "kognitif"}
+            {"name": "Komponen Versi", "tipe": "assignment"}
         )
         cls.old_year = cls.Year.create(
             {"tahun_ajaran": "2097/2098", "semester": "ganjil"}
@@ -75,7 +75,6 @@ class TestErpObeRpsVersioning(TransactionCase):
         rps = self.old_line.action_create_rps()
         source = self.RPS.browse(rps["res_id"])
         source.write({"komponen_ids": [Command.set([self.component.id])]})
-        source.bobot_cpmk_cpl_ids.write({"bobot_cpmk_cpl": 100.0})
         source.bobot_cpmk_mk_ids.write({"bobot_cpmk_mk": 100.0})
         source.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 100.0})
         source.rps_komponen_ids.write({"bobot": 100.0})
@@ -131,7 +130,7 @@ class TestErpObeRpsVersioning(TransactionCase):
         with self.assertRaises(UserError):
             rps.action_finalize()
 
-    def test_rps_can_finalize_without_subcpmk_before_offer_link(self):
+    def test_rps_can_finalize_before_offer_link(self):
         rps = self.RPS.create(
             {
                 "matakuliah_id": self.course.id,

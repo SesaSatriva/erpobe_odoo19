@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import api, fields, models
 
 class ErpObeAkademikCpl(models.Model):
     _name = "erpobe.akademik.cpl"
@@ -33,7 +33,19 @@ class ErpObeAkademikCpl(models.Model):
     cpmk_mapping_ids = fields.One2many(
         "erpobe.akademik.cpl.mk.cpmk", "cpl_id", string="Mapping CPMK"
     )
+    mk_mapping_ids = fields.One2many(
+        "erpobe.akademik.mk.cpl", "cpl_id", string="Mapping Mata Kuliah"
+    )
 
     _uniq_kode_cpl_constraint = models.Constraint(
         "unique(prodi_id, kode_cpl)", "Kode CPL harus unik dalam prodi."
     )
+
+    @api.depends("kode_cpl", "name")
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = (
+                f"{record.kode_cpl}: {record.name}"
+                if record.name
+                else record.kode_cpl
+            )

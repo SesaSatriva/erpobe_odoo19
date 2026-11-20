@@ -95,12 +95,17 @@ PRODIS = {
 }
 
 COMPONENTS = [
-    ('komp_tugas', 'Tugas', 'kognitif'),
-    ('komp_kuis', 'Kuis', 'partisipatif'),
-    ('komp_uts', 'UTS', 'kognitif'),
-    ('komp_uas', 'UAS', 'kognitif'),
-    ('komp_proyek', 'Proyek', 'partisipatif'),
-    ('komp_praktikum', 'Praktikum', 'partisipatif'),
+    ('komponen_partisipatif', 'Kehadiran', 'attendance'),
+    ('fixture_component_quiz', 'Kuis', 'quiz'),
+    ('komponen_kognitif', 'Tugas', 'assignment'),
+    ('fixture_component_midterm', 'UTS', 'midterm'),
+    ('fixture_component_exam', 'UAS', 'final_exam'),
+    ('fixture_component_presentation', 'Presentasi', 'presentation'),
+    ('fixture_component_project', 'Proyek', 'project'),
+    ('fixture_component_practicum', 'Praktikum', 'practicum'),
+    ('fixture_component_case_study', 'Studi Kasus', 'case_study'),
+    ('fixture_component_tbp', 'TBP', 'tbp'),
+    ('fixture_component_other', 'Aktivitas Penilaian Khusus', 'other'),
 ]
 
 MASTER_GRADES = [
@@ -428,18 +433,6 @@ def generate_fixture_files():
                     f'cpl_{key}_{(base_cpl + first_offset) % len(cfg["cpls"]) + 1:02d}',
                     f'cpl_{key}_{(base_cpl + second_offset) % len(cfg["cpls"]) + 1:02d}',
                 ]
-                for cpl_id, pct in zip(cpl_dist, [60, 40]):
-                    append_search_write(
-                        rps_functions,
-                        'erpobe.bobot.cpmk.cpl',
-                        [
-                            f"('rps_id', '=', ref('erpobe.{rps_id}'))",
-                            f"('cpmk_id', '=', ref('erpobe.{cpmk_id}'))",
-                            f"('cpl_id', '=', ref('erpobe.{cpl_id}'))",
-                            "('rps_id.status', '=', 'review')",
-                        ],
-                        repr({'bobot_cpmk_cpl': pct}),
-                    )
             # komponen weights exact 100% per cpmk
             for sub_idx, cpmk_id in enumerate(cpmk_ids, 1):
                 comp_values = [25, 15, 20, 25, 10, 5]

@@ -249,6 +249,22 @@ class TestTritonKrsWorkflows(TransactionCase):
             "Mahasiswa Ketiga",             f"N3{self.suffix}", self.rombel
         )
         second_krs = self._new_krs(second_student)
+        first_krs_line = self.KrsLine.create(
+            {"krs_id": first_krs.id, "penawaran_line_id": self.offer_line.id}
+        )
+        second_krs_line = self.KrsLine.create(
+            {"krs_id": second_krs.id, "penawaran_line_id": self.offer_line.id}
+        )
+        component = self.env["erpobe.akademik.komponen"].create(
+            {"name": f"Tugas privasi {self.suffix}", "tipe": "assignment"}
+        )
+        grade_component_model = self.env["erpobe.grade.komponen"]
+        first_grade = grade_component_model.create(
+            {"krs_line_id": first_krs_line.id, "komponen_id": component.id, "nilai": 81}
+        )
+        second_grade = grade_component_model.create(
+            {"krs_line_id": second_krs_line.id, "komponen_id": component.id, "nilai": 73}
+        )
         self.assertNotEqual(self.student.user_id, second_student.user_id)
         visible_ids = self.Krs.with_user(self.student.user_id).search(
             [("id", "in", [first_krs.id, second_krs.id])]
@@ -264,6 +280,26 @@ class TestTritonKrsWorkflows(TransactionCase):
         ).ids
         self.assertIn(first_report.id, visible_report_ids)
         self.assertNotIn(second_report.id, visible_report_ids)
+        component_line_model = self.env["erpobe.report.khs.komponen"]
+        first_component_line = first_report.komponen_line_ids.filtered(
+            lambda line: line.grade_id == first_grade
+        )
+        second_component_line = second_report.komponen_line_ids.filtered(
+            lambda line: line.grade_id == second_grade
+        )
+        visible_component_line_ids = component_line_model.with_user(
+            self.student.user_id
+        ).search(
+            [
+                (
+                    "id",
+                    "in",
+                    [first_component_line.id, second_component_line.id],
+                )
+            ]
+        ).ids
+        self.assertIn(first_component_line.id, visible_component_line_ids)
+        self.assertNotIn(second_component_line.id, visible_component_line_ids)
 
     def test_prerequisite_passes_with_passing_grade(self):
         prerequisite = self._create_course(
@@ -307,8 +343,13 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.env["erpobe.akademik.cpl.mk.cpmk"].create(
             {"cpl_id": cpl.id, "cpmk_id": cpmk.id}
         )
+        self.assertEqual(cpmk.display_name, f"{cpmk.kode_cpmk}: {cpmk.name}")
+        self.assertEqual(cpl.display_name, f"{cpl.kode_cpl}: {cpl.name}")
+        self.env["erpobe.akademik.mk.cpl"].create(
+            {"mk_id": self.course.id, "cpl_id": cpl.id}
+        )
         component = self.env["erpobe.akademik.komponen"].create(
-            {"name": f"Komponen {self.suffix}", "tipe": "kognitif"}
+            {"name": f"Komponen {self.suffix}", "tipe": "assignment"}
         )
         rps = self.env["erpobe.akademik.rps"].create(
             {
@@ -317,7 +358,6 @@ class TestTritonKrsWorkflows(TransactionCase):
                 "komponen_ids": [Command.link(component.id)],
             }
         )
-        rps.bobot_cpmk_cpl_ids.write({"bobot_cpmk_cpl": 100.0})
         rps.bobot_cpmk_mk_ids.write({"bobot_cpmk_mk": 100.0})
         rps.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 100.0})
 
@@ -346,6 +386,16 @@ class TestTritonKrsWorkflows(TransactionCase):
         )
         grade_mk = self.GradeMk.create(
             {"mahasiswa_id": self.student.id, "mk_id": self.course.id}
+        )
+        ungraded_component = self.env["erpobe.akademik.komponen"].create(
+            {"name": f"Kuis belum dinilai {self.suffix}", "tipe": "quiz"}
+        )
+        self.env["erpobe.grade.komponen"].create(
+            {
+                "krs_line_id": krs_line.id,
+                "komponen_id": ungraded_component.id,
+                "is_graded": False,
+            }
         )
         self.env["erpobe.master.grade"].create(
             {
@@ -380,6 +430,15 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertEqual(len(report_line), 1)
         self.assertEqual(report.total_sks_lulus, self.course.sks)
         self.assertEqual(report.ipk, report_line.bobot)
+        component_line = report.komponen_line_ids.filtered(
+            lambda record: record.grade_id == grade_component
+        )
+        self.assertEqual(len(component_line), 1)
+        self.assertEqual(component_line.mk_id, self.course)
+        self.assertEqual(component_line.komponen_id, component)
+        self.assertEqual(component_line.tipe, "assignment")
+        self.assertEqual(component_line.nilai_angka, 75.0)
+        self.assertEqual(len(report.komponen_line_ids), 1)
 
 
 @tagged("post_install", "-at_install")
@@ -448,6 +507,168 @@ class TestTritonPublicRoutes(HttpCase):
         ):
             response = self.url_open(route, allow_redirects=False)
             self.assertIn(response.status_code, (302, 303), route)
+
+    def test_teacher_analysis_shows_cpmk_cpl_and_cohort_filters(self):
+        suffix = uuid.uuid4().hex[:8].upper()
+        faculty = self.env["erpobe.master.fakultas"].create(
+            {"name": f"Faculty Analysis {suffix}", "kode": f"FA{suffix}"}
+        )
+        prodi = self.env["erpobe.master.prodi"].create(
+            {
+                "name": f"Program Analysis {suffix}",
+                "kode": f"PA{suffix}",
+                "fakultas_id": faculty.id,
+            }
+        )
+        rombel = self.env["erpobe.master.rombel"].create(
+            {
+                "name": f"Rombel Analysis {suffix}",
+                "angkatan": 2025,
+                "prodi_id": prodi.id,
+            }
+        )
+        nip = f"NA{suffix}"
+        teacher_partner = self.env["res.partner"].create(
+            {
+                "name": f"Teacher Analysis {suffix}",
+                "email": f"teacher-analysis-{suffix.lower()}@example.test",
+            }
+        )
+        teacher = (
+            self.env["erpobe.master.dosen"]
+            .sudo()
+            .with_context(install_mode=True)
+            .create(
+                {
+                    "partner_id": teacher_partner.id,
+                    "nip": nip,
+                    "prodi_ids": [Command.link(prodi.id)],
+                }
+            )
+        )
+        year = self.env["erpobe.akademik.tahunajaran"].create(
+            {
+                "tahun_ajaran": f"2099/{suffix}",
+                "semester": "ganjil",
+                "aktif": True,
+            }
+        )
+        offer = self.env["erpobe.akademik.penawaran"].create(
+            {
+                "tahun_ajaran": year.id,
+                "prodi_id": prodi.id,
+                "rombel_ids": [Command.link(rombel.id)],
+            }
+        )
+        course = self.env["erpobe.master.matakuliah"].create(
+            {
+                "name": f"Course Analysis {suffix}",
+                "kode_mk": f"CA{suffix}",
+                "sks": 3,
+                "semester": 1,
+                "prodi_id": prodi.id,
+                "koordinator_id": teacher.id,
+            }
+        )
+        offer_line = self.env["erpobe.akademik.penawaran.line"].create(
+            {
+                "penawaran_id": offer.id,
+                "matakuliah_id": course.id,
+                "rombel_ids": [Command.link(rombel.id)],
+            }
+        )
+        student_partner = self.env["res.partner"].create(
+            {
+                "name": f"Student Analysis {suffix}",
+                "email": f"student-analysis-{suffix.lower()}@example.test",
+            }
+        )
+        student = self.env["erpobe.master.mahasiswa"].create(
+            {
+                "partner_id": student_partner.id,
+                "nim": f"SA{suffix}",
+                "rombel_id": rombel.id,
+            }
+        )
+        krs = self.env["erpobe.akademik.krs"].create(
+            {"mahasiswa_id": student.id, "penawaran_id": offer.id}
+        )
+        krs_line = self.env["erpobe.akademik.krs.line"].create(
+            {"krs_id": krs.id, "penawaran_line_id": offer_line.id}
+        )
+        cpl = self.env["erpobe.akademik.cpl"].create(
+            {
+                "name": f"Bertakwa Analysis {suffix}",
+                "kode_cpl": f"CPL-A{suffix}",
+                "prodi_id": prodi.id,
+            }
+        )
+        cpmk = self.env["erpobe.akademik.cpmk"].create(
+            {
+                "mk_id": course.id,
+                "kode_cpmk": f"CPMK-A{suffix}",
+                "name": f"CPMK Analysis {suffix}",
+            }
+        )
+        self.env["erpobe.akademik.cpl.mk.cpmk"].create(
+            {"cpl_id": cpl.id, "cpmk_id": cpmk.id}
+        )
+        component = self.env["erpobe.akademik.komponen"].create(
+            {"name": f"Assignment Analysis {suffix}", "tipe": "assignment"}
+        )
+        rps = self.env["erpobe.akademik.rps"].create(
+            {
+                "matakuliah_id": course.id,
+                "penawaran_line_id": offer_line.id,
+                "komponen_ids": [Command.link(component.id)],
+            }
+        )
+        snapshot = rps.rps_komponen_ids.filtered(
+            lambda record: record.komponen_id == component
+        )
+        snapshot.write({"bobot": 100.0})
+        rps.bobot_cpmk_mk_ids.write({"bobot_cpmk_mk": 100.0})
+        rps.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 100.0})
+        self.env["erpobe.grade.komponen"].create(
+            {
+                "krs_line_id": krs_line.id,
+                "komponen_id": component.id,
+                "rps_id": rps.id,
+                "rps_komponen_id": snapshot.id,
+                "nilai": 86.0,
+                "origin": "actual",
+                "is_graded": True,
+            }
+        )
+        self.env["erpobe.grade.cpmk"].create(
+            {
+                "mahasiswa_id": student.id,
+                "cpmk_id": cpmk.id,
+                "krs_line_id": krs_line.id,
+                "rps_id": rps.id,
+            }
+        )
+        self.env["erpobe.grade.cpl"].create(
+            {"mahasiswa_id": student.id, "cpl_id": cpl.id}
+        )
+
+        self.authenticate(teacher.user_id.login, nip)
+        response = self.url_open(
+            f"/my/analisis?angkatan=2025&rombel_id={rombel.id}"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertRegex(
+            response.text,
+            rf"{re.escape(f'CPL-A{suffix}')}</strong>\s*:\s*"
+            rf"{re.escape(f'Bertakwa Analysis {suffix}')}",
+        )
+        self.assertRegex(
+            response.text,
+            rf"{re.escape(f'CPMK-A{suffix}')}</strong>\s*:\s*"
+            rf"{re.escape(f'CPMK Analysis {suffix}')}",
+        )
+        self.assertIn('name="angkatan"', response.text)
+        self.assertIn('name="rombel_id"', response.text)
 
     def test_student_courses_route_renders_without_approved_krs(self):
         suffix = uuid.uuid4().hex[:8].upper()

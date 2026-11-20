@@ -51,7 +51,6 @@ class ErpObeAkademikCpmk(models.Model):
     @api.depends(
         "mk_id.rps_ids.weight_status",
         "mk_id.rps_ids.tahun_ajaran_id.aktif",
-        "mk_id.rps_ids.bobot_cpmk_cpl_ids.bobot_cpmk_cpl",
         "mk_id.rps_ids.bobot_cpmk_mk_ids.bobot_cpmk_mk",
         "mk_id.rps_ids.bobot_komponen_cpmk_ids.bobot_komponen_cpmk",
     )
@@ -84,3 +83,12 @@ class ErpObeAkademikCpmk(models.Model):
                     break
             cpmk.weight_status = status
     _uniq_cpmk_mk_constraint = models.Constraint('unique(mk_id, kode_cpmk)', 'Kode CPMK tidak boleh kembar dalam satu MK.')
+
+    @api.depends("kode_cpmk", "name")
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = (
+                f"{record.kode_cpmk}: {record.name}"
+                if record.name
+                else record.kode_cpmk
+            )

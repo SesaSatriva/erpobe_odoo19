@@ -1,9 +1,22 @@
-# TRITON RPS & Assessment Engine — Phase 1 Audit and Proposed Architecture
+# TRITON RPS & Assessment Engine — Architecture History and Current Design
 
-**Status:** Phase 1 (audit and design only)  
+**Status:** Original audit below is historical; current implementation is `19.0.2.4.0`.  
 **Project:** `erpobe`, Odoo 19  
 **Audit date:** 2026-11-20  
 **Scope:** Existing model, calculation, access, controller, view, fixture and test paths. No production code or database changes were made.
+
+## Current assessment and calculation design
+
+The implementation supersedes the audit/proposal below:
+
+- Assessment activity uses the `tipe` Selection on `erpobe.akademik.komponen` and an RPS snapshot. Its concrete Indonesian options are Kehadiran, Kuis, Tugas, UTS, UAS, Presentasi, Praktikum, Studi Kasus, Proyek, TBP, and Lainnya. A custom activity can provide its own name and description.
+- RPS assessment snapshots keep activity type, name, description, and course weight. Component-to-CPMK allocation weights, CPMK-to-course weights, and course-to-CPL matrix weights remain separate. CPMK-to-CPL is a relationship only.
+- CPL achievement is the unweighted mean of available CPMK scores mapped to the CPL. Course-to-CPL rows only select related courses; their mapping carries no weight. CPMK-to-course weights remain exclusive to the final course grade.
+- Component scores are the only simulated score inputs. CPMK, course, and CPL results are computed from the configured weights; simulated grades are marked `simulated`, and existing graded actual values are preserved during fixture regeneration.
+- The academic fixture is versioned and repeatable. Its stable external IDs preserve academic master data, RPS, enrollments, and component-grade records; legacy category values are migrated to assessment activities.
+- Sub-CPMK is no longer an active model or calculation dependency. The 19.0.2.3.0 migration removes its legacy tables.
+
+The remainder records the initial audit and recommendations as historical context; statements describing the former fixed component categories, weighting formulas, fixture behavior, or unimplemented proposals are not the current design.
 
 ## 1. Executive summary
 
@@ -14,7 +27,6 @@ The current implementation does not yet satisfy the requested academic semantics
 1. `erpobe.akademik.komponen` is a global, effectively read-only catalog whose required `tipe` is hard-coded to **Kognitif** or **Partisipatif**. An RPS selects catalog records through a Many2many, but does not own editable name/description/weight snapshots.
 2. `erpobe.bobot.komponen.cpmk` stores allocation per CPMK, validated as 100% **per CPMK**. It does not configure each assessment component's overall contribution to the course, nor allocate one component's contribution across its measured CPMKs.
 3. CPMK results select RPS weights by newest RPS for a course, while scores are gathered across the student's course attempts. Result records do not identify the RPS version or term used.
-4. CPMK→CPL is currently calculated using `bobot_cpmk_cpl`; this is a weighted relationship, not a mapping-only relationship.
 5. The fixture seeder's score function is deterministic and bounded but uses ten repeating student bands and a small periodic offset. It has no random-seed argument, and generated component-score records are not individually marked as simulated.
 6. Final RPS records and their child configuration rows are protected against edits. However, the score-to-RPS-version link needed to make that protection meaningful for historical calculations is absent.
 
@@ -27,13 +39,12 @@ The current implementation does not yet satisfy the requested academic semantics
 | `erpobe.master.matakuliah` | Course identity, code, SKS, curriculum semester, program, coordinator/teaching team, prerequisites. | Owns CPMK and RPS records. `rps_ids` can span offers/academic years. |
 | `erpobe.akademik.tahunajaran` | Academic year, term (`ganjil`, `genap`, `pendek`) and single-active-year flag. | `penawaran` and RPS obtain their year through their offer line. |
 | `erpobe.akademik.penawaran` / `.line` | Semester offering and course section; class/rombel, teachers, schedule, students and per-line RPS versions. | `.line.latest_rps_id` sorts by `(version, id)` and can therefore point at a newer draft/review version instead of a previous final one. |
-| `erpobe.akademik.rps` | Course/offer reference, version, source version, status (`draft`, `review`, `final`), component and CPMK/CPL selections, learning activities and rubrics. | `cpmk_ids` is computed from all CPMKs of the course; `cpl_ids` is derived from CPMK mappings. Owns the three existing weight tables. |
+| `erpobe.akademik.rps` | Course/offer reference, version, source version, status (`draft`, `review`, `final`), component and CPMK/CPL selections, learning activities and rubrics. | `cpmk_ids` is computed from all CPMKs of the course; `cpl_ids` is derived from CPMK mappings. Owns the two weight tables used for component→CPMK and CPMK→course calculations. |
 | `erpobe.akademik.cpmk` | Course learning outcome, description, indicator and target. | Belongs to a course; maps to CPL through `erpobe.akademik.cpl.mk.cpmk`. |
 | `erpobe.akademik.cpl` / `.cpl.mk.cpmk` | Program learning outcome and direct CPL↔CPMK mapping. | The bridge is unique per `(cpl_id, cpmk_id)` and checks program consistency. This is the appropriate mapping relation to retain. |
 | `erpobe.akademik.komponen` | Global assessment component catalog: `name`, required `tipe`, `aktif`, `color`. | `name`, `tipe`, `aktif` are declared read-only in Python; `tipe` is fixed to Kognitif/Partisipatif. An RPS links to the master, not to a frozen per-RPS copy. |
 | `erpobe.bobot.komponen.cpmk` | RPS-specific component↔CPMK rows and `bobot_komponen_cpmk`. | Has unique `(rps_id, komponen_penilaian, cpmk_id)` and 0–100 per-row SQL checks. Current group total is 100% per CPMK. |
 | `erpobe.bobot.cpmk.mk` | RPS-specific CPMK contribution to the course. | Current course total is validated as 100%; used by the MK calculation. |
-| `erpobe.bobot.cpmk.cpl` | RPS-specific CPMK↔CPL row with `bobot_cpmk_cpl`. | Current implementation adds weights to the direct mapping and uses them in CPL scores. |
 | `erpobe.akademik.krs` / `.line` | Student semester registration and course enrollment. | A line points to an offered course and student; its offer line determines class and academic period. |
 | `erpobe.input.nilai` / `erpobe.grade.komponen` | Class grade input and individual component score. | `grade.komponen` points to KRS line and global component; unique per `(krs_line_id, komponen_id)`. It currently has no FK to an RPS or RPS version and no backend 0–100 constraint. |
 | `erpobe.grade.komponen.audit` | Immutable history of component score changes. | Captures writes and nonzero initial values; preserves old/new values, actor and reason. |
@@ -43,7 +54,6 @@ The current implementation does not yet satisfy the requested academic semantics
 | `erpobe.master.grade` | Grade-letter/grade-point thresholds used to convert numeric MK values for KHS. | KHS line computation depends on these ranges; preserve existing grade bands during calculation changes. |
 | `erpobe.report.khs` and line models | Student transcript snapshot of MK/CPMK/CPL grades, GPA and passed credits. | One report per student. Sync copies all existing grade records; `tahun_ajaran_id` is not used to scope its grade fetch. GPA logic takes the best grade for a repeated course code, although the current unique student+course grade constraint limits representing repeated attempts. |
 | `erpobe.akademik.kurikulum`, `erpobe.master.rombel` | Curriculum and student cohort/class group. | Curriculum links courses/students; rombel links students, offers and program. |
-| `erpobe.akademik.subcpmk` / `erpobe.grade.subcpmk` | Per-RPS sub-outcomes and results. | Actively used by RPS activities, seeder and tests. This is legacy data to handle carefully if the new workflow removes Sub-CPMK use. |
 | `erpobe.akademik.fixture.source` | General provenance record (`official`, `mixed`, `dummy`, `derived`) for fixture-created records. | Can help preserve provenance, but component-grade records created by the seeder are not individually marked in its score-upsert path. |
 
 Primary source files: [model imports](../models/__init__.py), [RPS and activity/rubric models](../models/akademik_rps.py), [component catalog](../models/akademik_komponen.py), [weight tables](../models/bobot_komponen_cpmk.py), [CPL mapping](../models/akademik_cpl_mk_cpmk.py), [grade input and audit](../models/grade.py), [CPMK scores](../models/grade_cpmk.py), [MK scores](../models/grade_mk.py), [CPL scores](../models/grade_cpl.py), [KHS](../models/report_khs.py), [KRS](../models/akademik_krs.py), [offer and class](../models/akademik_penawaran.py), [academic year](../models/akademik_tahunajaran.py), and [fixture/provenance models](../models/academic_fixture.py).
@@ -52,7 +62,7 @@ Primary source files: [model imports](../models/__init__.py), [RPS and activity/
 
 ```text
 Course → CPMKs → direct CPL↔CPMK mapping
-Offer line → RPS version → selected global components + three RPS weight tables
+Offer line → RPS version → selected global components + two RPS weight tables
 Approved KRS line → actual component grade → computed CPMK → computed MK / computed CPL
 Computed MK, CPMK, CPL → KHS snapshot
 ```
@@ -61,7 +71,6 @@ Computed MK, CPMK, CPL → KHS snapshot
 
 - **Assessment component→CPMK:** for a CPMK, the implementation adds each selected component score multiplied by `bobot_komponen_cpmk / 100`. The configured weights sum to 100 per CPMK. Missing component scores are treated as `0`.
 - **CPMK→MK:** adds CPMK score multiplied by `bobot_cpmk_mk / 100`, with current CPMK→MK weights expected to total 100.
-- **CPMK→CPL:** for mapped CPMKs with a student grade, computes `Σ(CPMK score × bobot_cpmk_cpl) / Σ(bobot_cpmk_cpl)`. Unassessed CPMKs are omitted and the denominator is renormalized.
 - **KHS GPA:** uses each course code's highest grade point; GPA is `Σ(SKS × grade point) / Σ(SKS)` over the selected best-grade lines. Passed credits are counted only where grade point is greater than zero.
 - **RPS finalization:** `erpobe.weight.validation` checks group totals against 100% with 0.01 tolerance. Drafts can retain incomplete weights; finalization is the backend gate. The relevant tables have per-row range checks, but aggregate totals are not database constraints.
 
@@ -69,21 +78,21 @@ Computed MK, CPMK, CPL → KHS snapshot
 
 1. `grade.cpmk` selects RPS records by course and sorts by descending ID; its weight map is not scoped to the student's KRS line, offer line, academic year or exact RPS. Component grades are also gathered across course attempts and keyed only by student/course/component.
 2. `grade.mk` similarly builds weights from RPS records across the course and student CPMK grades, not a specific enrollment/version.
-3. `grade.cpl` searches `bobot.cpmk.cpl` by CPL across RPS records, not by an academic period or RPS version. Duplicate CPMK/CPL pairs from different RPS records can overwrite the same in-memory map entry.
+3. CPL is now calculated from distinct available CPMK grades selected by the CPMK→CPL mapping and related MK→CPL mappings. The MK→CPL relation only filters eligible courses; it never weights the score.
 4. Compute dependencies primarily watch score fields. RPS weight edits are not explicit dependencies of the stored student grade fields, so a change may not recompute all affected results unless the orchestrator explicitly forces recomputation.
 5. The manual score controller checks 0–100, but the grade model itself has no equivalent range constraint; ORM imports or other server-side callers can bypass that controller validation.
 6. `input.nilai`'s onchange builds rows from all globally active components, not the RPS configuration. The newer portal grade route does use the selected RPS components; the two input paths can therefore disagree.
 7. Component grades are unique by `(krs_line_id, komponen_id)`. A per-RPS component snapshot may require a new uniqueness key; preserve the existing one for legacy records while introducing the new key.
-8. CPL evaluation currently has an explicit weighted formula that conflicts with the requested mapping-only CPMK→CPL semantics. The public methodology text also describes the weighted formula and must be kept in sync when a later implementation is approved.
+8. The former weighted MK→CPL calculation has been removed. Stored CPL grades now use the unweighted mean of available mapped CPMK grades.
 9. Final RPS configuration is protected by `erpobe.rps.lock.mixin`; `copy()` creates a separate review version. The protection does not freeze the grade formula inputs historically because score records are not linked to the exact RPS version.
 
 ## 4. Controllers, access, views and tests audited
 
 - **Portal RPS / grades:** `controllers/portal_dosen.py` exposes list/create/edit/copy/finalize and class grade-input routes. It checks teacher-to-course assignment through `portal_base.py`, then uses `sudo()` for reads/writes. Score POST validates 0–100 and invokes the calculation/KHS orchestrator. RPS POST writes description, media, selected master components and weight rows; it does not create custom component master records.
 - **Backend access:** `ir.model.access.csv` grants lecturers RPS create/write but not unlink; students can read RPS. Teacher access to grade component records is program-scoped. Grade CPMK/MK/CPL access differs by role and uses student-owned rules. Portal routes rely on explicit teacher ownership checks because they use elevated access.
-- **RPS views/PDF:** backend RPS form has tabs for learning outcomes, selected components, activities, rubrics and weight tables. It exposes Sub-CPMK. The portal RPS editor lists master components and separate weight tables; it has no per-RPS snapshot/custom component, component-total summary, allocation matrix or completion progress. QWeb PDF actions exist for RPS and KHS; the RPS PDF currently lists selected component names but not component weights or allocation.
+- **RPS views/PDF:** backend RPS form uses logical tabs for general information, outcomes, assessment components, references/materials and finalization. RPS component snapshots and allocation matrices remain traceable.
 - **Seed/simulation:** `fixture_seeder.py` uses fixed student bands `(93, 88, 83, 79, 75, 71, 68, 64, 59, 54)` by student index, then a periodic offset from student/course/component indices, clamped to 40–99. It is reproducible because it is deterministic, but does not accept a random seed and creates strongly patterned scores. The general fixture-source model exists; generated `grade.komponen` records are not marked in the component-grade creation loop.
-- **Current relevant tests:** `test_weight_validation.py`, `test_rps_versioning.py`, `test_triton_workflows.py` and `test_academic_fixture.py` cover portions of weight checks, final-RPS copy protection, grade formulas, KHS IPK and fixture generation. Existing tests encode weighted CPMK→CPL and Sub-CPMK usage. They do not establish the requested new component snapshots, version-pinned grade lineage, actual-vs-dummy isolation or a seeded statistical distribution.
+- **Current relevant tests:** `test_weight_validation.py`, `test_rps_versioning.py`, `test_triton_workflows.py` and `test_academic_fixture.py` cover portions of weight checks, final-RPS copy protection, grade formulas, KHS IPK and fixture generation.
 
 Relevant files: [portal grade/RPS controller](../controllers/portal_dosen.py), [portal authorization helper](../controllers/portal_base.py), [ACL](../security/ir.model.access.csv), [record rules](../security/rules.xml), [backend RPS form](../views/akademik_rps_views.xml), [portal RPS editor](../views/website/portal/teacher/portal_rps_edit.xml), [RPS/KHS PDF](../views/triton_reports.xml), and [existing academic tests](../tests/).
 
@@ -124,7 +133,7 @@ Let `w_i` be component `i`'s percentage of the course grade, `a_ij` the percenta
 
 - **Course final score:** `Σ(s_i × w_i / 100)` over required, graded, active components. This is the only route from component weights to final MK score; do not sum CPMK attributions again into the same final MK score.
 - **CPMK achievement:** `Σ(s_i × w_i × a_ij) / Σ(w_i × a_ij)` over graded components that measure CPMK `j`. This normalizes a CPMK's attribution against the component/course weight assigned to it and keeps its score on a 0–100 scale. Preserve component-grade IDs and allocation rows as provenance for every result.
-- **CPL evaluation (proposal):** use the CPL↔CPMK mapping only to select distinct, assessed CPMKs; calculate an unweighted mean of those CPMK achievements for the chosen student/period/cohort. Do not persist or apply CPMK→CPL weights. Confirm the aggregation population/period and missing-CPMK policy before implementation.
+- **CPL evaluation:** use the CPL↔CPMK mapping to select distinct, available CPMK achievements, optionally restricted to courses related through MK→CPL, and calculate their unweighted mean. MK→CPL is a relationship only, and CPMK→MK weights are not applied to CPL.
 
 The CPMK score is an attribution/result, not an additional component in the final course score. This avoids counting the same component score once through the component total and again through CPMK totals.
 
@@ -139,7 +148,6 @@ Separate the deterministic academic calculation service from a test/simulation g
 3. **New-version transition:** new RPS versions use the new component-weight and component→CPMK-allocation rules. Copy from an old RPS as a draft/review snapshot with an explicit conversion/confirmation step; no automatic finalization.
 4. **Backfill cautiously:** create per-RPS component snapshots for old RPS records by copying selected master names/descriptions and preserving old master IDs. Link old allocation/score records only where identity and academic period can be established unambiguously; report unresolved/ambiguous records for review.
 5. **Compatibility window:** keep legacy columns and read paths until reconciliation proves parity for a sampled set of historical grade, KHS and CPL results. Only then consider a later migration to remove obsolete fields/tables.
-6. **Sub-CPMK:** stop creating/editing it in the new RPS workflow. Keep existing Sub-CPMK records and their score relations readable/exportable as legacy history until references and reports are safely migrated; do not cascade-delete them as part of this phase.
 7. **Reconcile:** compare pre/post values for component grades, CPMK, MK, CPL and KHS before making the new calculation path the default. Keep a rollback/backup and run module upgrade/tests on a non-production copy first.
 
 ## 7. Impact and risks for later phases
@@ -152,15 +160,15 @@ Separate the deterministic academic calculation service from a test/simulation g
 | KHS and repeated enrollments | Need a defined per-term attempt/source relationship before KHS snapshotting. | Current one-grade-per-student+course key cannot represent repeated attempts; GPA best-grade behavior and KHS period label need a policy. |
 | KRS, offer line, year and rombel | Provide the academic-period context for the RPS selected for each enrollment. | Historical KRS lines must not begin using a newer RPS version after an upgrade. |
 | Controllers, backend/portal views, PDF | Add custom component editing, allocation matrix, progress/summary and printable weight/mapping details. | Portal routes use `sudo`; retain strict teacher-to-offer authorization and test cross-program access. |
-| CPL dashboard/public methodology | Update aggregation and descriptions after mapping-only formula is approved. | Existing explanatory public pages currently promise a weighted CPL formula. |
+| CPL dashboard/public methodology | Aggregation and explanatory text use the unweighted mean of mapped CPMK achievements. | MK→CPL relationships are used only for mapping, never as weights. |
 | Security/access | Add ACL and program-scoped rules for new snapshot/allocation fields/models. | Student read scope and teacher write scope must remain least-privilege, including elevated portal operations. |
-| Fixture/seeder/tests | Replace repetitive score logic and mark each generated score; update tests that currently assert weighted CPL/Sub-CPMK. | Fixture seed is versioned and may skip rebuilding; migration/test data must not rewrite actual records. |
+| Fixture/seeder/tests | Replace repetitive score logic and mark each generated score; preserve component-level lineage. | Fixture seed is versioned and may skip rebuilding; migration/test data must not rewrite actual records. |
 
 ## 8. Phase 1 completion record
 
 - **Files created:** `docs/TRITON_RPS_MODEL_ARCHITECTURE.md` (this audit/design report).
 - **Production files changed:** none.
-- **Models/relations affected by future phases:** RPS, component master, proposed RPS component snapshot, component↔CPMK allocation, component grades/audit, computed CPMK/MK/CPL grades, KHS, KRS/offer/year/class, fixture provenance and Sub-CPMK legacy models.
+- **Models/relations:** RPS, component snapshot, component↔CPMK allocation, component grades/audit, computed CPMK/MK/CPL grades, KHS, KRS/offer/year/class and fixture provenance.
 - **Testing/upgrade:** no Odoo tests or module upgrade run. Phase 1 made no implementation changes; upgrading database `erpobe` before design approval would be an out-of-phase schema/data change. No live database result is claimed.
 - **Screenshot:** none; no UI was changed or tested.
 - **Working-tree coordination:** the module repository was on `main` with pre-existing edits in portal navigation and SCSS (`views/website/components/*navigation.xml`, `static/src/scss/_tokens.scss`, `static/src/scss/components/*`, `static/src/scss/pages/_professional.scss`). These were not edited. Portal RPS/controller/view files are likely future overlap points and should be rechecked immediately before any later edit.

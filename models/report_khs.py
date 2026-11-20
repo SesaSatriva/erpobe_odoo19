@@ -39,6 +39,12 @@ class ErpObeReportKhs(models.Model):
     cpl_line_ids = fields.One2many(
         "erpobe.report.khs.cpl", "khs_id", string="Capaian CPL", readonly=True
     )
+    komponen_line_ids = fields.One2many(
+        "erpobe.report.khs.komponen",
+        "khs_id",
+        string="Nilai Komponen",
+        readonly=True,
+    )
 
     # === STATISTIK ===
     total_sks_lulus = fields.Integer(
@@ -151,12 +157,23 @@ class ErpObeReportKhs(models.Model):
             for g in source_cpl
         ]
 
-        # D. Execute Write
+        # D. Fetch graded assessment component scores.
+        GradeKomponen = self.env["erpobe.grade.komponen"].sudo()
+        source_komponen = GradeKomponen.search(
+            [("mahasiswa_id", "=", mhs_id), ("is_graded", "=", True)],
+            order="id asc",
+        )
+        komponen_cmds = [Command.clear()] + [
+            Command.create({"grade_id": g.id}) for g in source_komponen
+        ]
+
+        # E. Execute Write
         self.write(
             {
                 "mk_line_ids": mk_cmds,
                 "cpmk_line_ids": cpmk_cmds,
                 "cpl_line_ids": cpl_cmds,
+                "komponen_line_ids": komponen_cmds,
                 "tanggal_cetak": fields.Date.context_today(self),
             }
         )
@@ -290,6 +307,34 @@ class ErpObeReportKhsCpl(models.Model):
         related="khs_id.prodi_id", store=True, readonly=True, index=True
     )
 
+    fakultas_id = fields.Many2one(
+        related="prodi_id.fakultas_id", store=True, readonly=True, index=True
+    )
+
+
+class ErpObeReportKhsKomponen(models.Model):
+    _name = "erpobe.report.khs.komponen"
+    _description = "Line KHS Komponen Penilaian"
+    _order = "mk_id, komponen_id"
+
+    khs_id = fields.Many2one("erpobe.report.khs", ondelete="cascade")
+    grade_id = fields.Many2one(
+        "erpobe.grade.komponen", required=True, ondelete="cascade"
+    )
+    mk_id = fields.Many2one(
+        related="grade_id.krs_line_id.matakuliah_id", store=True
+    )
+    komponen_id = fields.Many2one(
+        related="grade_id.komponen_id", store=True
+    )
+    tipe = fields.Selection(
+        related="komponen_id.tipe", string="Jenis Aktivitas", store=True
+    )
+    nilai_angka = fields.Float(related="grade_id.nilai", store=True)
+    origin = fields.Selection(related="grade_id.origin", store=True)
+    prodi_id = fields.Many2one(
+        related="khs_id.prodi_id", store=True, readonly=True, index=True
+    )
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )

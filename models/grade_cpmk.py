@@ -22,11 +22,20 @@ class ErpObeGradeCpmk(models.Model):
         digits=(16, 2),
         help="Dihitung dari rata-rata tertimbang Komponen terhadap CPMK berdasarkan RPS.",
     )
+    is_available = fields.Boolean(
+        string="Data Tersedia",
+        compute="_compute_nilai_cpmk",
+        store=True,
+    )
     target_nilai = fields.Float(
         related="cpmk_id.target_nilai", store=True, readonly=True
     )
     status_capaian = fields.Selection(
-        [("tercapai", "Tercapai"), ("belum", "Belum Tercapai")],
+        [
+            ("belum_tersedia", "Belum Tersedia"),
+            ("tercapai", "Tercapai"),
+            ("belum", "Belum Tercapai"),
+        ],
         compute="_compute_status_capaian",
         store=True,
         string="Status Capaian",
@@ -42,49 +51,73 @@ class ErpObeGradeCpmk(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.depends("nilai_cpmk", "target_nilai")
+    @api.depends("nilai_cpmk", "target_nilai", "is_available")
     def _compute_status_capaian(self):
         for record in self:
-            record.status_capaian = (
-                "tercapai"
-                if record.nilai_cpmk >= record.target_nilai
-                else "belum"
-            )
+            if not record.is_available:
+                record.status_capaian = "belum_tersedia"
+            elif record.nilai_cpmk >= record.target_nilai:
+                record.status_capaian = "tercapai"
+            else:
+                record.status_capaian = "belum"
 
     @api.depends(
         "mahasiswa_id.grade_komponen_ids.nilai",
         "mahasiswa_id.grade_komponen_ids.krs_line_id",
+        "mahasiswa_id.grade_komponen_ids.rps_komponen_id",
+        "mahasiswa_id.grade_komponen_ids.is_graded",
+        "mahasiswa_id.grade_komponen_ids.origin",
+        "rps_id.rps_komponen_ids.bobot",
+        "rps_id.bobot_komponen_cpmk_ids.bobot_komponen_cpmk",
     )
     def _compute_nilai_cpmk(self):
         Rps = self.env["erpobe.akademik.rps"]
         BobotKomp = self.env["erpobe.bobot.komponen.cpmk"]
         GradeKomp = self.env["erpobe.grade.komponen"]
 
-        for rec in self.filtered(lambda grade: grade.rps_id and grade.krs_line_id):
-            rps = rec.rps_id
-            allocations = BobotKomp.search([
-                ("rps_id", "=", rps.id),
-                ("cpmk_id", "=", rec.cpmk_id.id),
-                ("rps_komponen_id", "!=", False),
-            ])
+        exact_records = self.filtered(
+            lambda grade: grade.rps_id and grade.krs_line_id
+        )
+        allocations = BobotKomp.search([
+            ("rps_id", "in", exact_records.mapped("rps_id").ids),
+            ("cpmk_id", "in", exact_records.mapped("cpmk_id").ids),
+            ("rps_komponen_id", "!=", False),
+        ])
+        allocation_map = {}
+        for allocation in allocations:
+            allocation_map.setdefault(
+                (allocation.rps_id.id, allocation.cpmk_id.id), []
+            ).append(allocation)
+
+        grades = GradeKomp.search([
+            ("krs_line_id", "in", exact_records.mapped("krs_line_id").ids),
+            ("rps_id", "in", exact_records.mapped("rps_id").ids),
+            ("rps_komponen_id", "in", allocations.mapped("rps_komponen_id").ids),
+            ("is_graded", "=", True),
+        ])
+        grade_map = {
+            (grade.krs_line_id.id, grade.rps_id.id, grade.rps_komponen_id.id): grade
+            for grade in grades
+        }
+
+        for rec in exact_records:
             weighted_total = 0.0
             denominator = 0.0
-            for allocation in allocations:
+            for allocation in allocation_map.get(
+                (rec.rps_id.id, rec.cpmk_id.id), []
+            ):
                 snapshot = allocation.rps_komponen_id
                 if not snapshot.aktif:
                     continue
-                grade = GradeKomp.search([
-                    ("krs_line_id", "=", rec.krs_line_id.id),
-                    ("rps_id", "=", rps.id),
-                    ("rps_komponen_id", "=", snapshot.id),
-                    ("is_graded", "=", True),
-                    ("origin", "=", "actual"),
-                ], limit=1)
+                grade = grade_map.get(
+                    (rec.krs_line_id.id, rec.rps_id.id, snapshot.id)
+                )
                 if not grade:
                     continue
                 attribution = snapshot.bobot * allocation.bobot_komponen_cpmk / 100.0
                 weighted_total += grade.nilai * attribution
                 denominator += attribution
+            rec.is_available = bool(denominator)
             rec.nilai_cpmk = weighted_total / denominator if denominator else 0.0
 
         # Compatibility path for historical records that have no exact RPS/kRS lineage.
@@ -114,6 +147,7 @@ class ErpObeGradeCpmk(models.Model):
             [
                 ("mahasiswa_id", "in", mhs_ids.ids),
                 ("krs_line_id.matakuliah_id", "in", mk_ids.ids),
+                ("is_graded", "=", True),
             ]
         )
 
@@ -121,31 +155,30 @@ class ErpObeGradeCpmk(models.Model):
         for g in student_grades:
             m_id = g.mahasiswa_id.id
             k_mk_id = g.krs_line_id.matakuliah_id.id
-            if m_id not in grade_map:
-                grade_map[m_id] = {}
-            if k_mk_id not in grade_map[m_id]:
-                grade_map[m_id][k_mk_id] = {}
-            grade_map[m_id][k_mk_id][g.komponen_id.id] = g.nilai
+            grade_map.setdefault((m_id, k_mk_id, g.komponen_id.id), g)
 
         for rec in legacy_records:
             rec.nilai_cpmk = 0.0
+            rec.is_available = False
 
             cpmk_weights = weight_map.get(rec.cpmk_id.id, {})
             if not cpmk_weights:
                 continue
 
-            student_mk_grades = grade_map.get(rec.mahasiswa_id.id, {}).get(
-                rec.mk_id.id, {}
-            )
-
-            total_score = 0.0
-
+            weighted_total = 0.0
+            denominator = 0.0
             for komp_id, bobot in cpmk_weights.items():
-                # Default nilai 0.0 jika mahasiswa belum dinilai komponen tersebut
-                nilai_mhs = student_mk_grades.get(komp_id, 0.0)
-                total_score += nilai_mhs * (bobot / 100.0)
-
-            rec.nilai_cpmk = total_score
+                grade_record = grade_map.get(
+                    (rec.mahasiswa_id.id, rec.mk_id.id, komp_id)
+                )
+                if not grade_record:
+                    continue
+                weighted_total += grade_record.nilai * (bobot / 100.0)
+                denominator += bobot / 100.0
+            rec.is_available = bool(denominator)
+            rec.nilai_cpmk = (
+                weighted_total / denominator if denominator else 0.0
+            )
 
     @api.constrains("mahasiswa_id", "cpmk_id")
     def _check_grade_faculty(self):
@@ -190,7 +223,7 @@ class ErpObeCpmkRombel(models.Model):
                 FROM erpobe_grade_cpmk gc
                 JOIN erpobe_master_mahasiswa m ON m.id = gc.mahasiswa_id
                 JOIN erpobe_master_rombel r ON r.id = m.rombel_id
-                WHERE m.rombel_id IS NOT NULL
+                WHERE m.rombel_id IS NOT NULL AND gc.is_available IS TRUE
                 GROUP BY m.rombel_id, m.prodi_id, r.fakultas_id, gc.cpmk_id
             )
         """)
@@ -227,7 +260,7 @@ class ErpObeCpmkAngkatan(models.Model):
                 FROM erpobe_grade_cpmk gc
                 JOIN erpobe_master_mahasiswa m ON m.id = gc.mahasiswa_id
                 JOIN erpobe_master_rombel r ON r.id = m.rombel_id
-                WHERE r.angkatan IS NOT NULL
+                WHERE r.angkatan IS NOT NULL AND gc.is_available IS TRUE
                 GROUP BY r.angkatan, gc.cpmk_id
             )
         """)

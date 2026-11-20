@@ -87,7 +87,7 @@ class TritonPortalDosen(TritonPortalBase):
                     if len(components) != len(set(selected_components)):
                         raise ValidationError('Komponen penilaian tidak valid.')
                     rps.write({'deskripsi_mk': form.get('deskripsi_mk', ''), 'media_software': form.get('media_software', ''), 'media_hardware': form.get('media_hardware', ''), 'komponen_ids': [(6, 0, components.ids)]})
-                    weight_fields = (('bobot_mk_', 'bobot_cpmk_mk_ids', 'bobot_cpmk_mk'), ('bobot_cpl_', 'bobot_cpmk_cpl_ids', 'bobot_cpmk_cpl'), ('bobot_komponen_', 'bobot_komponen_cpmk_ids', 'bobot_komponen_cpmk'))
+                    weight_fields = (('bobot_mk_', 'bobot_cpmk_mk_ids', 'bobot_cpmk_mk'), ('bobot_komponen_', 'bobot_komponen_cpmk_ids', 'bobot_komponen_cpmk'))
                     for prefix, relation, field_name in weight_fields:
                         rows = getattr(rps, relation)
                         for row in rows:
@@ -364,21 +364,170 @@ class TritonPortalDosen(TritonPortalBase):
     @http.route('/my/analisis', type='http', auth='user', website=True)
     def triton_teacher_analysis(self, **kwargs):
         teacher = self._require_teacher()
+        Line = request.env['erpobe.akademik.penawaran.line'].sudo()
+        line_domain = [
+            '|',
+            ('matakuliah_id.koordinator_id', '=', teacher.id),
+            ('matakuliah_id.tim_pengampu_ids', 'in', teacher.id),
+        ]
+        all_lines = Line.search(
+            line_domain,
+            order='tahun_ajaran_id desc, matakuliah_id asc, id asc',
+        )
+        rombels = all_lines.mapped('rombel_ids').sorted(
+            key=lambda rombel: (rombel.angkatan or 0, rombel.name or '')
+        )
+        cohort_values = sorted(
+            {rombel.angkatan for rombel in rombels if rombel.angkatan},
+            reverse=True,
+        )
+        cohort_options = [('', 'Semua angkatan')] + [
+            (str(cohort), str(cohort)) for cohort in cohort_values
+        ]
+        rombel_options = [('', 'Semua rombel')] + [
+            (str(rombel.id), rombel.display_name) for rombel in rombels
+        ]
+
+        args = request.httprequest.args
+        raw_cohort = args.get('angkatan', '')
+        selected_cohort = (
+            int(raw_cohort)
+            if raw_cohort.isdigit() and int(raw_cohort) in cohort_values
+            else None
+        )
+        raw_rombel_id = args.get('rombel_id', '')
+        rombel_ids = set(rombels.ids)
+        selected_rombel_id = (
+            int(raw_rombel_id)
+            if raw_rombel_id.isdigit() and int(raw_rombel_id) in rombel_ids
+            else None
+        )
+        filter_options = (
+            ('angkatan', 'Angkatan', cohort_options),
+            ('rombel_id', 'Rombel', rombel_options),
+        )
+        filtered_line_domain = list(line_domain)
+        if selected_cohort is not None:
+            filtered_line_domain.append(
+                ('rombel_ids.angkatan', '=', selected_cohort)
+            )
+        if selected_rombel_id is not None:
+            filtered_line_domain.append(
+                ('rombel_ids', 'in', [selected_rombel_id])
+            )
         lines, pagination = self._list_page(
-            request.env['erpobe.akademik.penawaran.line'].sudo(),
-            ['|', ('matakuliah_id.koordinator_id', '=', teacher.id), ('matakuliah_id.tim_pengampu_ids', 'in', teacher.id)],
+            Line,
+            filtered_line_domain,
             '/my/analisis',
             {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru')},
             'tahun_ajaran_id desc, matakuliah_id asc, id asc',
             ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+            filter_options,
+        )
+        for filter_option in pagination['filter_options']:
+            if filter_option['name'] == 'angkatan':
+                filter_option['selected'] = (
+                    str(selected_cohort) if selected_cohort is not None else ''
+                )
+            elif filter_option['name'] == 'rombel_id':
+                filter_option['selected'] = (
+                    str(selected_rombel_id)
+                    if selected_rombel_id is not None
+                    else ''
+                )
+
+        def student_matches_filters(student):
+            return (
+                (selected_cohort is None or student.angkatan == selected_cohort)
+                and (
+                    selected_rombel_id is None
+                    or student.rombel_id.id == selected_rombel_id
+                )
+            )
+
+        analysis_lines = all_lines.filtered(
+            lambda line: (
+                selected_cohort is None
+                or any(
+                    rombel.angkatan == selected_cohort
+                    for rombel in line.rombel_ids
+                )
+            )
+            and (
+                selected_rombel_id is None
+                or selected_rombel_id in line.rombel_ids.ids
+            )
+        )
+        analysis_students = analysis_lines.mapped('mahasiswa_ids').filtered(
+            student_matches_filters
         )
         analysis = []
         GradeCpmk = request.env['erpobe.grade.cpmk'].sudo()
         for line in lines:
-            students = line.mahasiswa_ids
-            grades = GradeCpmk.search([('mahasiswa_id', 'in', students.ids), ('mk_id', '=', line.matakuliah_id.id)])
+            students = line.mahasiswa_ids.filtered(student_matches_filters)
+            grades = GradeCpmk.search([
+                ('mahasiswa_id', 'in', students.ids),
+                ('krs_line_id.penawaran_line_id', '=', line.id),
+                ('is_available', '=', True),
+            ])
             by_cpmk = {}
             for grade in grades:
                 by_cpmk.setdefault(grade.cpmk_id, []).append(grade.nilai_cpmk)
-            analysis.append({'course': line.matakuliah_id.name, 'year': line.tahun_ajaran_id.tahun_ajaran, 'results': [{'name': cpmk.name, 'average': round(sum(values) / len(values), 2), 'below_target': sum((value < 75 for value in values))} for cpmk, values in by_cpmk.items()]})
-        return request.render('erpobe.triton_teacher_analysis_page', {'analysis': analysis, 'pagination': pagination, 'list_action': '/my/analisis'})
+            results = []
+            for cpmk, values in sorted(
+                by_cpmk.items(), key=lambda item: item[0].kode_cpmk
+            ):
+                results.append({
+                    'code': cpmk.kode_cpmk,
+                    'description': cpmk.name,
+                    'average': round(sum(values) / len(values), 2),
+                    'below_target': sum(
+                        value < cpmk.target_nilai for value in values
+                    ),
+                    'target': cpmk.target_nilai,
+                })
+            analysis.append({
+                'course': (
+                    f"{line.matakuliah_id.kode_mk}: {line.matakuliah_id.name}"
+                    if line.matakuliah_id.kode_mk
+                    else line.matakuliah_id.name
+                ),
+                'year': line.tahun_ajaran_id.tahun_ajaran,
+                'results': results,
+            })
+
+        relevant_cpl_ids = request.env[
+            'erpobe.akademik.cpl.mk.cpmk'
+        ].sudo().search([
+            ('cpmk_id.mk_id', 'in', analysis_lines.mapped('matakuliah_id').ids),
+        ]).mapped('cpl_id').ids
+        GradeCpl = request.env['erpobe.grade.cpl'].sudo()
+        cpl_grades = GradeCpl.search([
+            ('mahasiswa_id', 'in', analysis_students.ids),
+            ('cpl_id', 'in', relevant_cpl_ids),
+            ('is_available', '=', True),
+        ])
+        by_cpl = {}
+        for grade in cpl_grades:
+            by_cpl.setdefault(grade.cpl_id, []).append(grade)
+        cpl_analysis = []
+        for cpl, grades in sorted(
+            by_cpl.items(), key=lambda item: item[0].kode_cpl
+        ):
+            scores = [grade.nilai_cpl for grade in grades]
+            cpl_analysis.append({
+                'code': cpl.kode_cpl,
+                'description': cpl.name,
+                'average': round(sum(scores) / len(scores), 2),
+                'below_target': sum(
+                    grade.nilai_cpl < cpl.target_nilai for grade in grades
+                ),
+                'student_count': len(grades),
+                'target': cpl.target_nilai,
+            })
+        return request.render('erpobe.triton_teacher_analysis_page', {
+            'analysis': analysis,
+            'cpl_analysis': cpl_analysis,
+            'pagination': pagination,
+            'list_action': '/my/analisis',
+        })

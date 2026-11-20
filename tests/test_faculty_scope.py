@@ -559,7 +559,7 @@ class TestErpObeFacultyScope(TransactionCase):
         Kegiatan.create({**kegiatan_values, "cpmk_id": cpmk_a.id})
 
         komponen = self.env["erpobe.akademik.komponen"].create(
-            {"name": "Komponen Uji", "tipe": "kognitif"}
+            {"name": "Komponen Uji", "tipe": "assignment"}
         )
         Bobot = self.env["erpobe.bobot.komponen.cpmk"]
         bobot_values = {

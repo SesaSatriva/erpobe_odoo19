@@ -61,6 +61,13 @@
                                 </form>
                             </field>
                         </page>
+                        <page string="Pemetaan Mata Kuliah–CPL">
+                            <field name="mk_mapping_ids">
+                                <list editable="bottom">
+                                    <field name="mk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                                </list>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
             </form>

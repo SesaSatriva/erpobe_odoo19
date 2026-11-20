@@ -1,5 +1,7 @@
 from odoo import models
 
+from ..models.akademik_komponen import ASSESSMENT_TYPE_SELECTION
+
 
 class ErpObeImportKomponenWizard(models.TransientModel):
     _name = "erpobe.wizard.import.komponen"
@@ -19,15 +21,12 @@ class ErpObeImportKomponenWizard(models.TransientModel):
         },
         {
             "name": "tipe",
-            "label": "Tipe Komponen",
+            "label": "Jenis Aktivitas Penilaian",
             "type": "selection",
-            "selection": [
-                ("kognitif", "Kognitif"),
-                ("partisipatif", "Partisipatif"),
-            ],
+            "selection": ASSESSMENT_TYPE_SELECTION,
             "required": True,
-            "example": "Kognitif",
-            "description": "Pilih Kognitif atau Partisipatif.",
+            "example": "quiz",
+            "description": "Pilih aktivitas penilaian; untuk Lainnya, jelaskan nama aktivitas pada kolom Nama Komponen.",
         },
         {
             "name": "aktif",

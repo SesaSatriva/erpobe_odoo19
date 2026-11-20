@@ -232,7 +232,7 @@ class TestErpObeFacultyImportExport(TransactionCase):
         komponen = self.env["erpobe.akademik.komponen"].create(
             {
                 "name": "Komponen Round Trip",
-                "tipe": "kognitif",
+                "tipe": "assignment",
                 "aktif": True,
                 "color": 0,
             }

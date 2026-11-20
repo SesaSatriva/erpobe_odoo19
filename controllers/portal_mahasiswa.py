@@ -94,10 +94,22 @@ class TritonPortalMahasiswa(TritonPortalBase):
         for line in krs_lines:
             final_rps = line.penawaran_line_id.rps_ids.filtered(lambda record: record.status == 'final').sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]
             component_grades = request.env['erpobe.grade.komponen'].sudo().search([('krs_line_id', '=', line.id)])
-            subcpmk_grades = request.env['erpobe.grade.subcpmk'].sudo().search(
-                [('krs_line_id', '=', line.id)]
-            ).sorted(key=lambda grade: (grade.subcpmk_id.minggu, grade.subcpmk_id.id))
-            courses.append({'name': line.matakuliah_id.name, 'code': line.matakuliah_id.kode_mk, 'sks': line.sks, 'year': line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran, 'semester': line.penawaran_line_id.tahun_ajaran_id.semester, 'rps': bool(final_rps), 'components': [{'name': grade.komponen_id.name, 'score': grade.nilai} for grade in component_grades], 'cpmk': [{'name': cpmk.name, 'description': cpmk.name} for cpmk in (final_rps.cpmk_ids if final_rps else [])], 'subcpmk': [{'week': grade.subcpmk_id.minggu, 'name': grade.subcpmk_id.name, 'score': grade.nilai, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in subcpmk_grades]})
+            courses.append({
+                'name': line.matakuliah_id.name,
+                'code': line.matakuliah_id.kode_mk,
+                'sks': line.sks,
+                'year': line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran,
+                'semester': line.penawaran_line_id.tahun_ajaran_id.semester,
+                'rps': bool(final_rps),
+                'components': [
+                    {'name': grade.komponen_id.name, 'score': grade.nilai}
+                    for grade in component_grades
+                ],
+                'cpmk': [
+                    {'name': cpmk.kode_cpmk, 'description': cpmk.name}
+                    for cpmk in (final_rps.cpmk_ids if final_rps else [])
+                ],
+            })
         return request.render('erpobe.triton_student_courses_page', {'courses': courses, 'pagination': pagination, 'list_action': '/my/mata-kuliah'})
 
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)

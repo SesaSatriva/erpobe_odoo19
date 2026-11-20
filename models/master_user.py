@@ -828,6 +828,7 @@ class ErpobeMahasiswa(models.Model):
 
     grade_komponen_ids = fields.One2many("erpobe.grade.komponen", "mahasiswa_id")
     grade_cpmk_ids = fields.One2many("erpobe.grade.cpmk", "mahasiswa_id")
+    grade_mk_ids = fields.One2many("erpobe.grade.mk", "mahasiswa_id")
 
     _nim_unique = models.Constraint("UNIQUE (nim)", "NIM tidak boleh duplikat.")
 

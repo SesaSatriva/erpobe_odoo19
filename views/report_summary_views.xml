@@ -1,5 +1,34 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
+    <record id="view_erpobe_summary_cpmk_search" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpmk.search</field>
+        <field name="model">erpobe.summary.cpmk</field>
+        <field name="arch" type="xml">
+            <search string="Analisis CPMK">
+                <field name="angkatan"/>
+                <field name="rombel_id"/>
+                <field name="prodi_id"/>
+                <field name="mk_id"/>
+                <field name="cpmk_id"/>
+                <filter name="group_by_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+                <filter name="group_by_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_cpl_search" model="ir.ui.view">
+        <field name="name">erpobe.summary.cpl.search</field>
+        <field name="model">erpobe.summary.cpl</field>
+        <field name="arch" type="xml">
+            <search string="Analisis CPL">
+                <field name="angkatan"/>
+                <field name="rombel_id"/>
+                <field name="prodi_id"/>
+                <field name="cpl_id"/>
+                <filter name="group_by_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+                <filter name="group_by_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+            </search>
+        </field>
+    </record>
     <record id="view_erpobe_summary_mk_list" model="ir.ui.view">
         <field name="name">erpobe.summary.mk.list</field>
         <field name="model">erpobe.summary.mk</field>
@@ -159,11 +188,13 @@
         <field name="name">Analisis CPMK</field>
         <field name="res_model">erpobe.summary.cpmk</field>
         <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_erpobe_summary_cpmk_search"/>
     </record>
     <record id="action_erpobe_summary_cpl" model="ir.actions.act_window">
         <field name="name">Analisis CPL</field>
         <field name="res_model">erpobe.summary.cpl</field>
         <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_erpobe_summary_cpl_search"/>
     </record>
     <record id="action_erpobe_summary_komponen" model="ir.actions.act_window">
         <field name="name">Analisis Komponen</field>

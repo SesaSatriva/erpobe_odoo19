@@ -16,11 +16,19 @@ class ErpObeGradeCpl(models.Model):
     )
 
     nilai_cpl = fields.Float(compute="_compute_nilai_cpl", store=True, digits=(16, 2))
+    is_available = fields.Boolean(
+        string="Data Tersedia", compute="_compute_nilai_cpl", store=True
+    )
     target_nilai = fields.Float(
         related="cpl_id.target_nilai", store=True, readonly=True
     )
     status_capaian = fields.Selection(
-        [("tercapai", "Tercapai"), ("belum", "Belum Tercapai")],
+        [
+            ("belum_tersedia", "Belum Tersedia"),
+            ("dalam_proses", "Dalam Proses"),
+            ("tercapai", "Tercapai"),
+            ("belum", "Belum Tercapai"),
+        ],
         compute="_compute_status_capaian",
         store=True,
         string="Status Capaian",
@@ -36,91 +44,102 @@ class ErpObeGradeCpl(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.depends("nilai_cpl", "target_nilai")
+    @api.depends(
+        "nilai_cpl",
+        "target_nilai",
+        "is_available",
+        "cpl_id.cpmk_mapping_ids.cpmk_id",
+    )
     def _compute_status_capaian(self):
-        for record in self:
-            record.status_capaian = (
-                "tercapai" if record.nilai_cpl >= record.target_nilai else "belum"
-            )
-
-    @api.depends("mahasiswa_id.grade_cpmk_ids.nilai_cpmk")
-    def _compute_nilai_cpl(self):
-        BobotCpmkCpl = self.env["erpobe.bobot.cpmk.cpl"]
-        GradeCpmk = self.env["erpobe.grade.cpmk"]
-
-        exact_records = self.filtered(lambda grade: grade.rps_id and grade.krs_line_id)
-        for rec in exact_records:
-            mapped_cpmks = rec.cpl_id.cpmk_mapping_ids.mapped("cpmk_id")
-            grades = GradeCpmk.search([
-                ("mahasiswa_id", "=", rec.mahasiswa_id.id),
-                ("krs_line_id", "=", rec.krs_line_id.id),
-                ("rps_id", "=", rec.rps_id.id),
-                ("cpmk_id", "in", mapped_cpmks.ids),
-            ])
-            assessed = grades.filtered(lambda grade: grade.nilai_cpmk is not False)
-            rec.nilai_cpl = (
-                sum(assessed.mapped("nilai_cpmk")) / len(assessed)
-                if assessed else 0.0
-            )
-
-        legacy_records = self.filtered(lambda grade: not grade.rps_id or not grade.krs_line_id)
-        if not legacy_records:
-            return
-
-        cpl_ids = legacy_records.mapped("cpl_id")
-        
-        # 1. Ambil Peta Bobot (Mapping CPL -> CPMK & Bobotnya)
-        bobot_lines = BobotCpmkCpl.search([("cpl_id", "in", cpl_ids.ids)])
-
-        weight_map = {}
-        relevant_cpmk_ids = set()
-
-        for b in bobot_lines:
-            cpl_id = b.cpl_id.id
-            cpmk_id = b.cpmk_id.id
-            bobot = b.bobot_cpmk_cpl
-
-            if cpl_id not in weight_map:
-                weight_map[cpl_id] = {}
-
-            weight_map[cpl_id][cpmk_id] = bobot
-            relevant_cpmk_ids.add(cpmk_id)
-
-        # 2. Ambil Nilai Mahasiswa yang Relevan
-        mhs_ids = legacy_records.mapped("mahasiswa_id")
-        cpmk_grades = GradeCpmk.search([
-            ("mahasiswa_id", "in", mhs_ids.ids),
-            ("cpmk_id", "in", list(relevant_cpmk_ids)),
+        unavailable = self.filtered(lambda record: not record.is_available)
+        student_ids = unavailable.mapped("mahasiswa_id").ids
+        cpls = unavailable.mapped("cpl_id")
+        mappings = self.env["erpobe.akademik.cpl.mk.cpmk"].search([
+            ("cpl_id", "in", cpls.ids),
         ])
+        mapping_map = {}
+        for mapping in mappings:
+            mapping_map.setdefault(mapping.cpl_id.id, set()).add(
+                mapping.cpmk_id.mk_id.id
+            )
 
-        student_map = {}
-        for g in cpmk_grades:
-            mhs_id = g.mahasiswa_id.id
-            if mhs_id not in student_map:
-                student_map[mhs_id] = {}
-            # Catatan: Jika ada duplikat nilai CPMK (mengulang), pastikan logic ambil yg terbaru/tertinggi
-            # Kode ini mengambil record terakhir yang ditemukan (default Odoo order)
-            student_map[mhs_id][g.cpmk_id.id] = g.nilai_cpmk
+        all_course_ids = set().union(*mapping_map.values()) if mapping_map else set()
+        enrolled = self.env["erpobe.akademik.krs.line"].search([
+            ("mahasiswa_id", "in", student_ids),
+            ("matakuliah_id", "in", list(all_course_ids)),
+        ])
+        enrolled_pairs = {
+            (line.mahasiswa_id.id, line.matakuliah_id.id) for line in enrolled
+        }
 
-        # 3. Hitung nilai hanya dari CPMK yang sudah diambil mahasiswa.
-        for rec in legacy_records:
-            rec.nilai_cpl = 0.0
+        for record in self:
+            if not record.is_available:
+                contributing_course_ids = mapping_map.get(record.cpl_id.id, set())
+                record.status_capaian = (
+                    "dalam_proses"
+                    if any(
+                        (record.mahasiswa_id.id, course_id)
+                        in enrolled_pairs
+                        for course_id in contributing_course_ids
+                    )
+                    else "belum_tersedia"
+                )
+            elif record.nilai_cpl >= record.target_nilai:
+                record.status_capaian = "tercapai"
+            else:
+                record.status_capaian = "belum"
 
-            cpl_weights = weight_map.get(rec.cpl_id.id, {})
-            student_scores = student_map.get(rec.mahasiswa_id.id, {})
-            assessed_weights = {
-                cpmk_id: bobot
-                for cpmk_id, bobot in cpl_weights.items()
-                if cpmk_id in student_scores
-            }
-            total_bobot_pembagi = sum(assessed_weights.values())
-            if not assessed_weights or not total_bobot_pembagi:
-                continue
+    @api.depends(
+        "mahasiswa_id.grade_cpmk_ids.cpmk_id",
+        "mahasiswa_id.grade_cpmk_ids.nilai_cpmk",
+        "mahasiswa_id.grade_cpmk_ids.is_available",
+        "cpl_id.cpmk_mapping_ids.cpmk_id",
+        "cpl_id.mk_mapping_ids.mk_id",
+    )
+    def _compute_nilai_cpl(self):
+        GradeCpmk = self.env["erpobe.grade.cpmk"]
+        course_mappings = self.env["erpobe.akademik.mk.cpl"].search([
+            ("cpl_id", "in", self.mapped("cpl_id").ids),
+        ])
+        mapped_courses_by_cpl = {}
+        for mapping in course_mappings:
+            mapped_courses_by_cpl.setdefault(mapping.cpl_id.id, set()).add(
+                mapping.mk_id.id
+            )
 
-            total_score_tertimbang = 0.0
-            for cpmk_id, bobot in assessed_weights.items():
-                total_score_tertimbang += student_scores[cpmk_id] * bobot
-            rec.nilai_cpl = total_score_tertimbang / total_bobot_pembagi
+        cpmk_mappings = self.env["erpobe.akademik.cpl.mk.cpmk"].search([
+            ("cpl_id", "in", self.mapped("cpl_id").ids),
+        ])
+        cpmk_ids = cpmk_mappings.mapped("cpmk_id").ids
+        grade_cpmks = GradeCpmk.search([
+            ("mahasiswa_id", "in", self.mapped("mahasiswa_id").ids),
+            ("cpmk_id", "in", cpmk_ids),
+            ("is_available", "=", True),
+        ])
+        grade_map = {
+            (grade.mahasiswa_id.id, grade.cpmk_id.id): grade
+            for grade in grade_cpmks
+        }
+        mappings_by_cpl = {}
+        for mapping in cpmk_mappings:
+            mappings_by_cpl.setdefault(mapping.cpl_id.id, []).append(mapping)
+
+        for rec in self:
+            total = 0.0
+            count = 0
+            mapped_course_ids = mapped_courses_by_cpl.get(rec.cpl_id.id)
+            for mapping in mappings_by_cpl.get(rec.cpl_id.id, []):
+                cpmk = mapping.cpmk_id
+                if mapped_course_ids and cpmk.mk_id.id not in mapped_course_ids:
+                    continue
+                grade = grade_map.get((rec.mahasiswa_id.id, cpmk.id))
+                if not grade:
+                    continue
+                total += grade.nilai_cpmk
+                count += 1
+
+            rec.is_available = bool(count)
+            rec.nilai_cpl = total / count if count else 0.0
 
     @api.constrains("mahasiswa_id", "cpl_id")
     def _check_grade_faculty(self):
@@ -166,6 +185,7 @@ class ErpObeGradeCplRombel(models.Model):
                 FROM erpobe_grade_cpl gc
                 JOIN erpobe_master_mahasiswa m ON m.id = gc.mahasiswa_id
                 JOIN erpobe_master_rombel r ON r.id = m.rombel_id
+                WHERE gc.is_available IS TRUE
                 GROUP BY m.rombel_id, m.prodi_id, r.fakultas_id, gc.cpl_id
             )
         """)
@@ -199,6 +219,7 @@ class ErpObeGradeCplAngkatan(models.Model):
                 JOIN erpobe_master_mahasiswa m ON m.id = gc.mahasiswa_id
                 JOIN erpobe_master_rombel r ON r.id = m.rombel_id
                 JOIN erpobe_akademik_cpl cpl ON cpl.id = gc.cpl_id
+                WHERE gc.is_available IS TRUE
                 GROUP BY r.angkatan, cpl.prodi_id, gc.cpl_id
             )
         """)

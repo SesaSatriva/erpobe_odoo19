@@ -106,6 +106,7 @@ class ErpObeSummaryCpmk(models.Model):
                 JOIN erpobe_master_mahasiswa m ON g.mahasiswa_id = m.id
                 JOIN erpobe_master_rombel r ON m.rombel_id = r.id
                 JOIN erpobe_akademik_cpmk c ON g.cpmk_id = c.id
+                WHERE g.is_available IS TRUE
             )
         """
             % self._table
@@ -139,6 +140,7 @@ class ErpObeSummaryCpl(models.Model):
                 FROM erpobe_grade_cpl g
                 JOIN erpobe_master_mahasiswa m ON g.mahasiswa_id = m.id
                 JOIN erpobe_master_rombel r ON m.rombel_id = r.id
+                WHERE g.is_available IS TRUE
             )
         """
             % self._table

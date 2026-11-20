@@ -3,14 +3,6 @@ access_curriculum_settings,erpobe.akademik.kurikulum settings,model_erpobe_akade
 access_curriculum_admin,erpobe.akademik.kurikulum admin,model_erpobe_akademik_kurikulum,erpobe.group_admin,1,1,1,1
 access_curriculum_dosen,erpobe.akademik.kurikulum dosen,model_erpobe_akademik_kurikulum,erpobe.group_dosen,1,0,0,0
 access_curriculum_mahasiswa,erpobe.akademik.kurikulum mahasiswa,model_erpobe_akademik_kurikulum,erpobe.group_mahasiswa,1,0,0,0
-access_subcpmk_settings,erpobe.akademik.subcpmk settings,model_erpobe_akademik_subcpmk,base.group_system,1,1,1,1
-access_subcpmk_admin,erpobe.akademik.subcpmk admin,model_erpobe_akademik_subcpmk,erpobe.group_admin,1,1,1,1
-access_subcpmk_dosen,erpobe.akademik.subcpmk dosen,model_erpobe_akademik_subcpmk,erpobe.group_dosen,1,1,1,1
-access_subcpmk_mahasiswa,erpobe.akademik.subcpmk mahasiswa,model_erpobe_akademik_subcpmk,erpobe.group_mahasiswa,1,0,0,0
-access_subcpmk_result_settings,erpobe.grade.subcpmk settings,model_erpobe_grade_subcpmk,base.group_system,1,1,1,1
-access_subcpmk_result_admin,erpobe.grade.subcpmk admin,model_erpobe_grade_subcpmk,erpobe.group_admin,1,1,1,1
-access_subcpmk_result_dosen,erpobe.grade.subcpmk dosen,model_erpobe_grade_subcpmk,erpobe.group_dosen,1,0,0,0
-access_subcpmk_result_mahasiswa,erpobe.grade.subcpmk mahasiswa,model_erpobe_grade_subcpmk,erpobe.group_mahasiswa,1,0,0,0
 access_fixture_source_settings,erpobe.akademik.fixture.source settings,model_erpobe_akademik_fixture_source,base.group_system,1,1,1,1
 access_fixture_source_admin,erpobe.akademik.fixture.source admin,model_erpobe_akademik_fixture_source,erpobe.group_admin,1,1,1,1
 access_partner_admin,access.partner.admin,base.model_res_partner,erpobe.group_admin,1,1,1,1
@@ -24,6 +16,10 @@ access_erpobe_akademik_cpl_mk_cpmk_settings,erpobe.akademik.cpl.mk.cpmk settings
 access_cpl_mk_cpmk_admin,access.cpl.mk.cpmk.admin,model_erpobe_akademik_cpl_mk_cpmk,erpobe.group_admin,1,1,1,1
 access_cpl_mk_cpmk_dosen,access.cpl.mk.cpmk.dosen,model_erpobe_akademik_cpl_mk_cpmk,erpobe.group_dosen,1,1,1,1
 access_cpl_mk_cpmk_mahasiswa,access.cpl.mk.cpmk.mahasiswa,model_erpobe_akademik_cpl_mk_cpmk,erpobe.group_mahasiswa,1,0,0,0
+access_mk_cpl_settings,erpobe.akademik.mk.cpl settings,model_erpobe_akademik_mk_cpl,base.group_system,1,1,1,1
+access_mk_cpl_admin,erpobe.akademik.mk.cpl admin,model_erpobe_akademik_mk_cpl,erpobe.group_admin,1,1,1,1
+access_mk_cpl_dosen,erpobe.akademik.mk.cpl dosen,model_erpobe_akademik_mk_cpl,erpobe.group_dosen,1,1,1,1
+access_mk_cpl_mahasiswa,erpobe.akademik.mk.cpl mahasiswa,model_erpobe_akademik_mk_cpl,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_akademik_cpmk_settings,erpobe.akademik.cpmk settings,model_erpobe_akademik_cpmk,base.group_system,1,1,1,1
 access_cpmk_admin,access.cpmk.admin,model_erpobe_akademik_cpmk,erpobe.group_admin,1,1,1,1
 access_cpmk_dosen,access.cpmk.dosen,model_erpobe_akademik_cpmk,erpobe.group_dosen,1,1,1,1
@@ -80,10 +76,6 @@ access_erpobe_akademik_tahunajaran_settings,erpobe.akademik.tahunajaran settings
 access_erpobe_tahunajaran_admin,erpobe.tahunajaran admin,model_erpobe_akademik_tahunajaran,erpobe.group_admin,1,1,1,1
 access_erpobe_tahunajaran_dosen,erpobe.tahunajaran dosen,model_erpobe_akademik_tahunajaran,erpobe.group_dosen,1,0,0,0
 access_erpobe_tahunajaran_mahasiswa,erpobe.tahunajaran mahasiswa,model_erpobe_akademik_tahunajaran,erpobe.group_mahasiswa,1,0,0,0
-access_erpobe_bobot_cpmk_cpl_settings,erpobe.bobot.cpmk.cpl settings,model_erpobe_bobot_cpmk_cpl,base.group_system,1,1,1,1
-access_bobot_cpmk_cpl_admin,access.bobot.cpmk.cpl.admin,model_erpobe_bobot_cpmk_cpl,erpobe.group_admin,1,1,1,1
-access_bobot_cpmk_cpl_dosen,access.bobot.cpmk.cpl.dosen,model_erpobe_bobot_cpmk_cpl,erpobe.group_dosen,1,1,1,1
-access_bobot_cpmk_cpl_mahasiswa,access.bobot.cpmk.cpl.mahasiswa,model_erpobe_bobot_cpmk_cpl,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_bobot_cpmk_mk_settings,erpobe.bobot.cpmk.mk settings,model_erpobe_bobot_cpmk_mk,base.group_system,1,1,1,1
 access_bobot_cpmk_mk_admin,access.bobot.cpmk.mk.admin,model_erpobe_bobot_cpmk_mk,erpobe.group_admin,1,1,1,1
 access_bobot_cpmk_mk_dosen,access.bobot.cpmk.mk.dosen,model_erpobe_bobot_cpmk_mk,erpobe.group_dosen,1,1,1,1
@@ -206,6 +198,10 @@ access_erpobe_report_khs_cpl_settings,erpobe.report.khs.cpl settings,model_erpob
 access_erpobe_report_khs_cpl_admin,access.erpobe.report.khs.cpl.admin,model_erpobe_report_khs_cpl,erpobe.group_admin,1,1,1,1
 access_erpobe_report_khs_cpl_dosen,access.erpobe.report.khs.cpl.dosen,model_erpobe_report_khs_cpl,erpobe.group_dosen,1,1,1,1
 access_erpobe_report_khs_cpl_mahasiswa,access.erpobe.report.khs.cpl.mahasiswa,model_erpobe_report_khs_cpl,erpobe.group_mahasiswa,1,0,0,0
+access_erpobe_report_khs_komponen_settings,erpobe.report.khs.komponen settings,model_erpobe_report_khs_komponen,base.group_system,1,1,1,1
+access_erpobe_report_khs_komponen_admin,erpobe.report.khs.komponen.admin,model_erpobe_report_khs_komponen,erpobe.group_admin,1,1,1,1
+access_erpobe_report_khs_komponen_dosen,erpobe.report.khs.komponen.dosen,model_erpobe_report_khs_komponen,erpobe.group_dosen,1,0,0,0
+access_erpobe_report_khs_komponen_mahasiswa,erpobe.report.khs.komponen.mahasiswa,model_erpobe_report_khs_komponen,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_report_khs_cpmk_settings,erpobe.report.khs.cpmk settings,model_erpobe_report_khs_cpmk,base.group_system,1,1,1,1
 access_erpobe_report_khs_cpmk_admin,access.erpobe.report.khs.cpmk.admin,model_erpobe_report_khs_cpmk,erpobe.group_admin,1,1,1,1
 access_erpobe_report_khs_cpmk_dosen,access.erpobe.report.khs.cpmk.dosen,model_erpobe_report_khs_cpmk,erpobe.group_dosen,1,1,1,1

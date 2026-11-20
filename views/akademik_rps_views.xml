@@ -82,21 +82,76 @@
                         <field name="deskripsi_mk" nolabel="1"/>
                     </group>
                     <notebook>
-                        <page string="Capaian Pembelajaran">
+                        <page string="1 — Informasi Umum">
                             <group>
-                                <field name="cpmk_ids" widget="many2many_tags"/>
-                                <field name="cpl_ids" widget="many2many_tags"/>
+                                <group>
+                                    <field name="kode_mk" readonly="1"/>
+                                    <field name="matakuliah_id"/>
+                                    <field name="sks" readonly="1"/>
+                                    <field name="semester" readonly="1"/>
+                                    <field name="tahun_ajaran_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="koordinator_id" readonly="1"/>
+                                    <field name="tim_pengampu_ids" widget="many2many_tags" readonly="1"/>
+                                    <field name="mk_prasyarat_ids" widget="many2many_tags" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Deskripsi dan Tujuan">
+                                <field name="deskripsi_mk"/>
+                                <field name="tujuan_pembelajaran"/>
                             </group>
                         </page>
-                        <page string="Komponen Penilaian">
-                            <field name="komponen_ids" widget="many2many_tags"/>
+                        <page string="2 — Capaian Pembelajaran">
+                            <group>
+                                <field name="cpl_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="cpmk_ids" widget="many2many_tags"/>
+                            </group>
+                            <field name="cpmk_ids" mode="list" readonly="1">
+                                <list>
+                                    <field name="kode_cpmk"/>
+                                    <field name="name"/>
+                                    <field name="target_nilai"/>
+                                </list>
+                            </field>
+                            <separator string="Pemetaan Mata Kuliah terhadap CPL"/>
+                            <field name="mk_cpl_mapping_ids">
+                                <list create="0" edit="0" delete="0">
+                                    <field name="cpl_id"/>
+                                </list>
+                            </field>
                         </page>
-                        <page string="Kegiatan Mingguan">
+                        <page string="3 — Komponen Penilaian">
+                            <field name="rps_komponen_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="tipe"/>
+                                    <field name="description"/>
+                                    <field name="bobot"/>
+                                    <field name="aktif"/>
+                                    <field name="allocation_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                            <field name="bobot_komponen_cpmk_ids">
+                                <list editable="bottom">
+                                    <field name="rps_komponen_id"/>
+                                    <field name="cpmk_id"/>
+                                    <field name="bobot_komponen_cpmk"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="4 — Referensi dan Materi">
+                            <group>
+                                <field name="referensi_ids" widget="many2many_tags"/>
+                                <field name="materi_pembelajaran"/>
+                                <field name="sumber_belajar"/>
+                            </group>
+                            <separator string="Kegiatan Mingguan"/>
                             <field name="kegiatan_perkuliahan_ids">
                                 <list editable="bottom">
                                     <field name="minggu"/>
                                     <field name="cpmk_id"/>
-                                    <field name="subcpmk_id"/>
                                     <field name="bahan_kajian"/>
                                     <field name="metode_pembelajaran_id" domain="['|', ('prodi_id', '=', False), ('prodi_id', '=', parent.prodi_id)]"/>
                                     <field name="estimasi_waktu"/>
@@ -107,7 +162,6 @@
                                         <group>
                                             <field name="minggu"/>
                                             <field name="cpmk_id"/>
-                                            <field name="subcpmk_id"/>
                                             <field name="metode_pembelajaran_id" domain="['|', ('prodi_id', '=', False), ('prodi_id', '=', parent.prodi_id)]"/>
                                             <field name="estimasi_waktu"/>
                                         </group>
@@ -164,32 +218,26 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Bobot CPMK-CPL">
-                            <field name="bobot_cpmk_cpl_ids">
-                                <list editable="bottom">
-                                    <field name="cpl_id"/>
-                                    <field name="cpmk_id"/>
-                                    <field name="bobot_cpmk_cpl"/>
-                                    <field name="total_cpmk" readonly="1"/>
-                                    <field name="remaining_cpmk" readonly="1"/>
-                                    <field name="weight_status_cpmk" widget="badge" readonly="1"/>
-                                    <field name="total_cpl" readonly="1"/>
-                                    <field name="remaining_cpl" readonly="1"/>
-                                    <field name="weight_status_cpl" widget="badge" readonly="1"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Bobot Komponen-CPMK">
-                            <field name="bobot_komponen_cpmk_ids">
-                                <list editable="bottom">
-                                    <field name="cpmk_id"/>
-                                    <field name="komponen_penilaian"/>
-                                    <field name="bobot_komponen_cpmk"/>
-                                    <field name="total_bobot" readonly="1"/>
-                                    <field name="remaining_bobot" readonly="1"/>
-                                    <field name="weight_status" widget="badge" readonly="1"/>
-                                </list>
-                            </field>
+                        <page string="5 — Ringkasan dan Finalisasi">
+                            <group>
+                                <field name="status" readonly="1"/>
+                                <field name="weight_status" widget="badge" readonly="1"/>
+                                <field name="weight_issue_count" readonly="1"/>
+                            </group>
+                            <group string="Ringkasan Konfigurasi">
+                                <field name="cpl_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="cpmk_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="rps_komponen_ids" readonly="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="bobot"/>
+                                        <field name="aktif"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <button name="action_mark_for_review" type="object" string="Simpan dan Tinjau" invisible="status != 'draft'"/>
+                            <button name="action_finalize" type="object" string="Finalisasi" class="oe_highlight" invisible="status != 'review'"/>
+                            <button name="action_revise" type="object" string="Buat Revisi" invisible="status != 'final'"/>
                         </page>
                     </notebook>
                 </sheet>

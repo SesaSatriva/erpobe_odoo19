@@ -57,3 +57,43 @@ class ErpObeAkademikCplMkCpmk(models.Model):
         result = super().unlink()
         self._sync_rps_weights(affected_cpmks)
         return result
+
+
+class ErpObeAkademikMkCpl(models.Model):
+    _name = "erpobe.akademik.mk.cpl"
+    _description = "Matriks Pemetaan Mata Kuliah terhadap CPL"
+    _rec_name = "cpl_id"
+
+    mk_id = fields.Many2one(
+        "erpobe.master.matakuliah",
+        string="Mata Kuliah",
+        required=True,
+        ondelete="cascade",
+        index=True,
+    )
+    cpl_id = fields.Many2one(
+        "erpobe.akademik.cpl",
+        string="CPL",
+        required=True,
+        ondelete="cascade",
+        index=True,
+    )
+    prodi_id = fields.Many2one(
+        related="mk_id.prodi_id",
+        store=True,
+        readonly=True,
+        index=True,
+    )
+
+    _uniq_mk_cpl_constraint = models.Constraint(
+        "UNIQUE(mk_id, cpl_id)",
+        "Pemetaan Mata Kuliah-CPL tidak boleh duplikat.",
+    )
+
+    @api.constrains("mk_id", "cpl_id")
+    def _check_mk_cpl_prodi(self):
+        for record in self:
+            if record.mk_id.prodi_id != record.cpl_id.prodi_id:
+                raise ValidationError(
+                    "Mata kuliah dan CPL harus berasal dari prodi yang sama."
+                )

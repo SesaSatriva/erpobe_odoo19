@@ -78,44 +78,20 @@ class ErpObeWeightValidation(models.AbstractModel):
                         rps_komponen_id=component.id,
                     )
                 )
+            mk_total = sum(rps.bobot_cpmk_mk_ids.mapped("bobot_cpmk_mk"))
+            status, difference = _weight_status(mk_total)
+            groups.append(
+                self._group_result(
+                    rps,
+                    "cpmk_mk",
+                    rps.matakuliah_id.display_name,
+                    mk_total,
+                    difference,
+                    status,
+                    mk_id=rps.matakuliah_id.id,
+                )
+            )
             return groups
-
-        for cpmk in rps.cpmk_ids:
-            lines = rps.bobot_cpmk_cpl_ids.filtered(
-                lambda line: line.cpmk_id == cpmk
-            )
-            total = sum(lines.mapped("bobot_cpmk_cpl"))
-            status, difference = _weight_status(total)
-            groups.append(
-                self._group_result(
-                    rps,
-                    "cpmk_cpl",
-                    cpmk.display_name,
-                    total,
-                    difference,
-                    status,
-                    cpmk_id=cpmk.id,
-                    cpl_ids=lines.mapped("cpl_id").ids,
-                )
-            )
-
-        for cpl in rps.cpl_ids:
-            lines = rps.bobot_cpmk_cpl_ids.filtered(
-                lambda line: line.cpl_id == cpl
-            )
-            total = sum(lines.mapped("bobot_cpmk_cpl"))
-            status, difference = _weight_status(total)
-            groups.append(
-                self._group_result(
-                    rps,
-                    "cpl_cpmk",
-                    cpl.display_name,
-                    total,
-                    difference,
-                    status,
-                    cpl_id=cpl.id,
-                )
-            )
 
         mk_total = sum(rps.bobot_cpmk_mk_ids.mapped("bobot_cpmk_mk"))
         status, difference = _weight_status(mk_total)

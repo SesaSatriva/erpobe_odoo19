@@ -1,2 +1,47 @@
-<?xml version='1.0' encoding='utf-8'?>
-<odoo noupdate="1"><record id="komponen_kognitif" model="erpobe.akademik.komponen"><field name="name">Penilaian Kognitif</field><field name="tipe">kognitif</field></record><record id="komponen_partisipatif" model="erpobe.akademik.komponen"><field name="name">Penilaian Partisipatif</field><field name="tipe">partisipatif</field></record><record id="fixture_component_project" model="erpobe.akademik.komponen"><field name="name">Penilaian Proyek</field><field name="tipe">partisipatif</field></record><record id="fixture_component_exam" model="erpobe.akademik.komponen"><field name="name">Ujian Akhir</field><field name="tipe">kognitif</field></record></odoo>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="komponen_kognitif" model="erpobe.akademik.komponen">
+        <field name="name">Tugas</field>
+        <field name="tipe">assignment</field>
+    </record>
+    <record id="komponen_partisipatif" model="erpobe.akademik.komponen">
+        <field name="name">Kehadiran</field>
+        <field name="tipe">attendance</field>
+    </record>
+    <record id="fixture_component_project" model="erpobe.akademik.komponen">
+        <field name="name">Proyek</field>
+        <field name="tipe">project</field>
+    </record>
+    <record id="fixture_component_exam" model="erpobe.akademik.komponen">
+        <field name="name">UAS</field>
+        <field name="tipe">final_exam</field>
+    </record>
+    <record id="fixture_component_quiz" model="erpobe.akademik.komponen">
+        <field name="name">Kuis</field>
+        <field name="tipe">quiz</field>
+    </record>
+    <record id="fixture_component_midterm" model="erpobe.akademik.komponen">
+        <field name="name">UTS</field>
+        <field name="tipe">midterm</field>
+    </record>
+    <record id="fixture_component_presentation" model="erpobe.akademik.komponen">
+        <field name="name">Presentasi</field>
+        <field name="tipe">presentation</field>
+    </record>
+    <record id="fixture_component_practicum" model="erpobe.akademik.komponen">
+        <field name="name">Praktikum</field>
+        <field name="tipe">practicum</field>
+    </record>
+    <record id="fixture_component_case_study" model="erpobe.akademik.komponen">
+        <field name="name">Studi Kasus</field>
+        <field name="tipe">case_study</field>
+    </record>
+    <record id="fixture_component_tbp" model="erpobe.akademik.komponen">
+        <field name="name">TBP</field>
+        <field name="tipe">tbp</field>
+    </record>
+    <record id="fixture_component_other" model="erpobe.akademik.komponen">
+        <field name="name">Aktivitas Penilaian Khusus</field>
+        <field name="tipe">other</field>
+    </record>
+</odoo>

@@ -342,9 +342,11 @@ class ErpObeGradeKomponen(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        vals_list = [dict(values) for values in vals_list]
+        reasons = [values.pop("audit_reason", "") for values in vals_list]
         records = super().create(vals_list)
         Audit = self.env["erpobe.grade.komponen.audit"].sudo()
-        for grade in records:
+        for grade, reason in zip(records, reasons):
             if grade.nilai:
                 Audit.create({
                     "grade_id": grade.id,
@@ -355,7 +357,7 @@ class ErpObeGradeKomponen(models.Model):
                     "user_id": self.env.user.id,
                     "old_value": 0.0,
                     "new_value": grade.nilai,
-                    "reason": "Initial grade entry",
+                    "reason": reason or "Initial grade entry",
                 })
         return records
 

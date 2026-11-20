@@ -29,17 +29,7 @@
                         <div t-elif="tab in ['dosen', 'mahasiswa']" class="o_triton_panel">
                             <div t-if="privacy_disabled" class="o_triton_privacy-note">Daftar individu sedang dinonaktifkan administrator. Statistik agregat program studi tetap tersedia.</div>
                             <t t-else="">
-                                <form class="o_triton_filter-form" t-att-action="'/prodi/%s' % prodi['id']" method="get">
-                                    <input type="hidden" name="tab" t-att-value="tab"/>
-                                    <label for="prodi-query">Cari nama</label><input id="prodi-query" name="q" type="search" t-att-value="query"/>
-                                    <t t-if="tab == 'mahasiswa'">
-                                        <label for="cohort-filter">Angkatan</label>
-                                        <select id="cohort-filter" name="angkatan"><option value="">Semua angkatan</option><t t-foreach="years" t-as="year"><option t-att-value="year['angkatan']" t-att-selected="angkatan_filter == str(year['angkatan'])" t-out="year['angkatan']"/></t></select>
-                                        <label for="status-filter">Status</label>
-                                        <select id="status-filter" name="status"><option value="">Semua status</option><option value="aktif" t-att-selected="status_filter == 'aktif'">Aktif</option><option value="lulus" t-att-selected="status_filter == 'lulus'">Lulus</option><option value="cuti" t-att-selected="status_filter == 'cuti'">Cuti</option></select>
-                                    </t>
-                                    <button type="submit" class="o_triton_btn">Terapkan</button>
-                                </form>
+                                <t t-call="erpobe.triton_portal_list_controls"/>
                                 <div t-if="results" class="o_triton_table-wrap">
                                     <table class="o_triton_table">
                                         <thead><tr><th>Nama</th><th t-if="tab == 'dosen'">Jabatan Fungsional</th><th t-if="tab == 'mahasiswa'">Angkatan</th><th t-if="tab == 'mahasiswa'">Status</th><th>Identitas tersamarkan</th></tr></thead>
@@ -53,17 +43,16 @@
                                     </table>
                                 </div>
                                 <div t-elif="not privacy_disabled" class="o_triton_empty"><p>Tidak ada data yang cocok dengan filter.</p></div>
-                                <nav t-if="pager and (pager['previous'] or pager['next'])" class="o_triton_pagination" aria-label="Paginasi daftar">
-                                    <a t-if="pager['previous']" t-att-href="pager['previous']">Sebelumnya</a><span>Halaman <t t-out="pager['page']"/> / <t t-out="pager['page_count']"/></span><a t-if="pager['next']" t-att-href="pager['next']">Berikutnya</a>
-                                </nav>
                                 <p class="o_triton_caption">Data identitas ditampilkan terbatas. Nilai, kontak, alamat, dan informasi sensitif tidak tersedia di area publik.</p>
                             </t>
                         </div>
                         <div t-elif="tab == 'cpl'" class="o_triton_panel">
+                            <t t-call="erpobe.triton_portal_list_controls"/>
                             <div t-if="results" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Kode</th><th>Jenis</th><th>Deskripsi CPL</th><th>CPMK pendukung</th></tr></thead><tbody><t t-foreach="results" t-as="cpl"><tr><td t-out="cpl['kode']"/><td t-out="cpl['jenis']"/><td t-out="cpl['name']"/><td><t t-foreach="cpl['cpmk']" t-as="cpmk"><span class="o_triton_badge" t-out="cpmk"/></t></td></tr></t></tbody></table></div>
                             <div t-else="" class="o_triton_empty"><p>Belum ada CPL yang terdaftar.</p></div>
                         </div>
                         <div t-elif="tab == 'mata-kuliah'" class="o_triton_panel">
+                            <t t-call="erpobe.triton_portal_list_controls"/>
                             <div t-if="results" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Tahun Ajaran</th><th>Semester</th><th>Status RPS</th></tr></thead><tbody><t t-foreach="results" t-as="course"><tr><td t-out="course['kode']"/><td t-out="course['name']"/><td t-out="course['sks']"/><td t-out="course['tahun_ajaran']"/><td t-out="course['semester']"/><td><span class="o_triton_badge o_triton_badge-success">Final</span></td></tr></t></tbody></table></div>
                             <div t-else="" class="o_triton_empty"><p>Belum ada RPS final yang dapat ditampilkan.</p></div>
                         </div>

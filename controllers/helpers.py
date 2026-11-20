@@ -12,16 +12,23 @@ from odoo import http
 from odoo.http import request
 
 from .const import _CPL_TYPES, _PAGE_SIZE, _RATE_HITS, _RATE_LIMIT, _RATE_LOCK, _RATE_WINDOW
+from .list_helpers import PAGE_SIZES, TritonListHelpers
 
 
-
-class TritonPublicHelpers:
+class TritonPublicHelpers(TritonListHelpers):
 
     def _read_domain_page(self, model_name, domain, page, serializer, order='name asc'):
         model = request.env[model_name].sudo()
+        args = request.httprequest.args
+        page_size = self._page_size(args.get("limit"))
         total = model.search_count(domain)
-        page = max(1, page)
-        records = model.search(domain, order=order, limit=_PAGE_SIZE, offset=(page - 1) * _PAGE_SIZE)
+        page = min(max(1, page), max(1, math.ceil(total / page_size)))
+        records = model.search(
+            domain,
+            order=order,
+            limit=page_size,
+            offset=(page - 1) * page_size,
+        )
         return ([serializer(record) for record in records], total)
 
     def _safe_prodi(self, record):
@@ -233,6 +240,7 @@ class TritonPublicHelpers:
             hits.append(now)
 
     def _pager(self, base, page, total, args=None, page_size=_PAGE_SIZE):
+        page_size = self._page_size(page_size)
         page_count = max(1, math.ceil(total / page_size))
         page = min(max(page, 1), page_count)
         preserved = dict(args or {})
@@ -241,7 +249,14 @@ class TritonPublicHelpers:
         def link(target):
             query = {**preserved, 'page': target}
             return f'{base}?{url_encode(query)}'
-        return {'page': page, 'page_count': page_count, 'total': total, 'previous': link(page - 1) if page > 1 else False, 'next': link(page + 1) if page < page_count else False}
+        return {'page': page, 'page_count': page_count, 'page_size': page_size, 'page_sizes': PAGE_SIZES, 'total': total, 'start': (page - 1) * page_size + 1 if total else 0, 'end': min(page * page_size, total), 'previous': link(page - 1) if page > 1 else False, 'next': link(page + 1) if page < page_count else False}
+
+    def _page_size(self, value):
+        try:
+            page_size = int(value)
+        except (TypeError, ValueError):
+            return PAGE_SIZES[0]
+        return page_size if page_size in PAGE_SIZES else PAGE_SIZES[0]
 
     def _safe_faculty(self, record):
         values = record.sudo().read(['name', 'kode'])[0]

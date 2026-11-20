@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from lxml import etree
 
 from odoo.tests import TransactionCase, tagged
@@ -5,6 +7,20 @@ from odoo.tests import TransactionCase, tagged
 
 @tagged("post_install", "-at_install")
 class TestErpObeUiViews(TransactionCase):
+    def test_owl_templates_key_foreach_loops(self):
+        template_root = Path(__file__).resolve().parents[1] / "static" / "src"
+        unkeyed_loops = []
+
+        for template_path in template_root.rglob("*.xml"):
+            arch = etree.parse(str(template_path))
+            for loop in arch.xpath("//*[@t-foreach and not(@t-key)]"):
+                unkeyed_loops.append(
+                    f"{template_path.relative_to(template_root)}: "
+                    f'{loop.get("t-foreach")}'
+                )
+
+        self.assertFalse(unkeyed_loops, "\n".join(unkeyed_loops))
+
     def test_actions_load_all_configured_views(self):
         action_data = self.env["ir.model.data"].search(
             [

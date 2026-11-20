@@ -325,12 +325,18 @@ class TestTritonKrsWorkflows(TransactionCase):
         krs_line = self.KrsLine.create(
             {"krs_id": krs.id, "penawaran_line_id": self.offer_line.id}
         )
-        self.env["erpobe.grade.komponen"].create(
+        grade_component = self.env["erpobe.grade.komponen"].create(
             {
                 "krs_line_id": krs_line.id,
                 "komponen_id": component.id,
                 "nilai": 80.0,
+                "audit_reason": "Initial assessment",
             }
+        )
+        audit_model = self.env["erpobe.grade.komponen.audit"].sudo()
+        self.assertEqual(
+            audit_model.search([("grade_id", "=", grade_component.id)], limit=1).reason,
+            "Initial assessment",
         )
         grade_cpmk = self.env["erpobe.grade.cpmk"].create(
             {"mahasiswa_id": self.student.id, "cpmk_id": cpmk.id}
@@ -352,6 +358,18 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertEqual(grade_cpmk.nilai_cpmk, 80.0)
         self.assertEqual(grade_cpl.nilai_cpl, 80.0)
         self.assertEqual(grade_mk.nilai_mk, 80.0)
+        grade_component.write({"nilai": 75.0, "audit_reason": "Verified correction"})
+        self.assertEqual(grade_cpmk.nilai_cpmk, 75.0)
+        self.assertEqual(grade_cpl.nilai_cpl, 75.0)
+        self.assertEqual(grade_mk.nilai_mk, 75.0)
+        correction = audit_model.search(
+            [("grade_id", "=", grade_component.id)],
+            order="create_date desc, id desc",
+            limit=1,
+        )
+        self.assertEqual(correction.old_value, 80.0)
+        self.assertEqual(correction.new_value, 75.0)
+        self.assertEqual(correction.reason, "Verified correction")
 
         report = self.env["erpobe.report.khs"].create(
             {"mahasiswa_id": self.student.id}

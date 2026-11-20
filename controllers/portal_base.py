@@ -5,9 +5,10 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 
+from .list_helpers import TritonListHelpers
 
 
-class TritonPortalBase(CustomerPortal):
+class TritonPortalBase(CustomerPortal, TritonListHelpers):
 
     def _teacher_lines(self, teacher):
         return request.env['erpobe.akademik.penawaran.line'].sudo().search(['|', ('matakuliah_id.koordinator_id', '=', teacher.id), ('matakuliah_id.tim_pengampu_ids', 'in', teacher.id)], order='tahun_ajaran_id desc, matakuliah_id asc')

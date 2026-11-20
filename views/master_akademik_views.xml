@@ -83,14 +83,14 @@
         <field name="model">erpobe.master.matakuliah</field>
         <field name="arch" type="xml">
             <list string="Mata Kuliah">
-                <field name="kode_mk"/>
-                <field name="name"/>
-                <field name="prodi_id"/>
-                <field name="sks"/>
-                <field name="semester"/>
-                <field name="kurikulum_id"/>
-                <field name="koordinator_id" optional="show"/>
-                <field name="weight_status" widget="badge"/>
+                <field name="kode_mk" width="100px"/>
+                <field name="name" width="220px"/>
+                <field name="prodi_id" width="140px"/>
+                <field name="sks" width="60px"/>
+                <field name="semester" width="80px"/>
+                <field name="kurikulum_id" width="180px"/>
+                <field name="koordinator_id" optional="show" width="150px"/>
+                <field name="weight_status" widget="badge" width="120px"/>
             </list>
         </field>
     </record>

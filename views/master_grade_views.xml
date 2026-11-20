@@ -34,12 +34,14 @@
                             <field name="name"/>
                         </h1>
                     </div>
-                    <group>
+                    <group string="Rentang dan Konversi">
                         <field name="nilai_min"/>
                         <field name="nilai_max"/>
                         <field name="bobot"/>
                     </group>
-                    <field name="keterangan_standar"/>
+                    <group string="Keterangan Standar">
+                        <field name="keterangan_standar" nolabel="1"/>
+                    </group>
                 </sheet>
             </form>
         </field>

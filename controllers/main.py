@@ -25,6 +25,7 @@ class TritonMain(http.Controller, TritonPublicHelpers):
             page_number = max(1, int(page))
         except (TypeError, ValueError):
             page_number = 1
+        page_size = self._page_size(request.httprequest.args.get('limit'))
         models = {'mahasiswa': ('erpobe.master.mahasiswa', self._safe_student), 'dosen': ('erpobe.master.dosen', self._safe_dosen), 'prodi': ('erpobe.master.prodi', self._safe_prodi), 'fakultas': ('erpobe.master.fakultas', self._safe_faculty), 'mata-kuliah': ('erpobe.master.matakuliah', None), 'cpl': ('erpobe.akademik.cpl', None)}
         categories = []
         for key in ('mahasiswa', 'dosen', 'prodi', 'fakultas', 'mata-kuliah', 'cpl'):
@@ -32,8 +33,7 @@ class TritonMain(http.Controller, TritonPublicHelpers):
         results = []
         totals = 0
         chosen = [category] if category != 'all' else list(models)
-        global_start = (page_number - 1) * _PAGE_SIZE
-        global_cursor = 0
+        datasets = []
         for key in chosen:
             if key in ('mahasiswa', 'dosen') and (not self._people_enabled()):
                 continue
@@ -45,15 +45,34 @@ class TritonMain(http.Controller, TritonPublicHelpers):
             if key == 'mahasiswa':
                 domain.append(('status_akademik', 'in', ['aktif', 'lulus', 'cuti']))
             if q:
-                field = 'name'
-                if key == 'cpl':
-                    field = 'name'
-                elif key == 'mata-kuliah':
-                    field = 'name'
-                domain.append((field, 'ilike', q))
+                search_fields = {
+                    'mahasiswa': ('name', 'nim'),
+                    'dosen': ('name', 'nip'),
+                    'prodi': ('name', 'kode'),
+                    'fakultas': ('name', 'kode'),
+                    'mata-kuliah': ('name', 'kode_mk'),
+                    'cpl': ('name', 'kode_cpl'),
+                }[key]
+                if len(search_fields) > 1:
+                    domain.extend(['|'] * (len(search_fields) - 1))
+                for field in search_fields:
+                    domain.append((field, 'ilike', q))
             total = model.search_count(domain)
+            datasets.append((key, model, serializer, domain, total))
+            totals += total
+        pager = self._pager(
+            '/cari',
+            page_number,
+            totals,
+            {'q': q, 'category': category, 'limit': page_size},
+            page_size=page_size,
+        )
+        global_start = (pager['page'] - 1) * page_size
+        global_cursor = 0
+        category_labels = {item['key']: item['label'] for item in categories}
+        for key, model, serializer, domain, total in datasets:
             overlap_start = max(global_start, global_cursor)
-            overlap_end = min(global_start + _PAGE_SIZE, global_cursor + total)
+            overlap_end = min(global_start + page_size, global_cursor + total)
             records = model.browse()
             if overlap_end > overlap_start:
                 records = model.search(
@@ -62,7 +81,6 @@ class TritonMain(http.Controller, TritonPublicHelpers):
                     limit=overlap_end - overlap_start,
                     offset=overlap_start - global_cursor,
                 )
-            totals += total
             global_cursor += total
             for record in records:
                 if serializer:
@@ -74,11 +92,8 @@ class TritonMain(http.Controller, TritonPublicHelpers):
                     fields = record.read(['kode_cpl', 'name', 'jenis_cpl', 'prodi_id'])[0]
                     item = {'id': record.id, 'name': fields['name'], 'kode': fields['kode_cpl'], 'jenis': _CPL_TYPES.get(fields['jenis_cpl'], 'Lainnya'), 'prodi': fields['prodi_id'][1] if fields['prodi_id'] else ''}
                 item['category'] = key
-                item['category_label'] = dict((categories_item for categories_item in ((item['key'], item['label']) for item in categories))).get(key, key)
+                item['category_label'] = category_labels.get(key, key)
                 results.append(item)
-            if len(results) >= _PAGE_SIZE:
-                break
-        pager = self._pager('/cari', page_number, totals, {'q': q, 'category': category})
         return request.render('erpobe.triton_search_page', {
             'q': q,
             'category': category,
@@ -87,6 +102,10 @@ class TritonMain(http.Controller, TritonPublicHelpers):
             'total': totals,
             'page': pager['page'],
             'page_count': pager['page_count'],
+            'page_size': pager['page_size'],
+            'page_sizes': pager['page_sizes'],
+            'range_start': pager['start'],
+            'range_end': pager['end'],
             'previous_url': pager['previous'],
             'next_url': pager['next'],
             'people_enabled': self._people_enabled(),

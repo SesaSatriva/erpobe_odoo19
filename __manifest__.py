@@ -24,6 +24,12 @@
             "erpobe/static/src/js/print.js",
             "erpobe/static/src/js/portal_dashboard.js",
         ],
+        "web.assets_backend": [
+            ("remove", "erpobe/static/src/scss/primary_variables.scss"),
+        ],
+        "web.assets_backend_lazy": [
+            ("remove", "erpobe/static/src/scss/primary_variables.scss"),
+        ],
     },
     "data": [
         "security/groups.xml",
@@ -39,6 +45,7 @@
         "views/website/components/website_navigation.xml",
         "views/website/components/portal_navigation.xml",
         "views/website/components/login_branding.xml",
+        "views/website/components/list_management.xml",
         "views/website/public/website_about.xml",
         "views/website/public/website_comparison.xml",
         "views/website/public/website_contact.xml",

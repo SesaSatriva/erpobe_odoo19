@@ -9,6 +9,7 @@
                     <div class="o_triton_container">
                         <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Fakultas</span></nav>
                         <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Struktur akademik</span><h1>Fakultas</h1><p class="o_triton_subtitle">Pilih fakultas untuk melihat program studi dan statistik agregat.</p></div></header>
+                        <t t-call="erpobe.triton_portal_list_controls"/>
                         <div t-if="faculties" class="o_triton_grid-three">
                             <t t-foreach="faculties" t-as="faculty">
                                 <article class="o_triton_result-card">
@@ -18,7 +19,7 @@
                                 </article>
                             </t>
                         </div>
-                        <div t-else="" class="o_triton_empty"><h2>Belum ada fakultas</h2><p>Belum ada data fakultas yang aktif.</p></div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada fakultas yang cocok</h2><p>Belum ada data aktif yang cocok dengan pencarian Anda.</p></div>
                     </div>
                 </section>
                 <t t-call="erpobe.triton_footer"/>

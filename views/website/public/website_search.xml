@@ -8,7 +8,7 @@
                 <section class="o_triton_section">
                     <div class="o_triton_container">
                         <nav class="o_triton_breadcrumb" aria-label="Breadcrumb"><a href="/">Beranda</a><span>/</span><span>Pencarian</span></nav>
-                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Pencarian publik</span><h1>Hasil pencarian</h1><p class="o_triton_subtitle"><t t-out="total"/> hasil ditampilkan secara bertahap.</p></div></header>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Pencarian publik</span><h1>Hasil pencarian</h1><p class="o_triton_subtitle">Menampilkan <t t-out="range_start"/>–<t t-out="range_end"/> dari <t t-out="total"/> hasil.</p></div></header>
                         <form class="o_triton_search o_triton_search-light" action="/cari" method="get">
                             <label class="visually-hidden" for="search-q">Kata kunci</label>
                             <input id="search-q" type="search" name="q" t-att-value="q" placeholder="Masukkan kata kunci"/>
@@ -16,6 +16,10 @@
                             <select id="search-category" name="category">
                                 <option value="all" t-att-selected="category == 'all'">Semua kategori</option>
                                 <t t-foreach="categories" t-as="item"><option t-att-value="item['key']" t-att-selected="category == item['key']" t-out="item['label']"/></t>
+                            </select>
+                            <label for="search-limit">Hasil per halaman</label>
+                            <select id="search-limit" name="limit">
+                                <t t-foreach="page_sizes" t-as="size"><option t-att-value="size" t-att-selected="page_size == size" t-out="size"/></t>
                             </select>
                             <button type="submit">Cari</button>
                         </form>

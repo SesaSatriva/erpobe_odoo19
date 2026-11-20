@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="triton_portal_list_controls" name="TRITON List Controls">
+        <div class="o_triton_list-management">
+            <form class="o_triton_list-toolbar" t-att-action="list_action" method="get">
+                <t t-foreach="pagination['filters']" t-as="item">
+                    <input type="hidden" t-att-name="item['name']" t-att-value="item['value']"/>
+                </t>
+                <label>
+                    Cari
+                    <input type="search" name="q" t-att-value="pagination['search_query']" placeholder="Cari nama atau kata kunci"/>
+                </label>
+                <label t-if="pagination['sort_options']">
+                    Urutkan
+                    <select name="sort">
+                        <option value="">Default</option>
+                        <t t-foreach="pagination['sort_options']" t-as="option">
+                            <option t-att-value="option['value']" t-att-selected="pagination['sort'] == option['value']" t-out="option['label']"/>
+                        </t>
+                    </select>
+                </label>
+                <t t-foreach="pagination['filter_options']" t-as="filter_option">
+                    <label>
+                        <t t-out="filter_option['label']"/>
+                        <select t-att-name="filter_option['name']">
+                            <t t-foreach="filter_option['options']" t-as="option">
+                                <option t-att-value="option[0]" t-att-selected="filter_option['selected'] == option[0]" t-out="option[1]"/>
+                            </t>
+                        </select>
+                    </label>
+                </t>
+                <label>
+                    Baris per halaman
+                    <select name="limit">
+                        <t t-foreach="pagination['page_sizes']" t-as="page_size">
+                            <option t-att-value="page_size" t-att-selected="pagination['page_size'] == page_size" t-out="page_size"/>
+                        </t>
+                    </select>
+                </label>
+                <button class="o_triton_btn" type="submit">Terapkan</button>
+            </form>
+            <div class="o_triton_list-summary">
+                <span>Menampilkan <t t-out="pagination['start']"/>–<t t-out="pagination['end']"/> dari <t t-out="pagination['total']"/> record</span>
+                <nav t-if="pagination['previous'] or pagination['next']" class="o_triton_pagination" aria-label="Navigasi halaman">
+                    <a t-if="pagination['previous']" t-att-href="pagination['previous']" rel="prev">Sebelumnya</a>
+                    <span>Halaman <t t-out="pagination['page']"/> / <t t-out="pagination['page_count']"/></span>
+                    <a t-if="pagination['next']" t-att-href="pagination['next']" rel="next">Berikutnya</a>
+                </nav>
+            </div>
+        </div>
+    </template>
+</odoo>

@@ -20,16 +20,16 @@
         <field name="model">erpobe.akademik.rps</field>
         <field name="arch" type="xml">
             <list string="Rencana Pembelajaran Semester">
-                <field name="kode_mk"/>
-                <field name="matakuliah_id"/>
-                <field name="prodi_id"/>
-                <field name="tahun_ajaran_id"/>
-                <field name="version"/>
-                <field name="status" widget="badge"/>
-                <field name="weight_status" widget="badge"/>
-                <field name="sks"/>
-                <field name="semester"/>
-                <field name="koordinator_id"/>
+                <field name="kode_mk" width="90px"/>
+                <field name="matakuliah_id" width="190px"/>
+                <field name="prodi_id" width="130px"/>
+                <field name="tahun_ajaran_id" width="140px"/>
+                <field name="version" width="70px"/>
+                <field name="status" widget="badge" width="100px"/>
+                <field name="weight_status" widget="badge" width="110px"/>
+                <field name="sks" width="60px"/>
+                <field name="semester" width="80px"/>
+                <field name="koordinator_id" width="150px"/>
             </list>
         </field>
     </record>

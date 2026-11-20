@@ -65,15 +65,31 @@ class TritonPortalMahasiswa(TritonPortalBase):
     def triton_student_khs(self, **kwargs):
         student = self._require_student()
         reports = request.env['erpobe.report.khs'].sudo().search([('mahasiswa_id', '=', student.id)], order='tahun_ajaran_id desc')
+        course_lines, pagination = self._list_page(
+            request.env['erpobe.report.khs.mk'].sudo(),
+            [('khs_id', 'in', reports.ids)],
+            '/my/khs',
+            {'course': ('mk_id.name asc, id asc', 'Mata kuliah A–Z'), 'score': ('nilai_angka desc, mk_id.name asc', 'Nilai tertinggi')},
+            'mk_id asc, id asc',
+            ('mk_id.name', 'kode_mk'),
+        )
         data = []
         for report in reports:
-            data.append({'year': report.tahun_ajaran_id.display_name if report.tahun_ajaran_id else 'Transkrip', 'id': report.id, 'ipk': report.ipk, 'sks': report.total_sks_lulus, 'courses': [{'name': line.mk_id.name, 'kode': line.kode_mk, 'sks': line.sks, 'score': line.nilai_angka, 'grade': line.nilai_huruf} for line in report.mk_line_ids]})
-        return request.render('erpobe.triton_khs_page', {'reports': data})
+            selected_lines = course_lines.filtered(lambda line: line.khs_id == report)
+            data.append({'year': report.tahun_ajaran_id.display_name if report.tahun_ajaran_id else 'Transkrip', 'id': report.id, 'ipk': report.ipk, 'sks': report.total_sks_lulus, 'courses': [{'name': line.mk_id.name, 'kode': line.kode_mk, 'sks': line.sks, 'score': line.nilai_angka, 'grade': line.nilai_huruf} for line in selected_lines]})
+        return request.render('erpobe.triton_khs_page', {'reports': data, 'pagination': pagination, 'list_action': '/my/khs'})
 
     @http.route('/my/mata-kuliah', type='http', auth='user', website=True)
     def triton_student_courses(self, **kwargs):
         student = self._require_student()
-        krs_lines = request.env['erpobe.akademik.krs.line'].sudo().search([('mahasiswa_id', '=', student.id), ('krs_id.state', '=', 'approved')], order='krs_id asc, matakuliah_id asc')
+        krs_lines, pagination = self._list_page(
+            request.env['erpobe.akademik.krs.line'].sudo(),
+            [('mahasiswa_id', '=', student.id), ('krs_id.state', '=', 'approved')],
+            '/my/mata-kuliah',
+            {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('krs_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru')},
+            'krs_id desc, matakuliah_id asc, id asc',
+            ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+        )
         courses = []
         for line in krs_lines:
             final_rps = line.penawaran_line_id.rps_ids.filtered(lambda record: record.status == 'final').sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]
@@ -82,14 +98,21 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 [('krs_line_id', '=', line.id)]
             ).sorted(key=lambda grade: (grade.subcpmk_id.minggu, grade.subcpmk_id.id))
             courses.append({'name': line.matakuliah_id.name, 'code': line.matakuliah_id.kode_mk, 'sks': line.sks, 'year': line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran, 'semester': line.penawaran_line_id.tahun_ajaran_id.semester, 'rps': bool(final_rps), 'components': [{'name': grade.komponen_id.name, 'score': grade.nilai} for grade in component_grades], 'cpmk': [{'name': cpmk.name, 'description': cpmk.name} for cpmk in (final_rps.cpmk_ids if final_rps else [])], 'subcpmk': [{'week': grade.subcpmk_id.minggu, 'name': grade.subcpmk_id.name, 'score': grade.nilai, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in subcpmk_grades]})
-        return request.render('erpobe.triton_student_courses_page', {'courses': courses})
+        return request.render('erpobe.triton_student_courses_page', {'courses': courses, 'pagination': pagination, 'list_action': '/my/mata-kuliah'})
 
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)
     def triton_student_cpl(self, **kwargs):
         student = self._require_student()
-        grades = request.env['erpobe.grade.cpl'].sudo().search([('mahasiswa_id', '=', student.id)], order='cpl_id asc')
+        grades, pagination = self._list_page(
+            request.env['erpobe.grade.cpl'].sudo(),
+            [('mahasiswa_id', '=', student.id)],
+            '/my/capaian-cpl',
+            {'cpl': ('cpl_id.kode_cpl asc, id asc', 'Kode CPL A–Z'), 'score': ('nilai_cpl desc, cpl_id.kode_cpl asc', 'Nilai tertinggi')},
+            'cpl_id asc, id asc',
+            ('cpl_id.name', 'cpl_id.kode_cpl'),
+        )
         values = [{'name': grade.cpl_id.kode_cpl, 'description': grade.cpl_id.name, 'score': grade.nilai_cpl, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in grades]
-        return request.render('erpobe.triton_student_cpl_page', {'grades': values})
+        return request.render('erpobe.triton_student_cpl_page', {'grades': values, 'pagination': pagination, 'list_action': '/my/capaian-cpl'})
 
     @http.route('/my/profil', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def triton_student_profile(self, **kwargs):

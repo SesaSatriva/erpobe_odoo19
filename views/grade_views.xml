@@ -36,11 +36,16 @@
                 </header>
                 <sheet>
                     <group>
-                        <field name="penawaran_id"/>
-                        <field name="penawaran_line_id"/>
-                        <field name="tahun_ajaran" readonly="1"/>
-                        <field name="matakuliah_id" readonly="1"/>
+                        <group string="Penawaran">
+                            <field name="penawaran_id"/>
+                            <field name="penawaran_line_id"/>
+                        </group>
+                        <group string="Informasi Mata Kuliah">
+                            <field name="tahun_ajaran" readonly="1"/>
+                            <field name="matakuliah_id" readonly="1"/>
+                        </group>
                     </group>
+                    <separator string="Nilai Mahasiswa"/>
                     <field name="grade_komponen_ids">
                         <list editable="bottom">
                             <field name="krs_line_id"/>

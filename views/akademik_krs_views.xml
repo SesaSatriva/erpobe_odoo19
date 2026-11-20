@@ -20,13 +20,13 @@
         <field name="model">erpobe.akademik.krs</field>
         <field name="arch" type="xml">
             <list string="Kartu Rencana Studi">
-                <field name="mahasiswa_id"/>
-                <field name="rombel_id"/>
-                <field name="penawaran_id"/>
-                <field name="tahun_ajaran"/>
-                <field name="total_sks"/>
-                <field name="state" widget="badge"/>
-                <field name="max_sks_allowed"/>
+                <field name="mahasiswa_id" width="200px"/>
+                <field name="rombel_id" width="120px"/>
+                <field name="penawaran_id" width="240px"/>
+                <field name="tahun_ajaran" width="150px"/>
+                <field name="total_sks" width="90px"/>
+                <field name="state" widget="badge" width="130px"/>
+                <field name="max_sks_allowed" width="100px"/>
             </list>
         </field>
     </record>
@@ -49,14 +49,19 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="rombel_id" readonly="1"/>
-                        <field name="penawaran_id"/>
-                        <field name="tahun_ajaran" readonly="1"/>
-                        <field name="semester_akademik" readonly="1"/>
-                        <field name="total_sks" readonly="1"/>
-                        <field name="max_sks_allowed"/>
-                        <field name="advisor_note" readonly="1"/>
+                        <group string="Informasi Akademik">
+                            <field name="rombel_id" readonly="1"/>
+                            <field name="penawaran_id"/>
+                            <field name="tahun_ajaran" readonly="1"/>
+                            <field name="semester_akademik" readonly="1"/>
+                        </group>
+                        <group string="Batas Studi">
+                            <field name="total_sks" readonly="1"/>
+                            <field name="max_sks_allowed"/>
+                            <field name="advisor_note" readonly="1"/>
+                        </group>
                     </group>
+                    <separator string="Mata Kuliah yang Diambil"/>
                     <field name="line_ids">
                         <list editable="bottom">
                             <field name="penawaran_line_id"/>

@@ -77,6 +77,35 @@ Status: PASS, FAIL, BLOCKED, NOT TESTED.
 - [ ] NOT TESTED — Full Odoo test suite.
 - [ ] NOT TESTED — Permanent Playwright test suite.
 
+## Rule-based academic assistant
+
+- The OWL component is registered through `main_components` in
+  `web.assets_backend` and calls the authenticated JSON-RPC endpoint
+  `/web/erpobe/assistant/query`. The endpoint requires an internal user.
+- The service uses the active user's ORM environment without `sudo()` or raw SQL.
+  Page record context is accepted only for an allowlisted model and is resolved
+  again through ORM search, so ACLs and record rules remain in effect.
+- Assistant aggregates over `erpobe.grade.cpmk` and `erpobe.grade.mk` explicitly
+  restrict lecturer-group users to `user.erpobe_prodi_ids`; existing record rules
+  for those models do not provide lecturer-specific scope.
+- [x] PASS — Assistant SCSS compiles with libsass, the compiler used by Odoo.
+- Verified data sources are `erpobe.master.mahasiswa`, `erpobe.master.dosen`,
+  `erpobe.master.prodi`, `erpobe.master.fakultas`,
+  `erpobe.master.matakuliah`, `erpobe.akademik.rps`,
+  `erpobe.akademik.cpl`, `erpobe.akademik.cpmk`, their existing grade models,
+  and `erpobe.report.khs`.
+- Implemented intent groups cover student counts/search/cohort/program and
+  accessible GPA data; lecturer counts/search/program/workload; program and
+  faculty counts/distribution; RPS search/status/weight completeness; CPL/CPMK
+  counts and stored-score summaries; course counts/search and stored-grade
+  summaries; and a scoped academic count summary. Unsupported comparisons are
+  reported as unsupported rather than inferred.
+- [ ] NOT TESTED — Odoo module upgrade and authenticated backend endpoint.
+- [ ] NOT TESTED — Role, ACL, and record-rule workflows in an `erpobe_test*`
+  database.
+- [ ] NOT TESTED — Backend chat visual/responsive behavior and OWL asset loading.
+- [ ] NOT TESTED — Odoo TransactionCase assistant service tests.
+
 ## Phase 2 dashboard slice
 
 - [x] PASS — Student dashboard reads IPK/SKS from KHS and current course rows from

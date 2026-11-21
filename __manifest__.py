@@ -26,6 +26,9 @@
         ],
         "web.assets_backend": [
             ("remove", "erpobe/static/src/scss/primary_variables.scss"),
+            "erpobe/static/src/js/academic_assistant.js",
+            "erpobe/static/src/xml/academic_assistant.xml",
+            "erpobe/static/src/scss/components/_academic_assistant.scss",
         ],
         "web.assets_backend_lazy": [
             ("remove", "erpobe/static/src/scss/primary_variables.scss"),

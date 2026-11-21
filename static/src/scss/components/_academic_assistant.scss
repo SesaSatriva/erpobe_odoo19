@@ -1,0 +1,214 @@
+.o_erpobe_assistant {
+    position: fixed;
+    z-index: 1000;
+    right: calc(1rem + env(safe-area-inset-right, 0px));
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    color: #263746;
+
+    &-launcher {
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+        min-height: 2.75rem;
+        padding: .5rem .85rem;
+        border: 1px solid #123f59;
+        border-radius: 999px;
+        background: #123f59;
+        color: #fff;
+        box-shadow: 0 2px 8px #0b2d4224;
+        font-weight: 600;
+
+        &:hover,
+        &:focus-visible {
+            background: #0b2d42;
+        }
+    }
+
+    &-panel {
+        display: flex;
+        flex-direction: column;
+        width: 25rem;
+        max-width: calc(100vw - 2rem);
+        height: 38rem;
+        max-height: calc(100vh - 6rem);
+        margin-bottom: .65rem;
+        overflow: hidden;
+        border: 1px solid #d6dee5;
+        border-radius: .6rem;
+        background: #fff;
+        box-shadow: 0 6px 20px #0b2d421f;
+    }
+
+    &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+        padding: .8rem .9rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: #fff;
+        color: #263746;
+
+        small {
+            display: block;
+            margin-top: .15rem;
+            color: #718096;
+            font-size: .75rem;
+        }
+    }
+
+    &-header-actions {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+    }
+
+    &-clear,
+    &-close {
+        min-height: 2rem;
+        border: 1px solid #d6dee5;
+        border-radius: .3rem;
+        background: #fff;
+        color: #123f59;
+    }
+
+    &-clear {
+        padding: 0 .45rem;
+        font-size: .75rem;
+    }
+
+    &-close {
+        width: 2rem;
+        font-size: 1.2rem;
+    }
+
+    &-messages {
+        flex: 1;
+        padding: .75rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    &-message {
+        max-width: 100%;
+        margin: 0 0 .65rem;
+        padding: .65rem;
+        border: 1px solid #e2e8f0;
+        border-radius: .4rem;
+        background: #f8fafb;
+
+        &.is-user {
+            margin-left: auto;
+            border-color: #d7e5ed;
+            background: #edf4f7;
+        }
+
+        p {
+            margin: .3rem 0 0;
+            white-space: pre-line;
+        }
+    }
+
+    &-facts {
+        display: grid;
+        gap: .25rem;
+        margin: .55rem 0 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            gap: .75rem;
+            font-size: .85rem;
+        }
+    }
+
+    &-table {
+        width: 100%;
+        margin-top: .6rem;
+        border-collapse: collapse;
+        font-size: .8rem;
+
+        th,
+        td {
+            padding: .35rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: #526170;
+            font-weight: 600;
+        }
+    }
+
+    &-source {
+        display: block;
+        margin-top: .45rem;
+        color: #718096;
+        overflow-wrap: anywhere;
+    }
+
+    &-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin-top: .6rem;
+
+        button {
+            padding: .3rem .45rem;
+            border: 1px solid #d6dee5;
+            border-radius: .3rem;
+            background: #fff;
+            color: #123f59;
+            font-size: .75rem;
+            text-align: left;
+        }
+    }
+
+    &-form {
+        display: flex;
+        align-items: end;
+        gap: .45rem;
+        padding: .65rem;
+        border-top: 1px solid #e2e8f0;
+
+        textarea {
+            flex: 1;
+            min-width: 0;
+            resize: vertical;
+            border: 1px solid #cbd5e0;
+            border-radius: .35rem;
+            padding: .45rem;
+        }
+
+        button {
+            min-height: 2.35rem;
+            padding: 0 .7rem;
+            border: 1px solid #123f59;
+            border-radius: .35rem;
+            background: #123f59;
+            color: #fff;
+        }
+    }
+
+    &-loading {
+        color: #718096;
+        font-size: .9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .o_erpobe_assistant {
+        right: calc(.75rem + env(safe-area-inset-right, 0px));
+        bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+
+        &-panel {
+            width: calc(100vw - 1.5rem);
+            height: 34rem;
+            max-height: calc(100vh - 5.5rem);
+        }
+    }
+}

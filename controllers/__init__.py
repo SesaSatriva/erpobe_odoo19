@@ -9,3 +9,4 @@ from . import tracking
 from . import portal
 from . import portal_mahasiswa
 from . import portal_dosen
+from . import academic_assistant

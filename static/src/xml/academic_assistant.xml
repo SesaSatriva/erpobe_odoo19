@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="erpobe.AcademicAssistant" owl="1">
+        <div class="o_erpobe_assistant" t-att-class="state.isOpen ? 'is-open' : ''">
+            <section t-if="state.isOpen" class="o_erpobe_assistant-panel" role="dialog"
+                aria-label="Academic Assistant" aria-modal="false">
+                <header class="o_erpobe_assistant-header">
+                    <div>
+                        <strong>Academic Assistant</strong>
+                        <small>Local Rule-Based Assistant</small>
+                    </div>
+                    <div class="o_erpobe_assistant-header-actions">
+                        <button type="button" class="o_erpobe_assistant-clear"
+                            aria-label="Bersihkan percakapan" title="Bersihkan percakapan"
+                            t-on-click="clearConversation">Bersihkan</button>
+                        <button type="button" class="o_erpobe_assistant-close"
+                            aria-label="Minimalkan assistant" title="Minimalkan"
+                            t-on-click="toggle">−</button>
+                    </div>
+                </header>
+                <div class="o_erpobe_assistant-messages" aria-live="polite">
+                    <article t-foreach="state.messages" t-as="message" t-key="message_index"
+                        t-att-class="'o_erpobe_assistant-message is-' + message.role">
+                        <strong t-if="message.title" t-out="message.title"/>
+                        <p t-if="message.message" t-out="message.message"/>
+                        <ul t-if="message.type === 'statistic' &amp;&amp; getStatisticFacts(message.data).length"
+                            class="o_erpobe_assistant-facts">
+                            <li t-foreach="getStatisticFacts(message.data)" t-as="fact"
+                                t-key="fact[0]">
+                                <span t-out="fact[0]"/><strong t-out="fact[1]"/>
+                            </li>
+                        </ul>
+                        <table t-if="message.type === 'table' || getDisplayTable(message.data)"
+                            class="o_erpobe_assistant-table">
+                            <thead>
+                                <tr>
+                                    <th t-foreach="getDisplayTable(message.data)?.columns || []"
+                                        t-as="column" t-key="column" t-out="column"/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="getDisplayTable(message.data)?.rows || []"
+                                    t-as="row" t-key="row_index">
+                                    <td t-foreach="row" t-as="cell" t-key="cell_index" t-out="cell"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <small t-if="message.source" class="o_erpobe_assistant-source"
+                            t-out="'Sumber: ' + message.source"/>
+                        <div t-if="message.suggested_questions?.length"
+                            class="o_erpobe_assistant-suggestions">
+                            <button t-foreach="message.suggested_questions" t-as="question"
+                                t-key="question" type="button" t-out="question"
+                                t-on-click="() => this.askSuggestion(question)"/>
+                        </div>
+                    </article>
+                    <p t-if="state.isLoading" class="o_erpobe_assistant-loading"
+                        role="status">Mencari data akademik...</p>
+                </div>
+                <form class="o_erpobe_assistant-form" t-on-submit="send">
+                    <label class="visually-hidden" for="o_erpobe_assistant_input">
+                        Pertanyaan akademik
+                    </label>
+                    <textarea id="o_erpobe_assistant_input" t-ref="input"
+                        t-model="state.input" rows="2" maxlength="500"
+                        placeholder="Tulis pertanyaan..." t-att-disabled="state.isLoading"/>
+                    <button type="submit"
+                        t-att-disabled="state.isLoading || !state.input.trim()">Kirim</button>
+                </form>
+            </section>
+            <button type="button" class="o_erpobe_assistant-launcher"
+                t-att-aria-expanded="state.isOpen" aria-label="Buka Academic Assistant"
+                t-on-click="toggle">
+                <span aria-hidden="true">?</span><span>Assistant</span>
+            </button>
+        </div>
+    </t>
+</templates>

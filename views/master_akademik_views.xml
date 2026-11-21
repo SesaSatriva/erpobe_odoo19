@@ -88,8 +88,8 @@
                 <field name="prodi_id" width="140px"/>
                 <field name="sks" width="60px"/>
                 <field name="semester" width="80px"/>
-                <field name="kurikulum_id" width="180px"/>
-                <field name="koordinator_id" optional="show" width="150px"/>
+                <field name="kurikulum_id" optional="hide" width="180px"/>
+                <field name="koordinator_id" optional="hide" width="150px"/>
                 <field name="weight_status" widget="badge" width="120px"/>
             </list>
         </field>

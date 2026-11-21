@@ -10,8 +10,13 @@
                 <field name="rombel_id"/>
                 <field name="tahun_ajaran"/>
                 <field name="state"/>
+                <filter name="status_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="status_submitted" string="Menunggu Persetujuan" domain="[('state', '=', 'submitted')]"/>
+                <filter name="status_approved" string="Disetujui" domain="[('state', '=', 'approved')]"/>
+                <filter name="status_rejected" string="Perlu Perbaikan" domain="[('state', '=', 'rejected')]"/>
                 <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
                 <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+                <filter name="group_state" string="Status Persetujuan" context="{'group_by': 'state'}"/>
             </search>
         </field>
     </record>
@@ -24,9 +29,9 @@
                 <field name="rombel_id" width="120px"/>
                 <field name="penawaran_id" width="240px"/>
                 <field name="tahun_ajaran" width="150px"/>
-                <field name="total_sks" width="90px"/>
                 <field name="state" widget="badge" width="130px"/>
-                <field name="max_sks_allowed" width="100px"/>
+                <field name="total_sks" width="90px"/>
+                <field name="max_sks_allowed" optional="hide" width="100px"/>
             </list>
         </field>
     </record>

@@ -5,10 +5,10 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page string="Program Studi ERP OBE" groups="erpobe.group_superadmin">
+            <xpath expr="//notebook" position="before">
+                <group string="Program Studi ERP OBE" groups="erpobe.group_superadmin">
                     <field name="erpobe_prodi_ids" widget="many2many_tags"/>
-                </page>
+                </group>
             </xpath>
         </field>
     </record>
@@ -32,7 +32,7 @@
                 <field name="nip"/>
                 <field name="name"/>
                 <field name="email"/>
-                <field name="bidang_keahlian"/>
+                <field name="bidang_keahlian" optional="hide"/>
                 <field name="prodi_ids" widget="many2many_tags" optional="show"/>
                 <field name="user_id" optional="hide"/>
             </list>
@@ -93,11 +93,11 @@
             <list string="Mahasiswa">
                 <field name="nim"/>
                 <field name="name"/>
-                <field name="email"/>
+                <field name="email" optional="hide"/>
                 <field name="prodi_id"/>
                 <field name="rombel_id"/>
                 <field name="angkatan" optional="show"/>
-                <field name="semester_saat_ini" optional="show"/>
+                <field name="semester_saat_ini" optional="hide"/>
             </list>
         </field>
     </record>

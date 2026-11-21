@@ -10,6 +10,7 @@
                 <field name="jenis_cpl"/>
                 <field name="prodi_id"/>
                 <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_jenis" string="Jenis CPL" context="{'group_by': 'jenis_cpl'}"/>
             </search>
         </field>
     </record>
@@ -45,30 +46,26 @@
                         <field name="indikator_capaian"/>
                         <field name="target_nilai"/>
                     </group>
-                    <notebook>
-                        <page string="Pemetaan CPMK">
-                            <field name="cpmk_mapping_ids">
-                                <list editable="bottom">
-                                    <field name="cpmk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
-                                    <field name="mk_id" readonly="1"/>
-                                </list>
-                                <form>
-                                    <group>
-                                        <field name="cpl_id" readonly="1"/>
-                                        <field name="cpmk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
-                                        <field name="mk_id" readonly="1"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </page>
-                        <page string="Pemetaan Mata Kuliah–CPL">
-                            <field name="mk_mapping_ids">
-                                <list editable="bottom">
-                                    <field name="mk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
+                    <separator string="Pemetaan CPMK"/>
+                    <field name="cpmk_mapping_ids">
+                        <list editable="bottom">
+                            <field name="cpmk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                            <field name="mk_id" readonly="1"/>
+                        </list>
+                        <form>
+                            <group>
+                                <field name="cpl_id" readonly="1"/>
+                                <field name="cpmk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                                <field name="mk_id" readonly="1"/>
+                            </group>
+                        </form>
+                    </field>
+                    <separator string="Pemetaan Mata Kuliah"/>
+                    <field name="mk_mapping_ids">
+                        <list editable="bottom">
+                            <field name="mk_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
+                        </list>
+                    </field>
                 </sheet>
             </form>
         </field>

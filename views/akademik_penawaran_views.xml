@@ -11,6 +11,7 @@
                 <field name="rombel_ids"/>
                 <filter name="group_tahun" string="Tahun Ajaran" context="{'group_by': 'tahun_ajaran'}"/>
                 <filter name="group_semester" string="Semester" context="{'group_by': 'semester_akademik'}"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
             </search>
         </field>
     </record>

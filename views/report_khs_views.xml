@@ -30,7 +30,7 @@
                 <field name="angkatan"/>
                 <field name="total_sks_lulus"/>
                 <field name="ipk"/>
-                <field name="tanggal_cetak"/>
+                <field name="tanggal_cetak" optional="hide"/>
             </list>
         </field>
     </record>

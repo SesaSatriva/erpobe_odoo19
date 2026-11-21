@@ -10,6 +10,7 @@
                 <field name="prodi_id"/>
                 <field name="mk_id"/>
                 <field name="cpmk_id"/>
+                <filter name="group_by_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
                 <filter name="group_by_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
                 <filter name="group_by_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
             </search>
@@ -24,8 +25,43 @@
                 <field name="rombel_id"/>
                 <field name="prodi_id"/>
                 <field name="cpl_id"/>
+                <filter name="group_by_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
                 <filter name="group_by_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
                 <filter name="group_by_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_mk_search" model="ir.ui.view">
+        <field name="name">erpobe.summary.mk.search</field>
+        <field name="model">erpobe.summary.mk</field>
+        <field name="arch" type="xml">
+            <search string="Analisis Mata Kuliah">
+                <field name="mahasiswa_id"/>
+                <field name="prodi_id"/>
+                <field name="rombel_id"/>
+                <field name="angkatan"/>
+                <field name="mk_id"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+                <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_erpobe_summary_komponen_search" model="ir.ui.view">
+        <field name="name">erpobe.summary.komponen.search</field>
+        <field name="model">erpobe.summary.komponen</field>
+        <field name="arch" type="xml">
+            <search string="Analisis Komponen">
+                <field name="mahasiswa_id"/>
+                <field name="prodi_id"/>
+                <field name="rombel_id"/>
+                <field name="angkatan"/>
+                <field name="mk_id"/>
+                <field name="komponen_id"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
+                <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+                <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
+                <filter name="group_komponen" string="Komponen" context="{'group_by': 'komponen_id'}"/>
             </search>
         </field>
     </record>
@@ -34,7 +70,7 @@
         <field name="model">erpobe.summary.mk</field>
         <field name="arch" type="xml">
             <list string="Analisis Mata Kuliah">
-                <field name="fakultas_id"/>
+                <field name="fakultas_id" optional="hide"/>
                 <field name="prodi_id"/>
                 <field name="angkatan"/>
                 <field name="rombel_id"/>
@@ -71,7 +107,7 @@
         <field name="model">erpobe.summary.cpmk</field>
         <field name="arch" type="xml">
             <list string="Analisis CPMK">
-                <field name="fakultas_id"/>
+                <field name="fakultas_id" optional="hide"/>
                 <field name="prodi_id"/>
                 <field name="angkatan"/>
                 <field name="rombel_id"/>
@@ -109,7 +145,7 @@
         <field name="model">erpobe.summary.cpl</field>
         <field name="arch" type="xml">
             <list string="Analisis CPL">
-                <field name="fakultas_id"/>
+                <field name="fakultas_id" optional="hide"/>
                 <field name="prodi_id"/>
                 <field name="angkatan"/>
                 <field name="rombel_id"/>
@@ -146,7 +182,7 @@
         <field name="model">erpobe.summary.komponen</field>
         <field name="arch" type="xml">
             <list string="Analisis Komponen Penilaian">
-                <field name="fakultas_id"/>
+                <field name="fakultas_id" optional="hide"/>
                 <field name="prodi_id"/>
                 <field name="angkatan"/>
                 <field name="rombel_id"/>
@@ -183,6 +219,7 @@
         <field name="name">Analisis Mata Kuliah</field>
         <field name="res_model">erpobe.summary.mk</field>
         <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_erpobe_summary_mk_search"/>
     </record>
     <record id="action_erpobe_summary_cpmk" model="ir.actions.act_window">
         <field name="name">Analisis CPMK</field>
@@ -200,5 +237,6 @@
         <field name="name">Analisis Komponen</field>
         <field name="res_model">erpobe.summary.komponen</field>
         <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_erpobe_summary_komponen_search"/>
     </record>
 </odoo>

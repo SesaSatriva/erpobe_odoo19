@@ -9,9 +9,14 @@
                 <field name="kode_mk"/>
                 <field name="prodi_id"/>
                 <field name="koordinator_id"/>
+                <field name="status"/>
+                <filter name="status_draft" string="Draft" domain="[('status', '=', 'draft')]"/>
+                <filter name="status_review" string="Perlu Ditinjau" domain="[('status', '=', 'review')]"/>
+                <filter name="status_final" string="Final" domain="[('status', '=', 'final')]"/>
                 <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
                 <filter name="group_mk" string="Mata Kuliah" context="{'group_by': 'matakuliah_id'}"/>
                 <filter name="group_semester" string="Semester" context="{'group_by': 'semester'}"/>
+                <filter name="group_status" string="Status RPS" context="{'group_by': 'status'}"/>
             </search>
         </field>
     </record>
@@ -22,14 +27,14 @@
             <list string="Rencana Pembelajaran Semester">
                 <field name="kode_mk" width="90px"/>
                 <field name="matakuliah_id" width="190px"/>
-                <field name="prodi_id" width="130px"/>
+                <field name="prodi_id" optional="hide" width="130px"/>
                 <field name="tahun_ajaran_id" width="140px"/>
-                <field name="version" width="70px"/>
+                <field name="version" optional="hide" width="70px"/>
                 <field name="status" widget="badge" width="100px"/>
                 <field name="weight_status" widget="badge" width="110px"/>
-                <field name="sks" width="60px"/>
-                <field name="semester" width="80px"/>
-                <field name="koordinator_id" width="150px"/>
+                <field name="sks" optional="hide" width="60px"/>
+                <field name="semester" optional="hide" width="80px"/>
+                <field name="koordinator_id" optional="hide" width="150px"/>
             </list>
         </field>
     </record>
@@ -38,6 +43,12 @@
         <field name="model">erpobe.akademik.rps</field>
         <field name="arch" type="xml">
             <form string="Rencana Pembelajaran Semester">
+                <header>
+                    <button name="action_mark_for_review" type="object" string="Tandai Perlu Ditinjau" invisible="status != 'draft'"/>
+                    <button name="action_finalize" type="object" string="Finalisasi RPS" class="oe_highlight" invisible="status != 'review'"/>
+                    <button name="action_revise" type="object" string="Buat Revisi" invisible="status != 'final'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,review,final" readonly="1"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="matakuliah_id"/>
@@ -51,11 +62,8 @@
                         <field name="semester_akademik" readonly="1"/>
                         <field name="version" readonly="1"/>
                         <field name="source_rps_id" readonly="1"/>
-                        <field name="status" readonly="1"/>
                         <field name="weight_status" widget="badge" readonly="1"/>
                         <field name="weight_issue_count" readonly="1"/>
-                        <button name="action_mark_for_review" type="object" string="Tandai Perlu Ditinjau" invisible="status != 'draft'"/>
-                        <button name="action_finalize" type="object" string="Finalisasi RPS" class="oe_highlight" invisible="status != 'review'"/>
                     </group>
                     <div class="alert alert-warning" role="alert" invisible="weight_status != 'incomplete'">
                         Bobot masih kurang atau melebihi 100%. Draft tetap dapat disimpan, tetapi RPS tidak dapat difinalisasi sampai semua kelompok lengkap.
@@ -80,29 +88,10 @@
                     </group>
                     <group string="Deskripsi Mata Kuliah">
                         <field name="deskripsi_mk" nolabel="1"/>
+                        <field name="tujuan_pembelajaran"/>
                     </group>
                     <notebook>
-                        <page string="1 — Informasi Umum">
-                            <group>
-                                <group>
-                                    <field name="kode_mk" readonly="1"/>
-                                    <field name="matakuliah_id"/>
-                                    <field name="sks" readonly="1"/>
-                                    <field name="semester" readonly="1"/>
-                                    <field name="tahun_ajaran_id" readonly="1"/>
-                                </group>
-                                <group>
-                                    <field name="koordinator_id" readonly="1"/>
-                                    <field name="tim_pengampu_ids" widget="many2many_tags" readonly="1"/>
-                                    <field name="mk_prasyarat_ids" widget="many2many_tags" readonly="1"/>
-                                </group>
-                            </group>
-                            <group string="Deskripsi dan Tujuan">
-                                <field name="deskripsi_mk"/>
-                                <field name="tujuan_pembelajaran"/>
-                            </group>
-                        </page>
-                        <page string="2 — Capaian Pembelajaran">
+                        <page string="Capaian Pembelajaran">
                             <group>
                                 <field name="cpl_ids" widget="many2many_tags" readonly="1"/>
                                 <field name="cpmk_ids" widget="many2many_tags"/>
@@ -121,7 +110,7 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="3 — Komponen Penilaian">
+                        <page string="Komponen dan Bobot">
                             <field name="rps_komponen_ids">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -140,8 +129,19 @@
                                     <field name="bobot_komponen_cpmk"/>
                                 </list>
                             </field>
+                            <separator string="Bobot CPMK terhadap Mata Kuliah"/>
+                            <field name="bobot_cpmk_mk_ids">
+                                <list editable="bottom">
+                                    <field name="cpmk_id"/>
+                                    <field name="mk_id" readonly="1"/>
+                                    <field name="bobot_cpmk_mk"/>
+                                    <field name="total_bobot" readonly="1"/>
+                                    <field name="remaining_bobot" readonly="1"/>
+                                    <field name="weight_status" widget="badge" readonly="1"/>
+                                </list>
+                            </field>
                         </page>
-                        <page string="4 — Referensi dan Materi">
+                        <page string="Materi dan Kegiatan">
                             <group>
                                 <field name="referensi_ids" widget="many2many_tags"/>
                                 <field name="materi_pembelajaran"/>
@@ -178,7 +178,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Rubrik dan Kriteria">
+                        <page string="Rubrik Penilaian">
                             <field name="rubrik_penilaian_ids">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -206,24 +206,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Bobot CPMK-Mata Kuliah">
-                            <field name="bobot_cpmk_mk_ids">
-                                <list editable="bottom">
-                                    <field name="cpmk_id"/>
-                                    <field name="mk_id" readonly="1"/>
-                                    <field name="bobot_cpmk_mk"/>
-                                    <field name="total_bobot" readonly="1"/>
-                                    <field name="remaining_bobot" readonly="1"/>
-                                    <field name="weight_status" widget="badge" readonly="1"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page string="5 — Ringkasan dan Finalisasi">
-                            <group>
-                                <field name="status" readonly="1"/>
-                                <field name="weight_status" widget="badge" readonly="1"/>
-                                <field name="weight_issue_count" readonly="1"/>
-                            </group>
+                        <page string="Ringkasan RPS">
                             <group string="Ringkasan Konfigurasi">
                                 <field name="cpl_ids" widget="many2many_tags" readonly="1"/>
                                 <field name="cpmk_ids" widget="many2many_tags" readonly="1"/>
@@ -235,9 +218,6 @@
                                     </list>
                                 </field>
                             </group>
-                            <button name="action_mark_for_review" type="object" string="Simpan dan Tinjau" invisible="status != 'draft'"/>
-                            <button name="action_finalize" type="object" string="Finalisasi" class="oe_highlight" invisible="status != 'review'"/>
-                            <button name="action_revise" type="object" string="Buat Revisi" invisible="status != 'final'"/>
                         </page>
                     </notebook>
                 </sheet>

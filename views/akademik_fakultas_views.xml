@@ -33,16 +33,15 @@
                         <field name="name"/>
                     </group>
                     <notebook>
-                        <page string="Program Studi">
-                            <field name="prodi_ids">
-                                <list>
-                                    <field name="kode"/>
-                                    <field name="name"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Master Akademik">
+                        <page string="Program Studi dan Data Utama">
                             <group>
+                                <field name="prodi_ids">
+                                    <list>
+                                        <field name="kode"/>
+                                        <field name="name"/>
+                                        <field name="active"/>
+                                    </list>
+                                </field>
                                 <field name="dosen_ids" readonly="1">
                                     <list create="0" edit="0" delete="0">
                                         <field name="display_name"/>
@@ -66,7 +65,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Data Akademik">
+                        <page string="Kurikulum dan Perkuliahan">
                             <group>
                                 <field name="akademik_cpl_ids" readonly="1">
                                     <list create="0" edit="0" delete="0">
@@ -248,17 +247,15 @@
         <field name="inherit_id" ref="view_erpobe_master_fakultas_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="replace">
-                <notebook>
-                    <page string="Program Studi">
-                        <field name="prodi_ids">
-                            <list>
-                                <field name="kode"/>
-                                <field name="name"/>
-                                <field name="active"/>
-                            </list>
-                        </field>
-                    </page>
-                </notebook>
+                <group string="Program Studi">
+                    <field name="prodi_ids">
+                        <list>
+                            <field name="kode"/>
+                            <field name="name"/>
+                            <field name="active"/>
+                        </list>
+                    </field>
+                </group>
             </xpath>
         </field>
     </record>

@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="fakultas_id"/>
                 <filter name="archived" string="Diarsipkan" domain="[('active', '=', False)]"/>
+                <filter name="group_fakultas" string="Fakultas" context="{'group_by': 'fakultas_id'}"/>
             </search>
         </field>
     </record>
@@ -40,15 +41,15 @@
                         <button name="action_open_penawaran" type="object" string="Penawaran Mata Kuliah"/>
                     </group>
                     <notebook>
-                        <page string="CPL">
+                        <page string="Capaian Pembelajaran">
+                            <separator string="Capaian Pembelajaran Lulusan"/>
                             <field name="cpl_ids">
                                 <list editable="bottom">
                                     <field name="kode_cpl"/>
                                     <field name="name"/>
                                 </list>
                             </field>
-                        </page>
-                        <page string="CPMK">
+                            <separator string="Capaian Pembelajaran Mata Kuliah"/>
                             <field name="cpmk_ids" readonly="1">
                                 <list>
                                     <field name="kode_cpmk"/>
@@ -57,10 +58,10 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Dosen">
+                        <page string="Mahasiswa dan Dosen">
+                            <separator string="Dosen"/>
                             <field name="dosen_ids" widget="many2many_tags"/>
-                        </page>
-                        <page string="Mahasiswa">
+                            <separator string="Mahasiswa"/>
                             <field name="mahasiswa_ids" readonly="1">
                                 <list>
                                     <field name="nim"/>
@@ -69,7 +70,8 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Mata Kuliah">
+                        <page string="Perkuliahan">
+                            <separator string="Mata Kuliah"/>
                             <field name="matakuliah_ids">
                                 <list editable="bottom">
                                     <field name="kode_mk"/>
@@ -78,8 +80,7 @@
                                     <field name="semester"/>
                                 </list>
                             </field>
-                        </page>
-                        <page string="Rombel">
+                            <separator string="Rombel"/>
                             <field name="rombel_ids">
                                 <list editable="bottom">
                                     <field name="name"/>
@@ -106,7 +107,8 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Metode Pembelajaran">
+                        <page string="Referensi dan Metode">
+                            <separator string="Metode Pembelajaran"/>
                             <field name="metode_ids">
                                 <list editable="bottom">
                                     <field name="kode"/>
@@ -114,8 +116,7 @@
                                     <field name="active"/>
                                 </list>
                             </field>
-                        </page>
-                        <page string="Referensi Akademik">
+                            <separator string="Referensi Akademik"/>
                             <field name="referensi_ids">
                                 <list editable="bottom">
                                     <field name="kode"/>

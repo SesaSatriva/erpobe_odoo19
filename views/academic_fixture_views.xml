@@ -22,7 +22,7 @@
                 <field name="name"/>
                 <field name="prodi_id"/>
                 <field name="angkatan_mulai"/>
-                <field name="source_type" widget="badge"/>
+                <field name="source_type" optional="hide"/>
                 <field name="active"/>
             </list>
         </field>
@@ -96,6 +96,20 @@
             </list>
         </field>
     </record>
+    <record id="view_erpobe_fixture_source_search" model="ir.ui.view">
+        <field name="name">erpobe.akademik.fixture.source.search</field>
+        <field name="model">erpobe.akademik.fixture.source</field>
+        <field name="arch" type="xml">
+            <search string="Sumber Data Fixture">
+                <field name="name"/>
+                <field name="fixture_key"/>
+                <field name="record_model"/>
+                <field name="source_type"/>
+                <filter name="group_model" string="Model Sumber" context="{'group_by': 'record_model'}"/>
+                <filter name="group_source_type" string="Jenis Sumber" context="{'group_by': 'source_type'}"/>
+            </search>
+        </field>
+    </record>
     <record id="view_erpobe_fixture_source_form" model="ir.ui.view">
         <field name="name">erpobe.akademik.fixture.source.form</field>
         <field name="model">erpobe.akademik.fixture.source</field>
@@ -118,5 +132,6 @@
         <field name="name">Sumber Data Fixture</field>
         <field name="res_model">erpobe.akademik.fixture.source</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_erpobe_fixture_source_search"/>
     </record>
 </odoo>

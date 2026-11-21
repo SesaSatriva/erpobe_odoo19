@@ -9,8 +9,13 @@
                 <field name="nim"/>
                 <field name="rombel_id"/>
                 <field name="angkatan"/>
+                <field name="prodi_id"/>
+                <filter name="ipk_tinggi" string="IPK 3,50 ke atas" domain="[('ipk', '&gt;=', 3.50)]"/>
+                <filter name="ipk_lulus" string="IPK 2,00 ke atas" domain="[('ipk', '&gt;=', 2.00)]"/>
+                <filter name="ipk_rendah" string="IPK di bawah 2,00" domain="[('ipk', '&lt;', 2.00)]"/>
                 <filter name="group_rombel" string="Rombel" context="{'group_by': 'rombel_id'}"/>
                 <filter name="group_angkatan" string="Angkatan" context="{'group_by': 'angkatan'}"/>
+                <filter name="group_prodi" string="Program Studi" context="{'group_by': 'prodi_id'}"/>
             </search>
         </field>
     </record>
@@ -102,7 +107,7 @@
         </field>
     </record>
     <record id="action_erpobe_khs" model="ir.actions.act_window">
-        <field name="name">Hasil Studi Mahasiswa</field>
+        <field name="name">Monitoring IPK Mahasiswa</field>
         <field name="res_model">erpobe.report.khs</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_erpobe_khs_search"/>

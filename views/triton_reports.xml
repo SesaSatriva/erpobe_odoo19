@@ -64,21 +64,32 @@
                         <p><strong>Program studi:</strong> <span t-field="doc.prodi_id"/> • <strong>Tahun ajaran:</strong> <span t-field="doc.tahun_ajaran_id"/> • <strong>Versi:</strong> <span t-field="doc.version"/></p>
                         <p><strong>Status:</strong> <span t-field="doc.status"/> • <strong>Bobot:</strong> <span t-field="doc.weight_status"/></p>
                         <h3>Deskripsi Mata Kuliah</h3><p t-field="doc.deskripsi_mk"/>
+                        <h3>Identitas Akademik</h3>
+                        <p><strong>Program studi:</strong> <span t-field="doc.prodi_id"/> • <strong>Semester:</strong> <span t-field="doc.semester"/> • <strong>SKS:</strong> <span t-field="doc.sks"/></p>
+                        <p><strong>Dosen koordinator:</strong> <span t-field="doc.koordinator_id"/></p>
+                        <p><strong>Tim pengampu:</strong> <t t-foreach="doc.tim_pengampu_ids" t-as="lecturer"><span t-field="lecturer.name"/>; </t></p>
+                        <h3>Capaian Pembelajaran Lulusan</h3>
+                        <ul><li t-foreach="doc.cpl_ids" t-as="cpl"><span t-field="cpl.kode_cpl"/> - <span t-field="cpl.name"/></li></ul>
                         <h3>CPMK</h3>
-                        <ul><li t-foreach="doc.cpmk_ids" t-as="cpmk"><span t-field="cpmk.name"/></li></ul>
+                        <ul><li t-foreach="doc.cpmk_ids" t-as="cpmk"><span t-field="cpmk.kode_cpmk"/> - <span t-field="cpmk.name"/></li></ul>
                         <h3>Komponen Penilaian</h3>
-                        <ul><li t-foreach="doc.komponen_ids" t-as="component"><span t-field="component.name"/></li></ul>
+                        <table class="table table-sm"><thead><tr><th>Komponen</th><th>Bobot</th></tr></thead><tbody><tr t-foreach="doc.rps_komponen_ids" t-as="component"><td><span t-field="component.komponen_id"/></td><td><span t-field="component.bobot"/>%</td></tr></tbody></table>
                         <h3>Kegiatan Perkuliahan</h3>
                         <table class="table table-sm">
-                            <thead><tr><th>Minggu</th><th>Bahan Kajian</th><th>Metode</th></tr></thead>
+                            <thead><tr><th>Minggu</th><th>Bahan Kajian</th><th>Metode</th><th>Pengalaman Belajar</th><th>Waktu</th><th>Penilaian</th></tr></thead>
                             <tbody>
                                 <tr t-foreach="doc.kegiatan_perkuliahan_ids" t-as="activity">
                                     <td><span t-field="activity.minggu"/></td>
                                     <td><span t-field="activity.bahan_kajian"/></td>
                                     <td><span t-field="activity.metode_pembelajaran_id"/></td>
+                                    <td><span t-field="activity.pengalaman_belajar"/></td>
+                                    <td><span t-field="activity.estimasi_waktu"/> menit</td>
+                                    <td><span t-field="activity.teknik_penilaian"/></td>
                                 </tr>
                             </tbody>
                         </table>
+                        <h3>Referensi</h3>
+                        <ul><li t-foreach="doc.referensi_ids" t-as="reference"><span t-field="reference.judul"/> - <span t-field="reference.penulis"/></li></ul>
                     </div>
                 </t>
             </t>

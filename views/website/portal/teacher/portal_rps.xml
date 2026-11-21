@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_teacher_rps_page" name="RPS Dosen">
-        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>RPS mata kuliah yang diampu</h1><p class="o_triton_subtitle">Aksi hanya tersedia untuk penawaran yang ditugaskan kepada Anda.</p></div></header><div t-if="message" class="o_triton_error" role="alert" t-out="message"/><t t-call="erpobe.triton_portal_list_controls"/><div t-if="lines" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Tahun ajaran</th><th>Mata kuliah</th><th>Status RPS</th><th>Bobot</th><th>Aksi</th>        </tr></thead><tbody><t t-foreach="lines" t-as="line"><tr><td><t t-out="line['year']"/> • <t t-out="line['semester']"/></td><td><t t-out="line['code']"/> — <t t-out="line['course']"/></td><td t-out="line['status']"/><td t-out="line['weights']"/><td><form t-if="not line['rps_id']" t-att-action="'/my/rps/%s/create' % line['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><button class="o_triton_btn-ghost" type="submit">Buat RPS</button></form><a t-if="line['rps_id'] and line['status'] != 'final'" class="o_triton_link" t-att-href="'/my/rps/%s/edit' % line['id']">Edit RPS</a><form t-if="line['sources']" t-att-action="'/my/rps/%s/copy' % line['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><label class="visually-hidden" t-att-for="'source-%s' % line['id']">Salin RPS final sebelumnya</label><select t-att-id="'source-%s' % line['id']" name="source_rps_id" required="required"><option value="">Pilih RPS final</option><t t-foreach="line['sources']" t-as="source"><option t-att-value="source['id']" t-out="source['name']"/></t></select><button class="o_triton_btn-ghost" type="submit">Salin dari tahun sebelumnya</button></form><form t-if="line['rps_id'] and line['status'] == 'review'" t-att-action="'/my/rps/%s/finalize' % line['rps_id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><button class="o_triton_btn" type="submit">Finalisasi</button></form><a t-if="line['rps_id'] and line['status'] == 'final'" class="o_triton_link" t-att-href="'/report/pdf/erpobe.action_report_rps/%s' % line['rps_id']">Cetak RPS</a></td></tr></t></tbody></table></div><div t-else="" class="o_triton_empty"><h2>Belum ada penawaran</h2><p>Tidak ada penawaran yang cocok dengan pencarian atau filter Anda.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>RPS mata kuliah yang diampu</h1><p class="o_triton_subtitle">Aksi hanya tersedia untuk penawaran yang ditugaskan kepada Anda.</p></div></header><div t-if="message" class="o_triton_error" role="alert" t-out="message"/><t t-call="erpobe.triton_portal_list_controls"/><div t-if="lines" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Tahun ajaran</th><th>Mata kuliah</th><th>Status RPS</th><th>Bobot</th><th>Aksi</th>        </tr></thead><tbody><t t-foreach="lines" t-as="line"><tr><td><t t-out="line['year']"/> • <t t-out="line['semester']"/></td><td><t t-out="line['code']"/> — <t t-out="line['course']"/></td><td t-out="line['status']"/><td t-out="line['weights']"/><td><form t-if="not line['rps_id']" t-att-action="'/my/rps/%s/create' % line['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><button class="o_triton_btn-ghost" type="submit">Buat RPS</button></form><a t-if="line['rps_id'] and line['status'] != 'final'" class="o_triton_link" t-att-href="'/my/rps/%s/edit' % line['id']">Edit RPS</a><form t-if="line['sources']" t-att-action="'/my/rps/%s/copy' % line['id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><label class="visually-hidden" t-att-for="'source-%s' % line['id']">Salin RPS final sebelumnya</label><select t-att-id="'source-%s' % line['id']" name="source_rps_id" required="required"><option value="">Pilih RPS final</option><t t-foreach="line['sources']" t-as="source"><option t-att-value="source['id']" t-out="source['name']"/></t></select><button class="o_triton_btn-ghost" type="submit">Salin dari tahun sebelumnya</button></form><form t-if="line['rps_id'] and line['status'] == 'review'" t-att-action="'/my/rps/%s/finalize' % line['rps_id']" method="post"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><button class="o_triton_btn" type="submit">Finalisasi</button></form>        <a t-if="line['rps_id']" class="o_triton_link" t-att-href="'/my/rps/detail/%s' % line['rps_id']">Lihat Detail</a><a t-if="line['rps_id'] and line['status'] == 'final'" class="o_triton_link" t-att-href="'/report/pdf/erpobe.action_report_rps/%s' % line['rps_id']">Cetak RPS</a></td></tr></t></tbody></table></div><div t-else="" class="o_triton_empty"><h2>Belum ada penawaran</h2><p>Tidak ada penawaran yang cocok dengan pencarian atau filter Anda.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+    </template>
+
+    <template id="triton_rps_detail_page" name="Detail RPS">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb"><a href="/my/rps">RPS</a><span> / Detail RPS</span></nav>
+                        <header class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow">Rencana Pembelajaran Semester</span><h1 t-out="rps.display_name"/></div>
+                            <a class="o_triton_btn-ghost" href="javascript:history.back()">Kembali</a>
+                        </header>
+                        <article class="o_triton_panel">
+                            <h2>Identitas Mata Kuliah</h2>
+                            <dl class="o_triton_definition-list">
+                                <dt>Kode / Nama</dt><dd><t t-out="rps.kode_mk"/> — <t t-out="rps.matakuliah_name"/></dd>
+                                <dt>Program studi</dt><dd t-out="rps.prodi_id.display_name"/>
+                                <dt>Tahun ajaran / Semester</dt><dd><t t-out="rps.tahun_ajaran_id.display_name"/> / <t t-out="rps.semester"/></dd>
+                                <dt>SKS</dt><dd t-out="rps.sks"/>
+                                <dt>Dosen pengampu</dt><dd><t t-if="rps.koordinator_id" t-out="rps.koordinator_id.name"/><t t-foreach="rps.tim_pengampu_ids" t-as="lecturer">; <t t-out="lecturer.name"/></t></dd>
+                                <dt>Status / Versi</dt><dd><t t-out="rps.status"/> / <t t-out="rps.version"/></dd>
+                            </dl>
+                            <h3>Deskripsi Mata Kuliah</h3><p t-out="rps.deskripsi_mk or '-'"/>
+                            <h3>CPL Terkait</h3>
+                            <ul class="o_triton_list"><li t-foreach="rps.cpl_ids" t-as="cpl"><strong t-out="cpl.kode_cpl"/> — <t t-out="cpl.name"/></li></ul>
+                            <h3>CPMK</h3>
+                            <ul class="o_triton_list"><li t-foreach="rps.cpmk_ids" t-as="cpmk"><strong t-out="cpmk.kode_cpmk"/> — <t t-out="cpmk.name"/></li></ul>
+                            <h3>Komponen dan Alokasi Penilaian</h3>
+                            <table class="o_triton_table"><thead><tr><th>Komponen</th><th>Bobot</th></tr></thead><tbody><tr t-foreach="rps.rps_komponen_ids" t-as="component"><td t-out="component.komponen_id.name"/><td><t t-out="component.bobot"/>%</td></tr></tbody></table>
+                            <h3>Rencana Pembelajaran Per Pertemuan</h3>
+                            <div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Minggu</th><th>Bahan Kajian</th><th>Metode</th><th>Pengalaman Belajar</th><th>Waktu</th><th>Penilaian</th></tr></thead><tbody><tr t-foreach="rps.kegiatan_perkuliahan_ids" t-as="activity"><td t-out="activity.minggu"/><td t-out="activity.bahan_kajian"/><td t-out="activity.metode_pembelajaran_id.name"/><td t-out="activity.pengalaman_belajar"/><td><t t-out="activity.estimasi_waktu"/> menit</td><td t-out="activity.teknik_penilaian"/></tr></tbody></table></div>
+                            <h3>Referensi</h3>
+                            <ul class="o_triton_list"><li t-foreach="rps.referensi_ids" t-as="reference"><t t-out="reference.judul"/> — <t t-out="reference.penulis"/></li></ul>
+                        </article>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
     </template>
 
 </odoo>

@@ -192,23 +192,23 @@ access_rombel_dosen,access.rombel.dosen,model_erpobe_master_rombel,erpobe.group_
 access_rombel_mahasiswa,access.rombel.mahasiswa,model_erpobe_master_rombel,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_report_khs_settings,erpobe.report.khs settings,model_erpobe_report_khs,base.group_system,1,1,1,1
 access_erpobe_report_khs_admin,access.erpobe.report.khs.admin,model_erpobe_report_khs,erpobe.group_admin,1,1,1,1
-access_erpobe_report_khs_dosen,access.erpobe.report.khs.dosen,model_erpobe_report_khs,erpobe.group_dosen,1,0,0,0
+access_erpobe_report_khs_dosen,access.erpobe.report.khs.dosen,model_erpobe_report_khs,erpobe.group_dosen,0,0,0,0
 access_erpobe_report_khs_mahasiswa,access.erpobe.report.khs.mahasiswa,model_erpobe_report_khs,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_report_khs_cpl_settings,erpobe.report.khs.cpl settings,model_erpobe_report_khs_cpl,base.group_system,1,1,1,1
 access_erpobe_report_khs_cpl_admin,access.erpobe.report.khs.cpl.admin,model_erpobe_report_khs_cpl,erpobe.group_admin,1,1,1,1
-access_erpobe_report_khs_cpl_dosen,access.erpobe.report.khs.cpl.dosen,model_erpobe_report_khs_cpl,erpobe.group_dosen,1,1,1,1
+access_erpobe_report_khs_cpl_dosen,access.erpobe.report.khs.cpl.dosen,model_erpobe_report_khs_cpl,erpobe.group_dosen,0,0,0,0
 access_erpobe_report_khs_cpl_mahasiswa,access.erpobe.report.khs.cpl.mahasiswa,model_erpobe_report_khs_cpl,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_report_khs_komponen_settings,erpobe.report.khs.komponen settings,model_erpobe_report_khs_komponen,base.group_system,1,1,1,1
 access_erpobe_report_khs_komponen_admin,erpobe.report.khs.komponen.admin,model_erpobe_report_khs_komponen,erpobe.group_admin,1,1,1,1
-access_erpobe_report_khs_komponen_dosen,erpobe.report.khs.komponen.dosen,model_erpobe_report_khs_komponen,erpobe.group_dosen,1,0,0,0
+access_erpobe_report_khs_komponen_dosen,erpobe.report.khs.komponen.dosen,model_erpobe_report_khs_komponen,erpobe.group_dosen,0,0,0,0
 access_erpobe_report_khs_komponen_mahasiswa,erpobe.report.khs.komponen.mahasiswa,model_erpobe_report_khs_komponen,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_report_khs_cpmk_settings,erpobe.report.khs.cpmk settings,model_erpobe_report_khs_cpmk,base.group_system,1,1,1,1
 access_erpobe_report_khs_cpmk_admin,access.erpobe.report.khs.cpmk.admin,model_erpobe_report_khs_cpmk,erpobe.group_admin,1,1,1,1
-access_erpobe_report_khs_cpmk_dosen,access.erpobe.report.khs.cpmk.dosen,model_erpobe_report_khs_cpmk,erpobe.group_dosen,1,1,1,1
+access_erpobe_report_khs_cpmk_dosen,access.erpobe.report.khs.cpmk.dosen,model_erpobe_report_khs_cpmk,erpobe.group_dosen,0,0,0,0
 access_erpobe_report_khs_cpmk_mahasiswa,access.erpobe.report.khs.cpmk.mahasiswa,model_erpobe_report_khs_cpmk,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_report_khs_mk_settings,erpobe.report.khs.mk settings,model_erpobe_report_khs_mk,base.group_system,1,1,1,1
 access_erpobe_report_khs_mk_admin,access.erpobe.report.khs.mk.admin,model_erpobe_report_khs_mk,erpobe.group_admin,1,1,1,1
-access_erpobe_report_khs_mk_dosen,access.erpobe.report.khs.mk.dosen,model_erpobe_report_khs_mk,erpobe.group_dosen,1,1,1,1
+access_erpobe_report_khs_mk_dosen,access.erpobe.report.khs.mk.dosen,model_erpobe_report_khs_mk,erpobe.group_dosen,0,0,0,0
 access_erpobe_report_khs_mk_mahasiswa,access.erpobe.report.khs.mk.mahasiswa,model_erpobe_report_khs_mk,erpobe.group_mahasiswa,1,0,0,0
 access_erpobe_summary_cpl_settings,erpobe.summary.cpl settings,model_erpobe_summary_cpl,base.group_system,1,1,1,1
 access_erpobe_summary_cpl_admin,erpobe.summary.cpl.admin,model_erpobe_summary_cpl,erpobe.group_admin,1,1,1,1

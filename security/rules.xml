@@ -620,16 +620,22 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
     <record id="erpobe_report_khs_faculty_scope" model="ir.rule">
-        <field name="name">erpobe.report.khs: cakupan prodi</field>
+        <field name="name">erpobe.report.khs: tidak tersedia untuk dosen</field>
         <field name="model_id" ref="model_erpobe_report_khs"/>
-        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+        <field name="domain_force">[(0, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_dosen'))]"/>
     </record>
     <record id="erpobe_report_khs_own" model="ir.rule">
         <field name="name">erpobe.report.khs: data sendiri</field>
         <field name="model_id" ref="model_erpobe_report_khs"/>
         <field name="domain_force">[('mahasiswa_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_report_khs_admin_global" model="ir.rule">
+        <field name="name">erpobe.report.khs: Admin global</field>
+        <field name="model_id" ref="model_erpobe_report_khs"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin'))]"/>
     </record>
     <record id="erpobe_report_khs_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs: Superadmin global</field>
@@ -644,16 +650,22 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
     <record id="erpobe_report_khs_mk_faculty_scope" model="ir.rule">
-        <field name="name">erpobe.report.khs.mk: cakupan prodi</field>
+        <field name="name">erpobe.report.khs.mk: tidak tersedia untuk dosen</field>
         <field name="model_id" ref="model_erpobe_report_khs_mk"/>
-        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+        <field name="domain_force">[(0, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_dosen'))]"/>
     </record>
     <record id="erpobe_report_khs_mk_own" model="ir.rule">
         <field name="name">erpobe.report.khs.mk: data sendiri</field>
         <field name="model_id" ref="model_erpobe_report_khs_mk"/>
         <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_report_khs_mk_admin_global" model="ir.rule">
+        <field name="name">erpobe.report.khs.mk: Admin global</field>
+        <field name="model_id" ref="model_erpobe_report_khs_mk"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin'))]"/>
     </record>
     <record id="erpobe_report_khs_mk_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.mk: Superadmin global</field>
@@ -668,16 +680,22 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
     <record id="erpobe_report_khs_cpmk_faculty_scope" model="ir.rule">
-        <field name="name">erpobe.report.khs.cpmk: cakupan prodi</field>
+        <field name="name">erpobe.report.khs.cpmk: tidak tersedia untuk dosen</field>
         <field name="model_id" ref="model_erpobe_report_khs_cpmk"/>
-        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+        <field name="domain_force">[(0, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_dosen'))]"/>
     </record>
     <record id="erpobe_report_khs_cpmk_own" model="ir.rule">
         <field name="name">erpobe.report.khs.cpmk: data sendiri</field>
         <field name="model_id" ref="model_erpobe_report_khs_cpmk"/>
         <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_report_khs_cpmk_admin_global" model="ir.rule">
+        <field name="name">erpobe.report.khs.cpmk: Admin global</field>
+        <field name="model_id" ref="model_erpobe_report_khs_cpmk"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin'))]"/>
     </record>
     <record id="erpobe_report_khs_cpmk_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.cpmk: Superadmin global</field>
@@ -692,16 +710,22 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
     <record id="erpobe_report_khs_cpl_faculty_scope" model="ir.rule">
-        <field name="name">erpobe.report.khs.cpl: cakupan prodi</field>
+        <field name="name">erpobe.report.khs.cpl: tidak tersedia untuk dosen</field>
         <field name="model_id" ref="model_erpobe_report_khs_cpl"/>
-        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+        <field name="domain_force">[(0, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_dosen'))]"/>
     </record>
     <record id="erpobe_report_khs_cpl_own" model="ir.rule">
         <field name="name">erpobe.report.khs.cpl: data sendiri</field>
         <field name="model_id" ref="model_erpobe_report_khs_cpl"/>
         <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_report_khs_cpl_admin_global" model="ir.rule">
+        <field name="name">erpobe.report.khs.cpl: Admin global</field>
+        <field name="model_id" ref="model_erpobe_report_khs_cpl"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin'))]"/>
     </record>
     <record id="erpobe_report_khs_cpl_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.cpl: Superadmin global</field>
@@ -716,16 +740,22 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
     <record id="erpobe_report_khs_komponen_faculty_scope" model="ir.rule">
-        <field name="name">erpobe.report.khs.komponen: cakupan prodi</field>
+        <field name="name">erpobe.report.khs.komponen: tidak tersedia untuk dosen</field>
         <field name="model_id" ref="model_erpobe_report_khs_komponen"/>
-        <field name="domain_force">[('prodi_id', 'in', user.erpobe_prodi_ids.ids)]</field>
-        <field name="groups" eval="[(6, 0, [ref('erpobe.group_admin'), ref('erpobe.group_dosen')])]"/>
+        <field name="domain_force">[(0, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_dosen'))]"/>
     </record>
     <record id="erpobe_report_khs_komponen_own" model="ir.rule">
         <field name="name">erpobe.report.khs.komponen: data sendiri</field>
         <field name="model_id" ref="model_erpobe_report_khs_komponen"/>
         <field name="domain_force">[('khs_id.mahasiswa_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('erpobe.group_mahasiswa'))]"/>
+    </record>
+    <record id="erpobe_report_khs_komponen_admin_global" model="ir.rule">
+        <field name="name">erpobe.report.khs.komponen: Admin global</field>
+        <field name="model_id" ref="model_erpobe_report_khs_komponen"/>
+        <field name="domain_force">[(1, "=", 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_admin'))]"/>
     </record>
     <record id="erpobe_report_khs_komponen_superadmin_global" model="ir.rule">
         <field name="name">erpobe.report.khs.komponen: Superadmin global</field>

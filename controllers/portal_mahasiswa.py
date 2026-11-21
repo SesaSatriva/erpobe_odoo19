@@ -101,6 +101,7 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 'year': line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran,
                 'semester': line.penawaran_line_id.tahun_ajaran_id.semester,
                 'rps': bool(final_rps),
+                'rps_id': final_rps.id if final_rps else 0,
                 'components': [
                     {'name': grade.komponen_id.name, 'score': grade.nilai}
                     for grade in component_grades
@@ -111,6 +112,22 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 ],
             })
         return request.render('erpobe.triton_student_courses_page', {'courses': courses, 'pagination': pagination, 'list_action': '/my/mata-kuliah'})
+
+    @http.route('/my/rps/<int:rps_id>', type='http', auth='user', website=True)
+    def triton_student_rps_detail(self, rps_id, **kwargs):
+        student = self._require_student()
+        rps = request.env['erpobe.akademik.rps'].sudo().browse(rps_id)
+        if not rps.exists() or rps.status != 'final':
+            raise UserError('RPS tidak ditemukan atau belum final.')
+        authorized = request.env['erpobe.akademik.krs.line'].sudo().search_count([
+            ('mahasiswa_id', '=', student.id),
+            ('krs_id.state', '=', 'approved'),
+            ('matakuliah_id', '=', rps.matakuliah_id.id),
+            ('penawaran_line_id', '=', rps.penawaran_line_id.id),
+        ])
+        if not authorized:
+            raise AccessError('RPS ini tidak relevan dengan mata kuliah yang Anda ambil.')
+        return request.render('erpobe.triton_rps_detail_page', {'rps': rps})
 
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)
     def triton_student_cpl(self, **kwargs):

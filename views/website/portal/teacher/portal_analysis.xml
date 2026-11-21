@@ -23,19 +23,11 @@
                                     <article class="o_triton_panel">
                                         <h3 t-out="class_item['course']"/>
                                         <span class="o_triton_badge" t-out="class_item['year']"/>
-                                        <ul t-if="class_item['results']" class="o_triton_list">
-                                            <t t-foreach="class_item['results']" t-as="result">
-                                                <li>
-                                                    <strong t-out="result['code']"/>:
-                                                    <t t-out="result['description']"/>
-                                                    <br/>
-                                                    Rata-rata <t t-out="result['average']"/>%
-                                                    • <t t-out="result['below_target']"/> mahasiswa
-                                                    di bawah target <t t-out="result['target']"/>%
-                                                </li>
-                                            </t>
-                                        </ul>
-                                        <p t-else="" class="o_triton_caption">Belum ada nilai CPMK tersedia.</p>
+                                        <p>Jumlah mahasiswa: <strong t-out="class_item['student_count']"/></p>
+                                        <p>Rata-rata capaian CPMK: <strong t-out="class_item['average']"/>%</p>
+                                        <p>Jumlah CPMK: <strong t-out="class_item['cpmk_count']"/></p>
+                                        <p>Status: <strong t-out="class_item['met_count']"/> nilai tercapai</p>
+                                        <a class="o_triton_btn" t-att-href="'/my/analisis/mata-kuliah/%s' % class_item['line_id']">Lihat Detail Analisis</a>
                                     </article>
                                 </t>
                             </div>
@@ -50,9 +42,13 @@
                                     <thead>
                                         <tr>
                                             <th>Kode dan keterangan CPL</th>
+                                            <th>Program studi</th>
+                                            <th>Mata kuliah</th>
                                             <th>Rata-rata</th>
-                                            <th>Mahasiswa di bawah target</th>
                                             <th>Jumlah mahasiswa</th>
+                                            <th>Target</th>
+                                            <th>Mencapai target</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,9 +57,13 @@
                                                 <strong t-out="result['code']"/>:
                                                 <t t-out="result['description']"/>
                                             </th>
+                                            <td t-out="result['prodi']"/>
+                                            <td t-out="result['course_count']"/>
                                             <td><t t-out="result['average']"/>%</td>
-                                            <td><t t-out="result['below_target']"/></td>
                                             <td><t t-out="result['student_count']"/></td>
+                                            <td><t t-out="result['target']"/>%</td>
+                                            <td><t t-out="result['met_percentage']"/>%</td>
+                                            <td><a class="o_triton_link" t-att-href="'/my/analisis/cpl/%s' % result['id']">Lihat Detail</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -75,6 +75,65 @@
                     </div>
                 </section>
                 <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+    <template id="triton_cpmk_course_detail_page" name="Detail CPMK Mata Kuliah">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section"><div class="o_triton_container">
+                    <nav class="o_triton_breadcrumb"><a href="/my/analisis">Analisis</a><span> / Detail Mata Kuliah</span></nav>
+                    <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Capaian CPMK</span><h1 t-out="line.matakuliah_id.display_name"/></div><a class="o_triton_btn-ghost" href="/my/analisis">Kembali</a></header>
+                    <div class="o_triton_grid-three"><article t-foreach="results" t-as="result" class="o_triton_panel">
+                        <h2><t t-out="result['code']"/> — <t t-out="result['description']"/></h2>
+                        <p>Rata-rata: <strong t-out="result['average']"/>%</p><p>Target: <strong t-out="result['target']"/>%</p>
+                        <p><span class="o_triton_badge o_triton_badge-success"><t t-out="result['met']"/> tercapai</span> <span class="o_triton_badge o_triton_badge-warning"><t t-out="result['below']"/> belum</span></p>
+                        <p>Ketercapaian: <strong t-out="result['percentage']"/>%</p>
+                        <a class="o_triton_link" t-att-href="'/my/analisis/cpmk/%s/%s' % (line.id, result['id'])">Lihat Detail Mahasiswa</a>
+                    </article></div>
+                </div></section><t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_cpmk_student_detail_page" name="Detail Mahasiswa CPMK">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section"><div class="o_triton_container">
+                    <nav class="o_triton_breadcrumb"><a href="/my/analisis">Analisis</a><span> / Detail Mahasiswa CPMK</span></nav>
+                    <header class="o_triton_heading"><div><span class="o_triton_eyebrow" t-out="cpmk.kode_cpmk"/><h1 t-out="cpmk.name"/></div><a class="o_triton_btn-ghost" t-att-href="'/my/analisis/mata-kuliah/%s' % line.id">Kembali</a></header>
+                    <div class="o_triton_kpi-grid"><article><span>Jumlah mahasiswa</span><strong t-out="len(rows)"/></article><article><span>Rata-rata</span><strong t-out="average"/>%</article><article><span>Mencapai target</span><strong t-out="met_count"/> (<t t-out="met_percentage"/>%)</article></div>
+                    <form class="o_triton_toolbar" method="get"><input type="search" name="q" t-att-value="query" placeholder="Cari NIM atau nama"/><select name="status"><option value="">Semua status</option><option value="tercapai" t-att-selected="'selected' if status_filter == 'tercapai' else None">Tercapai</option><option value="belum" t-att-selected="'selected' if status_filter == 'belum' else None">Belum tercapai</option></select><select name="sort"><option value="student" t-att-selected="'selected' if sort == 'student' else None">Urutan mahasiswa</option><option value="desc" t-att-selected="'selected' if sort == 'desc' else None">Nilai tertinggi</option><option value="asc" t-att-selected="'selected' if sort == 'asc' else None">Nilai terendah</option></select><button class="o_triton_btn" type="submit">Terapkan</button></form>
+                    <div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>No</th><th>NIM</th><th>Nama Mahasiswa</th><th>Nilai Capaian</th><th>Target</th><th>Status</th></tr></thead><tbody><tr t-foreach="rows" t-as="row"><td t-out="row_index + 1"/><td t-out="row['nim']"/><td t-out="row['name']"/><td t-out="row['score']"/><td t-out="row['target']"/><td><span t-att-class="'o_triton_badge o_triton_badge-success' if row['status'] == 'tercapai' else 'o_triton_badge o_triton_badge-warning'" t-out="'Tercapai' if row['status'] == 'tercapai' else 'Belum tercapai'"/></td></tr></tbody></table></div>
+                </div></section><t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_cpl_detail_page" name="Detail CPL">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section"><div class="o_triton_container">
+                    <nav class="o_triton_breadcrumb"><a href="/my/analisis">Analisis</a><span> / Detail CPL</span></nav>
+                    <header class="o_triton_heading"><div><span class="o_triton_eyebrow" t-out="cpl.kode_cpl"/><h1 t-out="cpl.name"/></div><a class="o_triton_btn-ghost" href="/my/analisis">Kembali</a></header>
+                    <div class="o_triton_kpi-grid"><article><span>Rata-rata CPL</span><strong t-out="average"/>%</article><article><span>Target</span><strong t-out="cpl.target_nilai"/>%</article><article><span>Mencapai target</span><strong t-out="met_count"/> (<t t-out="met_percentage"/>%)</article><article><span>Jumlah mahasiswa</span><strong t-out="student_count"/></article></div>
+                    <section class="o_triton_section-heading"><h2>Mata Kuliah Kontributor</h2><ul class="o_triton_list"><li t-foreach="courses" t-as="course" t-out="course.display_name"/></ul></section>
+                    <section class="o_triton_section-heading"><h2>CPMK Kontributor</h2><ul class="o_triton_list"><li t-foreach="cpmks" t-as="cpmk"><strong t-out="cpmk.kode_cpmk"/> — <t t-out="cpmk.name"/></li></ul></section>
+                    <a class="o_triton_btn" t-att-href="'/my/analisis/cpl/%s/mahasiswa' % cpl.id">Lihat Detail Mahasiswa</a>
+                </div></section><t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_cpl_student_detail_page" name="Detail Mahasiswa CPL">
+        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section"><div class="o_triton_container">
+                    <nav class="o_triton_breadcrumb"><a href="/my/analisis">Analisis</a><a t-att-href="'/my/analisis/cpl/%s' % cpl.id"> / Detail CPL</a><span> / Mahasiswa</span></nav>
+                    <header class="o_triton_heading"><div><span class="o_triton_eyebrow" t-out="cpl.kode_cpl"/><h1>Detail Capaian Mahasiswa</h1></div><a class="o_triton_btn-ghost" t-att-href="'/my/analisis/cpl/%s' % cpl.id">Kembali</a></header>
+                    <div class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>NIM</th><th>Nama Mahasiswa</th><th>Nilai CPL</th><th>Target</th><th>Status</th></tr></thead><tbody><tr t-foreach="rows" t-as="row"><td t-out="row['nim']"/><td t-out="row['name']"/><td t-out="row['score']"/><td t-out="row['target']"/><td><span t-att-class="'o_triton_badge o_triton_badge-success' if row['status'] == 'tercapai' else 'o_triton_badge o_triton_badge-warning'" t-out="'Tercapai' if row['status'] == 'tercapai' else 'Belum tercapai'"/></td></tr></tbody></table></div>
+                    <section t-foreach="rows" t-as="row" class="o_triton_section-heading"><h2 t-out="row['name']"/><ul class="o_triton_list"><li t-foreach="row['contributions']" t-as="contribution"><strong t-out="contribution['course']"/> — <t t-out="contribution['cpmk']"/>: <t t-out="contribution['score']"/></li></ul></section>
+                </div></section><t t-call="erpobe.triton_footer"/>
             </main>
         </t>
     </template>

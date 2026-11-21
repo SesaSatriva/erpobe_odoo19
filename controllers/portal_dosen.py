@@ -62,6 +62,20 @@ class TritonPortalDosen(TritonPortalBase):
         data = [{'id': line.id, 'course': line.matakuliah_id.name, 'code': line.matakuliah_id.kode_mk, 'year': line.tahun_ajaran_id.tahun_ajaran, 'semester': line.tahun_ajaran_id.semester, 'status': line.latest_rps_id.status if line.latest_rps_id else 'missing', 'weights': line.latest_rps_id.weight_status if line.latest_rps_id else 'missing', 'rps_id': line.latest_rps_id.id if line.latest_rps_id else 0, 'sources': [{'id': source.id, 'name': source.display_name} for source in request.env['erpobe.akademik.rps'].sudo().search([('matakuliah_id', '=', line.matakuliah_id.id), ('prodi_id', '=', line.prodi_id.id), ('status', '=', 'final'), ('penawaran_line_id', '!=', line.id)], order='tahun_ajaran_id desc, version desc')]} for line in lines]
         return request.render('erpobe.triton_teacher_rps_page', {'lines': data, 'message': request.httprequest.args.get('message', ''), 'pagination': pagination, 'list_action': '/my/rps'})
 
+    @http.route('/my/rps/detail/<int:rps_id>', type='http', auth='user', website=True)
+    def triton_teacher_rps_detail(self, rps_id, **kwargs):
+        teacher = self._require_teacher()
+        rps = request.env['erpobe.akademik.rps'].sudo().browse(rps_id)
+        if not rps.exists():
+            raise UserError('RPS tidak ditemukan.')
+        line = rps.penawaran_line_id
+        if not line or (
+            line.matakuliah_id.koordinator_id != teacher
+            and teacher not in line.matakuliah_id.tim_pengampu_ids
+        ):
+            raise AccessError('RPS ini bukan bagian dari mata kuliah yang Anda ampu.')
+        return request.render('erpobe.triton_rps_detail_page', {'rps': rps})
+
     @http.route('/my/rps/<int:line_id>/create', type='http', auth='user', website=True, methods=['POST'])
     def triton_create_rps(self, line_id, **kwargs):
         _, line = self._authorized_teacher_line(line_id)
@@ -487,12 +501,24 @@ class TritonPortalDosen(TritonPortalBase):
                     'target': cpmk.target_nilai,
                 })
             analysis.append({
+                'line_id': line.id,
                 'course': (
                     f"{line.matakuliah_id.kode_mk}: {line.matakuliah_id.name}"
                     if line.matakuliah_id.kode_mk
                     else line.matakuliah_id.name
                 ),
                 'year': line.tahun_ajaran_id.tahun_ajaran,
+                'student_count': len(students),
+                'average': round(
+                    sum(grades.mapped('nilai_cpmk')) / len(grades)
+                    if grades else 0.0,
+                    2,
+                ),
+                'cpmk_count': len(by_cpmk),
+                'met_count': sum(
+                    grade.nilai_cpmk >= grade.target_nilai
+                    for grade in grades
+                ),
                 'results': results,
             })
 
@@ -515,10 +541,24 @@ class TritonPortalDosen(TritonPortalBase):
             by_cpl.items(), key=lambda item: item[0].kode_cpl
         ):
             scores = [grade.nilai_cpl for grade in grades]
+            course_ids = request.env['erpobe.akademik.cpl.mk.cpmk'].sudo().search([
+                ('cpl_id', '=', cpl.id),
+            ]).mapped('cpmk_id.mk_id').ids
             cpl_analysis.append({
+                'id': cpl.id,
                 'code': cpl.kode_cpl,
                 'description': cpl.name,
+                'prodi': cpl.prodi_id.display_name,
+                'course_count': len(set(course_ids)),
                 'average': round(sum(scores) / len(scores), 2),
+                'met_percentage': round(
+                    (sum(
+                        grade.nilai_cpl >= grade.target_nilai
+                        for grade in grades
+                    ) * 100.0 / len(grades))
+                    if grades else 0.0,
+                    2,
+                ),
                 'below_target': sum(
                     grade.nilai_cpl < cpl.target_nilai for grade in grades
                 ),
@@ -530,4 +570,152 @@ class TritonPortalDosen(TritonPortalBase):
             'cpl_analysis': cpl_analysis,
             'pagination': pagination,
             'list_action': '/my/analisis',
+        })
+
+    @http.route('/my/analisis/mata-kuliah/<int:line_id>', type='http', auth='user', website=True)
+    def triton_teacher_course_analysis_detail(self, line_id, **kwargs):
+        _, line = self._authorized_teacher_line(line_id)
+        students = line.mahasiswa_ids
+        grades = request.env['erpobe.grade.cpmk'].sudo().search([
+            ('mahasiswa_id', 'in', students.ids),
+            ('krs_line_id.penawaran_line_id', '=', line.id),
+            ('is_available', '=', True),
+        ])
+        cpmks = grades.mapped('cpmk_id').sorted('kode_cpmk')
+        results = []
+        for cpmk in cpmks:
+            cpmk_grades = grades.filtered(lambda grade: grade.cpmk_id == cpmk)
+            values = cpmk_grades.mapped('nilai_cpmk')
+            met = sum(value >= cpmk.target_nilai for value in values)
+            results.append({
+                'id': cpmk.id,
+                'code': cpmk.kode_cpmk,
+                'description': cpmk.name,
+                'average': round(sum(values) / len(values), 2) if values else 0.0,
+                'target': cpmk.target_nilai,
+                'met': met,
+                'below': len(values) - met,
+                'percentage': round(met * 100.0 / len(values), 2) if values else 0.0,
+            })
+        return request.render('erpobe.triton_cpmk_course_detail_page', {
+            'line': line,
+            'results': results,
+        })
+
+    @http.route('/my/analisis/cpmk/<int:line_id>/<int:cpmk_id>', type='http', auth='user', website=True)
+    def triton_teacher_cpmk_student_detail(self, line_id, cpmk_id, **kwargs):
+        _, line = self._authorized_teacher_line(line_id)
+        cpmk = request.env['erpobe.akademik.cpmk'].sudo().browse(cpmk_id)
+        if not cpmk.exists() or cpmk.mk_id != line.matakuliah_id:
+            raise UserError('CPMK tidak sesuai dengan mata kuliah ini.')
+        grades = request.env['erpobe.grade.cpmk'].sudo().search([
+            ('mahasiswa_id', 'in', line.mahasiswa_ids.ids),
+            ('krs_line_id.penawaran_line_id', '=', line.id),
+            ('cpmk_id', '=', cpmk.id),
+            ('is_available', '=', True),
+        ])
+        query = (request.httprequest.args.get('q') or '').strip().lower()
+        status_filter = request.httprequest.args.get('status', '')
+        sort = request.httprequest.args.get('sort', 'student')
+        rows = []
+        for grade in grades:
+            student = grade.mahasiswa_id
+            status = 'tercapai' if grade.nilai_cpmk >= grade.target_nilai else 'belum'
+            haystack = f"{student.nim or ''} {student.name or ''}".lower()
+            if query and query not in haystack:
+                continue
+            if status_filter in ('tercapai', 'belum') and status != status_filter:
+                continue
+            rows.append({
+                'nim': student.nim,
+                'name': student.name,
+                'score': grade.nilai_cpmk,
+                'target': grade.target_nilai,
+                'status': status,
+            })
+        rows.sort(key=lambda row: row['score'], reverse=(sort == 'desc'))
+        if sort == 'asc':
+            rows.sort(key=lambda row: row['score'])
+        values = [row['score'] for row in rows]
+        met_count = sum(row['status'] == 'tercapai' for row in rows)
+        return request.render('erpobe.triton_cpmk_student_detail_page', {
+            'line': line,
+            'cpmk': cpmk,
+            'rows': rows,
+            'query': query,
+            'status_filter': status_filter,
+            'sort': sort,
+            'average': round(sum(values) / len(values), 2) if values else 0.0,
+            'met_count': met_count,
+            'met_percentage': round(met_count * 100.0 / len(rows), 2) if rows else 0.0,
+        })
+
+    @http.route('/my/analisis/cpl/<int:cpl_id>', type='http', auth='user', website=True)
+    def triton_teacher_cpl_detail(self, cpl_id, **kwargs):
+        teacher = self._require_teacher()
+        cpl = request.env['erpobe.akademik.cpl'].sudo().browse(cpl_id)
+        if not cpl.exists():
+            raise UserError('CPL tidak ditemukan.')
+        if cpl.prodi_id not in request.env['erpobe.master.dosen'].sudo().browse(teacher.id).prodi_ids:
+            raise AccessError('CPL ini di luar cakupan dosen.')
+        mappings = request.env['erpobe.akademik.cpl.mk.cpmk'].sudo().search([('cpl_id', '=', cpl.id)])
+        courses = mappings.mapped('cpmk_id.mk_id').sorted('kode_mk')
+        cpmks = mappings.mapped('cpmk_id').sorted('kode_cpmk')
+        line_ids = self._teacher_lines(teacher).ids
+        grades = request.env['erpobe.grade.cpl'].sudo().search([
+            ('cpl_id', '=', cpl.id),
+            ('krs_line_id.penawaran_line_id', 'in', line_ids),
+            ('is_available', '=', True),
+        ])
+        values = grades.mapped('nilai_cpl')
+        met = sum(grade.nilai_cpl >= cpl.target_nilai for grade in grades)
+        return request.render('erpobe.triton_cpl_detail_page', {
+            'cpl': cpl,
+            'courses': courses,
+            'cpmks': cpmks,
+            'average': round(sum(values) / len(values), 2) if values else 0.0,
+            'student_count': len(grades),
+            'met_count': met,
+            'met_percentage': round(met * 100.0 / len(grades), 2) if grades else 0.0,
+        })
+
+    @http.route('/my/analisis/cpl/<int:cpl_id>/mahasiswa', type='http', auth='user', website=True)
+    def triton_teacher_cpl_students(self, cpl_id, **kwargs):
+        teacher = self._require_teacher()
+        cpl = request.env['erpobe.akademik.cpl'].sudo().browse(cpl_id)
+        if not cpl.exists():
+            raise UserError('CPL tidak ditemukan.')
+        line_ids = self._teacher_lines(teacher).ids
+        grades = request.env['erpobe.grade.cpl'].sudo().search([
+            ('cpl_id', '=', cpl.id),
+            ('krs_line_id.penawaran_line_id', 'in', line_ids),
+            ('is_available', '=', True),
+        ])
+        rows = []
+        for grade in grades:
+            student = grade.mahasiswa_id
+            contributions = []
+            for mapping in cpl.cpmk_mapping_ids:
+                cpmk_grade = request.env['erpobe.grade.cpmk'].sudo().search([
+                    ('mahasiswa_id', '=', student.id),
+                    ('cpmk_id', '=', mapping.cpmk_id.id),
+                    ('is_available', '=', True),
+                ], limit=1)
+                if cpmk_grade:
+                    contributions.append({
+                        'course': mapping.cpmk_id.mk_id.display_name,
+                        'cpmk': mapping.cpmk_id.display_name,
+                        'score': cpmk_grade.nilai_cpmk,
+                    })
+            rows.append({
+                'nim': student.nim,
+                'name': student.name,
+                'score': grade.nilai_cpl,
+                'target': cpl.target_nilai,
+                'status': 'tercapai' if grade.nilai_cpl >= cpl.target_nilai else 'belum',
+                'contributions': contributions,
+            })
+        return request.render('erpobe.triton_cpl_student_detail_page', {
+            'cpl': cpl,
+            'rows': rows,
         })

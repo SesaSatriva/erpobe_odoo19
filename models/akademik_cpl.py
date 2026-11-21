@@ -41,6 +41,70 @@ class ErpObeAkademikCpl(models.Model):
         "unique(prodi_id, kode_cpl)", "Kode CPL harus unik dalam prodi."
     )
 
+    @api.model
+    def classify_type(self, kode_cpl=None, name=None, indikator=None):
+        text = " ".join(
+            value for value in (kode_cpl or "", name or "", indikator or "")
+            if value
+        ).casefold()
+        sikap = (
+            "etika", "jujur", "mandiri", "sikap", "tanggung jawab",
+            "kerja sama", "kolaborasi", "disiplin", "nasionalisme",
+            "kewarganegaraan", "social", "sosial",
+        )
+        umum = (
+            "komunikasi", "komunikatif", "tim", "belajar sepanjang hayat",
+            "pengambilan keputusan", "kelompok", "multidisiplin",
+            "manajemen", "pemikiran", "inovasi",
+        )
+        khusus = (
+            "merancang", "menganalisis", "menggunakan alat",
+            "perancangan", "analisis", "rekayasa", "teknik",
+            "komputasi", "memodelkan", "mengimplementasikan",
+            "eksperimen", "laboratorium", "aplikasi",
+        )
+        pengetahuan = (
+            "pengetahuan", "memahami", "menerapkan konsep", "ilmu",
+            "prinsip", "teori", "matematika", "sains",
+        )
+        for kind, keywords in (
+            ("sikap", sikap),
+            ("keterampilan_umum", umum),
+            ("keterampilan_khusus", khusus),
+            ("pengetahuan", pengetahuan),
+        ):
+            if any(keyword in text for keyword in keywords):
+                return kind
+        return "lainnya"
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get("jenis_cpl") or values.get("jenis_cpl") == "lainnya":
+                values["jenis_cpl"] = self.classify_type(
+                    values.get("kode_cpl"),
+                    values.get("name"),
+                    values.get("indikator_capaian"),
+                )
+        return super().create(vals_list)
+
+    def write(self, vals):
+        for record in self:
+            if any(field in vals for field in ("kode_cpl", "name", "indikator_capaian")):
+                values = {
+                    "kode_cpl": vals.get("kode_cpl", record.kode_cpl),
+                    "name": vals.get("name", record.name),
+                    "indikator_capaian": vals.get(
+                        "indikator_capaian", record.indikator_capaian
+                    ),
+                }
+                if not vals.get("jenis_cpl") or vals.get("jenis_cpl") == "lainnya":
+                    vals = dict(vals)
+                    vals["jenis_cpl"] = self.classify_type(
+                        values["kode_cpl"], values["name"], values["indikator_capaian"]
+                    )
+        return super().write(vals)
+
     @api.depends("kode_cpl", "name")
     def _compute_display_name(self):
         for record in self:

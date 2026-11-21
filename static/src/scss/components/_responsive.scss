@@ -43,6 +43,9 @@
 }
 
 @media (max-width: 640px) {
+  .o_triton_prodi-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .o_triton_hero .o_triton_container,
   .o_triton_two-col,
   .o_triton_grid-three,

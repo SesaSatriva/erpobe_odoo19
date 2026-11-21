@@ -67,11 +67,17 @@
                                     </div>
                                     <div class="o_triton_filter-field o_triton_filter-field--wide">
                                         <label for="prodi-selection">Program studi <small>(maksimal 6)</small></label>
-                                        <select id="prodi-selection" name="prodi_id" multiple="multiple" size="5" data-max-selection="6" aria-describedby="prodi-selection-help">
+                                        <div id="prodi-selection" class="o_triton_prodi-picker" data-max-selection="6" role="group" aria-describedby="prodi-selection-help">
+                                            <input class="o_triton_prodi-search" type="search" placeholder="Cari program studi" aria-label="Cari program studi"/>
+                                            <div class="o_triton_prodi-options">
                                             <t t-foreach="prodis" t-as="prodi">
-                                                <option t-att-value="prodi['id']" t-att-selected="prodi['id'] in comparison['prodi_ids']" t-out="prodi['name']"/>
+                                                <label class="o_triton_prodi-option" t-att-data-name="prodi['name'].lower()">
+                                                    <input type="checkbox" name="prodi_id" t-att-value="prodi['id']" t-att-checked="prodi['id'] in comparison['prodi_ids']"/>
+                                                    <span t-out="prodi['name']"/>
+                                                </label>
                                             </t>
-                                        </select>
+                                            </div>
+                                        </div>
                                         <small id="prodi-selection-help" class="o_triton_field-help">Pilih maksimal enam program studi dalam satu analisis.</small>
                                     </div>
                                     <div class="o_triton_filter-field o_triton_filter-field--wide">
@@ -103,12 +109,17 @@
                                 <strong t-out="len(comparison['prodis'])"/>
                             </article>
                             <article class="o_triton_summary-item">
-                                <span>Target</span>
-                                <strong><t t-out="comparison['target']"/>%</strong>
+                                <span>Rata-rata capaian</span>
+                                <strong t-if="comparison['summary']['overall_average'] is not None"><t t-out="comparison['summary']['overall_average']"/>%</strong>
+                                <strong t-else="">—</strong>
                             </article>
                             <article class="o_triton_summary-item">
-                                <span>Jenis CPL</span>
-                                <strong><t t-out="comparison['jenis_cpl'] or 'Semua'"/></strong>
+                                <span>Kelompok CPL</span>
+                                <strong t-out="comparison['summary']['category_count']"/>
+                            </article>
+                            <article class="o_triton_summary-item">
+                                <span>Capaian tertinggi</span>
+                                <strong t-out="comparison['summary']['highest_category'] or 'Belum tersedia'"/>
                             </article>
                         </div>
 
@@ -161,9 +172,10 @@
                                                 <t t-foreach="prodi['scores']" t-as="score">
                                                     <div class="o_triton_bar-row">
                                                         <span t-out="comparison['categories'][score_index]['name']"/>
-                                                        <meter class="o_triton_bar-track" min="0" max="100" t-att-value="score or 0" t-att-aria-label="comparison['categories'][score_index]['name']"/>
-                                                        <b t-if="score"><t t-out="score"/>%</b>
-                                                        <b t-else="">—</b>
+                                                        <meter t-if="score is not None" class="o_triton_bar-track" min="0" max="100" t-att-value="score" t-att-aria-label="comparison['categories'][score_index]['name']"/>
+                                                        <span t-if="score is None" class="o_triton_bar-track o_triton_bar-track--empty" aria-label="Data belum tersedia"/>
+                                                        <b t-if="score is not None"><t t-out="score"/>%</b>
+                                                        <b t-else="" title="Data belum tersedia">—</b>
                                                     </div>
                                                 </t>
                                             </div>
@@ -216,7 +228,7 @@
                                                         <span t-out="prodi['name']"/>
                                                     </th>
                                                     <t t-foreach="prodi['scores']" t-as="score">
-                                                        <td t-if="score">
+                                                        <td t-if="score is not None">
                                                             <strong><t t-out="score"/>%</strong>
                                                         </td>
                                                         <td t-else="" class="o_triton_table-empty">Belum ada data</td>
@@ -245,43 +257,55 @@
 
             <script type="text/javascript">
                 (function() {
-                    var select = document.getElementById('prodi-selection');
-                    if (!select) {
+                    var picker = document.getElementById('prodi-selection');
+                    if (!picker) {
                         return;
                     }
                     var status = document.getElementById('prodi-selection-status');
-                    var submitStatus = document.querySelector('.o_triton_submit-status');
+                    var max = parseInt(picker.dataset.maxSelection || '6', 10);
+                    var checkboxes = Array.prototype.slice.call(picker.querySelectorAll('input[type="checkbox"]'));
+                    var search = picker.querySelector('.o_triton_prodi-search');
                     var update = function() {
-                        var values = Array.prototype.slice.call(select.selectedOptions).map(function(option) { return option.value; });
-                        var max = parseInt(select.dataset.maxSelection || '6', 10);
+                        var selected = checkboxes.filter(function(input) { return input.checked; });
                         if (status) {
-                            status.textContent = values.length + '/' + max + ' terpilih';
-                        }
-                        if (values.length > max) {
-                            var remaining = values.length - max;
-                            for (var idx = select.options.length - 1; idx >= 0; idx--) {
-                                if (select.options[idx].selected &amp;&amp; remaining > 0) {
-                                    select.options[idx].selected = false;
-                                    remaining -= 1;
-                                }
-                            }
-                            if (status) {
-                                status.textContent = max + '/' + max + ' terpilih';
-                            }
+                            status.textContent = selected.length + '/' + max + ' terpilih';
                         }
                     };
                     update();
-                    select.addEventListener('change', update);
+                    checkboxes.forEach(function(input) {
+                        input.addEventListener('change', function() {
+                            var selected = checkboxes.filter(function(item) { return item.checked; });
+                            if (selected.length > max) {
+                                input.checked = false;
+                                if (status) {
+                                    status.textContent = max + '/' + max + ' terpilih';
+                                }
+                            }
+                            update();
+                        });
+                    });
+                    if (search) {
+                        search.addEventListener('input', function() {
+                            var query = search.value.trim().toLowerCase();
+                            picker.querySelectorAll('.o_triton_prodi-option').forEach(function(label) {
+                                label.hidden = query &amp;&amp; !(label.dataset.name || '').includes(query);
+                            });
+                        });
+                    }
                     var forms = document.querySelectorAll('.o_triton_filter-form');
                     forms.forEach(function(form) {
-                        form.addEventListener('submit', function() {
+                        form.addEventListener('submit', function(event) {
+                            var yearStart = form.querySelector('[name="tahun_awal"]');
+                            var yearEnd = form.querySelector('[name="tahun_akhir"]');
+                            if (yearStart &amp;&amp; yearEnd &amp;&amp; yearStart.value &amp;&amp; yearEnd.value &amp;&amp; yearStart.value > yearEnd.value) {
+                                event.preventDefault();
+                                alert('Tahun awal tidak boleh melebihi tahun akhir.');
+                                return;
+                            }
                             var button = form.querySelector('.o_triton_primary-action');
                             if (button) {
                                 button.disabled = true;
                                 button.textContent = 'Memproses…';
-                            }
-                            if (submitStatus) {
-                                submitStatus.textContent = 'Memproses analisis…';
                             }
                         });
                     });

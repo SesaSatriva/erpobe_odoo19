@@ -191,6 +191,11 @@ class ErpObeFixtureSeeder(models.AbstractModel):
     _description = "Pemuat Fixture Akademik OBE"
 
     @api.model
+    def _fixture_cpl_type(self, code, description, aspect=None):
+        cpl_model = self.env["erpobe.akademik.cpl"].sudo()
+        return cpl_model.classify_type(code, description, aspect)
+
+    @api.model
     def load_2022_cohort(self):
         params = self.env["ir.config_parameter"].sudo()
         force_seed = self.env.context.get("force_fixture_seed")
@@ -890,6 +895,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                             else f"Indikator simulasi: mahasiswa menunjukkan bukti capaian untuk {description.lower()}."
                         ),
                         "target_nilai": 70.0,
+                        "jenis_cpl": self._fixture_cpl_type(
+                            code, description, aspect
+                        ),
                     },
                 )
             )
@@ -1514,6 +1522,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                                         student_index,
                                         course["spec"]["sequence"],
                                         component_index,
+                                        program["config"]["slug"],
                                     ),
                                 },
                             )
@@ -1687,11 +1696,20 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         return "T"
 
     @api.model
-    def _simulated_score(self, student_index, course_sequence, component_index):
+    def _simulated_score(
+        self, student_index, course_sequence, component_index, program_slug=None
+    ):
         bands = (93, 88, 83, 79, 75, 71, 68, 64, 59, 54)
         base = bands[student_index % len(bands)]
         variation = ((course_sequence * 3 + component_index * 7 + student_index) % 11) - 5
-        return float(max(40, min(99, base + variation)))
+        program_offsets = {
+            "ti": -2,
+            "el": 4,
+            "mf": 1,
+            "si": -5,
+        }
+        program_offset = program_offsets.get(program_slug, 0)
+        return float(max(40, min(99, base + variation + program_offset)))
 
     @api.model
     def _slug(self, value):

@@ -178,6 +178,7 @@ class TritonPublicHelpers(TritonListHelpers):
         cpls = cpl_grades.mapped('cpl_id')
         cpl_types = {row['id']: row['jenis_cpl'] for row in cpls.read(['jenis_cpl'])}
 
+        seen_attempts = set()
         for line in eligible_lines:
             line_krs = krs_lines_by_offer.get(line.id, [])
             if not line_krs:
@@ -188,6 +189,14 @@ class TritonPublicHelpers(TritonListHelpers):
             for krs_line in line_krs:
                 student_cpl_grades = cpl_grades_by_student.get(krs_line.mahasiswa_id.id, [])
                 for grade in student_cpl_grades:
+                    if grade.cpl_id.prodi_id.id != prodi_id:
+                        continue
+                    if grade.is_available is not True:
+                        continue
+                    attempt_key = (year_name, prodi_id, krs_line.mahasiswa_id.id, grade.cpl_id.id)
+                    if attempt_key in seen_attempts:
+                        continue
+                    seen_attempts.add(attempt_key)
                     cpl_id = grade.cpl_id.id
                     score = grade.nilai_cpl
                     kind = cpl_types.get(cpl_id) or 'lainnya'
@@ -196,6 +205,9 @@ class TritonPublicHelpers(TritonListHelpers):
                     accumulators[prodi_id][kind].append(score)
                     year_accumulators[year_name].setdefault((prodi_id, kind), []).append(score)
         prodi_results = []
+        all_category_scores = []
+        highest_category = None
+        lowest_category = None
         for prodi in candidates:
             scores = []
             for kind in _CPL_TYPES:
@@ -204,6 +216,13 @@ class TritonPublicHelpers(TritonListHelpers):
             prodi_results.append({'id': prodi.id, 'name': prodi.name, 'kode': prodi.kode, 'scores': scores, 'warning': warnings[prodi.id]})
         categories = [{'key': key, 'name': value} for key, value in _CPL_TYPES.items() if not jenis_cpl or key == jenis_cpl]
         selected_indexes = [index for index, key in enumerate(_CPL_TYPES) if not jenis_cpl or key == jenis_cpl]
+        category_totals = {}
+        for result in prodi_results:
+            for index, category in enumerate(categories):
+                score = result['scores'][selected_indexes[index]]
+                if score is not None:
+                    all_category_scores.append(score)
+                    category_totals.setdefault(category['key'], []).append(score)
         for result in prodi_results:
             result['scores'] = [result['scores'][index] for index in selected_indexes]
             n = len(result['scores'])
@@ -213,12 +232,56 @@ class TritonPublicHelpers(TritonListHelpers):
                 radius = (score or 0) * 0.78
                 points.append(f'{100 + math.cos(angle) * radius:.2f},{100 + math.sin(angle) * radius:.2f}')
             result['radar_points'] = ' '.join(points)
+        available_category_names = {
+            item['key']: item['name'] for item in categories
+        }
+        category_averages = {
+            kind: round(sum(values) / len(values), 2)
+            for kind, values in category_totals.items()
+            if values
+        }
+        if category_averages:
+            highest_category = available_category_names.get(
+                max(category_averages, key=category_averages.get)
+            )
+            lowest_category = available_category_names.get(
+                min(category_averages, key=category_averages.get)
+            )
+        target_values = cpl_grades.mapped('target_nilai')
+        target = round(sum(target_values) / len(target_values), 2) if target_values else None
+        overall_average = round(sum(all_category_scores) / len(all_category_scores), 2) if all_category_scores else None
+        summary = {
+            'program_count': len(prodi_results),
+            'category_count': len(categories),
+            'overall_average': overall_average,
+            'highest_category': highest_category,
+            'attention_category': lowest_category,
+        }
         trend = []
         for year in sorted(year_accumulators):
             year_values = [score for (prodi_id, kind), values in year_accumulators[year].items() if prodi_id in candidates.ids and (not jenis_cpl or kind == jenis_cpl) for score in values]
             if year_values:
                 trend.append({'year': year, 'average': round(sum(year_values) / len(year_values), 2)})
-        return {'prodis': prodi_results, 'categories': categories, 'warnings': [result['name'] for result in prodi_results if result['warning']], 'years': available_years, 'year_start': year_start or '', 'year_end': year_end or '', 'semester': semester or '', 'faculty_id': int(faculty_id) if str(faculty_id or '').isdigit() else 0, 'prodi_ids': candidates.ids, 'jenis_cpl': jenis_cpl or '', 'trend': trend, 'target': 75, 'methodology': 'Nilai CPMK dihitung dari nilai komponen yang dinormalisasi terhadap alokasi CPMK pada RPS. Nilai akhir mata kuliah dihitung dari CPMK berbobot untuk hasil mata kuliah, tetapi tidak menjadi sumber nilai CPL. Nilai CPL adalah rata-rata tanpa bobot dari CPMK tersedia yang dipetakan; pemetaan MK-CPL hanya menentukan keterkaitan.'}
+        return {
+            'prodis': prodi_results,
+            'categories': categories,
+            'summary': summary,
+            'warnings': [result['name'] for result in prodi_results if result['warning']],
+            'years': available_years,
+            'year_start': year_start or '',
+            'year_end': year_end or '',
+            'semester': semester or '',
+            'faculty_id': int(faculty_id) if str(faculty_id or '').isdigit() else 0,
+            'prodi_ids': candidates.ids,
+            'jenis_cpl': jenis_cpl or '',
+            'trend': trend,
+            'target': target,
+            'methodology': (
+                'Nilai CPMK dihitung dari komponen yang dinilai dan alokasi bobotnya pada RPS final. '
+                'Nilai CPL menggunakan CPMK yang terpetakan ke CPL dan berbobot sesuai bobot CPMK→mata kuliah '
+                'pada RPS yang sama; setiap mahasiswa dihitung satu kali per CPL dalam periode yang dipilih.'
+            ),
+        }
 
     def _mask_identifier(self, value):
         text = (value or '').strip()

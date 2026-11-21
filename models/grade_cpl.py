@@ -117,6 +117,9 @@ class ErpObeGradeCpl(models.Model):
             ("mahasiswa_id", "in", self.mapped("mahasiswa_id").ids),
             ("cpmk_id", "in", cpmk_ids),
             ("is_available", "=", True),
+            ("rps_id.status", "=", "final"),
+            ("krs_line_id.krs_id.state", "=", "approved"),
+            ("krs_line_id.penawaran_line_id.rps_ids.status", "=", "final"),
         ])
         grade_map = {
             (grade.mahasiswa_id.id, grade.cpmk_id.id): grade
@@ -127,21 +130,32 @@ class ErpObeGradeCpl(models.Model):
             mappings_by_cpl.setdefault(mapping.cpl_id.id, []).append(mapping)
 
         for rec in self:
-            total = 0.0
-            count = 0
-            mapped_course_ids = mapped_courses_by_cpl.get(rec.cpl_id.id)
+            weighted_total = 0.0
+            denominator = 0.0
+            mapped_course_ids = mapped_courses_by_cpl.get(rec.cpl_id.id, set())
             for mapping in mappings_by_cpl.get(rec.cpl_id.id, []):
                 cpmk = mapping.cpmk_id
+                if cpmk.prodi_id != rec.cpl_id.prodi_id:
+                    continue
                 if mapped_course_ids and cpmk.mk_id.id not in mapped_course_ids:
                     continue
                 grade = grade_map.get((rec.mahasiswa_id.id, cpmk.id))
                 if not grade:
                     continue
-                total += grade.nilai_cpmk
-                count += 1
-
-            rec.is_available = bool(count)
-            rec.nilai_cpl = total / count if count else 0.0
+                weight = 0.0
+                for weight_line in grade.rps_id.bobot_cpmk_mk_ids:
+                    if weight_line.cpmk_id == cpmk:
+                        weight = weight_line.bobot_cpmk_mk
+                        break
+                if weight <= 0:
+                    continue
+                weighted_total += grade.nilai_cpmk * weight
+                denominator += weight
+            rec.is_available = bool(denominator)
+            rec.nilai_cpl = (
+                max(0.0, min(100.0, weighted_total / denominator))
+                if denominator else 0.0
+            )
 
     @api.constrains("mahasiswa_id", "cpl_id")
     def _check_grade_faculty(self):

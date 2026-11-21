@@ -503,6 +503,60 @@
   padding: 4px;
 }
 
+.o_triton_prodi-picker {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--triton-border);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.o_triton_prodi-picker .o_triton_prodi-search {
+  min-height: 38px;
+  height: 38px;
+  border-radius: 8px;
+}
+
+.o_triton_prodi-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+.o_triton_filter-form .o_triton_prodi-option {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  margin: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--triton-border);
+  border-radius: 8px;
+  color: var(--triton-text);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.o_triton_filter-form .o_triton_prodi-option:has(input:checked) {
+  border-color: var(--triton-primary);
+  background: rgba(0, 168, 204, 0.08);
+  color: var(--triton-deep-ocean);
+  font-weight: 700;
+}
+
+.o_triton_prodi-option input {
+  width: 16px;
+  min-height: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--triton-primary);
+}
+
 .o_triton_filter-field select:focus,
 .o_triton_page select:focus,
 .o_triton_page input:focus,

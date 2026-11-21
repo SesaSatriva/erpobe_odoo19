@@ -1,0 +1,6 @@
+flowchart LR
+  U[Pengguna Administrator/Dosen/Mahasiswa] --> UI[Backend Odoo/XML atau Portal QWeb]
+  UI --> C[Controller dan Python Business Logic]
+  C --> ORM[ORM Odoo]
+  ORM --> M[Model Akademik ERP OBE]
+  M --> DB[(PostgreSQL)]

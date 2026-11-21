@@ -1,0 +1,11 @@
+flowchart TD
+  C[Nilai CPMK] --> W[Kalikan Bobot CPMK terhadap MK]
+  Map[Pemetaan CPL-MK dan CPL-CPMK] --> W
+  FinalRPS[RPS Final dan KRS Approved] --> C
+  W --> P[Pembilang]
+  W --> Q[Penyebut]
+  P --> R[Nilai CPL = Pembilang/Penyebut]
+  Q --> R
+  R --> S{Nilai ≥ Target CPL?}
+  S -->|Ya| T[Tercapai]
+  S -->|Tidak| U[Belum Tercapai]

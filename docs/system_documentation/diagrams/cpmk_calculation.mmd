@@ -1,0 +1,10 @@
+flowchart TD
+  A[Nilai Komponen] --> B[Atribut bobot komponen × alokasi CPMK]
+  RPS[Bobot RPS Komponen Aktif] --> B
+  B --> C[Pembilang Σ Nilai × A]
+  B --> D[Penyebut Σ A]
+  C --> E[Nilai CPMK = Pembilang/Penyebut]
+  D --> E
+  E --> F{Nilai ≥ Target?}
+  F -->|Ya| G[Tercapai]
+  F -->|Tidak| H[Belum Tercapai]

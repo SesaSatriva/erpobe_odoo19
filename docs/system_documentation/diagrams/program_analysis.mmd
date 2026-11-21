@@ -1,0 +1,7 @@
+flowchart TD
+  CPL[Capaian CPL Mahasiswa] --> Rombel[Agregasi per Rombel]
+  CPL --> Prodi[Agregasi per Program Studi]
+  Prodi --> Angkatan[Agregasi menurut Angkatan/Kurikulum]
+  Rombel --> Tabel[Tabel/SQL View Analisis]
+  Prodi --> Tabel
+  Angkatan --> Tabel

@@ -1,0 +1,7 @@
+stateDiagram-v2
+  [*] --> Draft
+  Draft --> Review: Tandai perlu ditinjau
+  Review --> Draft: Tambahan perubahan sebelum final
+  Review --> Final: Validasi bobot 100%
+  Final --> [*]: Read-only
+  Final --> Draft: Salin sebagai versi baru

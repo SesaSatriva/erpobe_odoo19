@@ -1,0 +1,9 @@
+flowchart TB
+  Roles{Hak Utama} --> A[Administrator]
+  Roles --> D[Dosen]
+  Roles --> M[Mahasiswa]
+  A --> AB[CRUD master, kurikulum, RPS, penilaian, laporan]
+  D --> DB[Portal RPS, kelas, perwalian, analisis]
+  M --> MB[Portal KRS, mata kuliah, KHS, CPL, profil]
+  DA[Record rule cakupan prodi] --> D
+  MO[Data sendiri dan rombel/prodi] --> M

@@ -1,0 +1,8 @@
+flowchart TD
+  KRS[KRS Approved] --> Kelas[Penawaran Kelas]
+  RPS[RPS Final] --> Komponen[Nilai Komponen]
+  Kelas --> Komponen
+  Komponen --> CPMK[Nilai CPMK per Mahasiswa]
+  CPMK --> MK[Nilai Mata Kuliah]
+  CPMK --> CPL[Nilai CPL per Mahasiswa]
+  CPL --> KHS[Laporan/KHS/Portal]

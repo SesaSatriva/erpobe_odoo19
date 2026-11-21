@@ -68,6 +68,9 @@ class ErpObeAkademikRps(models.Model):
 
     # Field Related Wajib Store=True untuk Report/Search
     kode_mk = fields.Char(related="matakuliah_id.kode_mk", store=True)
+    matakuliah_name = fields.Char(
+        related="matakuliah_id.name", store=True, index=True
+    )
     sks = fields.Integer(related="matakuliah_id.sks", store=True)
     semester = fields.Integer(related="matakuliah_id.semester", store=True)
     deskripsi_mk = fields.Text(

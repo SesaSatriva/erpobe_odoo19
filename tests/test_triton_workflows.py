@@ -443,6 +443,95 @@ class TestTritonKrsWorkflows(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestTritonPublicRoutes(HttpCase):
+    def test_program_detail_data_tabs_render_with_website_layout(self):
+        prodi = self.env["erpobe.master.prodi"].search(
+            [("active", "=", True)],
+            order="id",
+            limit=1,
+        )
+        self.assertTrue(prodi, "The academic fixture should provide a public program")
+
+        for tab in ("cpl", "mata-kuliah"):
+            with self.subTest(tab=tab):
+                response = self.url_open(
+                    f"/prodi/{prodi.id}?tab={tab}"
+                )
+                self.assertEqual(response.status_code, 200, tab)
+
+        sorted_courses = self.url_open(
+            f"/prodi/{prodi.id}?tab=mata-kuliah&sort=course"
+        )
+        self.assertEqual(sorted_courses.status_code, 200)
+        searched_courses = self.url_open(
+            f"/prodi/{prodi.id}?tab=mata-kuliah&q=Pendidikan"
+        )
+        self.assertEqual(searched_courses.status_code, 200)
+
+    def test_teacher_listing_sorts_and_grade_detail_render(self):
+        teacher = self.env["erpobe.master.dosen"].search(
+            [("user_id", "!=", False)],
+            order="id",
+            limit=1,
+        )
+        self.assertTrue(teacher, "The academic fixture should provide a teacher")
+        line_domain = [
+            "|",
+            ("matakuliah_id.koordinator_id", "=", teacher.id),
+            ("matakuliah_id.tim_pengampu_ids", "in", teacher.id),
+        ]
+        lines = self.env["erpobe.akademik.penawaran.line"].sudo().search(
+            line_domain,
+            order="id",
+        )
+        graded_line = lines.filtered(
+            lambda line: line.latest_rps_id
+            and line.latest_rps_id.status == "final"
+            and line.latest_rps_id.weight_status == "complete"
+        )[:1]
+        self.assertTrue(
+            graded_line,
+            "The academic fixture should provide an assessable teacher class",
+        )
+
+        self.authenticate(teacher.user_id.login, teacher.nip)
+        routes = (
+            "/my/rps?sort=course",
+            "/my/rps?sort=term",
+            "/my/rps?sort=status",
+            "/my/kelas?sort=course",
+            "/my/kelas?sort=term",
+            "/my/riwayat-nilai?sort=student",
+            "/my/perwalian?sort=student",
+            "/my/analisis?sort=course",
+            f"/my/kelas/{graded_line.id}/nilai?sort=student",
+            f"/my/kelas/{graded_line.id}/nilai?sort=nim",
+        )
+        for route in routes:
+            with self.subTest(route=route):
+                response = self.url_open(route)
+                self.assertEqual(response.status_code, 200, route)
+
+        report_response = self.url_open(
+            f"/report/html/erpobe.action_report_rps/"
+            f"{graded_line.latest_rps_id.id}"
+        )
+        self.assertEqual(report_response.status_code, 200)
+
+    def test_student_khs_report_template_renders(self):
+        khs = self.env["erpobe.report.khs"].search(
+            [("mahasiswa_id.user_id", "!=", False)],
+            order="id",
+            limit=1,
+        )
+        self.assertTrue(khs, "The academic fixture should provide a student KHS")
+        student = khs.mahasiswa_id
+        self.authenticate(student.user_id.login, student.nim)
+
+        response = self.url_open(
+            f"/report/html/erpobe.action_report_khs/{khs.id}"
+        )
+        self.assertEqual(response.status_code, 200)
+
     def test_public_routes_and_frontend_asset_respond(self):
         home_response = self.url_open("/")
         self.assertEqual(home_response.status_code, 200, "/")

@@ -21,7 +21,13 @@
                             <thead><tr><th>Semester kurikulum</th><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Nilai angka</th><th>Huruf</th><th>Bobot</th></tr></thead>
                             <tbody>
                                 <tr t-foreach="doc.mk_line_ids" t-as="line">
-                                    <td t-field="line.semester_mk"/><td t-field="line.kode_mk"/><td t-field="line.mk_id"/><td t-field="line.sks"/><td t-field="line.nilai_angka"/><td t-field="line.nilai_huruf"/><td t-field="line.bobot"/>
+                                    <td><span t-field="line.semester_mk"/></td>
+                                    <td><span t-field="line.kode_mk"/></td>
+                                    <td><span t-field="line.mk_id"/></td>
+                                    <td><span t-field="line.sks"/></td>
+                                    <td><span t-field="line.nilai_angka"/></td>
+                                    <td><span t-field="line.nilai_huruf"/></td>
+                                    <td><span t-field="line.bobot"/></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -29,7 +35,10 @@
                         <table class="table table-sm">
                             <thead><tr><th>CPL</th><th>Capaian</th></tr></thead>
                             <tbody>
-                                <tr t-foreach="doc.cpl_line_ids" t-as="line"><td t-field="line.cpl_id"/><td t-field="line.nilai_angka"/></tr>
+                                <tr t-foreach="doc.cpl_line_ids" t-as="line">
+                                    <td><span t-field="line.cpl_id"/></td>
+                                    <td><span t-field="line.nilai_angka"/></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -63,7 +72,11 @@
                         <table class="table table-sm">
                             <thead><tr><th>Minggu</th><th>Bahan Kajian</th><th>Metode</th></tr></thead>
                             <tbody>
-                                <tr t-foreach="doc.kegiatan_perkuliahan_ids" t-as="activity"><td t-field="activity.minggu"/><td t-field="activity.bahan_kajian"/><td t-field="activity.metode_pembelajaran_id"/></tr>
+                                <tr t-foreach="doc.kegiatan_perkuliahan_ids" t-as="activity">
+                                    <td><span t-field="activity.minggu"/></td>
+                                    <td><span t-field="activity.bahan_kajian"/></td>
+                                    <td><span t-field="activity.metode_pembelajaran_id"/></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

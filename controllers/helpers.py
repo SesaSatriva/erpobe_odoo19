@@ -36,7 +36,7 @@ class TritonPublicHelpers(TritonListHelpers):
         faculty = values['fakultas_id']
         return {'id': record.id, 'name': values['name'], 'kode': values['kode'], 'fakultas': faculty[1] if faculty else ''}
 
-    def _public_stats(self):
+    def _public_stats(self, comparison=None):
         env = request.env
         Faculty = env['erpobe.master.fakultas'].sudo()
         Prodi = env['erpobe.master.prodi'].sudo()
@@ -47,7 +47,7 @@ class TritonPublicHelpers(TritonListHelpers):
         Cpmk = env['erpobe.akademik.cpmk'].sudo()
         Rps = env['erpobe.akademik.rps'].sudo()
         students_domain = [('active', '=', True), ('status_akademik', '=', 'aktif')]
-        return {'faculties': Faculty.search_count([('active', '=', True)]), 'prodis': Prodi.search_count([('active', '=', True)]), 'dosen': Dosen.search_count([('active', '=', True)]), 'mahasiswa_aktif': Student.search_count(students_domain), 'courses': Course.search_count([]), 'cpl_count': Cpl.search_count([]), 'cpmk_count': Cpmk.search_count([]), 'rps_final': Rps.search_count([('status', '=', 'final')]), 'institutional_average': self._institutional_average()}
+        return {'faculties': Faculty.search_count([('active', '=', True)]), 'prodis': Prodi.search_count([('active', '=', True)]), 'dosen': Dosen.search_count([('active', '=', True)]), 'mahasiswa_aktif': Student.search_count(students_domain), 'courses': Course.search_count([]), 'cpl_count': Cpl.search_count([]), 'cpmk_count': Cpmk.search_count([]), 'rps_final': Rps.search_count([('status', '=', 'final')]), 'institutional_average': self._institutional_average(comparison)}
 
     def _comparison_params(self):
         args = request.httprequest.args
@@ -102,8 +102,9 @@ class TritonPublicHelpers(TritonListHelpers):
         complete = sum((bool(validator.validate_rps(rps)['complete']) for rps in rps_records))
         return round(complete * 100.0 / len(rps_records), 1)
 
-    def _institutional_average(self):
-        comparison = self._comparison_data(default_latest=True)
+    def _institutional_average(self, comparison=None):
+        if comparison is None:
+            comparison = self._comparison_data(default_latest=True)
         scores = [score for prodi in comparison['prodis'] for score in prodi['scores'] if score is not None]
         return round(sum(scores) / len(scores), 1) if scores else False
 
@@ -115,7 +116,6 @@ class TritonPublicHelpers(TritonListHelpers):
         OfferLine = env['erpobe.akademik.penawaran.line'].sudo()
         Rps = env['erpobe.akademik.rps'].sudo()
         KrsLine = env['erpobe.akademik.krs.line'].sudo()
-        GradeComponent = env['erpobe.grade.komponen'].sudo()
         validator = env['erpobe.weight.validation'].sudo()
         years = Year.search([], order='tahun_ajaran asc, semester asc')
         if default_latest and years:
@@ -147,6 +147,7 @@ class TritonPublicHelpers(TritonListHelpers):
         warnings = {prodi.id: False for prodi in candidates}
         year_accumulators = {}
         offer_lines = OfferLine.search([('penawaran_id', 'in', offers.ids), ('prodi_id', 'in', candidates.ids)]) if offers and candidates else OfferLine
+        eligible_lines = []
         for line in offer_lines:
             prodi_id = line.prodi_id.id
             final_versions = line.rps_ids.filtered(lambda item: item.status == 'final').sorted(key=lambda item: (item.version, item.id), reverse=True)
@@ -157,29 +158,35 @@ class TritonPublicHelpers(TritonListHelpers):
             if not validator.validate_rps(rps)['complete']:
                 warnings[prodi_id] = True
                 continue
-            krs_lines = KrsLine.search([('penawaran_line_id', '=', line.id), ('krs_id.state', '=', 'approved')])
-            if not krs_lines:
+            eligible_lines.append(line)
+
+        krs_lines = KrsLine.search([
+            ('penawaran_line_id', 'in', [line.id for line in eligible_lines]),
+            ('krs_id.state', '=', 'approved'),
+        ]) if eligible_lines else KrsLine
+        krs_lines_by_offer = {}
+        for krs_line in krs_lines:
+            krs_lines_by_offer.setdefault(krs_line.penawaran_line_id.id, []).append(krs_line)
+        student_ids = krs_lines.mapped('mahasiswa_id').ids
+        cpl_grades = env['erpobe.grade.cpl'].sudo().search([
+            ('mahasiswa_id', 'in', student_ids),
+            ('is_available', '=', True),
+        ]) if student_ids else env['erpobe.grade.cpl']
+        cpl_grades_by_student = {}
+        for grade in cpl_grades:
+            cpl_grades_by_student.setdefault(grade.mahasiswa_id.id, []).append(grade)
+        cpls = cpl_grades.mapped('cpl_id')
+        cpl_types = {row['id']: row['jenis_cpl'] for row in cpls.read(['jenis_cpl'])}
+
+        for line in eligible_lines:
+            line_krs = krs_lines_by_offer.get(line.id, [])
+            if not line_krs:
                 continue
-            grade_rows = GradeComponent.search_read([('krs_line_id', 'in', krs_lines.ids)], ['krs_line_id', 'komponen_id', 'nilai'])
-            grades_by_line = {}
-            for row in grade_rows:
-                grades_by_line.setdefault(row['krs_line_id'][0], {})[row['komponen_id'][0]] = row['nilai']
-            component_weights = {}
-            for row in rps.bobot_komponen_cpmk_ids:
-                component_weights.setdefault(row.cpmk_id.id, []).append((row.komponen_penilaian.id, row.bobot_komponen_cpmk))
-            cpl_grades = env['erpobe.grade.cpl'].sudo().search([
-                ('mahasiswa_id', 'in', krs_lines.mapped('mahasiswa_id').ids),
-                ('is_available', '=', True),
-            ])
-            cpls = cpl_grades.mapped('cpl_id')
-            cpl_types = {row['id']: row['jenis_cpl'] for row in cpls.read(['jenis_cpl'])}
+            prodi_id = line.prodi_id.id
             year_name = line.tahun_ajaran_id.tahun_ajaran
             year_accumulators.setdefault(year_name, {})
-            for krs_line in krs_lines:
-                student_grades = grades_by_line.get(krs_line.id, {})
-                student_cpl_grades = cpl_grades.filtered(
-                    lambda grade: grade.mahasiswa_id == krs_line.mahasiswa_id
-                )
+            for krs_line in line_krs:
+                student_cpl_grades = cpl_grades_by_student.get(krs_line.mahasiswa_id.id, [])
                 for grade in student_cpl_grades:
                     cpl_id = grade.cpl_id.id
                     score = grade.nilai_cpl

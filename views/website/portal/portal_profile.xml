@@ -1,7 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_student_profile_page" name="Profil Mahasiswa Portal">
-        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Profil</span><h1>Profil dan pengaturan akun</h1></div></header>        <div t-if="message" class="o_triton_success" role="status" t-out="message"/><div t-if="error" class="o_triton_error" role="alert" t-out="error"/><div class="o_triton_profile-grid"><article t-if="student" class="o_triton_profile-card"><h2 t-out="student.name"/><p><strong>Program studi:</strong> <t t-out="student.prodi_id.name"/></p><p><strong>NIM:</strong> <t t-out="student.nim"/></p><p><strong>Angkatan:</strong> <t t-out="student.angkatan"/></p>        <p><strong>Status akademik:</strong> <t t-out="dict(student._fields['status_akademik'].selection).get(student.status_akademik, student.status_akademik)"/></p></article><article t-if="teacher" class="o_triton_profile-card"><h2 t-out="teacher.name"/><p><strong>Program studi:</strong> <t t-out="', '.join(teacher.prodi_ids.mapped('name'))"/></p><p><strong>NIP:</strong> <t t-out="teacher.nip"/></p><p><strong>Jabatan fungsional:</strong> <t t-out="teacher.jabatan_fungsional or 'Belum diatur'"/></p></article><form action="/my/profil" method="post" class="o_triton_panel o_triton_profile-form"><input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/><div class="o_triton_form-grid"><label>Nama<input type="text" name="name" t-att-value="profile_partner.name" required="required"/></label><label>Email<input type="email" name="email" t-att-value="profile_partner.email" required="required"/></label><label>Telepon<input type="text" name="phone" t-att-value="profile_partner.phone"/></label><label>Alamat<textarea name="street" rows="3" t-out="profile_partner.street or ''"/></label><label>Kota<input type="text" name="city" t-att-value="profile_partner.city"/></label></div><label class="o_triton_checkbox"><input type="checkbox" name="public_opt_out" value="1" t-att-checked="(student or teacher).public_opt_out"/> Jangan tampilkan profil saya pada daftar publik.</label><p class="o_triton_caption">Data akademik seperti NIM, NIP, status, nilai, dan SKS tidak dapat diubah dari portal.</p><button class="o_triton_btn" type="submit">Simpan profil</button></form></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">Profil</span>
+                                <h1>Profil dan pengaturan akun</h1>
+                            </div>
+                        </header>
+                        <div t-if="message" class="o_triton_success" role="status" t-out="message"/>
+                        <div t-if="error" class="o_triton_error" role="alert" t-out="error"/>
+                        <div class="o_triton_profile-grid">
+                            <article t-if="student" class="o_triton_profile-card">
+                                <h2 t-out="student.name"/>
+                                <p><strong>Program studi:</strong> <t t-out="student.prodi_id.name"/></p>
+                                <p><strong>NIM:</strong> <t t-out="student.nim"/></p>
+                                <p><strong>Angkatan:</strong> <t t-out="student.angkatan"/></p>
+                                <p><strong>Status akademik:</strong> <t t-out="dict(student._fields['status_akademik'].selection).get(student.status_akademik, student.status_akademik)"/></p>
+                            </article>
+                            <article t-if="teacher" class="o_triton_profile-card">
+                                <h2 t-out="teacher.name"/>
+                                <p><strong>Program studi:</strong> <t t-out="', '.join(teacher.prodi_ids.mapped('name'))"/></p>
+                                <p><strong>NIP:</strong> <t t-out="teacher.nip"/></p>
+                                <p><strong>Jabatan fungsional:</strong> <t t-out="teacher.jabatan_fungsional or 'Belum diatur'"/></p>
+                            </article>
+                            <form action="/my/profil" method="post" class="o_triton_panel o_triton_profile-form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="o_triton_form-grid">
+                                    <label>Nama<input type="text" name="name" t-att-value="profile_partner.name" required="required"/></label>
+                                    <label>Email<input type="email" name="email" t-att-value="profile_partner.email" required="required"/></label>
+                                    <label>Telepon<input type="text" name="phone" t-att-value="profile_partner.phone"/></label>
+                                    <label>Alamat<textarea name="street" rows="3" t-out="profile_partner.street or ''"/></label>
+                                    <label>Kota<input type="text" name="city" t-att-value="profile_partner.city"/></label>
+                                </div>
+                                <label class="o_triton_checkbox">
+                                    <input type="checkbox" name="public_opt_out" value="1" t-att-checked="(student or teacher).public_opt_out"/>
+                                    Jangan tampilkan profil saya pada daftar publik.
+                                </label>
+                                <p class="o_triton_caption">Data akademik seperti NIM, NIP, status, nilai, dan SKS tidak dapat diubah dari portal.</p>
+                                <div class="o_triton_profile-actions">
+                                    <button class="o_triton_btn" type="submit">Simpan profil</button>
+                                    <a class="o_triton_btn-ghost" href="/my/security">Keamanan dan kata sandi</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
     </template>
 
 </odoo>

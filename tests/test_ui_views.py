@@ -7,6 +7,19 @@ from odoo.tests import TransactionCase, tagged
 
 @tagged("post_install", "-at_install")
 class TestErpObeUiViews(TransactionCase):
+    def test_portal_profile_exposes_native_security_route(self):
+        profile_path = (
+            Path(__file__).resolve().parents[1]
+            / "views"
+            / "website"
+            / "portal"
+            / "portal_profile.xml"
+        )
+        arch = etree.parse(str(profile_path))
+        security_links = arch.xpath("//a[@href='/my/security']")
+        self.assertEqual(len(security_links), 1)
+        self.assertIn("kata sandi", " ".join(security_links[0].itertext()).lower())
+
     def test_owl_templates_key_foreach_loops(self):
         template_root = Path(__file__).resolve().parents[1] / "static" / "src"
         unkeyed_loops = []

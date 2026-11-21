@@ -69,9 +69,9 @@ class TritonPortalMahasiswa(TritonPortalBase):
             request.env['erpobe.report.khs.mk'].sudo(),
             [('khs_id', 'in', reports.ids)],
             '/my/khs',
-            {'course': ('mk_id.name asc, id asc', 'Mata kuliah A–Z'), 'score': ('nilai_angka desc, mk_id.name asc', 'Nilai tertinggi')},
+            {'course': ('mk_name asc, id asc', 'Mata kuliah A–Z'), 'score': ('nilai_angka desc, mk_name asc', 'Nilai tertinggi')},
             'mk_id asc, id asc',
-            ('mk_id.name', 'kode_mk'),
+            ('mk_name', 'kode_mk'),
         )
         data = []
         for report in reports:
@@ -86,9 +86,9 @@ class TritonPortalMahasiswa(TritonPortalBase):
             request.env['erpobe.akademik.krs.line'].sudo(),
             [('mahasiswa_id', '=', student.id), ('krs_id.state', '=', 'approved')],
             '/my/mata-kuliah',
-            {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('krs_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru')},
+            {'course': ('matakuliah_name asc, id asc', 'Mata kuliah A–Z'), 'term': ('krs_id desc, matakuliah_name asc, id asc', 'Tahun ajaran terbaru')},
             'krs_id desc, matakuliah_id asc, id asc',
-            ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+            ('matakuliah_name', 'matakuliah_kode'),
         )
         courses = []
         for line in krs_lines:
@@ -119,9 +119,9 @@ class TritonPortalMahasiswa(TritonPortalBase):
             request.env['erpobe.grade.cpl'].sudo(),
             [('mahasiswa_id', '=', student.id)],
             '/my/capaian-cpl',
-            {'cpl': ('cpl_id.kode_cpl asc, id asc', 'Kode CPL A–Z'), 'score': ('nilai_cpl desc, cpl_id.kode_cpl asc', 'Nilai tertinggi')},
+            {'cpl': ('cpl_kode asc, id asc', 'Kode CPL A–Z'), 'score': ('nilai_cpl desc, cpl_kode asc', 'Nilai tertinggi')},
             'cpl_id asc, id asc',
-            ('cpl_id.name', 'cpl_id.kode_cpl'),
+            ('cpl_name', 'cpl_kode'),
         )
         values = [{'name': grade.cpl_id.kode_cpl, 'description': grade.cpl_id.name, 'score': grade.nilai_cpl, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in grades]
         return request.render('erpobe.triton_student_cpl_page', {'grades': values, 'pagination': pagination, 'list_action': '/my/capaian-cpl'})

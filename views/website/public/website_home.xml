@@ -38,17 +38,6 @@
                     </div>
                 </section>
 
-                <section class="o_triton_section o_triton_stats-section" aria-label="Statistik akademik">
-                    <div class="o_triton_container">
-                        <div class="o_triton_summary-strip" aria-label="Ringkasan institusi">
-                            <article class="o_triton_summary-item"><span>Fakultas</span><strong t-out="stats['faculties']"/></article>
-                            <article class="o_triton_summary-item"><span>Program studi</span><strong t-out="stats['prodis']"/></article>
-                            <article class="o_triton_summary-item"><span>RPS final</span><strong t-out="stats['rps_final']"/></article>
-                            <article class="o_triton_summary-item"><span>CPL tercatat</span><strong t-out="stats['cpl_count']"/></article>
-                        </div>
-                    </div>
-                </section>
-
                 <section class="o_triton_section">
                     <div class="o_triton_container">
                         <div class="o_triton_heading">

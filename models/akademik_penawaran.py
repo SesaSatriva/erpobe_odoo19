@@ -204,6 +204,12 @@ class ErpObeAkademikPenawaranLine(models.Model):
         string="Mata Kuliah",
         required=True,
     )
+    matakuliah_name = fields.Char(
+        related="matakuliah_id.name", store=True, index=True
+    )
+    matakuliah_kode = fields.Char(
+        related="matakuliah_id.kode_mk", store=True, index=True
+    )
     rombel_ids = fields.Many2many(
         "erpobe.master.rombel",
         "erpobe_penawaran_line_rombel_rel",

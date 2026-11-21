@@ -14,6 +14,8 @@ class ErpObeAkademikKrs(models.Model):
         required=True,
         tracking=True,
     )
+    mahasiswa_name = fields.Char(related="mahasiswa_id.name", store=True, index=True)
+    mahasiswa_nim = fields.Char(related="mahasiswa_id.nim", store=True, index=True)
     rombel_id = fields.Many2one(
         related="mahasiswa_id.rombel_id", store=True, readonly=True
     )
@@ -25,6 +27,9 @@ class ErpObeAkademikKrs(models.Model):
         required=True,
         tracking=True,
         domain="[('rombel_ids', 'in', rombel_id), ('tahun_ajaran.aktif', '=', True)]",
+    )
+    penawaran_name = fields.Char(
+        related="penawaran_id.name", store=True, index=True
     )
 
     tahun_ajaran = fields.Many2one(related="penawaran_id.tahun_ajaran", store=True)
@@ -225,8 +230,16 @@ class ErpObeAkademikKrsLine(models.Model):
     )
 
     mahasiswa_id = fields.Many2one(related="krs_id.mahasiswa_id", store=True)
+    mahasiswa_name = fields.Char(related="mahasiswa_id.name", store=True, index=True)
+    mahasiswa_nim = fields.Char(related="mahasiswa_id.nim", store=True, index=True)
     matakuliah_id = fields.Many2one(
         related="penawaran_line_id.matakuliah_id", store=True
+    )
+    matakuliah_name = fields.Char(
+        related="matakuliah_id.name", store=True, index=True
+    )
+    matakuliah_kode = fields.Char(
+        related="matakuliah_id.kode_mk", store=True, index=True
     )
     sks = fields.Integer(related="matakuliah_id.sks", store=True)
     rombel_kelas = fields.Many2many(

@@ -18,9 +18,9 @@ class TritonPortalDosen(TritonPortalBase):
             Audit,
             [('penawaran_line_id', 'in', line_ids)],
             '/my/riwayat-nilai',
-            {'student': ('mahasiswa_id.name asc, id desc', 'Mahasiswa A–Z'), 'latest': ('create_date desc, id desc', 'Terbaru')},
+            {'student': ('mahasiswa_name asc, id desc', 'Mahasiswa A–Z'), 'latest': ('create_date desc, id desc', 'Terbaru')},
             'create_date desc, id desc',
-            ('mahasiswa_id.name', 'mahasiswa_id.nim', 'komponen_id.name'),
+            ('mahasiswa_name', 'mahasiswa_nim', 'komponen_name'),
         )
         data = [{
             'time': record.create_date,
@@ -48,9 +48,9 @@ class TritonPortalDosen(TritonPortalBase):
             request.env['erpobe.akademik.penawaran.line'].sudo(),
             line_domain,
             '/my/rps',
-            {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru'), 'status': ('rps_status asc, matakuliah_id.name asc', 'Status RPS')},
+            {'course': ('matakuliah_name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_name asc, id asc', 'Tahun ajaran terbaru'), 'status': ('rps_status asc, matakuliah_name asc', 'Status RPS')},
             'tahun_ajaran_id desc, matakuliah_id asc, id asc',
-            ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+            ('matakuliah_name', 'matakuliah_kode'),
             (('status', 'Status RPS', (
                 ('', 'Semua status'),
                 ('missing', 'Belum ada'),
@@ -136,9 +136,9 @@ class TritonPortalDosen(TritonPortalBase):
             request.env['erpobe.akademik.penawaran.line'].sudo(),
             ['|', ('matakuliah_id.koordinator_id', '=', teacher.id), ('matakuliah_id.tim_pengampu_ids', 'in', teacher.id)],
             '/my/kelas',
-            {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru')},
+            {'course': ('matakuliah_name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_name asc, id asc', 'Tahun ajaran terbaru')},
             'tahun_ajaran_id desc, matakuliah_id asc, id asc',
-            ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+            ('matakuliah_name', 'matakuliah_kode'),
         )
         classes = []
         for line in lines:
@@ -196,9 +196,9 @@ class TritonPortalDosen(TritonPortalBase):
             request.env['erpobe.akademik.krs.line'].sudo(),
             grade_domain,
             f'/my/kelas/{line.id}/nilai',
-            {'student': ('mahasiswa_id.name asc, id asc', 'Mahasiswa A–Z'), 'nim': ('mahasiswa_id.nim asc, id asc', 'NIM')},
-            'mahasiswa_id.name asc, id asc',
-            ('mahasiswa_id.name', 'mahasiswa_id.nim'),
+            {'student': ('mahasiswa_name asc, id asc', 'Mahasiswa A–Z'), 'nim': ('mahasiswa_nim asc, id asc', 'NIM')},
+            'mahasiswa_name asc, id asc',
+            ('mahasiswa_name', 'mahasiswa_nim'),
             (('status', 'Kelengkapan nilai', (
                 ('', 'Semua status'),
                 ('incomplete', 'Belum lengkap'),
@@ -332,9 +332,9 @@ class TritonPortalDosen(TritonPortalBase):
             request.env['erpobe.akademik.krs'].sudo(),
             domain,
             '/my/perwalian',
-            {'student': ('mahasiswa_id.name asc, id asc', 'Mahasiswa A–Z'), 'state': ('state asc, tahun_ajaran desc, id desc', 'Status')},
+            {'student': ('mahasiswa_name asc, id asc', 'Mahasiswa A–Z'), 'state': ('state asc, tahun_ajaran desc, id desc', 'Status')},
             'state asc, tahun_ajaran desc, id desc',
-            ('mahasiswa_id.name', 'mahasiswa_id.nim', 'penawaran_id.name'),
+            ('mahasiswa_name', 'mahasiswa_nim', 'penawaran_name'),
             (('state', 'Status KRS', (
                 ('', 'Semua status'),
                 ('submitted', 'Menunggu persetujuan'),
@@ -419,9 +419,9 @@ class TritonPortalDosen(TritonPortalBase):
             Line,
             filtered_line_domain,
             '/my/analisis',
-            {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru')},
+            {'course': ('matakuliah_name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_name asc, id asc', 'Tahun ajaran terbaru')},
             'tahun_ajaran_id desc, matakuliah_id asc, id asc',
-            ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+            ('matakuliah_name', 'matakuliah_kode'),
             filter_options,
         )
         for filter_option in pagination['filter_options']:

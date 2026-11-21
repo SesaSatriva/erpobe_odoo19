@@ -237,6 +237,7 @@ class ErpObeReportKhsMk(models.Model):
 
     # Data Related (Auto update jika Master Grade berubah)
     mk_id = fields.Many2one(related="grade_id.mk_id", store=True)
+    mk_name = fields.Char(related="mk_id.name", store=True, index=True)
     nilai_angka = fields.Float(related="grade_id.nilai_mk", store=True)
     semester_mk = fields.Integer(related="mk_id.semester", store=True)
     kode_mk = fields.Char(related="mk_id.kode_mk", store=True)

@@ -46,7 +46,7 @@ class TritonFakultas(http.Controller, TritonPublicHelpers):
         if not prodi.exists() or not prodi.active:
             raise NotFound()
         tab = tab if tab in {'profil', 'dosen', 'mahasiswa', 'cpl', 'mata-kuliah'} else 'profil'
-        data = {'prodi': self._safe_prodi(prodi), 'tab': tab, 'query': (q or '').strip()[:100], 'angkatan_filter': angkatan, 'status_filter': status, 'people_enabled': self._people_enabled(), 'stats': {'dosen': request.env['erpobe.master.dosen'].sudo().search_count([('prodi_ids', 'in', prodi.id), ('active', '=', True)]), 'mahasiswa': request.env['erpobe.master.mahasiswa'].sudo().search_count([('prodi_id', '=', prodi.id), ('active', '=', True)]), 'cpl': request.env['erpobe.akademik.cpl'].sudo().search_count([('prodi_id', '=', prodi.id)])}, 'results': [], 'pager': False, 'pagination': False, 'list_action': f'/prodi/{prodi.id}', 'years': request.env['erpobe.master.rombel'].sudo().search_read([('prodi_id', '=', prodi.id)], ['angkatan'], order='angkatan desc', limit=100)}
+        data = {'prodi': self._safe_prodi(prodi), 'tab': tab, 'query': (q or '').strip()[:100], 'angkatan_filter': angkatan, 'status_filter': status, 'people_enabled': self._people_enabled(), 'stats': {'dosen': request.env['erpobe.master.dosen'].sudo().search_count([('prodi_ids', 'in', prodi.id), ('active', '=', True)]), 'mahasiswa': request.env['erpobe.master.mahasiswa'].sudo().search_count([('prodi_id', '=', prodi.id), ('active', '=', True)]), 'cpl': request.env['erpobe.akademik.cpl'].sudo().search_count([('prodi_id', '=', prodi.id)])}, 'results': [], 'pagination': False, 'list_action': f'/prodi/{prodi.id}', 'years': request.env['erpobe.master.rombel'].sudo().search_read([('prodi_id', '=', prodi.id)], ['angkatan'], order='angkatan desc', limit=100)}
         if tab in ('dosen', 'mahasiswa') and (not data['people_enabled']):
             data['privacy_disabled'] = True
             return request.render('erpobe.triton_prodi_detail_page', data)
@@ -61,7 +61,7 @@ class TritonFakultas(http.Controller, TritonPublicHelpers):
                 ('name', 'nip'),
             )
             data['results'] = [self._safe_dosen(record) for record in records]
-            data['pager'] = data['pagination'] = pagination
+            data['pagination'] = pagination
         elif tab == 'mahasiswa':
             domain = [('prodi_id', '=', prodi.id), *self._public_person_domain()]
             if angkatan.isdigit():
@@ -90,7 +90,7 @@ class TritonFakultas(http.Controller, TritonPublicHelpers):
                 ),
             )
             data['results'] = [self._safe_student(record) for record in records]
-            data['pager'] = data['pagination'] = pagination
+            data['pagination'] = pagination
         elif tab == 'cpl':
             records, data['pagination'] = self._list_page(
                 request.env['erpobe.akademik.cpl'].sudo(),
@@ -100,17 +100,15 @@ class TritonFakultas(http.Controller, TritonPublicHelpers):
                 'kode_cpl asc, id asc',
                 ('name', 'kode_cpl'),
             )
-            data['pager'] = data['pagination']
             data['results'] = [{'id': item.id, 'name': item.name, 'kode': item.kode_cpl, 'jenis': _CPL_TYPES.get(item.jenis_cpl, 'Lainnya'), 'cpmk': [mapping.cpmk_id.display_name for mapping in item.cpmk_mapping_ids]} for item in records]
         elif tab == 'mata-kuliah':
             rps_records, data['pagination'] = self._list_page(
                 request.env['erpobe.akademik.rps'].sudo(),
                 [('prodi_id', '=', prodi.id), ('status', '=', 'final')],
                 f'/prodi/{prodi.id}',
-                {'course': ('matakuliah_id.name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_id.name asc, id asc', 'Tahun ajaran terbaru')},
+                {'course': ('matakuliah_name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_name asc, id asc', 'Tahun ajaran terbaru')},
                 'tahun_ajaran_id desc, matakuliah_id asc, id asc',
-                ('matakuliah_id.name', 'matakuliah_id.kode_mk'),
+                ('matakuliah_name', 'kode_mk'),
             )
-            data['pager'] = data['pagination']
             data['results'] = [{'name': rps.matakuliah_id.name, 'kode': rps.matakuliah_id.kode_mk, 'sks': rps.matakuliah_id.sks, 'tahun_ajaran': rps.tahun_ajaran_id.tahun_ajaran or '', 'semester': rps.semester_akademik or ''} for rps in rps_records]
         return request.render('erpobe.triton_prodi_detail_page', data)

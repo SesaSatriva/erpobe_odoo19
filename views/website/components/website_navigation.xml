@@ -40,7 +40,8 @@
                         t-att-aria-current="'page' if public_path == link[1] or (link[1] != '/' and public_path.startswith(link[1] + '/')) or (link[1] == '/fakultas' and public_path.startswith('/prodi/')) else None"
                         t-out="link[0]"/>
                 </div>
-                <a href="/my" class="o_triton_btn-secondary">Masuk Portal</a>
+                <a t-if="request.env.user._is_public()" href="/web/login?redirect=/my/triton" class="o_triton_btn-secondary">Masuk Portal</a>
+                <a t-else="" href="/my/triton" class="o_triton_btn-secondary">Buka Portal</a>
             </div>
         </nav>
     </template>

@@ -429,6 +429,9 @@ class ErpObeGradeKomponenAudit(models.Model):
     mahasiswa_id = fields.Many2one(
         "erpobe.master.mahasiswa", required=True, ondelete="restrict", readonly=True
     )
+    mahasiswa_name = fields.Char(related="mahasiswa_id.name", store=True, index=True)
+    mahasiswa_nim = fields.Char(related="mahasiswa_id.nim", store=True, index=True)
+    komponen_name = fields.Char(related="komponen_id.name", store=True, index=True)
     user_id = fields.Many2one("res.users", required=True, readonly=True)
     old_value = fields.Float(digits=(16, 2), readonly=True)
     new_value = fields.Float(digits=(16, 2), readonly=True)

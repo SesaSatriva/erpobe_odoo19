@@ -8,6 +8,8 @@ class ErpObeGradeCpl(models.Model):
 
     mahasiswa_id = fields.Many2one("erpobe.master.mahasiswa", required=True, index=True)
     cpl_id = fields.Many2one("erpobe.akademik.cpl", required=True, index=True)
+    cpl_name = fields.Text(related="cpl_id.name", store=True, index=True)
+    cpl_kode = fields.Char(related="cpl_id.kode_cpl", store=True, index=True)
     krs_line_id = fields.Many2one(
         "erpobe.akademik.krs.line", string="Attempt KRS", ondelete="restrict", index=True
     )

@@ -46,6 +46,15 @@
   color: var(--triton-primary);
 }
 
+.o_triton_page a.o_triton_btn {
+  color: #fff;
+}
+
+.o_triton_page a.o_triton_btn-secondary,
+.o_triton_page a.o_triton_btn-ghost {
+  color: var(--triton-deep-ocean);
+}
+
 .o_triton_page h1,
 .o_triton_page h2,
 .o_triton_page h3,

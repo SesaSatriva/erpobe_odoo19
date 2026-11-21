@@ -373,6 +373,14 @@
   padding: 10px 12px;
 }
 
+.o_triton_profile-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
 .o_triton_dashboard .o_triton_section {
   padding: clamp(30px, 5vw, 64px) 0;
 }

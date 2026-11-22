@@ -517,10 +517,6 @@ Nilai CPMK, MK, dan CPL dihitung dari nilai komponen secara terpisah.
 Hanya CPL yang mensyaratkan RPS final dan KRS approved, dan transkrip
 menyalin semua baris tanpa menyaring ketersediaan data (Bab IX, poin 1).
 
-Sumber diagram lain (ERD, alur KRS, alur finalisasi RPS) berada di
-folder diagrams/ pada repositori dalam format Mermaid dan belum ditinjau
-pada audit ini. Disarankan menyisipkan hasil render-nya ke bab ini.
-
 ## BAB VIII - Troubleshooting
 
 Penyebab di kolom Pemeriksaan untuk masalah nilai sudah selaras dengan

@@ -387,6 +387,28 @@ class ErpObeAkademikRps(models.Model):
         # Trigger sync jika ada perubahan pada MK, CPMK, atau Komponen
         if any(f in vals for f in ["matakuliah_id", "cpmk_ids", "komponen_ids"]):
             self._sync_bobot_tables()
+        if "status" in vals:
+            rps_ids = self.ids
+            grade_cpmk = self.env["erpobe.grade.cpmk"].sudo().search([
+                ("rps_id", "in", rps_ids),
+            ])
+            grade_mk = self.env["erpobe.grade.mk"].sudo().search([
+                ("rps_id", "in", rps_ids),
+            ])
+            grade_cpl = self.env["erpobe.grade.cpl"].sudo().search([
+                ("mahasiswa_id", "in", grade_cpmk.mapped("mahasiswa_id").ids),
+            ])
+            if grade_cpmk:
+                grade_cpmk._compute_nilai_cpmk()
+            if grade_mk:
+                grade_mk._compute_nilai_mk()
+            if grade_cpl:
+                grade_cpl._compute_nilai_cpl()
+                grade_cpl._compute_status_capaian()
+            if grade_cpmk or grade_mk or grade_cpl:
+                mhs_ids = (grade_cpmk.mapped("mahasiswa_id") | grade_mk.mapped("mahasiswa_id") | grade_cpl.mapped("mahasiswa_id")).ids
+                if "erpobe.report.khs" in self.env:
+                    self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids)
         return res
 
     def copy(self, default=None):

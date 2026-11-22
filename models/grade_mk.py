@@ -21,7 +21,10 @@ class ErpObeGradeMk(models.Model):
         string="Data Tersedia", compute="_compute_nilai_mk", store=True
     )
 
-    _uniq_mhs_mk_constraint = models.Constraint('unique(mahasiswa_id, mk_id)', 'Nilai MK exist.')
+    _uniq_mhs_mk_attempt_constraint = models.Constraint(
+        "unique(mahasiswa_id, mk_id, krs_line_id)",
+        "Nilai MK untuk attempt KRS yang sama sudah ada.",
+    )
 
     # === UPDATE TRIGGER (PENTING: Agar Transkrip Realtime) ===
 
@@ -82,17 +85,31 @@ class ErpObeGradeMk(models.Model):
 
     # === COMPUTE LOGIC ===
     @api.depends(
+        "rps_id.status",
+        "krs_line_id.krs_id.state",
         "mahasiswa_id.grade_cpmk_ids.nilai_cpmk",
         "mahasiswa_id.grade_cpmk_ids.is_available",
+        "mahasiswa_id.grade_cpmk_ids.rps_id.status",
+        "mahasiswa_id.grade_cpmk_ids.krs_line_id.krs_id.state",
         "rps_id.bobot_cpmk_mk_ids.bobot_cpmk_mk",
+        "rps_id.status",
+        "krs_line_id.krs_id.state",
     )
     def _compute_nilai_mk(self):
         Rps = self.env["erpobe.akademik.rps"]
         BobotCpmkMk = self.env["erpobe.bobot.cpmk.mk"]
         GradeCpmk = self.env["erpobe.grade.cpmk"]
 
+        for rec in self:
+            rec.nilai_mk = 0.0
+            rec.is_available = False
+
         exact_records = self.filtered(
-            lambda grade: grade.rps_id and grade.krs_line_id
+            lambda grade:
+                grade.rps_id
+                and grade.rps_id.status == "final"
+                and grade.krs_line_id
+                and grade.krs_line_id.krs_id.state == "approved"
         )
         weight_lines = BobotCpmkMk.search([
             ("rps_id", "in", exact_records.mapped("rps_id").ids),
@@ -106,6 +123,8 @@ class ErpObeGradeMk(models.Model):
             ("krs_line_id", "in", exact_records.mapped("krs_line_id").ids),
             ("rps_id", "in", exact_records.mapped("rps_id").ids),
             ("is_available", "=", True),
+            ("rps_id.status", "=", "final"),
+            ("krs_line_id.krs_id.state", "=", "approved"),
         ])
         grade_map = {
             (
@@ -138,61 +157,9 @@ class ErpObeGradeMk(models.Model):
             )
 
         legacy_records = self.filtered(lambda grade: not grade.rps_id or not grade.krs_line_id)
-        if not legacy_records:
-            return
-
-        # 1. Prepare Data
-        mk_ids = legacy_records.mapped("mk_id")
-
-        # Ambil RPS Terbaru (id desc) untuk MK terkait
-        rps_records = Rps.search([("matakuliah_id", "in", mk_ids.ids)], order="id desc")
-
-        # Map Bobot: {mk_id: {cpmk_id: bobot}}
-        weight_map = {}
-        # Filter bobot hanya dari RPS yang relevan (agar tidak duplikat jika ada banyak RPS)
-        # Sederhananya, kita ambil semua, tapi jika duplikat, yang terakhir (terbaru) menang
-        bobot_lines = BobotCpmkMk.search([("rps_id", "in", rps_records.ids)])
-
-        for b in bobot_lines:
-            mk = b.rps_id.matakuliah_id.id
-            if mk not in weight_map:
-                weight_map[mk] = {}
-            weight_map[mk][b.cpmk_id.id] = b.bobot_cpmk_mk
-
-        # 2. Get Nilai CPMK Mahasiswa
-        mhs_ids = legacy_records.mapped("mahasiswa_id")
-        cpmk_grades = GradeCpmk.search(
-            [
-                ("mahasiswa_id", "in", mhs_ids.ids),
-                ("mk_id", "in", mk_ids.ids),
-            ]
-        )
-
-        # Map: {mahasiswa_id: {cpmk_id: nilai}}
-        grade_map = {}
-        for g in cpmk_grades:
-            if g.mahasiswa_id.id not in grade_map:
-                grade_map[g.mahasiswa_id.id] = {}
-            grade_map[g.mahasiswa_id.id][g.cpmk_id.id] = g.nilai_cpmk
-
-        # 3. Calculate
         for rec in legacy_records:
             rec.nilai_mk = 0.0
             rec.is_available = False
-
-            weights = weight_map.get(rec.mk_id.id, {})
-            student_scores = grade_map.get(rec.mahasiswa_id.id, {})
-
-            final_score = 0.0
-            denominator = 0.0
-            for cpmk_id, bobot in weights.items():
-                s_cpmk = student_scores.get(cpmk_id, 0.0)
-                if cpmk_id not in student_scores or bobot <= 0:
-                    continue
-                final_score += s_cpmk * (bobot / 100.0)
-                denominator += bobot / 100.0
-            rec.is_available = bool(denominator)
-            rec.nilai_mk = final_score / denominator if denominator else 0.0
 
 
 class ErpObeGradeMkRombel(models.Model):
@@ -220,6 +187,9 @@ class ErpObeGradeMkRombel(models.Model):
         string="Rata-rata Nilai MK",
         readonly=True,
     )
+    jumlah_mahasiswa = fields.Integer(string="Jumlah Mahasiswa (N)", readonly=True)
+    jumlah_nilai_tersedia = fields.Integer(string="Nilai Tersedia", readonly=True)
+    jumlah_nilai_belum_tersedia = fields.Integer(string="Belum Memiliki Nilai", readonly=True)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -231,7 +201,10 @@ class ErpObeGradeMkRombel(models.Model):
                     m.prodi_id AS prodi_id,
                     r.fakultas_id AS fakultas_id,
                     gm.mk_id AS mk_id,
-                    AVG(gm.nilai_mk) AS nilai_rata_mk
+                    AVG(gm.nilai_mk) FILTER (WHERE gm.is_available IS TRUE) AS nilai_rata_mk,
+                    COUNT(DISTINCT gm.mahasiswa_id) AS jumlah_mahasiswa,
+                    COUNT(DISTINCT gm.mahasiswa_id) FILTER (WHERE gm.is_available IS TRUE) AS jumlah_nilai_tersedia,
+                    COUNT(DISTINCT gm.mahasiswa_id) FILTER (WHERE gm.is_available IS NOT TRUE) AS jumlah_nilai_belum_tersedia
                 FROM erpobe_grade_mk gm
                 JOIN erpobe_master_mahasiswa m
                     ON m.id = gm.mahasiswa_id
@@ -263,13 +236,13 @@ class ErpObeGradeMkAngkatan(models.Model):
         string="Rata-rata Nilai MK Angkatan",
         readonly=True,
     )
+    jumlah_mahasiswa = fields.Integer(string="Jumlah Mahasiswa (N)", readonly=True)
+    jumlah_nilai_tersedia = fields.Integer(string="Nilai Tersedia", readonly=True)
+    jumlah_nilai_belum_tersedia = fields.Integer(string="Belum Memiliki Nilai", readonly=True)
 
-    prodi_id = fields.Many2one(
-        related="mk_id.prodi_id", readonly=True, index=True
-    )
-
+    prodi_id = fields.Many2one("erpobe.master.prodi", readonly=True, index=True)
     fakultas_id = fields.Many2one(
-        related="prodi_id.fakultas_id", readonly=True, index=True
+        "erpobe.master.fakultas", readonly=True, index=True
     )
 
     def init(self):
@@ -280,12 +253,17 @@ class ErpObeGradeMkAngkatan(models.Model):
                     MIN(gm.id) AS id,
                     r.angkatan AS angkatan,
                     gm.mk_id AS mk_id,
-                    AVG(gm.nilai_mk) AS nilai_rata_mk
+                    m.prodi_id AS prodi_id,
+                    r.fakultas_id AS fakultas_id,
+                    AVG(gm.nilai_mk) FILTER (WHERE gm.is_available IS TRUE) AS nilai_rata_mk,
+                    COUNT(DISTINCT gm.mahasiswa_id) AS jumlah_mahasiswa,
+                    COUNT(DISTINCT gm.mahasiswa_id) FILTER (WHERE gm.is_available IS TRUE) AS jumlah_nilai_tersedia,
+                    COUNT(DISTINCT gm.mahasiswa_id) FILTER (WHERE gm.is_available IS NOT TRUE) AS jumlah_nilai_belum_tersedia
                 FROM erpobe_grade_mk gm
                 JOIN erpobe_master_mahasiswa m
                     ON m.id = gm.mahasiswa_id
                 JOIN erpobe_master_rombel r
                     ON r.id = m.rombel_id
-                GROUP BY r.angkatan, gm.mk_id
+                GROUP BY r.angkatan, gm.mk_id, m.prodi_id, r.fakultas_id
             )
         """)

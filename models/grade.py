@@ -155,6 +155,8 @@ class ErpObeInputNilai(models.Model):
                     [
                         ("mahasiswa_id", "=", mahasiswa.id),
                         ("cpmk_id", "=", cpmk.id),
+                        ("krs_line_id", "=", krs.id),
+                        ("rps_id", "=", rps.id),
                     ],
                     limit=1,
                 )
@@ -179,6 +181,8 @@ class ErpObeInputNilai(models.Model):
                 [
                     ("mahasiswa_id", "=", mahasiswa.id),
                     ("mk_id", "=", current_mk_id),
+                    ("krs_line_id", "=", krs.id),
+                    ("rps_id", "=", rps.id),
                 ],
                 limit=1,
             )
@@ -366,6 +370,41 @@ class ErpObeGradeKomponen(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
+    def _trigger_academic_recompute(self):
+        cpmk_records = self.env["erpobe.grade.cpmk"]
+        mk_records = self.env["erpobe.grade.mk"]
+        cpl_records = self.env["erpobe.grade.cpl"]
+        student_ids = set()
+
+        for grade in self:
+            if not grade.krs_line_id or not grade.rps_id:
+                continue
+            student_ids.add(grade.mahasiswa_id.id)
+            cpmk_records += self.env["erpobe.grade.cpmk"].search([
+                ("mahasiswa_id", "=", grade.mahasiswa_id.id),
+                ("krs_line_id", "=", grade.krs_line_id.id),
+                ("rps_id", "=", grade.rps_id.id),
+            ])
+            mk_records += self.env["erpobe.grade.mk"].search([
+                ("mahasiswa_id", "=", grade.mahasiswa_id.id),
+                ("krs_line_id", "=", grade.krs_line_id.id),
+                ("rps_id", "=", grade.rps_id.id),
+            ])
+            cpl_records += self.env["erpobe.grade.cpl"].search([
+                ("mahasiswa_id", "=", grade.mahasiswa_id.id),
+            ])
+
+        if cpmk_records:
+            cpmk_records._compute_nilai_cpmk()
+        if mk_records:
+            mk_records._compute_nilai_mk()
+        if cpl_records:
+            cpl_records._compute_nilai_cpl()
+        if student_ids:
+            self.env["erpobe.report.khs"].sudo().action_generate_khs(
+                list(student_ids)
+            )
+
     def write(self, vals):
         if "nilai" in vals:
             Audit = self.env["erpobe.grade.komponen.audit"].sudo()
@@ -385,7 +424,10 @@ class ErpObeGradeKomponen(models.Model):
                         "reason": vals.get("audit_reason", ""),
                     })
         vals.pop("audit_reason", None)
-        return super().write(vals)
+        result = super().write(vals)
+        if {"nilai", "is_graded", "rps_id", "rps_komponen_id", "krs_line_id"} & set(vals):
+            self._trigger_academic_recompute()
+        return result
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -406,6 +448,7 @@ class ErpObeGradeKomponen(models.Model):
                     "new_value": grade.nilai,
                     "reason": reason or "Initial grade entry",
                 })
+        records._trigger_academic_recompute()
         return records
 
 

@@ -130,6 +130,29 @@ class ErpObeReportKhs(models.Model):
         source_mk = GradeMk.search(
             [("mahasiswa_id", "=", mhs_id)], order="semester asc, kode_mk asc"
         )
+        source_mk = source_mk.filtered(
+            lambda grade: (
+                not grade.krs_line_id
+                or grade.krs_line_id.krs_id.state == "approved"
+            )
+        )
+        best_mk = {}
+        for grade in source_mk:
+            key = grade.mk_id.id
+            current = best_mk.get(key)
+            if (
+                not current
+                or (grade.is_available and not current.is_available)
+                or (
+                    grade.is_available
+                    and current.is_available
+                    and grade.nilai_mk > current.nilai_mk
+                )
+            ):
+                best_mk[key] = grade
+        source_mk = self.env["erpobe.grade.mk"].browse(
+            [grade.id for grade in best_mk.values()]
+        ).sorted(lambda grade: (grade.semester, grade.kode_mk or ""))
 
         # Gunakan Command.clear() untuk menghapus data lama dan insert baru (Snapshot)
         mk_cmds = [Command.clear()] + [
@@ -143,6 +166,29 @@ class ErpObeReportKhs(models.Model):
         GradeCpmk = self.env["erpobe.grade.cpmk"].sudo()
         source_cpmk = GradeCpmk.search(
             [("mahasiswa_id", "=", mhs_id), ("mk_id", "in", mk_ids_taken)]
+        )
+        source_cpmk = source_cpmk.filtered(
+            lambda grade: (
+                not grade.krs_line_id
+                or grade.krs_line_id.krs_id.state == "approved"
+            )
+        )
+        best_cpmk = {}
+        for grade in source_cpmk:
+            key = grade.cpmk_id.id
+            current = best_cpmk.get(key)
+            if (
+                not current
+                or (grade.is_available and not current.is_available)
+                or (
+                    grade.is_available
+                    and current.is_available
+                    and grade.nilai_cpmk > current.nilai_cpmk
+                )
+            ):
+                best_cpmk[key] = grade
+        source_cpmk = self.env["erpobe.grade.cpmk"].browse(
+            [grade.id for grade in best_cpmk.values()]
         )
         cpmk_cmds = [Command.clear()] + [
             Command.create({"cpmk_id": g.cpmk_id.id, "grade_id": g.id})
@@ -160,7 +206,12 @@ class ErpObeReportKhs(models.Model):
         # D. Fetch graded assessment component scores.
         GradeKomponen = self.env["erpobe.grade.komponen"].sudo()
         source_komponen = GradeKomponen.search(
-            [("mahasiswa_id", "=", mhs_id), ("is_graded", "=", True)],
+            [
+                ("mahasiswa_id", "=", mhs_id),
+                ("is_graded", "=", True),
+                ("krs_line_id.krs_id.state", "=", "approved"),
+                ("rps_id.status", "=", "final"),
+            ],
             order="id asc",
         )
         komponen_cmds = [Command.clear()] + [
@@ -178,7 +229,13 @@ class ErpObeReportKhs(models.Model):
             }
         )
 
-    @api.depends("mk_line_ids.bobot", "mk_line_ids.sks", "mk_line_ids.kode_mk")
+    @api.depends(
+        "mk_line_ids.bobot",
+        "mk_line_ids.sks",
+        "mk_line_ids.kode_mk",
+        "mk_line_ids.nilai_angka",
+        "mk_line_ids.data_available",
+    )
     def _compute_statistik(self):
         """
         Menghitung IPK dengan Logic 'Best Grade' (Nilai Terbaik).
@@ -189,20 +246,29 @@ class ErpObeReportKhs(models.Model):
             # Format: {'KODE_MK': record_line_terbaik}
             best_grades = {}
 
-            # Filter hanya yang SKS > 0 (MK Valid)
-            valid_lines = rec.mk_line_ids.filtered(lambda l: l.sks > 0)
+            # Ambil hanya attempt yang tersedia; nilai 0 aktual tetap bernilai aktual.
+            valid_lines = rec.mk_line_ids.filtered(
+                lambda l: l.sks > 0 and l.data_available
+            )
 
             for line in valid_lines:
                 kode = line.kode_mk
                 if not kode: 
                     continue # Skip jika master data kotor (tidak ada kode)
 
-                # Logic: Jika belum ada atau bobot nilai ini lebih tinggi dari yang tersimpan
+                # Retake: gunakan nilai numerik terbaik agar konsisten dengan CPL.
+                # Urutan baris tidak boleh menentukan hasil jika nilai numeriknya sama.
                 if kode not in best_grades:
                     best_grades[kode] = line
                 else:
-                    # Cek mana yang lebih bagus? Yang lama atau yang baru?
-                    if line.bobot > best_grades[kode].bobot:
+                    current = best_grades[kode]
+                    if (
+                        line.nilai_angka > current.nilai_angka
+                        or (
+                            line.nilai_angka == current.nilai_angka
+                            and line.bobot > current.bobot
+                        )
+                    ):
                         best_grades[kode] = line
             
             # 2. Hitung Total dari Dictionary 'best_grades'
@@ -212,9 +278,16 @@ class ErpObeReportKhs(models.Model):
             total_sks_ambil = sum(l.sks for l in final_lines)
             total_mutu = sum(l.sks * l.bobot for l in final_lines)
 
-            # 3. Hitung Total SKS Lulus (Total SKS MK unik yang bobotnya > 0)
-            # Biasanya MK dengan nilai E (bobot 0) tidak dihitung dalam 'Total SKS Lulus' di transkrip
-            sks_lulus_lines = [l for l in final_lines if l.bobot > 0]
+            # 3. Hitung SKS lulus berdasarkan konfigurasi batas kelulusan.
+            passing_score = float(
+                rec.env["ir.config_parameter"].sudo().get_param(
+                    "erpobe.krs.minimum_passing_score", "60"
+                )
+            )
+            sks_lulus_lines = [
+                l for l in final_lines
+                if l.nilai_angka >= passing_score
+            ]
             rec.total_sks_lulus = sum(l.sks for l in sks_lulus_lines)
 
             # 4. Hitung IPK
@@ -242,6 +315,10 @@ class ErpObeReportKhsMk(models.Model):
     semester_mk = fields.Integer(related="mk_id.semester", store=True)
     kode_mk = fields.Char(related="mk_id.kode_mk", store=True)
     sks = fields.Integer(related="mk_id.sks", store=True)
+    data_available = fields.Boolean(
+        related="grade_id.is_available", store=True, readonly=True
+    )
+    nilai_tampil = fields.Char(compute="_compute_nilai_tampil", store=True)
 
     # Data Computed (Konversi Angka ke Huruf)
     nilai_huruf = fields.Char(compute="_compute_grade", store=True)
@@ -255,7 +332,14 @@ class ErpObeReportKhsMk(models.Model):
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
 
-    @api.depends("nilai_angka")
+    @api.depends("nilai_angka", "data_available")
+    def _compute_nilai_tampil(self):
+        for rec in self:
+            rec.nilai_tampil = (
+                f"{rec.nilai_angka:.2f}" if rec.data_available else "Belum tersedia"
+            )
+
+    @api.depends("nilai_angka", "data_available")
     def _compute_grade(self):
         # Optimasi: Fetch Master Grade hanya sekali di luar loop record
         grades = (
@@ -263,7 +347,11 @@ class ErpObeReportKhsMk(models.Model):
         )
 
         for rec in self:
-            rec.nilai_huruf = "E"
+            if not rec.data_available:
+                rec.nilai_huruf = False
+                rec.bobot = 0.0
+                continue
+            rec.nilai_huruf = False
             rec.bobot = 0.0
 
             # Loop in-memory (Cepat)
@@ -284,6 +372,10 @@ class ErpObeReportKhsCpmk(models.Model):
     cpmk_id = fields.Many2one(related="grade_id.cpmk_id", store=True)
     mk_id = fields.Many2one(related="grade_id.mk_id", store=True)
     nilai_angka = fields.Float(related="grade_id.nilai_cpmk", store=True)
+    data_available = fields.Boolean(
+        related="grade_id.is_available", store=True, readonly=True
+    )
+    nilai_tampil = fields.Char(compute="_compute_nilai_tampil", store=True)
 
     prodi_id = fields.Many2one(
         related="khs_id.prodi_id", store=True, readonly=True, index=True
@@ -292,6 +384,13 @@ class ErpObeReportKhsCpmk(models.Model):
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
+
+    @api.depends("nilai_angka", "data_available")
+    def _compute_nilai_tampil(self):
+        for rec in self:
+            rec.nilai_tampil = (
+                f"{rec.nilai_angka:.2f}" if rec.data_available else "Belum tersedia"
+            )
 
 
 
@@ -304,6 +403,10 @@ class ErpObeReportKhsCpl(models.Model):
 
     cpl_id = fields.Many2one(related="grade_id.cpl_id", store=True)
     nilai_angka = fields.Float(related="grade_id.nilai_cpl", store=True)
+    data_available = fields.Boolean(
+        related="grade_id.is_available", store=True, readonly=True
+    )
+    nilai_tampil = fields.Char(compute="_compute_nilai_tampil", store=True)
     prodi_id = fields.Many2one(
         related="khs_id.prodi_id", store=True, readonly=True, index=True
     )
@@ -311,6 +414,13 @@ class ErpObeReportKhsCpl(models.Model):
     fakultas_id = fields.Many2one(
         related="prodi_id.fakultas_id", store=True, readonly=True, index=True
     )
+
+    @api.depends("nilai_angka", "data_available")
+    def _compute_nilai_tampil(self):
+        for rec in self:
+            rec.nilai_tampil = (
+                f"{rec.nilai_angka:.2f}" if rec.data_available else "Belum tersedia"
+            )
 
 
 class ErpObeReportKhsKomponen(models.Model):

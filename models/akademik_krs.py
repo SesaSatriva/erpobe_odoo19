@@ -103,6 +103,7 @@ class ErpObeAkademikKrs(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records._check_student_owner()
+        records._trigger_khs_sync()
         return records
 
     def write(self, vals):
@@ -123,7 +124,16 @@ class ErpObeAkademikKrs(models.Model):
             raise ValidationError(
                 "KRS yang sudah diajukan tidak dapat diubah sebelum dikembalikan."
             )
-        return super().write(vals)
+        result = super().write(vals)
+        if {"state", "penawaran_id", "line_ids"} & set(vals):
+            self._trigger_khs_sync()
+        return result
+
+    def _trigger_khs_sync(self):
+        if "erpobe.report.khs" not in self.env:
+            return
+        report_model = self.env["erpobe.report.khs"].sudo()
+        report_model.action_generate_khs(self.mapped("mahasiswa_id.id"))
 
     def action_submit(self):
         self._check_student_owner()
@@ -359,6 +369,10 @@ class ErpObeAkademikKrsLine(models.Model):
                         ]
                     }
                 )
+        if "erpobe.report.khs" in self.env:
+            self.env["erpobe.report.khs"].sudo().action_generate_khs(
+                records.mapped("mahasiswa_id.id")
+            )
         return records
 
     def write(self, vals):
@@ -374,6 +388,11 @@ class ErpObeAkademikKrsLine(models.Model):
                 old_kelas_map[rec.id] = rec.penawaran_line_id
 
         res = super().write(vals)
+        if {"penawaran_line_id", "status_pengambilan"} & set(vals):
+            if "erpobe.report.khs" in self.env:
+                self.env["erpobe.report.khs"].sudo().action_generate_khs(
+                    self.mapped("mahasiswa_id.id")
+                )
 
         if "penawaran_line_id" in vals:
             kelas_by_id = {}
@@ -421,9 +440,13 @@ class ErpObeAkademikKrsLine(models.Model):
                 raise ValidationError("Anda hanya dapat mengubah KRS milik sendiri.")
             if any(record.krs_id.state not in ("draft", "rejected") for record in self):
                 raise ValidationError("KRS yang sudah diajukan tidak dapat diubah.")
+        student_ids = self.mapped("mahasiswa_id.id")
         for rec in self:
             if rec.penawaran_line_id and rec.mahasiswa_id:
                 rec.penawaran_line_id.write(
                     {"mahasiswa_ids": [Command.unlink(rec.mahasiswa_id.id)]}
                 )
-        return super().unlink()
+        result = super().unlink()
+        if "erpobe.report.khs" in self.env:
+            self.env["erpobe.report.khs"].sudo().action_generate_khs(student_ids)
+        return result

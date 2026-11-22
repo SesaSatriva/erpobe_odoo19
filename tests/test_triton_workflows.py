@@ -273,8 +273,12 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertNotIn(second_krs.id, visible_ids)
 
         report_model = self.env["erpobe.report.khs"]
-        first_report = report_model.create({"mahasiswa_id": self.student.id})
-        second_report = report_model.create({"mahasiswa_id": second_student.id})
+        first_report = report_model.search(
+            [("mahasiswa_id", "=", self.student.id)], limit=1
+        ) or report_model.create({"mahasiswa_id": self.student.id})
+        second_report = report_model.search(
+            [("mahasiswa_id", "=", second_student.id)], limit=1
+        ) or report_model.create({"mahasiswa_id": second_student.id})
         visible_report_ids = report_model.with_user(self.student.user_id).search(
             [("id", "in", [first_report.id, second_report.id])]
         ).ids
@@ -324,6 +328,31 @@ class TestTritonKrsWorkflows(TransactionCase):
         )
         self.assertTrue(line)
 
+    def test_unavailable_grade_is_excluded_from_ipk_and_sks(self):
+        report = self.env["erpobe.report.khs"].search(
+            [("mahasiswa_id", "=", self.student.id)], limit=1
+        ) or self.env["erpobe.report.khs"].create(
+            {"mahasiswa_id": self.student.id}
+        )
+        unavailable_grade = self.GradeMk.create(
+            {
+                "mahasiswa_id": self.student.id,
+                "mk_id": self.course.id,
+            }
+        )
+        unavailable_grade.invalidate_recordset(["nilai_mk", "is_available"])
+        unavailable_grade._compute_nilai_mk()
+        report._sync_from_grades()
+
+        line = report.mk_line_ids.filtered(
+            lambda record: record.mk_id == self.course
+        )
+        self.assertEqual(len(line), 1)
+        self.assertFalse(line.data_available)
+        self.assertEqual(line.nilai_tampil, "Belum tersedia")
+        self.assertEqual(report.ipk, 0.0)
+        self.assertEqual(report.total_sks_lulus, 0)
+
     def test_cpl_and_ipk_are_calculated_from_weighted_grade_data(self):
         cpl = self.env["erpobe.akademik.cpl"].create(
             {
@@ -358,17 +387,23 @@ class TestTritonKrsWorkflows(TransactionCase):
                 "komponen_ids": [Command.link(component.id)],
             }
         )
+        rps.rps_komponen_ids.write({"bobot": 100.0})
         rps.bobot_cpmk_mk_ids.write({"bobot_cpmk_mk": 100.0})
         rps.bobot_komponen_cpmk_ids.write({"bobot_komponen_cpmk": 100.0})
+        rps.action_mark_for_review()
+        rps.action_finalize()
 
         krs = self._new_krs()
         krs_line = self.KrsLine.create(
             {"krs_id": krs.id, "penawaran_line_id": self.offer_line.id}
         )
+        krs.write({"state": "approved"})
         grade_component = self.env["erpobe.grade.komponen"].create(
             {
                 "krs_line_id": krs_line.id,
                 "komponen_id": component.id,
+                "rps_id": rps.id,
+                "rps_komponen_id": rps.rps_komponen_ids[:1].id,
                 "nilai": 80.0,
                 "audit_reason": "Initial assessment",
             }
@@ -379,13 +414,23 @@ class TestTritonKrsWorkflows(TransactionCase):
             "Initial assessment",
         )
         grade_cpmk = self.env["erpobe.grade.cpmk"].create(
-            {"mahasiswa_id": self.student.id, "cpmk_id": cpmk.id}
+            {
+                "mahasiswa_id": self.student.id,
+                "cpmk_id": cpmk.id,
+                "krs_line_id": krs_line.id,
+                "rps_id": rps.id,
+            }
         )
         grade_cpl = self.env["erpobe.grade.cpl"].create(
             {"mahasiswa_id": self.student.id, "cpl_id": cpl.id}
         )
         grade_mk = self.GradeMk.create(
-            {"mahasiswa_id": self.student.id, "mk_id": self.course.id}
+            {
+                "mahasiswa_id": self.student.id,
+                "mk_id": self.course.id,
+                "krs_line_id": krs_line.id,
+                "rps_id": rps.id,
+            }
         )
         ungraded_component = self.env["erpobe.akademik.komponen"].create(
             {"name": f"Kuis belum dinilai {self.suffix}", "tipe": "quiz"}
@@ -395,14 +440,6 @@ class TestTritonKrsWorkflows(TransactionCase):
                 "krs_line_id": krs_line.id,
                 "komponen_id": ungraded_component.id,
                 "is_graded": False,
-            }
-        )
-        self.env["erpobe.master.grade"].create(
-            {
-                "name": f"Grade KRS {self.suffix}",
-                "nilai_min": 0.0,
-                "nilai_max": 79.99,
-                "bobot": 1.0,
             }
         )
         self.assertEqual(grade_cpmk.nilai_cpmk, 80.0)
@@ -421,7 +458,9 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertEqual(correction.new_value, 75.0)
         self.assertEqual(correction.reason, "Verified correction")
 
-        report = self.env["erpobe.report.khs"].create(
+        report = self.env["erpobe.report.khs"].search(
+            [("mahasiswa_id", "=", self.student.id)], limit=1
+        ) or self.env["erpobe.report.khs"].create(
             {"mahasiswa_id": self.student.id}
         )
         report_line = report.mk_line_ids.filtered(

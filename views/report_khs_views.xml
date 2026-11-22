@@ -63,7 +63,7 @@
                             <field name="cpl_line_ids">
                                 <list create="0" edit="0" delete="0">
                                     <field name="cpl_id"/>
-                                    <field name="nilai_angka"/>
+                                    <field name="nilai_tampil"/>
                                 </list>
                             </field>
                         </page>
@@ -72,7 +72,7 @@
                                 <list create="0" edit="0" delete="0">
                                     <field name="mk_id"/>
                                     <field name="cpmk_id"/>
-                                    <field name="nilai_angka"/>
+                                    <field name="nilai_tampil"/>
                                 </list>
                             </field>
                         </page>
@@ -83,7 +83,7 @@
                                     <field name="kode_mk"/>
                                     <field name="mk_id"/>
                                     <field name="sks"/>
-                                    <field name="nilai_angka"/>
+                                    <field name="nilai_tampil"/>
                                     <field name="nilai_huruf"/>
                                     <field name="bobot"/>
                                 </list>

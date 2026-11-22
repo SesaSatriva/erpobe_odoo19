@@ -68,6 +68,7 @@ class ErpObeSummaryMk(models.Model):
                 JOIN erpobe_master_mahasiswa m ON g.mahasiswa_id = m.id
                 JOIN erpobe_master_rombel r ON m.rombel_id = r.id
                 JOIN erpobe_master_matakuliah mk ON g.mk_id = mk.id
+                WHERE g.is_available IS TRUE
             )
         """
             % self._table

@@ -106,11 +106,25 @@ Bobot berasal dari tabel `erpobe.bobot.cpmk.mk` pada RPS grade CPMK. CPL hanya m
 
 ## 5.6 KHS dan IPK
 
-Laporan KHS menghambil bobot nilai huruf dari master grade. Untuk mata kuliah unik, jika ada nilai ulang MK yang sama, hanya bobot tertinggi yang dipakai. `IPK = Σ(SKS mata kuliah unik × bobot nilai tertinggi) / Σ(SKS mata kuliah unik dengan bobot nilai > 0)` pada implementasi statistik yang terverifikasi. Nama dan detail implementasi dapat dilihat pada `models/report_khs.py`.
+a. IPK bisa terdeflasi. _sync_from_grades mengambil semua grade.mk mahasiswa tanpa filter is_available. MK yang belum selesai bernilai 0.0, jadi jatuh ke huruf E dan SKS-nya masuk penyebut IPK. Ini aman hanya jika grade.mk baru dibuat setelah nilai final (cek grade_mk.py). Baris CPMK dan CPL di KHS juga menampilkan 0.0 untuk data yang sebenarnya "belum tersedia".
 
-Hasil ini adalah indikator akademik umum, bukan rumus OBE.
+b. Nilai CPL tersimpan bisa basi. @api.depends pada _compute_nilai_cpl tidak memuat rps_id.status, krs_line_id.krs_id.state, maupun rps_id.bobot_cpmk_mk_ids. Perubahan bobot, finalisasi RPS, atau approval KRS tidak memicu hitung ulang, kecuali grade.cpmk ikut berubah.
 
-**Catatan formula belum ditemukan:** tidak ditemukan rumus persentase mahasiswa yang mencapai CPMK sebagai field tersimpan; tidak ditemukan rumus capaian program studi agregat tertulis sebagai field selain SQL view aggregasi rata-rata.
+c. dalam_proses bisa basi dan terlalu longgar. KRS tidak ada di @api.depends, jadi status tidak berubah saat mahasiswa mendaftar. Query KRS juga tidak memfilter state, sehingga KRS draft atau ditolak ikut dihitung.
+
+d. Kebijakan nilai ulang tidak konsisten. IPK memakai nilai terbaik per kode MK. CPL memakai grade_map dengan key (mahasiswa, cpmk), dan jika ada beberapa attempt, yang dipakai adalah record terakhir hasil search. Hasilnya bergantung _order model, bukan aturan eksplisit.
+
+e. Bobot tidak dinormalisasi antar-MK. Bobot yang dipakai adalah bobot CPMK di dalam MK, bukan kontribusi MK ke CPL. MK dengan bobot CPMK lebih besar mendominasi nilai CPL. Bisa jadi ini disengaja, tetapi harus ditulis sebagai keputusan desain.
+
+f. krs_line_id dan rps_id di erpobe.grade.cpl tidak diisi oleh compute di file ini. Untuk agregat lintas MK, field itu juga kurang bermakna.
+
+g. _compute_grade hanya bergantung pada nilai_angka. Jika skala erpobe.master.grade diubah, huruf dan bobot tersimpan tidak ikut berubah.
+
+h. total_sks_lulus hanya mensyaratkan bobot > 0, tanpa batas nilai lulus minimal. Jika D berbobot > 0, D dihitung lulus.
+
+i. Isi KHS hanya ter-update lewat action_generate_khs atau tombol manual. Himpunan barisnya tidak otomatis mengikuti perubahan nilai.
+
+j. View agregasi memakai AVG tanpa menampilkan jumlah mahasiswa (N), sehingga cakupan datanya tidak terlihat. Sumber prodi juga berbeda: view rombel memakai m.prodi_id, sedangkan view angkatan memakai cpl.prodi_id.
 
 ## 5.7 Studi Kasus Simulasi
 

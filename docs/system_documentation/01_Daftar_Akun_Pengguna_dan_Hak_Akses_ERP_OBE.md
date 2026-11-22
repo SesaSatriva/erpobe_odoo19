@@ -5,7 +5,7 @@
 | Item | Nilai |
 |---|---|
 | Nama Dokumen | Daftar Akun Pengguna dan Hak Akses ERP OBE |
-| Versi | 1.0 |
+| Versi | 1.2 |
 | Tanggal Penyusunan | 2026-11-22 |
 | Status | Audit source code — tanpa akses database produksi |
 
@@ -14,6 +14,8 @@
 | Versi | Tanggal | Keterangan |
 |---|---|---|
 | 1.0 | 2026-11-22 | Penyusunan awal berdasarkan audit source code ERP OBE. |
+| 1.1 | 2026-11-22 | Menambahkan daftar login akun fixture untuk pengujian. |
+| 1.2 | 2026-11-22 | Menyajikan login dan password per akun dalam baris terpisah. |
 
 ## Daftar Isi
 
@@ -31,22 +33,177 @@ Sumber akun yang diperiksa meliputi `_create_or_update_profile_user()` pada `mod
 
 Akun baru dibuat ketika profil dosen atau mahasiswa dibuat atau melalui seeder fixture. Relasi akun dilakukan melalui `res.partner` → profil dosen/mahasiswa → `res.users.partner_id`. Dosen memakai `nip` dan mahasiswa memakai `nim`; mahasiswa dan dosen juga mendapat cakupan program studi pada `res.users.erpobe_prodi_ids`.
 
-# Akuntansi Administrator
+# Daftar Akun Administrator
 
-| No | Nama | Username/Login | Email | Role | Status | Keterangan |
-|---|---|---|---|---|---|---|
-| — | Akun Admin Prodi fixture | Berpola `admin.<kode-prodi>`, misalnya `admin.du.p` pada pengujian | Berpasangan `login@example.test` | Administrator | Aktif pada fixture yang dijalankan | Satu akun admin per prodi fixture; password awal fixture `Demo123!`; data aktual belum dapat diverifikasi tanpa database |
-| — | Akun superadmin/administrator teknis | Tidak diambil dari database | Tidak ditampilkan | Administrator | Belum dapat diverifikasi | Bukan role tambahan dalam dokumen; grup teknis `base.group_system`/`group_superadmin` dipetakan ke Administrator |
+Seeder fixture dinamis membuat akun Admin Prodi hanya untuk prodi tanpa kurikulum fixture. Akun ini tidak otomatis dibuat untuk empat prodi fixture akademik pada daftar berikut.
 
-**Password awal:** password fixture Admin adalah `Demo123!` dan benar-benar tersedia pada kode source seeder. Password tersebut harus dianggap password demo bersama dan diganti sebelum digunakan di lingkungan produksi. Bukan produksi.
+| Role | Program Studi | Login | Password |
+|---|---|---|---|
+| Admin Prodi fixture dinamis | Sesuai prodi yang diseed | `admin.<kode-prodi>` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` |
 
-# Akuntansi Dosen
+Password Admin Prodi memang tidak sama dengan login pada source fixture. Akun superadmin/administrator teknis tidak disediakan sebagai akun demo. Jangan gunakan akun fixture di produksi.
 
-Tidak dapat menyusun tabel nama dosen aktual tanpa data database atau fixture individu yang lengkap. Mekanisme fixture target membuat tiga dosen aktif per prodi, dengan login `dosen.<kode-prodi>.<nomor>` dan password awal sama dengan nilai `nip` dosen. Contoh format login berasal dari pengujian; nama, NIP/NIDN, fakultas, dan prodi aktual database tidak boleh dikarang.
+# Daftar Akun Dosen Fixture Akademik
 
-# Akuntansi Mahasiswa
+Login dapat memakai NIP; pada fixture ini NIP juga menjadi password awal. Jadi kolom Login dan Password berisi nilai yang sama. Semua akun di bawah adalah akun fixture pengujian.
 
-Tidak dapat menyusun tabel nama mahasiswa aktual tanpa data database atau fixture individu yang lengkap. Mekanisme fixture target membuat dua puluh mahasiswa aktif per prodi, dengan login `mahasiswa.<kode-prodi>.<nomor>`, password awal sama dengan `nim`, dan email `login@example.test`. Kelas/rombel dan angkatan berasal dari data profil/rombel; nilai aktual tidak tersedia dari audit source.
+| No. | Program Studi | Login (NIP) | Password |
+|---:|---|---|---|
+| 1 | Teknik Industri | `SIM-DOSEN-MOHAMMAD_ADAM_JERUSALEM` | `SIM-DOSEN-MOHAMMAD_ADAM_JERUSALEM` |
+| 2 | Teknik Industri | `SIM-DOSEN-NOVA_SUPARMANTO` | `SIM-DOSEN-NOVA_SUPARMANTO` |
+| 3 | Teknik Industri | `SIM-DOSEN-HERI_NURDIYANTO` | `SIM-DOSEN-HERI_NURDIYANTO` |
+| 4 | Teknik Industri | `SIM-DOSEN-ADHE_RIZKY_ANUGERAH` | `SIM-DOSEN-ADHE_RIZKY_ANUGERAH` |
+| 5 | Teknik Industri | `SIM-DOSEN-GRAHITA_PRISCA_BRILIANTI` | `SIM-DOSEN-GRAHITA_PRISCA_BRILIANTI` |
+| 6 | Teknik Industri | `SIM-DOSEN-UMMI_FAKHRIYAH_JAYATRI` | `SIM-DOSEN-UMMI_FAKHRIYAH_JAYATRI` |
+| 7 | Teknik Industri | `SIM-DOSEN-DYANTIKA_PUTRY_MAHMUD` | `SIM-DOSEN-DYANTIKA_PUTRY_MAHMUD` |
+| 8 | Teknik Industri | `SIM-DOSEN-ANISA_KHARISMAWATI` | `SIM-DOSEN-ANISA_KHARISMAWATI` |
+| 9 | Teknik Industri | `SIM-DOSEN-PERDANA_SUTEJA_PUTRA` | `SIM-DOSEN-PERDANA_SUTEJA_PUTRA` |
+| 10 | Teknik Industri | `SIM-DOSEN-BROTO_WIDYA_HARTANTO` | `SIM-DOSEN-BROTO_WIDYA_HARTANTO` |
+| 11 | Teknik Industri | `SIM-DOSEN-KETUT_IMA_ISMARA` | `SIM-DOSEN-KETUT_IMA_ISMARA` |
+| 12 | Teknik Industri / Teknik Elektro | `SIM-DOSEN-MUHAMAD_ALI` | `SIM-DOSEN-MUHAMAD_ALI` |
+| 13 | Teknik Industri | `SIM-DOSEN-DIAN_EKSANA_WIBOWO` | `SIM-DOSEN-DIAN_EKSANA_WIBOWO` |
+| 14 | Teknik Elektro | `SIM-DOSEN-MOH_KHAIRUDIN` | `SIM-DOSEN-MOH_KHAIRUDIN` |
+| 15 | Teknik Elektro | `SIM-DOSEN-RUSTAM_ASNAWI` | `SIM-DOSEN-RUSTAM_ASNAWI` |
+| 16 | Teknik Elektro | `SIM-DOSEN-SIGIT_YATMONO` | `SIM-DOSEN-SIGIT_YATMONO` |
+| 17 | Teknik Elektro | `SIM-DOSEN-ARIADIE_CHANDRA_NUGRAHA` | `SIM-DOSEN-ARIADIE_CHANDRA_NUGRAHA` |
+| 18 | Teknik Elektro | `SIM-DOSEN-DENY_BUDI_HERTANTO` | `SIM-DOSEN-DENY_BUDI_HERTANTO` |
+| 19 | Teknik Elektro | `SIM-DOSEN-AJI_ERY_BURHANDENNY` | `SIM-DOSEN-AJI_ERY_BURHANDENNY` |
+| 20 | Teknik Elektro | `SIM-DOSEN-SARWO_PRANOTO` | `SIM-DOSEN-SARWO_PRANOTO` |
+| 21 | Teknik Elektro | `SIM-DOSEN-NURMAN_SETIAWAN` | `SIM-DOSEN-NURMAN_SETIAWAN` |
+| 22 | Teknik Elektro | `SIM-DOSEN-YUDI_UTOMO_PUTRA` | `SIM-DOSEN-YUDI_UTOMO_PUTRA` |
+| 23 | Teknik Elektro | `SIM-DOSEN-VANDO_GUSTI_AL_HAKIM` | `SIM-DOSEN-VANDO_GUSTI_AL_HAKIM` |
+| 24 | Teknik Elektro | `SIM-DOSEN-RIZAL_PRIYAMBUDI` | `SIM-DOSEN-RIZAL_PRIYAMBUDI` |
+| 25 | Teknik Elektro | `SIM-DOSEN-ARIF_NUGROHO` | `SIM-DOSEN-ARIF_NUGROHO` |
+| 26 | Teknik Elektro | `SIM-DOSEN-FATCHUL_ARIFIN` | `SIM-DOSEN-FATCHUL_ARIFIN` |
+| 27 | Teknik Manufaktur | `SIM-DOSEN-DIDIK_NURHADIYANTO` | `SIM-DOSEN-DIDIK_NURHADIYANTO` |
+| 28 | Teknik Manufaktur | `SIM-DOSEN-TIWAN` | `SIM-DOSEN-TIWAN` |
+| 29 | Teknik Manufaktur | `SIM-DOSEN-MUJIYONO` | `SIM-DOSEN-MUJIYONO` |
+| 30 | Teknik Manufaktur | `SIM-DOSEN-HERI_WIBOWO` | `SIM-DOSEN-HERI_WIBOWO` |
+| 31 | Teknik Manufaktur | `SIM-DOSEN-ARIANTO_LEMAN` | `SIM-DOSEN-ARIANTO_LEMAN` |
+| 32 | Teknik Manufaktur | `SIM-DOSEN-FREDY_SURAHMANTO` | `SIM-DOSEN-FREDY_SURAHMANTO` |
+| 33 | Teknik Manufaktur | `SIM-DOSEN-APRI_NURYANTO` | `SIM-DOSEN-APRI_NURYANTO` |
+| 34 | Teknik Manufaktur | `SIM-DOSEN-HENNY_PRATIWI` | `SIM-DOSEN-HENNY_PRATIWI` |
+| 35 | Teknik Manufaktur | `SIM-DOSEN-MARTINUS_HERU_PALMIYANTO` | `SIM-DOSEN-MARTINUS_HERU_PALMIYANTO` |
+| 36 | Teknik Manufaktur | `SIM-DOSEN-FEBRIANTO_AMRI_RISTADI` | `SIM-DOSEN-FEBRIANTO_AMRI_RISTADI` |
+| 37 | Teknik Manufaktur | `SIM-DOSEN-BENI_TRI_SASONGKO` | `SIM-DOSEN-BENI_TRI_SASONGKO` |
+| 38 | Teknik Manufaktur | `SIM-DOSEN-VIRDA_HERSY_LUTVIANA_SAPUTRI` | `SIM-DOSEN-VIRDA_HERSY_LUTVIANA_SAPUTRI` |
+| 39 | Teknik Manufaktur | `SIM-DOSEN-ANDHITA_MUSTIKANINGTYAS` | `SIM-DOSEN-ANDHITA_MUSTIKANINGTYAS` |
+| 40 | Teknik Manufaktur | `SIM-DOSEN-AULIA_MAJID` | `SIM-DOSEN-AULIA_MAJID` |
+| 41 | Teknik Sipil | `SIM-DOSEN-SIPIL_SIM_01` | `SIM-DOSEN-SIPIL_SIM_01` |
+| 42 | Teknik Sipil | `SIM-DOSEN-SIPIL_SIM_02` | `SIM-DOSEN-SIPIL_SIM_02` |
+| 43 | Teknik Sipil | `SIM-DOSEN-SIPIL_SIM_03` | `SIM-DOSEN-SIPIL_SIM_03` |
+| 44 | Teknik Sipil | `SIM-DOSEN-SIPIL_SIM_04` | `SIM-DOSEN-SIPIL_SIM_04` |
+| 45 | Teknik Sipil | `SIM-DOSEN-SIPIL_SIM_05` | `SIM-DOSEN-SIPIL_SIM_05` |
+| 46 | Teknik Sipil | `SIM-DOSEN-SIPIL_SIM_06` | `SIM-DOSEN-SIPIL_SIM_06` |
+
+# Daftar Akun Mahasiswa Fixture Akademik
+
+Login mahasiswa dapat memakai NIM, dan pada fixture ini NIM juga menjadi password awal. Jadi kolom Login dan Password berisi nilai yang sama.
+
+| No. | Program Studi | Login (NIM) | Password |
+|---:|---|---|---|
+| 1 | Teknik Industri | `SIMIN22001` | `SIMIN22001` |
+| 2 | Teknik Industri | `SIMIN22002` | `SIMIN22002` |
+| 3 | Teknik Industri | `SIMIN22003` | `SIMIN22003` |
+| 4 | Teknik Industri | `SIMIN22004` | `SIMIN22004` |
+| 5 | Teknik Industri | `SIMIN22005` | `SIMIN22005` |
+| 6 | Teknik Industri | `SIMIN22006` | `SIMIN22006` |
+| 7 | Teknik Industri | `SIMIN22007` | `SIMIN22007` |
+| 8 | Teknik Industri | `SIMIN22008` | `SIMIN22008` |
+| 9 | Teknik Industri | `SIMIN22009` | `SIMIN22009` |
+| 10 | Teknik Industri | `SIMIN22010` | `SIMIN22010` |
+| 11 | Teknik Industri | `SIMIN22011` | `SIMIN22011` |
+| 12 | Teknik Industri | `SIMIN22012` | `SIMIN22012` |
+| 13 | Teknik Industri | `SIMIN22013` | `SIMIN22013` |
+| 14 | Teknik Industri | `SIMIN22014` | `SIMIN22014` |
+| 15 | Teknik Industri | `SIMIN22015` | `SIMIN22015` |
+| 16 | Teknik Industri | `SIMIN22016` | `SIMIN22016` |
+| 17 | Teknik Industri | `SIMIN22017` | `SIMIN22017` |
+| 18 | Teknik Industri | `SIMIN22018` | `SIMIN22018` |
+| 19 | Teknik Industri | `SIMIN22019` | `SIMIN22019` |
+| 20 | Teknik Industri | `SIMIN22020` | `SIMIN22020` |
+| 21 | Teknik Industri | `SIMIN22021` | `SIMIN22021` |
+| 22 | Teknik Industri | `SIMIN22022` | `SIMIN22022` |
+| 23 | Teknik Industri | `SIMIN22023` | `SIMIN22023` |
+| 24 | Teknik Industri | `SIMIN22024` | `SIMIN22024` |
+| 25 | Teknik Industri | `SIMIN22025` | `SIMIN22025` |
+| 26 | Teknik Elektro | `SIMEL22001` | `SIMEL22001` |
+| 27 | Teknik Elektro | `SIMEL22002` | `SIMEL22002` |
+| 28 | Teknik Elektro | `SIMEL22003` | `SIMEL22003` |
+| 29 | Teknik Elektro | `SIMEL22004` | `SIMEL22004` |
+| 30 | Teknik Elektro | `SIMEL22005` | `SIMEL22005` |
+| 31 | Teknik Elektro | `SIMEL22006` | `SIMEL22006` |
+| 32 | Teknik Elektro | `SIMEL22007` | `SIMEL22007` |
+| 33 | Teknik Elektro | `SIMEL22008` | `SIMEL22008` |
+| 34 | Teknik Elektro | `SIMEL22009` | `SIMEL22009` |
+| 35 | Teknik Elektro | `SIMEL22010` | `SIMEL22010` |
+| 36 | Teknik Elektro | `SIMEL22011` | `SIMEL22011` |
+| 37 | Teknik Elektro | `SIMEL22012` | `SIMEL22012` |
+| 38 | Teknik Elektro | `SIMEL22013` | `SIMEL22013` |
+| 39 | Teknik Elektro | `SIMEL22014` | `SIMEL22014` |
+| 40 | Teknik Elektro | `SIMEL22015` | `SIMEL22015` |
+| 41 | Teknik Elektro | `SIMEL22016` | `SIMEL22016` |
+| 42 | Teknik Elektro | `SIMEL22017` | `SIMEL22017` |
+| 43 | Teknik Elektro | `SIMEL22018` | `SIMEL22018` |
+| 44 | Teknik Elektro | `SIMEL22019` | `SIMEL22019` |
+| 45 | Teknik Elektro | `SIMEL22020` | `SIMEL22020` |
+| 46 | Teknik Elektro | `SIMEL22021` | `SIMEL22021` |
+| 47 | Teknik Elektro | `SIMEL22022` | `SIMEL22022` |
+| 48 | Teknik Elektro | `SIMEL22023` | `SIMEL22023` |
+| 49 | Teknik Elektro | `SIMEL22024` | `SIMEL22024` |
+| 50 | Teknik Elektro | `SIMEL22025` | `SIMEL22025` |
+| 51 | Teknik Manufaktur | `SIMMF22001` | `SIMMF22001` |
+| 52 | Teknik Manufaktur | `SIMMF22002` | `SIMMF22002` |
+| 53 | Teknik Manufaktur | `SIMMF22003` | `SIMMF22003` |
+| 54 | Teknik Manufaktur | `SIMMF22004` | `SIMMF22004` |
+| 55 | Teknik Manufaktur | `SIMMF22005` | `SIMMF22005` |
+| 56 | Teknik Manufaktur | `SIMMF22006` | `SIMMF22006` |
+| 57 | Teknik Manufaktur | `SIMMF22007` | `SIMMF22007` |
+| 58 | Teknik Manufaktur | `SIMMF22008` | `SIMMF22008` |
+| 59 | Teknik Manufaktur | `SIMMF22009` | `SIMMF22009` |
+| 60 | Teknik Manufaktur | `SIMMF22010` | `SIMMF22010` |
+| 61 | Teknik Manufaktur | `SIMMF22011` | `SIMMF22011` |
+| 62 | Teknik Manufaktur | `SIMMF22012` | `SIMMF22012` |
+| 63 | Teknik Manufaktur | `SIMMF22013` | `SIMMF22013` |
+| 64 | Teknik Manufaktur | `SIMMF22014` | `SIMMF22014` |
+| 65 | Teknik Manufaktur | `SIMMF22015` | `SIMMF22015` |
+| 66 | Teknik Manufaktur | `SIMMF22016` | `SIMMF22016` |
+| 67 | Teknik Manufaktur | `SIMMF22017` | `SIMMF22017` |
+| 68 | Teknik Manufaktur | `SIMMF22018` | `SIMMF22018` |
+| 69 | Teknik Manufaktur | `SIMMF22019` | `SIMMF22019` |
+| 70 | Teknik Manufaktur | `SIMMF22020` | `SIMMF22020` |
+| 71 | Teknik Manufaktur | `SIMMF22021` | `SIMMF22021` |
+| 72 | Teknik Manufaktur | `SIMMF22022` | `SIMMF22022` |
+| 73 | Teknik Manufaktur | `SIMMF22023` | `SIMMF22023` |
+| 74 | Teknik Manufaktur | `SIMMF22024` | `SIMMF22024` |
+| 75 | Teknik Manufaktur | `SIMMF22025` | `SIMMF22025` |
+| 76 | Teknik Sipil | `SIMSI22001` | `SIMSI22001` |
+| 77 | Teknik Sipil | `SIMSI22002` | `SIMSI22002` |
+| 78 | Teknik Sipil | `SIMSI22003` | `SIMSI22003` |
+| 79 | Teknik Sipil | `SIMSI22004` | `SIMSI22004` |
+| 80 | Teknik Sipil | `SIMSI22005` | `SIMSI22005` |
+| 81 | Teknik Sipil | `SIMSI22006` | `SIMSI22006` |
+| 82 | Teknik Sipil | `SIMSI22007` | `SIMSI22007` |
+| 83 | Teknik Sipil | `SIMSI22008` | `SIMSI22008` |
+| 84 | Teknik Sipil | `SIMSI22009` | `SIMSI22009` |
+| 85 | Teknik Sipil | `SIMSI22010` | `SIMSI22010` |
+| 86 | Teknik Sipil | `SIMSI22011` | `SIMSI22011` |
+| 87 | Teknik Sipil | `SIMSI22012` | `SIMSI22012` |
+| 88 | Teknik Sipil | `SIMSI22013` | `SIMSI22013` |
+| 89 | Teknik Sipil | `SIMSI22014` | `SIMSI22014` |
+| 90 | Teknik Sipil | `SIMSI22015` | `SIMSI22015` |
+| 91 | Teknik Sipil | `SIMSI22016` | `SIMSI22016` |
+| 92 | Teknik Sipil | `SIMSI22017` | `SIMSI22017` |
+| 93 | Teknik Sipil | `SIMSI22018` | `SIMSI22018` |
+| 94 | Teknik Sipil | `SIMSI22019` | `SIMSI22019` |
+| 95 | Teknik Sipil | `SIMSI22020` | `SIMSI22020` |
+| 96 | Teknik Sipil | `SIMSI22021` | `SIMSI22021` |
+| 97 | Teknik Sipil | `SIMSI22022` | `SIMSI22022` |
+| 98 | Teknik Sipil | `SIMSI22023` | `SIMSI22023` |
+| 99 | Teknik Sipil | `SIMSI22024` | `SIMSI22024` |
+| 100 | Teknik Sipil | `SIMSI22025` | `SIMSI22025` |
+
+Jika fixture belum dijalankan, akun di atas belum tentu ada pada database. Jika login atau password pernah diubah, gunakan nilai yang tersimpan di database pengujian. Jangan gunakan akun/password fixture pada produksi.
 
 # Data Fakuitas dan Program Studi yang Terverifikasi
 
@@ -83,20 +240,18 @@ Angka prodi di atas berasal dari `data/fixture_01_fakultas_prodi.xml`. Mahasiswa
 | Indikator | Nilai | Status |
 |---|---|---|
 | Administrator aktual | Tidak dapat dihitung | Memerlukan data database |
-| Dosen aktual | Tidak dapat dihitung | Memerlukan data database |
-| Mahasiswa aktual | Tidak dapat dihitung | Memerlukan data database |
+| Akun dosen fixture akademik | 46 | Source seeder; bukan jumlah akun produksi |
+| Akun mahasiswa fixture akademik | 100 | Source seeder; bukan jumlah akun produksi |
 | Fakultas terverifikasi | 1 | Fixture XML |
 | Program Studi terverifikasi | 4 | Fixture XML |
-| Target dosen fixture per prodi | 3 | Seeding source/test |
-| Target mahasiswa fixture per prodi | 20 | Seeding source/test |
 | Akun aktif/nonaktif aktual | Tidak dapat dihitung | Memerlukan data database |
 
-Jumlah target seeder bersifat mekanisme pengujian dan bukan bukti jumlah akun pada database deployment.
+Jumlah akun fixture berasal dari mekanisme seeder dan bukan bukti jumlah akun pada database deployment.
 
 # Akun, Login, dan Keamanan
 
-1. Login dosen dapat berupa email pada proses normal, atau email lokal saat fixture. Login dapat juga berupa NIP melalui `res.users._get_login_domain()`.
-2. Login mahasiswa dapat berupa email atau NIM.
+1. Untuk dosen dan mahasiswa fixture, gunakan NIP/NIM pada kolom Login; nilai yang sama dipakai sebagai password awal. Odoo juga menerima NIP/NIM melalui `res.users._get_login_domain()`.
+2. Pada proses normal, login dapat berupa email. Untuk Admin Prodi fixture dinamis, gunakan login `admin.<kode-prodi>` dan password `Demo123!`.
 3. Pembuatan profil normal memakai password identitas sebagai password awal (`nip` untuk dosen dan `nim` untuk mahasiswa), sedangkan admin fixture memakai `Demo123!`.
 4. Hash password tidak dibongkar dan tidak dikarang.
 5. Setelah login pertama, password identitas agar segera diganti dengan password kuat unik.
@@ -105,4 +260,4 @@ Jumlah target seeder bersifat mekanisme pengujian dan bukan bukti jumlah akun pa
 
 # Catatan Kelengkapan
 
-Belum dapat diverifikasi: daftar seluruh akun aktual, status aktif/nonaktif aktual, nama dosen/mahasiswa aktual, email aktual, password produksi, grafik distribusi pengguna, dan identitas superadmin aktual. Catatan ini harus diganti setelah pemeriksaan database pengujian yang memiliki izin.
+Belum dapat diverifikasi: daftar seluruh akun aktual di database deployment, status aktif/nonaktif aktual, password yang mungkin telah diubah, akun Administrator aktual, dan identitas superadmin aktual. Daftar di atas hanya akun fixture pengujian yang ditentukan source code dan tidak membuktikan bahwa akun tersebut ada atau aktif pada database tertentu.

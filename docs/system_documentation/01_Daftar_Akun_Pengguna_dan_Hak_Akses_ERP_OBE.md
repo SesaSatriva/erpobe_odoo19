@@ -35,13 +35,16 @@ Akun baru dibuat ketika profil dosen atau mahasiswa dibuat atau melalui seeder f
 
 # Daftar Akun Administrator
 
-Seeder fixture dinamis membuat akun Admin Prodi hanya untuk prodi tanpa kurikulum fixture. Akun ini tidak otomatis dibuat untuk empat prodi fixture akademik pada daftar berikut.
+Seeder fixture akademik membuat satu akun Admin Prodi untuk masing-masing dari empat prodi fixture berikut. Akun dibuat ketika fixture dimuat; jika login dasar sudah digunakan, login mendapat akhiran `.p<ID>`.
 
 | Role | Program Studi | Login | Password |
 |---|---|---|---|
-| Admin Prodi fixture dinamis | Sesuai prodi yang diseed | `admin.<kode-prodi>` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` |
+| Admin Prodi fixture | Teknik Industri | `admin.in` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` |
+| Admin Prodi fixture | Teknik Elektro | `admin.el` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` |
+| Admin Prodi fixture | Teknik Manufaktur | `admin.mf` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` |
+| Admin Prodi fixture | Teknik Sipil | `admin.si` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` |
 
-Password Admin Prodi memang tidak sama dengan login pada source fixture. Akun superadmin/administrator teknis tidak disediakan sebagai akun demo. Jangan gunakan akun fixture di produksi.
+Password Admin Prodi memang tidak sama dengan login pada source fixture. Akun superadmin/administrator teknis tidak disediakan sebagai akun demo. Akun fixture ditujukan untuk pengujian; jangan gunakan password ini di produksi.
 
 # Daftar Akun Dosen Fixture Akademik
 

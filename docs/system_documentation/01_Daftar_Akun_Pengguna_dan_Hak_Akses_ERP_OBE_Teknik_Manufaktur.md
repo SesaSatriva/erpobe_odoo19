@@ -5,8 +5,8 @@
 | Item | Nilai |
 |---|---|
 | Nama Dokumen | Daftar Akun Pengguna dan Hak Akses ERP OBE — Teknik Manufaktur |
-| Versi | 1.3 |
-| Tanggal Penyusunan | 2026-11-22 |
+| Versi | 1.4 |
+| Tanggal Penyusunan | 2026-11-23 |
 | Program Studi | Teknik Manufaktur |
 | Kode Program Studi | MF |
 | Fakultas | Fakultas Teknik |
@@ -18,6 +18,7 @@
 |---|---|---|
 | 1.0 | 2026-11-22 | Penyusunan awal dokumen gabungan berdasarkan audit source code. |
 | 1.3 | 2026-11-22 | Pemisahan dokumen per program studi dan pemfilteran akun sesuai cakupan prodi. |
+| 1.4 | 2026-11-23 | Pembuatan akun Admin Prodi otomatis saat fixture akademik dimuat. |
 
 ## Batas Dokumen
 
@@ -36,7 +37,7 @@ Seeder fixture akademik tidak otomatis membuat akun Admin Prodi untuk empat prod
 
 | Role | Program Studi | Login | Password | Status pada Fixture Akademik |
 |---|---|---|---|---|
-| Admin Prodi fixture dinamis | Teknik Manufaktur | `admin.mf` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` | Tidak otomatis dibuat untuk prodi ini |
+| Admin Prodi fixture | Teknik Manufaktur | `admin.mf` (dapat berakhiran `.p<ID>` jika login bentrok) | `Demo123!` | Dibuat saat fixture akademik dimuat |
 
 ## Akun Dosen
 

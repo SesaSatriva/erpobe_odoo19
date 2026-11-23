@@ -196,11 +196,18 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         return cpl_model.classify_type(code, description, aspect)
 
     @api.model
+    def _ensure_fixture_admin_accounts(self):
+        return self.env["res.users"].with_context(
+            fixture_admins_only=True
+        ).load_erpobe_fixture_users()
+
+    @api.model
     def load_2022_cohort(self):
         params = self.env["ir.config_parameter"].sudo()
         force_seed = self.env.context.get("force_fixture_seed")
         if not force_seed:
             if params.get_param(FIXTURE_SEED_VERSION_PARAM) == FIXTURE_SEED_VERSION:
+                self._ensure_fixture_admin_accounts()
                 return True
 
             imd_model = self.env["ir.model.data"].sudo()
@@ -237,6 +244,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                     params.set_param(
                         FIXTURE_SEED_VERSION_PARAM, FIXTURE_SEED_VERSION
                     )
+                    self._ensure_fixture_admin_accounts()
                     return True
 
         source_text = self._read_program_document()
@@ -260,6 +268,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             programs[config["slug"]] = program
             all_students.extend(program["students"])
 
+        self._ensure_fixture_admin_accounts()
         self._create_enrollments(programs, component_ids)
         self._create_cpl_results(programs)
         self.env["erpobe.report.khs"].sudo().action_generate_khs(

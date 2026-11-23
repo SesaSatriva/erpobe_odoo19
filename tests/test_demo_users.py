@@ -93,16 +93,31 @@ class TestErpObeFixtureUsers(TransactionCase):
             ]
         )
 
-        self.env["res.users"].load_erpobe_fixture_users()
+        self.env["res.users"].with_context(
+            fixture_admins_only=True
+        ).load_erpobe_fixture_users()
 
         admins = prodi.user_ids.filtered(
             lambda user: user.has_group("erpobe.group_admin")
         )
         self.assertEqual(len(admins), 1)
         self.assertEqual(admins.erpobe_prodi_ids, prodi)
+        self.assertEqual(admins.login, "admin.afp")
+        self.assertTrue(admins.has_group("erpobe.group_admin"))
+        result = self.env["res.users"].authenticate(
+            {
+                "type": "password",
+                "login": admins.login,
+                "password": "Demo123!",
+            },
+            {"interactive": True},
+        )
+        self.assertEqual(result["uid"], admins.id)
         admin_id = admins.id
 
-        self.env["res.users"].load_erpobe_fixture_users()
+        self.env["res.users"].with_context(
+            fixture_admins_only=True
+        ).load_erpobe_fixture_users()
 
         admins = prodi.user_ids.filtered(
             lambda user: user.has_group("erpobe.group_admin")

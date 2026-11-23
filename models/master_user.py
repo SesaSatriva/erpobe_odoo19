@@ -232,6 +232,8 @@ class ResUsers(models.Model):
             .mapped("prodi_id")
             .ids
         )
+        if self.env.context.get("fixture_admins_only"):
+            prodis = prodis.filtered(lambda prodi: prodi.id in fixture_prodi_ids)
 
         dosen_model = (
             self.env["erpobe.master.dosen"]

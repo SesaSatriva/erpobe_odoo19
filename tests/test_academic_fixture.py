@@ -83,6 +83,23 @@ class TestErpObeAcademicFixture(TransactionCase):
         self.assertTrue(visible_results)
         self.assertEqual(set(visible_results.mapped("mahasiswa_id").ids), {own_student.id})
 
+    def test_academic_fixture_seeding_creates_scoped_admins_for_all_programs(self):
+        self._require_fixture()
+        self.env["erpobe.fixture.seeder"].load_2022_cohort()
+
+        for slug, (prodi_xmlid, _, _) in self.PROGRAMS.items():
+            prodi = self.env.ref(f"erpobe.{prodi_xmlid}")
+            admins = prodi.user_ids.filtered(
+                lambda user: user.has_group("erpobe.group_admin")
+                and not user.has_group("erpobe.group_superadmin")
+                and not user.has_group("base.group_system")
+            )
+            self.assertEqual(len(admins), 1)
+            self.assertEqual(admins.erpobe_prodi_ids, prodi)
+            self.assertTrue(
+                admins.login in (f"admin.{slug}", f"admin.{slug}.p{prodi.id}")
+            )
+
     def test_fixture_rps_has_sixteen_weeks_and_complete_weights(self):
         self._require_fixture()
         validator = self.env["erpobe.weight.validation"]

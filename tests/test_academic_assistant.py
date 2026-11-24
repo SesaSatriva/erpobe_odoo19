@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase, tagged
 
+from ..controllers.academic_assistant import AcademicAssistantController
 from ..controllers.academic_assistant_service import AcademicAssistantService
 from ..controllers.assistant_intents import (
     detect_intent,
@@ -14,6 +15,21 @@ from ..controllers.assistant_intents import (
 
 @tagged("post_install", "-at_install")
 class TestAcademicAssistantIntent(TransactionCase):
+    def test_admin_group_can_use_academic_assistant(self):
+        admin = SimpleNamespace(
+            has_group=lambda group: group == "erpobe.group_admin"
+        )
+        portal_user = SimpleNamespace(
+            has_group=lambda group: group == "base.group_portal"
+        )
+
+        self.assertTrue(
+            AcademicAssistantController._can_use_academic_assistant(admin)
+        )
+        self.assertFalse(
+            AcademicAssistantController._can_use_academic_assistant(portal_user)
+        )
+
     def test_conversation_context_rejects_untrusted_entity_codes(self):
         context = AcademicAssistantService._sanitize_conversation_context({
             "intent_id": "cpmk_achievement",

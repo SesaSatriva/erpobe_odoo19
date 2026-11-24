@@ -81,7 +81,8 @@ Status: PASS, FAIL, BLOCKED, NOT TESTED.
 
 - The OWL component is registered through `main_components` in
   `web.assets_backend` and calls the authenticated JSON-RPC endpoint
-  `/web/erpobe/assistant/query`. The endpoint requires an internal user.
+  `/web/erpobe/assistant/query`. The endpoint accepts internal users and
+  `erpobe.group_admin` users; model ACLs and record rules still constrain data.
 - The service uses the active user's ORM environment without `sudo()` or raw SQL.
   Page record context is accepted only for an allowlisted model and is resolved
   again through ORM search, so ACLs and record rules remain in effect.

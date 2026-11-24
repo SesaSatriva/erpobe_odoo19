@@ -6,6 +6,12 @@ from .academic_assistant_service import AcademicAssistantService
 
 
 class AcademicAssistantController(http.Controller):
+    @staticmethod
+    def _can_use_academic_assistant(user):
+        return user.has_group("base.group_user") or user.has_group(
+            "erpobe.group_admin"
+        )
+
     @http.route(
         "/web/erpobe/assistant/query",
         type="jsonrpc",
@@ -15,8 +21,11 @@ class AcademicAssistantController(http.Controller):
     def academic_assistant_query(
         self, question=None, context=None, page_context=None, **kwargs
     ):
-        if not request.env.user.has_group("base.group_user"):
-            raise AccessError("Academic Assistant hanya tersedia bagi pengguna internal.")
+        if not self._can_use_academic_assistant(request.env.user):
+            raise AccessError(
+                "Academic Assistant hanya tersedia bagi pengguna internal "
+                "atau Admin Prodi."
+            )
         if kwargs:
             return {
                 "type": "warning",

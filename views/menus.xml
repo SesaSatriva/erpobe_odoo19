@@ -5,7 +5,7 @@
     <menuitem id="menu_erpobe_academic_ops" name="Perkuliahan" parent="menu_erpobe_root" sequence="50" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_mahasiswa,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_krs" name="Kartu Rencana Studi" parent="menu_erpobe_academic_ops" action="action_erpobe_krs" sequence="30" groups="erpobe.group_admin,erpobe.group_mahasiswa,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_input_nilai" name="Input Nilai" parent="menu_erpobe_academic_ops" action="action_erpobe_input_nilai" sequence="40" groups="erpobe.group_admin,erpobe.group_dosen,erpobe.group_superadmin"/>
-    <menuitem id="menu_erpobe_results" name="Monitoring IPK Mahasiswa" parent="menu_erpobe_root" action="action_erpobe_khs" sequence="60" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_results" name="Monitoring IPK Mahasiswa" parent="menu_erpobe_academic_ops" action="action_erpobe_khs" sequence="50" groups="erpobe.group_admin,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_master_prodi" name="Program Studi" parent="menu_erpobe_root" action="action_erpobe_master_prodi" sequence="20" groups="erpobe.group_admin,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_master" name="Data Akademik" parent="menu_erpobe_root" sequence="30" groups="erpobe.group_admin,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_dosen" name="Dosen" parent="menu_erpobe_master" action="action_erpobe_master_dosen" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>

@@ -1,908 +1,814 @@
 # ENTERPRISE ARCHITECTURE
 
-## Odoo 19 Custom ERP Outcome-Based Education
+## ERP OBE — Odoo 19
 
 ### Document Information
 
-- Project Name: Odoo 19 Custom ERP OBE
-- Document Title: Enterprise Architecture ERP OBE
-- Version: 1.0
-- Analysis Date: 23 November 2026
-- Architecture Framework: TOGAF ADM sebagai kerangka konseptual; OBE dan Odoo digunakan sebagai domain teknologi.
-- Scope: reverse engineering addon kustom `custom_module/erpobe`, tanpa perubahan database, konfigurasi, atau source code.
-- Prepared By: Project Documentation
-- Document Status: Implementasi aktual yang telah diverifikasi terhadap source code
+| Item | Nilai |
+|---|---|
+| Project | ERP OBE — Custom Enterprise Resource Planning berbasis Odoo 19 |
+| Document | Enterprise Architecture ERP OBE |
+| Scope | Addon kustom `custom_module/erpobe` |
+| Framework | TOGAF Architecture Development Method (ADM) |
+| Process notation | BPMN 2.0 sebagai standar konseptual; Mermaid hanya digunakan sebagai representasi pendukung |
+| Module version | `19.0.2.8.0` |
+| Analysis date | 24 November 2026 |
+| Status | Berdasarkan reverse engineering source code |
 
-## Daftar Isi
+## 1. Executive Summary
 
-1. [Executive Summary](#1-executive-summary)
-2. [Pendahuluan](#2-pendahuluan)
-3. [Gambaran Project](#3-gambaran-project)
-4. [Architecture Vision](#4-architecture-vision)
-5. [Business Architecture](#5-business-architecture)
-6. [Application Architecture](#6-application-architecture)
-7. [Data Architecture](#7-data-architecture)
-8. [OBE Computation Architecture](#8-obe-computation-architecture)
-9. [Technology Architecture](#9-technology-architecture)
-10. [Security Architecture](#10-security-architecture)
-11. [Integration Architecture](#11-integration-architecture)
-12. [Reporting and Analytics Architecture](#12-reporting-and-analytics-architecture)
-13. [User Workflow and User Journey](#13-user-workflow-and-user-journey)
-14. [Architecture Diagrams](#14-architecture-diagrams)
-15. [Architecture Gap Analysis](#15-architecture-gap-analysis)
-16. [Target Architecture and Roadmap](#16-target-architecture-and-roadmap)
-17. [Risk and Technical Considerations](#17-risk-and-technical-considerations)
-18. [Source Code Traceability](#18-source-code-traceability)
-19. [Kesimpulan](#19-kesimpulan)
-20. [Glossary](#20-glossary)
-21. [Appendix](#21-appendix)
+ERP OBE merupakan aplikasi Odoo 19 kustom untuk pengelolaan master akademik, kurikulum, Outcome-Based Education (OBE), perkuliahan, penilaian, dan pelaporan. Implementasi aktual memiliki satu addon, `erpobe`, dengan model ORM, view backend, portal dosen dan mahasiswa, portal publik, wizard import/ekspor, laporan QWeb, bantuan akademik, dan infrastruktur audit terpusat.
 
-# 1. Executive Summary
+Rantai OBE yang terverifikasi adalah:
 
-Addon `erpobe` adalah aplikasi Odoo 19 kustom untuk pengelolaan data akademik dan capaian pembelajaran Outcome-Based Education (OBE). Implementasi aktual mencakup fakultas, program studi, kurikulum, dosen, mahasiswa, rombel, mata kuliah, CPL, CPMK, RPS, penawaran mata kuliah, KRS, nilai komponen, nilai MK/CPMK/CPL, KHS, analitik agregat, wizard import/ekspor, portal dosen-mahasiswa, dan halaman publik.
+**CPL ← pemetaan ← CPMK ← bobot CPMK/Mata Kuliah ← Mata Kuliah ← RPS ← Komponen Penilaian ← Nilai Komponen**
 
-Rantai data OBE yang dapat diverifikasi adalah **CPL - CPMK - Mata Kuliah - RPS - Komponen Penilaian - Nilai Komponen - Nilai CPMK - Nilai MK - Nilai CPL**. Perhitungan baru tersedia setelah RPS berstatus `final`, KRS berstatus `approved`, dan grade komponen bertanda `is_graded=True`.
+Logika implementasi tidak menggunakan Sub-CPMK. Pemetaan CPMK–CPL tidak memiliki bobot CPMK–CPL; kontribusi dihitung melalui nilai CPMK dan pemetaan CPMK/ mata kuliah terhadap CPL. Perhitungan detail tersedia hanya dengan RPS `final`, KRS `approved`, dan grade komponen bertanda `is_graded=True`.
 
-Struktur keamanan memiliki empat grup: Mahasiswa, Dosen, Admin, dan Superadmin. ACL, record rules, dan pengecekan ownership tersedia. Namun cakupan data tidak seragam pada semua model; beberapa controller publik menggunakan `sudo()` untuk menyajikan informasi yang memang dirancang publik, sedangkan beberapa data akademik pribadi dibatasi melalui query berdasarkan mahasiswa atau dosen yang sedang login.
+Audit Trail Phase 5 terimplementasi sebagai mixin ORM, model log terpusat, dashboard, autentikasi, audit laporan, retensi, dan aturan akses. Versi modul menyatakan `19.0.2.8.0`. Tidak ditemukan bukti deployment produksi atau integrasi eksternal berkelanjutan. Oleh sebab itu, teknologi aktual dibatasi pada sumber repository dan tidak mengklaim Docker, Kubernetes, Nginx, cloud, load balancer, broker pesan, atau API eksternal.
 
-Status: fitur yang memiliki model, view, security, controller, method, atau report terverifikasi ditandai Implemented. Fitur yang hanya memiliki sebagian bukti ditandai Partially Implemented/Needs Verification. Tidak ditemukan integrasi eksternal berkelanjutan dan tidak ditemukan `ir.cron` atau `base.automation` khusus addon.
+Ruang lingkup metodologi hanya mencakup Preliminary, Phase A, Phase B, Phase C, Phase D, Gap Analysis, dan rekomendasi roadmap. Phase E–H tidak dinyatakan sebagai hasil pelaksanaan penelitian.
 
-# 2. Pendahuluan
+## 2. Pendahuluan
 
-## 2.1 Latar Belakang
+### 2.1 Latar Belakang
 
-Pengelolaan capaian pembelajaran memerlukan kesinambungan dari kurikulum hingga nilai mahasiswa. Project ini mengimplementasikan keterhubungan tersebut melalui model Odoo dan portal web.
+Pengelolaan capaian pembelajaran memerlukan hubungan yang dapat ditelusuri dari CPL sampai nilai mahasiswa. Dokumen ini menyajikan arsitektur aktual yang hasilnya berasal dari pemeriksaan manifest, model, field, relasi, constraint, controller, view, security, wizard, migration, report, cron, dan test.
 
-## 2.2 Tujuan dan Metodologi
+### 2.2 Tujuan Enterprise Architecture
 
-Metodologi adalah:
+1. Memetakan konteks bisnis, proses akademik, dan stakeholder.
+2. Mendokumentasikan data dan relasi OBE secara faktual.
+3. Memetakan komponen aplikasi dan dukungan proses bisnis.
+4. Mendokumentasikan teknologi, deployment, security, dan audit aktual.
+5. Memisahkan kondisi As-Is, To-Be, gap, dan recommendation.
+6. Menyediakan traceability untuk penggunaan dalam metodologi skripsi.
 
-1. Inventaris manifest, dependency, model, view, XML, security, controller, wizard, report, migration, dan test.
-2. Trace field, relasi, constraint, computed field, override, dan method.
-3. Verifikasi alur KRS, RPS, input nilai, komputasi CPMK/MK/CPL, pelaporan, dan isolation.
-4. Penyusunan dokumentasi dalam satu file Markdown.
-5. Klaim lama pada dokumentasi tidak diperlakukan sebagai bukti apabila bertentangan dengan source code.
+### 2.3 Metodologi
 
-## 2.3 Batasan
+TOGAF ADM mengorganisasikan hasil reverse engineering. BPMN dipakai untuk proses bisnis utama. Dokumen lama bukan bukti utama apabila bertentangan dengan source code.
 
-- Tidak dilakukan instalasi, upgrade, migrasi, atau perubahan data.
-- Versi Odoo sumber belum disimpulkan dari konfigurasi runtime secara definitif; manifest menyatakan Odoo 19.
-- Versi Ubuntu/WSL teridentifikasi dari konteks lingkungan, tetapi tidak ada bukti deployment produksi.
-- Data fixture dan nilai simulasi dibedakan dari nilai aktual.
+### 2.4 Metode Reverse Engineering
 
-# 3. Gambaran Project
+Pemeriksaan dilakukan terhadap:
 
-## 3.1 Struktur Repositori
+- `__manifest__.py`, dependency, asset, dan urutan loading.
+- model ORM dan seluruh relasi, constraint, computed field, dan method.
+- view, menu, action, portal, dan laporan.
+- ACL, record rules, grup, dan pengecekan ownership.
+- controller, wizard, cron, migration, dan test.
+- implementasi audit dan jalur autentikasi/laporan.
 
-| Direktori/Berkas | Deskripsi | Tanggung Jawab | Komponen Terkait |
-|---|---|---|---|
-| `custom_module/erpobe/__manifest__.py` | Identitas addon | Dependency, asset, dan urutan loading data | Semua komponen |
-| `models/` | Implementasi ORM dan logika bisnis | Model, field, constraint, computed fields | Data dan proses akademik |
-| `views/` | View backend dan portal | List/form/search/pivot/graph/QWeb | User interface |
-| `security/` | Grup, ACL, record rules | Autentikasi dan otorisasi | Semua model |
-| `controllers/` | HTTP route/portal | Publikasi, portal dosen/mahasiswa, API internal | Odoo HTTP, ORM |
-| `wizard/` | TransientModel | Import/ekspor, copy RPS | Import/ekspor dan RPS |
-| `data/` | XML fixture awal | Seed data akademik | Fakultas, prodi, tahun, fixture |
-| `migrations/` | Script upgrade versi | Migrasi dan rollback | RPS/grade/relation |
-| `tests/` | Test addon | ACL, fixture, workflow, import, UI, bobot | Quality assurance |
-| `static/src/` | SCSS, JS, XML asset | Tampilan portal/backend dan asistensi akademik | Website dan web client |
-| `docs/` | Dokumentasi lama | Referensi historis, bukan fakta utama | Source code tetap prioritas |
-| `.github/workflows/deploy.yml` | Workflow deploy | Belum terverifikasi tujuan infrastruktur | Proposed/Needs Verification |
+### 2.5 Batasan
 
-## 3.2 Dependency
+- Tidak ada perubahan source code, model, database, view, security, endpoint, atau konfigurasi.
+- Lingkungan produksi tidak dapat diverifikasi dari repository.
+- Dokumen lama hanya dipakai sebagai konteks historis.
+- Nilai fixture dan hasil seed dibedakan dari nilai operasional aktual.
+- Tidak ada bukti eksekusi penuh suite test pada saat penyusunan dokumen ini.
 
-Manifest memuat `base`, `web`, `website`, `portal`, `contacts`, dan `mail`. External Python dependency adalah `openpyxl` dan `xlsxwriter`. Modul memanfaatkan Chart.js melalui aset `web.chartjs_lib`.
+# 3. Preliminary Phase
 
-## 3.3 Repository Structure Detail
+## 3.1 Architecture Context
 
-Model domain utama dikelompokkan menjadi master akademik, OBE, perkuliahan, penilaian, pelaporan, monitoring, dan virtual view. Security memuat 229 ACL baris; jumlahnya berasal dari file aktual dan mencakup sistem, admin, dosen, mahasiswa, serta model import. Record rules memuat cakupan prodi/fakultas dan data sendiri mahasiswa.
+ERP OBE mendukung pengelolaan akademik satu proyek Odoo 19. Konteks utamanya meliputi organisasi akademik, kurikulum, dosen, mahasiswa, perkuliahan, penilaian, capaian, pelaporan, dan audit.
 
-# 4. Architecture Vision
+## 3.2 Architecture Scope
 
-## 4.1 Visi dan Tujuan
+| Scope | Dalam Cakupan | Batas |
+|---|---|---|
+| Organization | Fakultas, prodi, dosen, mahasiswa, rombel | Tidak memodelkan SIMAK eksternal |
+| Curriculum | Mata kuliah, kurikulum, CPL, CPMK | Tanpa Sub-CPMK |
+| Learning plan | RPS, komponen, kegiatan, bobot | Status final dan snapshot RPS |
+| Enrollment | Penawaran, KRS, approval dosen wali | Tidak ditemukan integrasi SIAKAD eksternal |
+| Assessment | Nilai komponen, CPMK, MK, CPL | Tidak ada perubahan formula kode |
+| Reporting | KHS, report, summary, portal | Tidak ada bukti dashboard eksekutif eksternal |
+| Governance | ACL, record rules, audit, retensi | Infrastruktur produksi belum terverifikasi |
 
-**Visi:** menyediakan pengelolaan akademik berbasis OBE yang konsisten dari kurikulum sampai pelaporan capaian mahasiswa.
+## 3.3 Architecture Principles
 
-**Tujuan bisnis:**
+| Principle | Description | Rationale | Implication | Implementation Evidence |
+|---|---|---|---|---|
+| Business-driven | Arsitektur mengikuti proses akademik dan OBE | Capaian harus dapat ditelusuri | Keterhubungan domain tidak boleh diputus | Model mata kuliah, CPL, CPMK, RPS, KRS, nilai |
+| Data consistency | Relasi dan constraint menjadi penjaga integritas | Data akademik sensitif | Unique dan cross-model constraint diterapkan | SQL constraints dan Python validation |
+| Modular application | Satu addon dengan komponen fungsi terpisah | Mengurangi perubahan lintas domain | Model, view, wizard, dan controller tetap terpisah | Struktur direktori `erpobe` |
+| Security by design | Hak akses diterapkan melalui Odoo ACL dan rules | Pembatasan kebutuhan akademik | Cakupan prodi dan kepemilikan perlu konsisten | `security/groups.xml`, `rules.xml`, `ir.model.access.csv` |
+| Traceability | Perubahan nilai dan aktivitas dapat dilacak | Akuntabilitas akademik | Event audit harus menyertakan actor dan record | `erpobe.audit.mixin`, `erpobe.audit.log` |
+| Snapshot stability | RPS dan komponen digunakan sebagai snapshot | Bobot masa lalu tidak berubah diam-diam | Koneksi grade menggunakan RPS dan snapshot komponen | `rps_komponen`, `rps.lock.mixin`, migration |
+| Maintainability | Field dan method terkait ditempatkan per domain | Mempermudah perubahan terarah | Tidak menulis ulang logika lintas model | Direktori model per domain |
 
-- Memusatkan master fakultas, prodi, kurikulum, mahasiswa, dosen, dan mata kuliah.
-- Menghubungkan CPL, CPMK, mata kuliah, RPS, asesmen, dan nilai.
-- Mendukung alur KRS dan persetujuan dosen wali.
-- Menyediakan analisis MK, CPMK, CPL, KHS, dan monitor bobot.
-- Menyediakan portal dosen dan mahasiswa.
+## 3.4 Stakeholder Identification
 
-**Tujuan teknologi:**
+| Stakeholder | Kepentingan | Concern |
+|---|---|---|
+| Mahasiswa | KRS, nilai, KHS, CPL | Privasi dan data dirinya |
+| Dosen | RPS, kelas, penilaian, analisis | Akses kelas/prodi yang relevan |
+| Dosen wali | Pengajuan dan persetujuan KRS | Batas mahasiswa bimbingan |
+| Admin akademik | Master, workflow, import/ekspor | Konsistensi data dan cakupan prodi |
+| Superadmin | Administrasi global dan audit | Perlindungan integritas dan retensi |
+| Audit manager | Pemeriksaan aktivitas | Akses log tanpa hak mutasi biasa |
+| Program Studi | Pengelolaan kurikulum dan capaian | Akurasi pemetaan dan agregasi |
 
-- Memanfaatkan model dan constraint Odoo ORM.
-- Menjaga snapshot RPS dan komponen agar penilaian memiliki identitas yang stabil.
-- Menjaga ketertelusuran perubahan nilai melalui audit.
-- Menyediakan PDF KHS/RPS dan tampilan pivot/graph/list.
+## 3.5 Architecture Approach
 
-## 4.2 Stakeholder Matrix
+Pendekatan actual-state architecture dilakukan melalui source-based evidence, sedangkan target state dibatasi pada kebutuhan yang dapat ditelusuri dan recommendation yang belum diterapkan. Gap dipetakan berdasarkan bukti aktual, bukan daftar fitur asumsi.
 
-| Stakeholder | Responsibility | Business Interest | System Interaction |
-|---|---|---|---|
-| Admin | Konfigurasi master dan akademik | Integritas data dan operasional | Backend Odoo, import/ekspor, penilaian |
-| Dosen | Penyusunan RPS, input nilai, perwalian | Validitas bobot dan asesmen | Portal dosen, backend RPS/penilaian |
-| Mahasiswa | Mengelola KRS, melihat nilai dan CPL | Status studi dan capaian | Portal mahasiswa |
-| Superadmin | Hak global lintas prodi | Administrasi sistem terpusat | Backend dan security |
+# 4. Phase A — Architecture Vision
 
-## 4.3 Prinsip Arsitektur
+## 4.1 Business Context
 
-1. Source code dan database aktual menjadi sumber kebenaran.
-2. Relasi prodi-fakultas dipertahankan sebagai boundary akses.
-3. RPS final menjadi immutable; revisi dilakukan melalui copy/versi.
-4. Bobot harus tepat 100% dengan toleransi 0,01 poin persentase sebelum finalisasi.
-5. Nilai komponen adalah sumber detail; nilai MK/CPMK/CPL adalah hasil komputasi.
-6. UI tidak menjadi mekanisme keamanan utama; ACL dan record rules tetap berlaku.
+Pengelolaan akademik melibatkan master organisasi, kurikulum OBE, penawaran kelas, registrasi mata kuliah, penyusunan RPS, penilaian, dan pelaporan. Sistem perlu menjaga identitas mahasiswa, dosen, kelas, RPS, snapshot komponen, dan hasil perhitungan.
+
+## 4.2 Problem Statement
+
+Masalah utama yang diatasi sistem adalah keterhubungan proses akademik dan capaian, pembatasan hasil mahasiswa berdasarkan kepemilikan dan prodi, konsistensi bobot RPS, serta kebutuhan audit atas perubahan dan pembuatan laporan. Kesenjangan yang tersisa adalah pemerataan record rules pada seluruh model, verifikasi deployment produksi, dan otomatisasi observability.
+
+## 4.3 Architecture Vision
 
 ```mermaid
 flowchart LR
-  Student[Mahasiswa] -->|KRS, KHS, CPL| System[ERP OBE]
-  Lecturer[Dosen] -->|RPS, nilai, perwalian, analisis| System
-  Admin[Admin] -->|master, kurikulum, penawaran, fixture| System
-  Superadmin[Superadmin] -->|administrasi global| System
-  Public[Pengunjung] -->|informasi publik| System
-  System --> ORM[Odoo ORM]
-  ORM --> PG[(PostgreSQL)]
+    M[Mahasiswa] -->|Login dan KRS| W[Odoo Web/Portal]
+    D[Dosen/Dosen Wali] -->|RPS, Nilai, Analisis| W
+    A[Admin] -->|Master dan Workflow| W
+    P[Publik] -->|Website informasional| W
+    W --> ORM[Odoo ORM]
+    ORM --> PG[(PostgreSQL)]
+    ORM --> AUD[Audit Event]
+    AUD --> LOG[(erpobe.audit.log)]
+    ORM --> Q[RPS/KHS/PDF/HTML]
 ```
 
-# 5. Business Architecture
+## 4.4 Business Goals
 
-## 5.1 Capability Map
+| Goal | Outcome |
+|---|---|
+| Konsistensi data akademik | Fakultas, prodi, mahasiswa, dosen, mata kuliah, dan rombel saling valid |
+| Capaian terukur | CPL memiliki nilai dari CPMK dan pemetaan kurikulum |
+| RPS stabil | Komponen dan bobot disimpan sebagai snapshot per RPS |
+| Enrolment terkendali | KRS dibatasi SKS, kelas, rombel, prasyarat, dan persetujuan |
+| Pelaporan tersedia | KHS dan report dapat dijalankan backend/portal |
+| Audit dapat dipertanggungjawabkan | Perubahan, workflow, report, autentikasi, dan retensi tercatat |
+
+## 4.5 Architecture Scope
+
+Cakupan merupakan addon tunggal yang memanfaatkan Odoo core untuk authentication, company, mail, activity, web, portal, dan reporting. Integrasi antaraddon tidak mencakup sistem eksternal.
+
+# 5. Phase B — Business Architecture
+
+## 5.1 Business Actors
+
+- **Mahasiswa:** mengelola dan mengajukan KRS, membaca kelas dan KHS.
+- **Dosen:** menyusun RPS, mengelola kelas, memasukkan nilai, membaca analisis.
+- **Dosen wali:** menyetujui atau menolak KRS mahasiswa bimbingan.
+- **Admin:** mengelola data dan melakukan import/ekspor dalam cakupan prodi.
+- **Superadmin:** akses global dan pengelolaan audit.
+- **Public:** mengakses halaman informasional publik.
+
+## 5.2 Business Capability Map
 
 ```mermaid
 mindmap
   root((ERP OBE))
-    Core Academic
+    Governance Akademik
       Fakultas
       Program Studi
-      Kurikulum
-      Mata Kuliah
+      Tahun Ajaran
       Rombel
-      Dosen
-      Mahasiswa
-    Learning Management
-      Penawaran Mata Kuliah
-      KRS
-      RPS
-      Kegiatan
-      Metode
-      Referensi
-    Outcome Assessment
+    Curriculum & OBE
+      Mata Kuliah
       CPL
       CPMK
-      Pemetaan
-      Bobot
-      Asesmen
-      Nilai
-    Academic Analytics
+      Pemetaan MK-CPL
+      Pemetaan CPL-MK-CPMK
+    Learning & Enrollment
+      Penawaran
+      RPS
+      KRS
+      Persetujuan
+    Assessment
+      Komponen
+      Snapshot Bobot
+      Nilai Komponen
+      Grade CPMK/MK/CPL
+    Reporting & Governance
       KHS
-      Analisis MK
-      Analisis CPMK
-      Analisis CPL
-      Analisis komponen
-    Administration
-      Import Export
-      Copy RPS
-      Audit nilai
-      Fixture akademik
-    Portal and Reporting
-      Portal mahasiswa
-      Portal dosen
-      Website publik
-      PDF KHS
-      PDF RPS
+      Analisis
+      Audit Trail
+      Import/Ekspor
 ```
 
-## 5.2 Proses Bisnis Utama
+## 5.3 Process Catalog
 
-### Master Data dan Kurikulum
+| Process | As-Is evidence | To-Be behavior | Primary data |
+|---|---|---|---|
+| Pengelolaan fakultas/prodi | Tidak ada bukti end-to-end dokumentasi lama | Admin mengelola data berdasarkan scope | Fakultas, Prodi |
+| Pengelolaan dosen/mahasiswa | Profile linked to partner/user | Admin membuat dan memvalidasi profil | Dosen, Mahasiswa, res.users |
+| Pengelolaan tahun/rombel | Fixture dan master tersedia | Data semester dan rombel dikelola | Tahun Ajaran, Rombel |
+| Pengelolaan mata kuliah | Model master dan constraint tersedia | Mata kuliah dipetakan ke prodi dan CPMK | Mata Kuliah, CPMK |
+| Pengelolaan CPL/CPMK | Pemetaan model tersedia | CPL dan CPMK dikelola terpisah dan terhubung | CPL, CPMK, mapping |
+| Penyusunan RPS | Ada workflow draft/review/final | RPS divisualkan, disalin, divalidasi bobot, lalu difinalkan | RPS, snapshot komponen |
+| Penawaran kelas | Penawaran dan line tersedia | Admin membentuk kelas, jadwal, dan rombel | Penawaran, Penawaran Line |
+| Pengajuan KRS | Ada draft/submitted/approved/rejected | Mahasiswa mengisi, dosen wali memutuskan | KRS, KRS Line |
+| Penilaian | Grade komponen tersedia | Dosen memasukkan nilai dan menghitung hasil | Grade Komponen |
+| Perhitungan OBE | Formula code tersedia | CPMK → MK → CPL dihitung dengan gate status | Grade CPMK/MK/CPL |
+| KHS dan pelaporan | Report model dan QWeb tersedia | KHS/summary/RPS dipublikasikan sebagai PDF/HTML/text | Report KHS |
+| Audit | Mixin dan log tersedia | Aktor, perubahan, workflow, dan report dicatat | Audit Log |
 
-Admin mengelola fakultas, prodi, kurikulum, mata kuliah, dosen, mahasiswa, rombel, dan tahun ajaran. Unique constraint menjaga kode prodi/mata kuliah/CPL/CPMK. Mata kuliah dibatasi pada prodi, rombel, kurikulum, dosen, dan prasyarat yang sama prodi.
+## 5.4 Business Process As-Is
 
-### CPL dan CPMK
+Tidak ada bukti lengkap untuk proses akademik manual sebelum ERP. Dokumen tidak membangun klaim As-Is detail yang tidak didukung. Kondisi As-Is yang dapat disimpulkan adalah proses masih bergantung pada master dan formulir terpisah/eksternal ketika ERP tidak tersedia. Bukti formal proses lama tidak tersedia.
 
-CPL dimiliki prodi. CPMK dimiliki mata kuliah. CPL-CPMK dipetakan melalui `erpobe.akademik.cpl.mk.cpmk`, sedangkan MK-CPL dipetakan melalui `erpobe.akademik.mk.cpl`. Kedua mapping mempunyai constraint prodi yang sama.
+## 5.5 Business Rules
 
-### Penawaran dan RPS
+- RPS memiliki status `draft`, `review`, dan `final`.
+- Finalisasi RPS memerlukan bobot lengkap dan valid.
+- RPS final bersifat snapshot terhadap komponen dan bobot yang digunakan.
+- KRS memiliki status `draft`, `submitted`, `approved`, dan `rejected`.
+- Mahasiswa tidak dapat mengubah KRS setelah diajukan; dosen wali hanya memproses mahasiswa bimbingannya.
+- Pembatasan maksimal SKS adalah 24 pada model KRS.
+- KRS baru harus memenuhi prasyarat dan tidak bentrok jadwal pada validasi yang tersedia.
+- Nilai CPMK dihitung dari bobot komponen terhadap CPMK.
+- Nilai MK dihitung dari bobot CPMK terhadap MK.
+- Nilai CPL dihitung lintas mata kuliah dan CPMK yang dipetakan; tidak ada bobot CPMK–CPL.
+- CPL dapat berstatus `belum_tersedia`, `dalam_proses`, `tercapai`, atau `belum`.
 
-Admin membuat penawaran untuk tahun ajaran, prodi, dan rombel. RPS dibuat atau disalin untuk penawaran line. RPS melewati draft → review → final. RPS final tidak dapat diedit atau dihapus; revisi dibuat sebagai versi baru.
+## 5.6 BPMN Supporting Representations
 
-### KRS
+Diagram di bawah merupakan representasi alur pendukung dalam Mermaid. Mereka tidak disajikan sebagai artefak BPMN 2.0 XML formal.
 
-Mahasiswa memilih mata kuliah dari penawaran aktif yang sesuai rombel dan prodi. KRS melewati draft, submitted, approved/rejected. Total SKS dibatasi 24 secara default. Dosen wali memvalidasi KRS milik mahasiswa bimbingan.
-
-### Input Nilai
-
-Portal dosen hanya menerima input untuk kelas yang menjadi koordinasi/tim pengampu dosen. Input memerlukan RPS final dan bobot lengkap. Nilai komponen dibatasi 0–100, bertipe actual/simulated/legacy, dan memiliki audit perubahan.
-
-### Capaian dan Pelaporan
-
-Grade CPMK dihitung dari bobot komponen terhadap CPMK. Grade MK dihitung dari bobot CPMK terhadap MK. Grade CPL dihitung lintas mata kuliah dari grade CPMK dan bobot CPMK pada RPS. Hasil disinkronkan ke KHS.
-
-## 5.3 Business Process Diagrams
+### 5.6.1 Penyusunan dan Finalisasi RPS
 
 ```mermaid
 flowchart TD
-  A[Konfigurasi Fakultas dan Prodi] --> B[Master Kurikulum dan Mata Kuliah]
-  B --> C[Definisi CPL dan CPMK]
-  C --> D[Pemetaan CPL-CPMK-MK]
-  D --> E[Penawaran Mata Kuliah]
-  E --> F[Penyusunan RPS]
-  F --> G{Bobot Lengkap?}
-  G -->|Tidak| F
-  G -->|Ya| H[Finalisasi RPS]
+    S([Mulai]) --> A[Dosen memilih penawaran dan membuat RPS]
+    A --> B[Dosen menyusun CPMK, komponen, dan bobot]
+    B --> C{Bobot lengkap dan valid?}
+    C -->|Tidak| D[Tandai weight issue / revisi]
+    D --> B
+    C -->|Ya| E[Dosen meninjau RPS]
+    E --> F{Siap final?}
+    F -->|Belum| G[Kembalikan ke draft/review]
+    G --> B
+    F -->|Ya| H[Finalisasi RPS]
+    H --> I[(RPS final dan snapshot]
+    I --> Z([Selesai])
 ```
+
+Tujuannya memastikan RPS final memiliki snapshot komponen dan bobot yang valid. Aktor utama adalah dosen/admin sesuai hak akses.
+
+### 5.6.2 Pengisian dan Persetujuan KRS
 
 ```mermaid
-sequenceDiagram
-  participant M as Mahasiswa
-  participant P as Portal
-  participant K as KRS
-  participant A as Dosen Wali
-  M->>P: Pilih penawaran dan mata kuliah
-  P->>K: Simpan line KRS
-  K-->>K: Validasi prodi, rombel, SKS
-  M->>K: Ajukan KRS
-  K-->>A: Status submitted
-  alt Disetujui
-    A->>K: approve
-    K-->>P: approved
-  else Dikembalikan
-    A->>K: reject + catatan
-    K-->>M: rejected
-  end
+flowchart TD
+    S([Mulai]) --> A[Mahasiswa membuka KRS aktif]
+    A --> B[Memilih paket atau mata kuliah]
+    B --> C{Validasi SKS/prasyarat/jadwal/kelas?}
+    C -->|Gagal| D[Tampilkan validation error]
+    D --> B
+    C -->|Lulus| E[Menyimpan KRS draft]
+    E --> F[Mahasiswa mengajukan KRS]
+    F --> G[Dosen wali menerima pengajuan]
+    G --> H{Keputusan?}
+    H -->|Setujui| I[KRS approved]
+    H -->|Tolak| J[KRS rejected beserta catatan]
+    I --> Z([Selesai])
+    J --> A
 ```
 
-# 6. Application Architecture
-
-## 6.1 Komponen Aplikasi
-
-| Component | Business Function | Technical Implementation | Dependencies | User | Status |
-|---|---|---|---|---|---|
-| Master Akademik | Data fakultas, prodi, dosen, mahasiswa, rombel, MK | Model dan XML view | Odoo base, contacts | Admin/Superadmin | Implemented |
-| Kurikulum/OBE | CPL, CPMK, mapping | ORM model dan constraint | Master MK/Prodi | Admin | Implemented |
-| RPS | Struktur RPS, snapshot, bobot, aktivitas | Python model, mixin lock, QWeb PDF | CPL/CPMK/Komponen | Admin/Dosen | Implemented |
-| Penawaran/KRS | Penawaran kelas dan KRS | One2many/M2M, workflow state | Tahun ajaran, rombel, MK | Admin/Mahasiswa/Dosen wali | Implemented |
-| Grading | Nilai komponen dan hasil | Computed fields, overrides, audit | RPS, KRS, OBE mapping | Dosen/Admin | Implemented |
-| Analitik | Pivot/graph MK/CPMK/CPL/komponen | PostgreSQL SQL view + Odoo view | Grade models | Admin/Dosen/Mahasiswa | Implemented |
-| KHS | KHS/transkrip dan PDF | Aggregate/sync model, QWeb | Grade MK/CPMK/CPL/component | Admin/Mahasiswa | Implemented |
-| Portal | Workflow website | HTTP controllers dan QWeb | portal, website | Dosen/Mahasiswa | Implemented |
-| Import/Ekspor | Pemindahan master data | Transient wizard, openpyxl/xlsxwriter | CSV/XLSX | Admin/Superadmin | Implemented |
-
-## 6.2 Application Interaction
-
-Alur aktual adalah: Browser → route/controller atau backend action → Odoo ORM → model method/computed field → PostgreSQL → report/view/portal. Untuk input nilai portal, form mengirim nilai komponen, model membuat atau memperbarui grade, method `_trigger_academic_recompute()` menghitung CPMK/MK/CPL, lalu KHS disinkronkan.
+### 5.6.3 Pelaksanaan Penilaian dan Capaian OBE
 
 ```mermaid
-sequenceDiagram
-  participant U as Dosen
-  participant V as Portal View
-  participant C as Portal Controller
-  participant G as Grade Komponen
-  participant O as OBE Computation
-  participant DB as PostgreSQL
-  U->>V: Submit nilai komponen
-  V->>C: POST nilai
-  C->>C: Validasi kelas dan rentang 0-100
-  C->>G: create/write
-  G->>G: Audit dan recompute trigger
-  G->>O: CPMK
-  O->>O: MK
-  O->>O: CPL
-  O->>DB: Persist computed grades
-  O->>DB: Sync report KHS
-  DB-->>C: Data terbaru
-  C-->>V: Tampilkan hasil
+flowchart TD
+    S([Mulai]) --> A[Dosen membuka kelas ber-RPS final]
+    A --> B[Mengisi nilai komponen]
+    B --> C[Menandai is_graded]
+    C --> D{RPS final dan KRS approved?}
+    D -->|Tidak| E[Grade belum tersedia untuk perhitungan]
+    D -->|Ya| F[Hitung nilai CPMK]
+    F --> G[Hitung nilai MK dari bobot CPMK]
+    G --> H[Agregasi lintas CPMK/MK ke CPL]
+    H --> I[Perbarui status dan KHS]
+    I --> Z([Selesai])
 ```
 
-# 7. Data Architecture
+### 5.6.4 KHS dan Pelaporan
 
-## 7.1 Conceptual and Logical Model
+```mermaid
+flowchart TD
+    S([Mulai]) --> A[Event KRS/nilai memicu sinkronisasi]
+    A --> B[Generate atau refresh report KHS]
+    B --> C[Ambil nilai MK, CPMK, CPL, dan komponen]
+    C --> D[Mahasiswa/dosen/admin membuka report]
+    D --> E[Odoo menghasilkan PDF/HTML/text]
+    E --> F[Audit mencatat REPORT_GENERATION]
+    F --> Z([Selesai])
+```
 
-Entitas utama:
+## 5.7 Business-to-Application Mapping
 
-- Fakultas, Prodi, Kurikulum, Rombel, Angkatan
-- Dosen, Mahasiswa
-- Mata Kuliah, CPL, CPMK
-- Penawaran dan Penawaran Line
-- RPS dan komponen snapshot
-- KRS dan KRS Line
-- Grade Komponen, Grade MK, Grade CPMK, Grade CPL
-- KHS dan line KHS
-- Analitik SQL View
+| Process | Component | Model utama |
+|---|---|---|
+| Master akademik | Master Data Akademik | `erpobe.master.fakultas`, `erpobe.master.prodi`, `erpobe.master.rombel` |
+| User profile | User and Faculty Scope | `erpobe.master.dosen`, `erpobe.master.mahasiswa`, `res.users` |
+| Kurikulum/OBE | Curriculum and OBE | `erpobe.akademik.cpl`, `erpobe.akademik.cpmk`, mapping models |
+| RPS | RPS and Assessment | `erpobe.akademik.rps`, `erpobe.akademik.rps.komponen` |
+| Penawaran | Course Offering | `erpobe.akademik.penawaran`, `...penawaran.line` |
+| KRS | KRS Management | `erpobe.akademik.krs`, `erpobe.akademik.krs.line` |
+| Nilai | Academic Assessment | `erpobe.input.nilai`, `erpobe.grade.*` |
+| Pelaporan | Reporting | `erpobe.report.khs`, `erpobe.summary.*` |
+| Audit | Audit and Governance | `erpobe.audit.log`, `erpobe.audit.dashboard` |
 
-Relasi aktual:
+# 6. Phase C — Data Architecture
 
-- Fakultas 1—N Prodi; Prodi 1—N Mata Kuliah/CPL/CPMK/Rombel/Mahasiswa.
-- Mata Kuliah 1—N CPMK.
-- CPL M—N CPMK melalui bridge `erpobe.akademik.cpl.mk.cpmk`.
-- Mata Kuliah M—N CPL melalui `erpobe.akademik.mk.cpl`.
-- RPS memiliki snapshot komponen, bobot CPMK→MK, dan bobot komponen→CPMK.
-- KRS 1—N KRS Line; KRS Line mengacu penawaran line.
-- Grade Komponen mengacu KRS Line dan snapshot RPS.
-- Grade CPMK/MK mengacu mahasiswa, CPMK/MK, KRS Line, dan RPS.
-- Grade CPL mengacu mahasiswa dan CPL.
+## 6.1 Data Domains
 
-## 7.2 Physical Model
+| Domain | Entitas utama |
+|---|---|
+| Organization | Fakultas, Prodi |
+| Academic Master | Tahun Ajaran, Rombel, Mata Kuliah, Grade |
+| Curriculum and OBE | CPL, CPMK, mapping CPL–MK–CPMK, mapping MK–CPL |
+| User | Dosen, Mahasiswa, res.users, res.partner |
+| Learning Plan | RPS, komponen RPS, kegiatan, rubrik, bobot |
+| Transaction | Penawaran, line penawaran, KRS, line KRS |
+| Assessment | Grade komponen, grade CPMK, grade MK, grade CPL |
+| Reporting | Report KHS dan detail MK/CPMK/CPL/komponen |
+| Audit | Audit log, audit dashboard, auth/report/import/export events |
 
-Odoo ORM membuat tabel PostgreSQL dengan nama titik diganti garis bawah, misalnya `erpobe_grade_cpmk`, kecuali `_auto=False` untuk virtual/SQL view. `grade_cpl_rombel`, `grade_cpl_angkatan`, `cpmk_rombel`, `cpmk_angkatan`, `grade_mk_rombel`, `grade_mk_angkatan`, dan empat model summary merupakan model `_auto=False` yang membuat atau memanfaatkan view pada `init()`.
-
-Master dosen dan mahasiswa memakai `_inherits={"res.partner":"partner_id"}`, sehingga sebagian identitas disimpan melalui delegasi ke `res.partner`. Odoo juga menyediakan Odoo core `res.users` sebagai akun login.
+## 6.2 Logical OBE and Academic Model
 
 ```mermaid
 erDiagram
-  ERPOBE_MASTER_FAKULTAS ||--o{ ERPOBE_MASTER_PRODI : contains
-  ERPOBE_MASTER_PRODI ||--o{ ERPOBE_MASTER_MATAKULIAH : owns
-  ERPOBE_MASTER_PRODI ||--o{ ERPOBE_AKADEMIK_CPL : owns
-  ERPOBE_MASTER_MATAKULIAH ||--o{ ERPOBE_AKADEMIK_CPMK : owns
-  ERPOBE_AKADEMIK_CPL }o--o{ ERPOBE_AKADEMIK_CPMK : CPL_CPMK_MAPPING
-  ERPOBE_MASTER_MATAKULIAH }o--o{ ERPOBE_AKADEMIK_CPL : MK_CPL_MAPPING
-  ERPOBE_MASTER_MATAKULIAH ||--o{ ERPOBE_AKADEMIK_RPS : has
-  ERPOBE_AKADEMIK_RPS ||--o{ ERPOBE_AKADEMIK_RPS_KOMPONEN : snapshots
-  ERPOBE_AKADEMIK_RPS ||--o{ ERPOBE_BOBOT_CPMK_MK : weighs
-  ERPOBE_AKADEMIK_RPS ||--o{ ERPOBE_BOBOT_KOMPONEN_CPMK : weighs
-  ERPOBE_MASTER_MAHASISWA ||--o{ ERPOBE_AKADEMIK_KRS : submits
-  ERPOBE_AKADEMIK_KRS ||--o{ ERPOBE_AKADEMIK_KRS_LINE : contains
-  ERPOBE_AKADEMIK_KRS_LINE ||--o{ ERPOBE_GRADE_KOMPONEN : receives
-  ERPOBE_MASTER_MAHASISWA ||--o{ ERPOBE_GRADE_CPMK : has
-  ERPOBE_MASTER_MAHASISWA ||--o{ ERPOBE_GRADE_MK : has
-  ERPOBE_MASTER_MAHASISWA ||--o{ ERPOBE_GRADE_CPL : has
+    FAKULTAS ||--o{ PRODI : contains
+    PRODI ||--o{ MATA_KULIAH : owns
+    PRODI ||--o{ MAHASISWA : enrolls
+    PRODI ||--o{ ROMBEL : has
+    MAHASISWA ||--o{ KRS : submits
+    KRS ||--o{ KRS_LINE : contains
+    TAHUN_AJARAN ||--o{ PENAWARAN : period
+    PENAWARAN ||--o{ PENAWARAN_LINE : offers
+    PENAWARAN_LINE ||--o{ KRS_LINE : selected_by
+    MATA_KULIAH ||--o{ CPMK : defines
+    CPL }o--o{ CPMK : mapping
+    MATA_KULIAH }o--o{ CPL : matrix
+    PENAWARAN_LINE ||--o{ RPS : has_versions
+    RPS ||--o{ RPS_KOMPONEN : snapshots
+    RPS ||--o{ BOBOT_KOMPONEN_CPMK : allocates
+    RPS ||--o{ BOBOT_CPMK_MK : weighs
+    KRS_LINE ||--o{ GRADE_KOMPONEN : receives
+    GRADE_KOMPONEN }o--|| RPS_KOMPONEN : based_on
+    GRADE_KOMPONEN ||--o| GRADE_CPMK : derives
+    GRADE_CPMK ||--o| GRADE_MK : derives
+    GRADE_MK ||--o| GRADE_CPL : aggregates
 ```
 
-## 7.3 Data Dictionary Penting
+Cardinality di atas merupakan model konseptual yang merepresentasikan relasi ORM. Beberapa relasi CPL/CPMK dan MK/CPL berupa tabel pemetaan Odoo dengan constraint unik.
 
-| Model | Field | Type | Required | Relation | Description | Computation |
-|---|---|---|---|---|---|---|
-| `erpobe.grade.komponen` | `nilai` | Float | Default 0 | - | Nilai asesmen 0–100 | User input |
-| `erpobe.grade.komponen` | `is_graded` | Boolean | - | - | Menentukan nilai dianggap dinilai | User/input logic |
-| `erpobe.grade.komponen` | `origin` | Selection | Yes | - | actual, simulated, legacy | User/source |
-| `erpobe.bobot.komponen.cpmk` | `bobot_komponen_cpmk` | Float | Yes | RPS, CPMK, snapshot | Bobot komponen terhadap CPMK | Validation 100 |
-| `erpobe.bobot.cpmk.mk` | `bobot_cpmk_mk` | Float | - | RPS, CPMK | Bobot CPMK terhadap MK | Validation 100 |
-| `erpobe.akademik.rps.komponen` | `bobot` | Float | - | RPS, komponen | Bobot komponen terhadap MK | Validation 100 |
-| `erpobe.grade.cpmk` | `nilai_cpmk` | Float computed | - | mahasiswa, CPMK, RPS, KRS line | Capaian CPMK | Stored |
-| `erpobe.grade.cpmk` | `is_available` | Boolean computed | - | - | Ada penyebut bobot | Stored |
-| `erpobe.grade.mk` | `nilai_mk` | Float computed | - | mahasiswa, MK, RPS, KRS line | Nilai akhir MK | Stored |
-| `erpobe.grade.cpl` | `nilai_cpl` | Float computed | - | mahasiswa, CPL | Agregat lintas MK/CPMK | Stored |
+## 6.3 Primary Models and Relations
 
-## 7.4 Integrity and Lifecycle
+| Model | Key relations | Role |
+|---|---|---|
+| `erpobe.master.fakultas` | one-to-many prodi | Unit organisasi |
+| `erpobe.master.prodi` | many-to-one fakultas | Unit akademik |
+| `erpobe.master.mahasiswa` | inherits res.partner; one-to-many KRS/grade | Actor dan transaksi mahasiswa |
+| `erpobe.master.dosen` | inherits res.partner; many-to-many prodi | Actor dan scope dosen |
+| `erpobe.master.matakuliah` | many-to-one prodi; many-to-one/two prasyarat | Master mata kuliah |
+| `erpobe.akademik.cpl` | many-to-one prodi | Hasil pembelajaran lulusan |
+| `erpobe.akademik.cpmk` | many-to-one mata kuliah | Capaian mata kuliah |
+| `erpobe.akademik.cpl.mk.cpmk` | CPL, CPMK | Pemetaan CPL–CPMK |
+| `erpobe.akademik.mk.cpl` | MK, CPL | Matriks MK–CPL |
+| `erpobe.akademik.rps` | many-to-one MK/penawaran line | Rencana pembelajaran dan snapshot |
+| `erpobe.akademik.rps.komponen` | many-to-one RPS/komponen | Snapshot bobot komponen |
+| `erpobe.bobot.komponen.cpmk` | RPS, snapshot komponen, CPMK | Bobot komponen → CPMK |
+| `erpobe.bobot.cpmk.mk` | RPS, CPMK | Bobot CPMK → MK |
+| `erpobe.akademik.penawaran` | many-to-one tahun; many-to-many rombel | Penawaran semester |
+| `erpobe.akademik.krs` | many-to-one mahasiswa/penawaran | Header KRS |
+| `erpobe.grade.komponen` | many-to-one KRS line/RPS/snapshot | Nilai mentah |
+| `erpobe.grade.cpmk` | mahasiswa, CPMK, KRS line, RPS | Nilai CPMK |
+| `erpobe.grade.mk` | mahasiswa, MK, KRS line, RPS | Nilai MK |
+| `erpobe.grade.cpl` | mahasiswa, CPL | Agregat CPL lintas MK |
+| `erpobe.report.khs` | mahasiswa plus detail/report | Dokumen KHS |
+| `erpobe.audit.log` | many-to-one res.users/company | Riwayat audit |
 
-- Required field, SQL constraint, ORM constraint, dan unique constraint digunakan.
-- Nilai komponen dibatasi 0–100.
-- CPMK/MK/CPL dinyatakan available hanya pada kondisi data yang ditentukan method.
-- Riwayat audit bersifat immutable: write/unlink ditolak.
-- RPS final read-only dan tidak dapat dihapus.
-- Audit archival/deletion tidak teridentifikasi.
+## 6.4 Data Integrity
 
-## 7.5 Data Flow
+Data integrity dijaga dengan:
+
+- `_sql_constraints` dan `models.Constraint` untuk duplikasi dan identitas unik.
+- `@api.constrains` untuk relasi lintas model, SKS, prasyarat, jadwal, dan scope.
+- RPS lock mixin untuk melindungi baris tertentu setelah RPS final.
+- Snapshot RPS komponen agar penilaian mempertahankan lineage.
+- `ondelete=restrict` pada relasi nilai KRS/RPS agar record capaian tidak mudah putus.
+- Nilai computed dan store untuk rekonsiliasi OBE.
+
+## 6.5 Data Flow
 
 ```mermaid
 flowchart LR
-  Manual[Input Admin/Dosen/Mahasiswa] --> Validate[Validasi ORM dan domain]
-  Fixture[Fixture/seed] --> Validate
-  Import[CSV/XLSX Wizard] --> Validate
-  Validate --> DB[(PostgreSQL)]
-  Grade[Nilai Komponen] --> Check{RPS final + KRS approved + is_graded}
-  DB --> Grade
-  Check -->|Ya| CPMK[Hitung CPMK]
-  CPMK --> MK[Hitung MK]
-  CPMK --> CPL[Agregasi CPL]
-  MK --> KHS[KHS]
-  CPL --> KHS
-  KHS --> Report[Portal/Pivot/Graph/PDF]
+    Master[Master CPL/CPMK/MK] --> RPS[RPS final]
+    RPS --> Alloc[Bobot Komponen-CPMK dan CPMK-MK]
+    KRS[KRS approved] --> Grades[Nilai Komponen]
+    Alloc --> Grades
+    Grades --> CPMK[Grade CPMK]
+    CPMK --> MK[Grade MK]
+    MK --> CPL[Grade CPL]
+    CPL --> KHS[KHS dan Analitik]
+    All[Audit Mixin] --> Log[(Audit Log)]
 ```
 
-# 8. OBE Computation Architecture
+## 6.6 Data-to-Application Mapping
 
-## 8.1 Mapping Architecture
+| Domain data | Application component |
+|---|---|
+| Organization/master | Backend views, profile, import wizard |
+| OBE | CPL/CPMK, mapping, RPS views |
+| Enrollment | Penawaran/KRS views dan portal |
+| Assessment | Grade and RPS views |
+| Reporting | Report KHS, summary analytics, public/portal QWeb |
+| Audit | Audit log/dashboard and authentication/report hooks |
 
-CPL dipetakan ke CPMK. CPMK melekat pada mata kuliah. RPS mengambil semua CPMK mata kuliah melalui `_compute_cpmk_ids`. RPS terkait CPL dihitung dari mapping CPMK. MK-CPL digunakan sebagai filter kedua pada perhitungan CPL.
+# 7. Phase C — Application Architecture
 
-## 8.2 Formula CPMK
-
-Untuk satu `grade_cpmk`:
-
-$$
-a_{i}=b_{komponen,i}\times b_{komponen\rightarrow CPMK,i}/100
-$$
-
-$$
-NilaiCPMK=\frac{\sum_i NilaiKomponen_i\times a_i}{\sum_i a_i}
-$$
-
-Implementasi:
-
-- Input: nilai komponen, snapshot bobot komponen, alokasi komponen-CPMK.
-- Hanya grade dengan `is_graded=True`, RPS `final`, dan KRS `approved`.
-- Record dengan grade/tidak tersedia tidak menambah penyebut.
-- `is_available=True` hanya jika penyebut bobot `denominator > 0`.
-- Status: `belum_tersedia`, `tercapai`, `belum`.
-- Target CPMK dari `cpmk_id.target_nilai`, default 70.
-
-## 8.3 Formula MK
-
-$$
-NilaiMK=\frac{\sum_j NilaiCPMK_j\times b_{CPMK\rightarrow MK,j}/100}{\sum_j b_{CPMK\rightarrow MK,j}/100}
-$$
-
-Hanya grade CPMK `is_available=True` yang dipakai. Jika tidak ada bobot positif, MK unavailable. Bobot total tidak dinormalisasi ulang secara implisit: penyebut adalah bobot grade CPMK yang tersedia, tetapi bobot MK keseluruhan divalidasi 100% sebelum RPS final.
-
-## 8.4 Formula CPL
-
-$$
-NilaiCPL=\frac{\sum_k NilaiCPMK_k\times b_{CPMK\rightarrow MK,k}}{\sum_k b_{CPMK\rightarrow MK,k}}
-$$
-
-Nilai dibatasi 0–100. Implementasi:
-
-- Mengambil mapping CPL–CPMK.
-- Memastikan CPMK berasal dari prodi yang sama dan MK CPMK termasuk mapping MK-CPL CPL bersangkutan.
-- Mengambil grade CPMK terbaik untuk mahasiswa/CPMK lintas attempt.
-- Bobot berasal dari RPS grade CPMK yang dipilih.
-- CPL hanya available jika ada bobot penyebut positif.
-- Status `belum_tersedia`, `dalam_proses`, `tercapai`, atau `belum`.
-
-## 8.5 Edge Cases
-
-- Nilai kosong belum dinilai tidak ditambahkan ke penyebut CPMK.
-- Komponen yang tidak aktif dan alokasi yang belum memiliki snapshot tidak dihitung.
-- Bobot 0 tidak dihitung.
-- Pembagian nol menghasilkan 0 dan `is_available=False`.
-- Legacy grade dengan tidak ada RPS/KRS line mendapat nilai 0 dan unavailable.
-- CPL memilih grade CPMK tertinggi untuk kombinasi mahasiswa–CPMK, dengan tie-break berdasarkan RPS/KRS/grade id.
-- Nilai simulasi tidak dianggap actual pada kelengkapan portal dosen, tetapi tetap dapat memicu komputasi sebelum diganti actual.
-- Bobot total diverifikasi tepat 100% dengan toleransi 0,01.
-
-## 8.6 RPS and Assessment
-
-RPS memiliki metadata MK, versi, status, tahun, bobot, CPMK, CPL, komponen, kegiatan perkuliahan, metode, referensi, dan rubrik. Komponen RPS adalah snapshot master komponen. Bobot memiliki tiga lapisan: komponen terhadap MK, komponen terhadap CPMK, dan CPMK terhadap MK.
-
-Asesmen menggunakan komponen penilaian dengan rentang 0–100. Portal dosen dapat menilai hanya komponen pada RPS final. Audit mencatat old/new value, user, alasan, dan bersifat read-only/undeletable.
-
-## 8.7 Computation Flow
+## 7.1 Application Landscape
 
 ```mermaid
-flowchart TD
-  A[Nilai Komponen] --> B{is_graded?}
-  B -->|Tidak| X[CPMK unavailable]
-  B -->|Ya| C{RPS final?}
-  C -->|Tidak| X
-  C -->|Ya| D{KRS approved?}
-  D -->|Tidak| X
-  D -->|Ya| E[Bobot komponen x alokasi CPMK]
-  E --> F{Penyebut > 0?}
-  F -->|Tidak| X
-  F -->|Ya| G[CPMK weighted average]
-  G --> H{CPMK >= target?}
-  H -->|Ya| I[Tercapai]
-  H -->|Tidak| J[Belum tercapai]
-  G --> K[Bobot CPMK-MK]
-  K --> L[Nilai MK]
-  G --> M[Bobot lintas CPL dan MK]
-  M --> N[Nilai CPL]
-  L --> O[KHS]
-  N --> O
-  O --> P[Portal/PDF/Analitik]
+flowchart TB
+    subgraph Actors
+      Public[Public]
+      Student[Mahasiswa]
+      Lecturer[Dosen/Wali]
+      Admin[Admin]
+      Super[Superadmin]
+    end
+    subgraph Presentation
+      Web[Website/Public]
+      Portal[Student/Lecturer Portal]
+      Backend[Odoo Backend]
+      QWeb[RPS/KHS Reports]
+    end
+    subgraph Application
+      Master[Master/Scope]
+      OBE[Curriculum/OBE/RPS]
+      Enrollment[KRS/Penawaran]
+      Grade[Assessment/Computation]
+      Audit[Audit/Retention]
+    end
+    subgraph Platform
+      ORM[Odoo ORM]
+      PG[(PostgreSQL)]
+    end
+    Public --> Web
+    Student --> Portal
+    Lecturer --> Portal
+    Lecturer --> Backend
+    Admin --> Backend
+    Super --> Backend
+    Web --> Application
+    Portal --> Application
+    Backend --> Application
+    QWeb --> Application
+    Application --> ORM
+    Audit --> ORM
+    ORM --> PG
 ```
 
-# 9. Technology Architecture
+## 7.2 Application Components
+
+| Component | Responsibility | Evidence |
+|---|---|---|
+| Master Academic | Fakultas, prodi, mata kuliah, rombel, tahun | Model dan view master |
+| User/Scope | Profil dosen/mahasiswa, hak prodi | `master_user.py`, `faculty_access.py`, rules |
+| Curriculum/OBE | CPL, CPMK, mapping MK | Model akademik dan view |
+| RPS/Assessment | RPS, komponen, bobot, lock | RPS models dan wizard copy |
+| Course Offering | Penawaran dan line | Penawaran model/view |
+| KRS | Draft hingga approval | KRS model dan portal |
+| Academic Assessment | Grade komponen/CPMK/MK/CPL | Grade model |
+| Reporting | KHS dan summary | Report model/QWeb |
+| Import/Ekspor | Wizard dan template | Wizard mixin dan import models |
+| Portals | Fungsi dosen/mahasiswa/publik | Controllers and QWeb |
+| Academic Assistant | Pencarian informasi berbasis halaman/konteks | OWL/JS dan controller |
+| Audit | Log, auth, report, dashboard, cleanup | Audit models/controller/cron |
+
+## 7.3 Application Interaction
+
+1. Pengguna membuka backend atau portal.
+2. Controller/view memanggil model melalui Odoo ORM.
+3. Model menjalankan constraint dan computed field.
+4. Audit mixin mencatat create/update/delete/workflow pada model yang menginherit-nya.
+5. Report hook mencatat pembuatan PDF/HTML/text.
+6. Cron melakukan cleanup audit yang kedaluwarsa.
+7. Portal dan backend membaca ORM sesuai ACL dan record rules.
+
+## 7.4 Application-to-Business Matrix
+
+| Component | Master | Curriculum | RPS | Offering | KRS | Assessment | KHS | Audit |
+|---|---|---|---|---|---|---|---|---|
+| Master Academic | Penuh | Sebagian | - | - | - | - | - | Terintegrasi |
+| Curriculum/OBE | - | Penuh | Penuh | - | - | Penuh | Sebagian | Terintegrasi |
+| RPS/Assessment | - | Penuh | Penuh | Penuh | - | Penuh | Sebagian | Terintegrasi |
+| Course Offering | - | - | Penuh | Penuh | Penuh | - | - | Terintegrasi |
+| KRS | - | - | - | Penuh | Penuh | Sebagian | Penuh | Terintegrasi |
+| Assessment | - | Penuh | Penuh | Penuh | Penuh | Penuh | Penuh | Terintegrasi |
+| Reporting | - | Sebagian | Penuh | - | Penuh | Penuh | Penuh | Terintegrasi |
+
+## 7.5 Application Security
+
+Empat role ERP ditambahkan melalui `groups.xml`: Mahasiswa, Dosen, Admin, Superadmin. Audit Trail Manager juga tersedia sebagai grup terpisah; Superadmin mengimplikasikan Admin dan Audit Trail Manager.
+
+ACL memberi operasi per model, sedangkan record rules membatasi scope prodi/fakultas dan kepemilikan mahasiswa. Beberapa query portal menggunakan `sudo()` dan melakukan pengecekan actor/data secara eksplisit di controller atau model; publikasi informasi publik dirancang untuk diakses tanpa login.
+
+# 8. Audit Trail and Governance Architecture
+
+## 8.1 Centralized Audit
+
+`erpobe.audit.mixin` menangani create, update, dan delete untuk model yang menginherit-nya. Event mencakup perubahan field lama/baru, identitas actor, record, event, severity, status, source, IP/user agent, correlation ID, company, dan metadata.
+
+Nilai sensitif disanitasi: field bernama password/passwd/token/secret/API key/access token/session/credential/binary dan field binary/one2many dikecualikan atau dimasking. Snapshot record dibatasi sekitar 30 field untuk penghindaran beban.
+
+## 8.2 Authentication Audit
+
+Implementasi mencatat:
+
+- `LOGIN_SUCCESS`,
+- `LOGIN_FAILED`,
+- `LOGOUT`.
+
+Login gagal dicatat melalui cursor independen untuk bertahan pada kegagalan autentikasi. Tidak ada password atau kredensial tersimpan dalam audit; metadata login dibatasi kepada informasi login yang dibutuhkan. Logout dicatat oleh override controller session.
+
+## 8.3 Workflow and CRUD Audit
+
+Mixin memetakan field state/status menjadi action seperti SUBMIT, APPROVE, REJECT, PUBLISH/UNPUBLISH, ARCHIVE/RESTORE. Aktivitas CRUD dicatat sebagai CREATE/UPDATE/DELETE. DELETE menyimpan snapshot atau nama record sebelum penghapusan. Log ikut rollback transaksi melalui satu database transaction.
+
+## 8.4 Report Audit
+
+Override `ir.actions.report` mencatat PDF, HTML, dan text untuk report ERP OBE yang memenuhi filter model/template. Metadata mencakup nama report, template, format, jumlah record, status, dan correlation ID. Report KHS/RPS ditandai sensitif. Deduplikasi dilakukan berdasarkan `correlation_id + action_type` pada `log_event`.
+
+## 8.5 Import and Export Audit
+
+Wizard import/ekspor menggunakan mixin terpisah untuk template, validasi, pembacaan CSV/XLSX, dan operasi bulk. Bukti source tersedia, tetapi pencatatan setiap operasi import/ekspor perlu dilihat per action implementation. Audit model mendukung action IMPORT dan EXPORT; setiap wizard tidak boleh diasumsikan memanggilnya kecuali benar-benar ada kode log.
+
+## 8.6 Portal Audit
+
+Infrastructure mendukung event portal melalui field `source=portal` dan context audit. Pengaksesan baca sensitif tidak otomatis tercatat hanya karena controller dibuka; implementasi harus memanggil `SENSITIVE_ACCESS` secara eksplisit untuk mendapatkan log baca. Pencatatan perubahan dan workflow tetap terjadi pada mixin jika model diwarisi.
+
+## 8.7 Audit Dashboard
+
+Transient model menyediakan KPI:
+
+- total hari ini, tujuh hari, bulan berjalan,
+- jumlah create/update/delete,
+- workflow,
+- record sensitif,
+- aktor aktif,
+- 20 aktivitas terbaru,
+- total expired ordinary/critical,
+- status dan last call cron.
+
+## 8.8 Retention
+
+Cron harian aktif untuk `erpobe.audit.log.cleanup_expired_logs()`:
+
+- log biasa: 180 hari;
+- log kritis: 365 hari.
+
+Cleanup dibatasi 500 ordinary dan 500 critical per eksekusi. Penghapusan memerlukan context `allow_audit_cleanup` dan actor system/superadmin.
+
+## 8.9 Audit Integrity
+
+`write()` log menolak perubahan tanpa context internal `allow_audit_mutation`. `unlink()` menolak penghapusan pengguna biasa. Immutability mengandalkan context dan guard model, sehingga tidak sama dengan database append-only. Model audit memiliki record rule global hanya untuk Audit Manager, Superadmin, dan System.
+
+## 8.10 Test Evidence
+
+File `tests/test_audit_log.py` memuat sepuluh method pengujian pada penelusuran saat ini:
+
+- CRUD dan sudo actor,
+- masking dan immutability,
+- unchanged update,
+- rollback create,
+- archive/restore dashboard,
+- rollback update/delete,
+- role security,
+- authentication success/failed,
+- report and retention.
+
+Pengujian ini merupakan bukti test source; tidak ada hasil eksekusi runtime terbaru yang dapat disertakan.
+
+## 8.11 Audit Trail Architecture
+
+```mermaid
+flowchart LR
+    Actor[Aktor: Backend/Portal/Auth/Report/Cron] --> App[Odoo Application]
+    App --> Mix[Audit Mixin/Log Hook]
+    Mix --> San[Sanitize & Snapshot]
+    San --> Log[(erpobe.audit.log)]
+    Log --> Dash[Audit Dashboard]
+    Cron[Daily Retention Cron] --> Log
+    Manager[Audit Manager/Superadmin] --> Dash
+```
+
+# 9. Phase D — Technology Architecture
 
 ## 9.1 Technology Stack
 
-| Layer | Technology | Version | Purpose | Evidence |
-|---|---|---|---|---|
-| Application | Odoo | 19 | ERP framework | Manifest/ode source path |
-| Language | Python | 3.12.3 | Model/controller/wizard | Runtime environment |
-| Database | PostgreSQL | Belum teridentifikasi | Persistensi ORM dan SQL view | Model `_table`, SQL init |
-| OS | Ubuntu 24.04 | Belum teridentifikasi build | Runtime konteks | Project context |
-| Virtualization | WSL2 | Belum teridentifikasi | Development runtime | Project context |
-| Python env | venv | Belum teridentifikasi | Dependency isolation | `/venv` |
-| ORM | Odoo ORM | Odoo 19 | Model, constraint, compute | `models/*.py` |
-| UI | QWeb, XML, SCSS, JS | Odoo 19 | Backend and portal | `views`, `static` |
-| Report | QWeb PDF | Odoo 19 | KHS/RPS | `triton_reports.xml` |
-| Spreadsheet | openpyxl, xlsxwriter | Belum teridentifikasi | Import/ekspor | Manifest |
-| Chart | Chart.js | Versi dikendalikan Odoo asset | Dashboard/visualisasi | `web.chartjs_lib` |
+| Layer | Technology | Evidence |
+|---|---|---|
+| ERP platform | Odoo 19 | Manifest and Odoo APIs |
+| Language | Python | Model/controller/wizard |
+| Database | PostgreSQL | Odoo ORM and SQL audit |
+| View | XML, QWeb | Backend and portal templates |
+| Frontend | JavaScript, OWL, SCSS/CSS | Assets and academic assistant |
+| Reporting | QWeb PDF/HTML/text | ir.actions.report override |
+| Spreadsheet | openpyxl, xlsxwriter | External Python dependencies |
+| Chart | web.chartjs_lib | Frontend asset |
+| Core addons | base, web, website, portal, contacts, mail | Manifest |
 
 ## 9.2 Runtime Architecture
 
-Browser mengakses Odoo HTTP/Web. Odoo memuat addon melalui addons path, mengolah controller dan view, lalu ORM berkomunikasi ke PostgreSQL. Aset frontend dimuat sebagai `web.assets_frontend`; asset backend dimuat sebagai `web.assets_backend` dan backend lazy.
+Odoo server menjalankan addon dan ORM; PostgreSQL menyimpan model bisnis dan log; browser memuat backend/portal melalui web assets; controller HTTP/JSONRPC menangani portal dan session; cron Odoo menjalankan cleanup audit.
 
-## 9.3 Deployment
+## 9.3 Deployment Architecture
 
-Tidak ada bukti Docker, Kubernetes, reverse proxy, cloud provider, konfigurasi production database, backup, atau CI/CD runtime dalam workspace. `.github/workflows/deploy.yml` adalah bukti keberadaan deployment workflow, tetapi rincian infrastruktur target memerlukan Needs Verification.
+Repository tidak membuktikan server produksi, reverse proxy, containerization, high availability, atau backup. Deployment aktual dibedakan:
 
-```mermaid
-flowchart LR
-  U[Browser/Dosen/Mahasiswa] -->|HTTP| O[Odoo 19]
-  O --> A[Custom Addon erpobe]
-  A --> ORM[Odoo ORM]
-  ORM --> DB[(PostgreSQL)]
-  A --> Q[QWeb Views]
-  A --> R[PDF Reports]
-  A --> S[Static SCSS/JS]
-```
+| Environment | Evidence | Status |
+|---|---|---|
+| Development | Source, test, dan fixture lokal | Terverifikasi dari repository |
+| Test | TransactionCase dan test tagging | Ada source, eksekusi runtime tidak dilampirkan |
+| Production | Tidak ditemukan manifest/infrastruktur | Tidak terverifikasi |
 
-# 10. Security Architecture
+## 9.4 Security Technology
 
-## 10.1 Role and Permission
+Security diwujudkan oleh Odoo session/authentication, groups, ACL, record rules, owner checks, portal/public routes, audit context, dan PostgreSQL transaction. Tidak ditemukan service authentication eksternal atau API gateway.
 
-Empat grup ditemukan:
+## 9.5 Constraints
 
-- Mahasiswa: grup portal yang dapat membuat/melihat KRS miliknya dan membaca sejumlah data akademik.
-- Dosen: grup portal yang dapat melihat RPS/kelas dan mengelola nilai sesuai method.
-- Admin: grup user internal dengan ACL luas.
-- Superadmin: mewarisi Admin dan menerima global record rule.
+- Tidak ada scheduled action selain cron audit yang teridentifikasi.
+- Tidak ditemukan `base.automation` khusus addon.
+- Tidak ditemukan integrasi external API pada code yang ditinjau.
+- Penggunaan `sudo()` terbatas dan perlu trace per controller.
+- Production backup/retention external tidak dapat diverifikasi.
 
-Role tambahan tidak disimpulkan. Superadmin/`base.group_system` merupakan grup Odoo bawaan yang digunakan sebagai boundary global, bukan custom role baru.
+# 10. Architecture Gap Analysis
 
-| Area | Mahasiswa | Dosen | Admin | Superadmin |
-|---|---|---|---|---|
-| Fakultas/Prodi | Read in scope | Read in scope | CRUD in scope | CRUD global |
-| Mahasiswa | Own record Read/Write | Read in scope | CRUD in scope | Global |
-| Mata Kuliah | Read in scope | Read/Write Dosen ACL | CRUD | Global |
-| CPL/CPMK/Mapping | Read in scope | CRUD | CRUD | Global |
-| RPS | Read | Read/Write, Final finalisasi terbatas | CRUD | Global |
-| KRS | Own create/read/write flow | Read/Advisor action | CRUD | Global |
-| Nilai komponen | No ACL | CRUD | CRUD | Global |
-| Grade CPL/MK/CPMK | Read | Mostly read/CRUD | CRUD | Global |
-| KHS | Read own | No KHS ACL | CRUD | Global |
-| Wizard import | No ACL | No ACL | CRUD | CRUD |
+## 10.1 Gap Classification
 
-## 10.2 Security Mechanisms
-
-- Autentikasi: Odoo `auth='user'` pada portal dosen/mahasiswa.
-- Authorization: ACL pada model dan record rules pada recordset.
-- UI: menu groups membatasi menu.
-- Controller: `_require_student`, `_require_teacher`, `_authorized_teacher_line`, dan `_check_student_owner`.
-- Public route: `auth='public'` dan data diambil menggunakan `sudo()` untuk konten publik. Tidak boleh disimpulkan sebagai akses ke seluruh data akademik.
-- Delegation: `sudo()` digunakan untuk sinkronisasi laporan dan beberapa data publik; temuan ini memerlukan review pada setiap controller.
-
-## 10.3 Gap Analysis
-
-- Record rule prodi dan mahasiswa sendiri tersedia, tetapi cakupan seluruh model perlu review konsisten.
-- Beberapa controller melakukan `sudo()` dan menerapkan otorisasi manual; kerentanan tidak dapat dinyatakan tanpa pengujian runtime.
-- Public profile route dapat menampilkan dosen/mahasiswa berdasarkan ID; implementasi harus memastikan hanya field safe yang ditampilkan.
-- Password/credential tidak ditampilkan atau disimpan pada dokumentasi ini.
-
-```mermaid
-flowchart TD
-  Login[Odoo Authentication] --> User[res.users]
-  User --> Groups[Mahasiswa/Dosen/Admin/Superadmin]
-  Groups --> ACL[Model ACL]
-  ACL --> Rule[Record Rules]
-  Rule --> Controller[Controller Authorization]
-  Controller --> ORM[Scoped ORM Recordset]
-  ORM --> DB[(PostgreSQL)]
-```
-
-# 11. Integration Architecture
-
-| Integration | Source | Target | Protocol | Data | Authentication | Status |
+| No | Domain | As-Is | To-Be | Gap | Dampak | Prioritas |
 |---|---|---|---|---|---|---|
-| Odoo internal | Custom addon | Odoo core | Python/ORM | res.users, res.partner, mail | Odoo session/ACL | Implemented |
-| HTTP portal | Browser | Odoo controller | HTTP/JSON rendered QWeb | Academic/profile/KRS/grades | Session/public | Implemented |
-| Spreadsheet import/export | Wizard | PostgreSQL | CSV/XLSX | Master academic data | Odoo role ACL | Implemented |
-| PDF report | Odoo report engine | Browser | QWeb PDF | KHS/RPS | Odoo report ACL | Implemented |
-| External API | - | - | - | - | - | Not Implemented |
-| Cron/Scheduled action | - | - | - | - | - | Not Implemented |
-| Email external | Odoo mail | - | - | - | - | Dependency tersedia, use case khusus Belum teridentifikasi |
+| 1 | Business | Draft As-Is manual tidak terdokumentasi dengan bukti | Proses lama dan transisi tersedia secara terukur | Bukti proses lama belum lengkap | Risiko asumsi proses | Medium |
+| 2 | Business | RPS, KRS, nilai, dan KHS tersedia | Semua proses tereksekusi end-to-end terkontrol | Belum terdapat bukti eksekusi produksi | Gap verifikasi operasional | High |
+| 3 | Data | Banyak master dan hubungan terimplementasi | Data governance lintas model konsisten | Cakupan rules tidak seragam pada setiap model | Risiko ketimpangan akses | High |
+| 4 | Data | Constraint dan snapshot tersedia | Dapat direkonsiliasi lintas versi RPS | Rekonsiliasi historis perlu diuji dari data produksi | Risiko nilai lama/migrasi | Medium |
+| 5 | Application | Wizard, portal, report, and audit tersedia | Komponen mempunyai audit dan interaksi konsisten | Pencatatan portal baca/tindakan tidak seragam | Kontrol audit read access terbatas | High |
+| 6 | Application | Academic assistant tersedia | Respons dibatasi konteks dan hak | Tidak ada bukti konten grounding eksternal | Risiko jawaban tidak terverifikasi | Medium |
+| 7 | Technology | Odoo 19/PostgreSQL terverifikasi dari repository | Deployment aman, terukur, dan terbackup | Infrastruktur produksi belum teridentifikasi | Risiko availability dan recovery | High |
+| 8 | Security | ACL, rules, audit manager tersedia | Semua model sensitif mempunyai owner/scope | Beberapa model perlu audit coverage review | Risiko exposure | High |
+| 9 | Audit | Audit Phase 5 tersedia | Audit immutable operational | Log hanya immutable secara guard, belum database append-only | Risiko mutasi superuser/context abuse | Medium |
+| 10 | Audit | Retention cron aktif di XML | Cleanup terpantau dan evidence diperoleh | Last run di data produksi belum terverifikasi | Risiko cleanup tidak berjalan | Medium |
 
-Tidak ditemukan API eksternal nyata, scheduled action addon, atau integrasi pembayaran/SIAKAD eksternal. Website dan portal merupakan integrasi internal Odoo.
+## 10.2 Resolved Gap
 
-```mermaid
-flowchart LR
-  B[Browser] -->|HTTP| O[Odoo Controllers]
-  O --> M[erpobe Models]
-  M --> ORM[Odoo ORM]
-  ORM --> P[(PostgreSQL)]
-  M --> PDF[QWeb PDF]
-  M --> XLS[CSV/XLSX Wizard]
-  Core[base/web/portal/contacts/mail] --> M
-```
+- RPS mendapat lock/snapshot dan validasi bobot.
+- KRS mendapat batas SKS, prasyarat, jadwal, dan approval.
+- Nilai CPMK/MK/CPL telah dipisahkan dan dihubungkan.
+- Pemetaan CPL tidak menggunakan pembobotan CPMK–CPL.
+- Centralized audit CRUD dan dashboard telah tersedia.
+- Login, logout, report, masking, dan retention telah diimplementasikan.
+- Security role mencakup mahasiswa, dosen, admin, superadmin, dan audit manager.
 
-# 12. Reporting and Analytics Architecture
+## 10.3 Existing Gap
 
-## 12.1 Inventory
+- Konsistensi hak akses lintas seluruh model belum seragam.
+- Pencatatan akses baca sensitif di portal masih bergantung pada implementasi explicit log.
+- Backup, recovery, monitoring, dan observability produksi tidak terverifikasi.
+- Evidensi eksekusi test runtime belum tersedia sebagai artifact dokumen.
 
-| Laporan/Analitik | Sumber | Aggregation | Output | Access |
-|---|---|---|---|---|
-| KHS | Grade MK/CPMK/CPL/component | IPK, SKS lulus, line nilai | QWeb/PDF dan portal | Admin/Mahasiswa |
-| RPS PDF | RPS | Struktur dan bobot | QWeb/PDF | Admin/Dosen/Mahasiswa sesuai route |
-| Summary MK | `erpobe.summary.mk` SQL view | Average nilai available | List/Pivot/Graph | Admin/Dosen/Mahasiswa read ACL |
-| Summary CPMK | `erpobe.summary.cpmk` SQL view | Average grade available | List/Pivot/Graph | Admin/Dosen/Mahasiswa |
-| Summary CPL | `erpobe.summary.cpl` SQL view | Average grade available | List/Pivot/Graph | Admin/Dosen/Mahasiswa |
-| Summary komponen | `erpobe.summary.komponen` SQL view | Average nilai komponen | List/Pivot/Graph | Admin/Dosen/Mahasiswa |
-| Bobot monitor | RPS weight validation | Kelompok bobot dan isu | Form/list/export | Admin/Superadmin |
-| Portal dosen | KRS, grade, summary | Kelas/CPMK/CPL | Web | Dosen |
-| Portal mahasiswa | KHS, CPL, courses | Nilai pribadi | Web | Mahasiswa |
+## 10.4 Unverified Gap
 
-Fixture akademik dapat membentuk data simulasi/dummy. Hasil analitik harus dibedakan apakah berasal dari nilai actual, nilai simulated, atau sumber fixture. Source code menyimpan asal fixture pada `erpobe.akademik.fixture.source` dan nilai pada `grade.komponen.origin`.
+- Infrastruktur deployment aktual.
+- Frekuensi kegagalan cron dan retensi pada instance operasional.
+- Konsistensi data fixture terhadap environment akademik nyata.
+- Integrasi SIAKAD atau layanan eksternal.
+- Volume, performa, dan kapasitas PostgreSQL.
 
-# 13. User Workflow and User Journey
+# 11. Architecture Roadmap
 
-## 13.1 Admin
+## 11.1 Recommendation
 
-1. Login.
-2. Kelola fakultas dan prodi.
-3. Kelola dosen, mahasiswa, rombel, mata kuliah, tahun ajaran.
-4. Kelola CPL/CPMK/mapping.
-5. Buat penawaran dan RPS.
-6. Finalisasi RPS setelah bobot lengkap.
-7. Jalankan import/ekspor bila diperlukan.
-8. Lihat laporan dan analisis.
-
-## 13.2 Dosen
-
-1. Login ke portal.
-2. Lihat kelas yang diampu sebagai koordinator/tim pengampu.
-3. Buat/revisi/copy RPS.
-4. Pastikan bobot lengkap dan finalisasi.
-5. Input nilai aktual komponen.
-6. Lihat hasil MK/CPMK dan analisis CPL.
-7. Proses KRS mahasiswa bimbingan.
-
-## 13.3 Mahasiswa
-
-1. Login ke portal.
-2. Pilih penawaran aktif sesuai rombel dan prodi.
-3. Buat/edit/diajukan KRS.
-4. Tunggu persetujuan dosen wali.
-5. Lihat mata kuliah dan RPS yang relevan.
-6. Lihat KHS/nilai komponen dan capaian CPL.
-
-```mermaid
-journey
-  title Mahasiswa menggunakan portal KRS dan KHS
-  section Perencanaan
-    Buka penawaran: 5: Mahasiswa
-    Pilih mata kuliah: 4: Mahasiswa
-    Validasi prodi/rombel/SKS: 4: Sistem
-  section Pengajuan
-    Submit KRS: 5: Mahasiswa
-    Review dosen wali: 3: Dosen
-    Hasil approve/reject: 4: Sistem
-  section Hasil
-    Lihat mata kuliah dan RPS: 5: Mahasiswa
-    Lihat nilai dan CPL: 5: Mahasiswa
-```
-
-# 14. Architecture Diagrams
-
-## 14.1 Enterprise Context
-
-```mermaid
-flowchart LR
-  A[Admin] -->|Master, penawaran, RPS| S[ERP OBE]
-  D[Dosen] -->|RPS, nilai, perwalian| S
-  M[Mahasiswa] -->|KRS, KHS, CPL| S
-  P[Pengunjung] -->|Informasi publik| S
-  S --> PG[(PostgreSQL)]
-  S --> PDF[PDF KHS/RPS]
-```
-
-## 14.2 Application Component
-
-```mermaid
-flowchart TB
-  UI[Backend/Web/Portal] --> CTRL[Controllers & Actions]
-  CTRL --> ORM[Odoo ORM]
-  ORM --> MODELS[Custom Academic/OBE Models]
-  MODELS --> DB[(PostgreSQL)]
-  MODELS --> CALC[OBE Computation]
-  CALC --> REPORT[QWeb/Pivot/Graph/SQL Views]
-  WIZ[Import/Export/Wizard] --> ORM
-```
-
-## 14.3 Conceptual Data
-
-```mermaid
-flowchart LR
-  Faculty[Fakultas] --> Prodi[Program Studi]
-  Prodi --> Curriculum[Kurikulum]
-  Prodi --> CPL[CPL]
-  Prodi --> Course[Mata Kuliah]
-  Course --> CPMK[CPMK]
-  CPL <--> CPMK
-  Course <--> CPL
-  Course --> RPS[RPS]
-  RPS --> Assessment[Komponen/Asesmen]
-  Student[Mahasiswa] --> KRS[KRS]
-  KRS --> Grades[Nilai]
-  Grades --> Achievement[Capaian CPL/CPMK/MK]
-```
-
-## 14.4 Logical Data
-
-```mermaid
-classDiagram
-  class Fakultas
-  class Prodi
-  class MataKuliah
-  class CPL
-  class CPMK
-  class RPS
-  class RPSKomponen
-  class Mahasiswa
-  class KRS
-  class KRSLine
-  class GradeKomponen
-  class GradeCPMK
-  class GradeMK
-  class GradeCPL
-  Fakultas "1" --> "*" Prodi
-  Prodi "1" --> "*" MataKuliah
-  Prodi "1" --> "*" CPL
-  MataKuliah "1" --> "*" CPMK
-  CPL "*" --> "*" CPMK
-  MataKuliah "*" --> "*" CPL
-  MataKuliah "1" --> "*" RPS
-  RPS "1" --> "*" RPSKomponen
-  Mahasiswa "1" --> "*" KRS
-  KRS "1" --> "*" KRSLine
-  KRSLine "1" --> "*" GradeKomponen
-  Mahasiswa "1" --> "*" GradeCPMK
-  Mahasiswa "1" --> "*" GradeMK
-  Mahasiswa "1" --> "*" GradeCPL
-```
-
-## 14.5 Security and Deployment
-
-```mermaid
-flowchart TB
-  User[Authenticated User] --> G[ERP OBE Group]
-  G --> ACL[ACL]
-  ACL --> RR[Record Rules]
-  RR --> UF[Controller Ownership Check]
-  UF --> DB[(PostgreSQL)]
-  Public[Public Visitor] --> PublicRoute[Public QWeb Route]
-  PublicRoute --> SafeData[Public Fields]
-```
-
-## 14.6 Integration
-
-```mermaid
-flowchart LR
-  Internal[Odoo Core Models] <--> ERP[erpobe]
-  Browser[Browser] -->|Website/Portal| Controller[HTTP Controllers]
-  Controller <--> ERP
-  ERP <--> DB[(PostgreSQL)]
-  ERP --> PDF[KHS/RPS PDF]
-  ERP --> Sheet[CSV/XLSX]
-```
-
-# 15. Architecture Gap Analysis
-
-| ID | Domain | Current State | Expected State | Identified Gap | Impact | Priority | Recommendation |
-|---|---|---|---|---|---|---|---|
-| G1 | OBE computation | Implemented | Bobot dan lineage lengkap | Edge lineage legacy tetap unavailable | Data lama mungkin tidak dihitung | High | Migrasi legacy ke RPS/KRS line yang eksplisit |
-| G2 | RPS | Implemented | Bobot tepat 100% final | Bobot draft dapat kurang, review UI tetap perlu | Finalisasi diblokir sesuai implementasi | Medium | Pertahankan validasi dan tambahkan indikator per user |
-| G3 | Security | Implemented | Isolation konsisten | Cakupan model dan sudo perlu audit komprehensif | Risiko leakage bila route/method salah | High | Test akses lintas prodi dan lintas mahasiswa |
-| G4 | Public portal | Implemented | Publik hanya data aman | Public routes memakai sudo/manual filtering | Risk misinformation/direct exposure | High | Centralize public field allowlist |
-| G5 | Integration | Implemented internal only | Sistem akademik terintegrasi jika dibutuhkan | Tidak ada external API/SIAKAD ditemukan | Sinkronisasi manual | Medium | Tambahkan API adapter hanya setelah kebutuhan terverifikasi |
-| G6 | Scheduled automation | Not Implemented | Sinkronisasi berkala bila perlu | Tidak ada cron/base automation | Proses tetap manual/action-driven | Medium | Evaluasi kebutuhan cron sebelum implementasi |
-| G7 | Deployment | Needs Verification | Production configuration terdokumentasi | Tidak ada bukti deploy/backup/HA | Operasional tidak terdokumentasi | High | Dokumen deployment dan backup |
-| G8 | Testing | Implemented | Regression coverage luas | Tidak ada bukti hasil eksekusi di workspace | Status suite Needs Verification | Medium | Jalankan test dengan environment Odoo |
-| G9 | Reporting | Implemented | Data simulation actual explicitly labeled | Simulasi dapat terbaca sebagai nilai aktual | Misinformasi | High | UI badge actual/simulated dan audit source |
-| G10 | Data lifecycle | Partially Implemented | Retensi/archive policy | Tidak ada kebijakan archival/deletion | Pertumbuhan DB dan kepatuhan | Medium | Tambahkan retention policy dan archive trial |
-
-# 16. Target Architecture and Roadmap
-
-## Short-Term
-
-| ID | Problem | Current | Target | Risk | Priority | Acceptance Criteria |
+| No | Inisiatif | Domain | Gap yang ditangani | Priority | Dependensi | Target |
 |---|---|---|---|---|---|---|
-| ST1 | Security audit | ACL/rules ada | Semua model dan route teruji lintas role | Akses berlebih | Critical | Test role matrix lulus lintas prodi/own data |
-| ST2 | Simulated data | Origin tersedia | UI and report label origin | Salah tafsir data | High | Semua nilai simulasi diberi label |
-| ST3 | Legacy computation | Legacy unavailable | Migrasi lineage bila lengkap | Kehilangan riwayat | High | Record lama mendapat RPS/KRS lineage atau status documented |
-| ST4 | Audit result | No test execution evidence | Test suite dijalankan | Regression | High | Test list/rps/weight/import/security lulus |
+| 1 | Verifikasi dan normalisasi record rules | Security/Data | Scope tidak seragam | High | Inventaris model dan test role | Setiap model sensitif memiliki owner/scope |
+| 2 | Tambahkan portal sensitive-access audit | Audit | Akses baca belum terekam eksplisit | High | Pemetaan route sensitif | KHS/RPS/grade memiliki event SENSITIVE_ACCESS |
+| 3 | Siapkan evidence run test CI | Governance | Hasil test belum tercatat runtime | High | Environment test | Report pass/failure/error terdokumentasi |
+| 4 | Dokumentasikan deployment target | Technology | Production tidak terverifikasi | High | Keputusan infrastruktur | Architecture deployment yang diverifikasi |
+| 5 | Monitoring cron dan audit | Technology/Audit | Retensi dan keberhasilan cleanup | Medium | Observability platform | Dashboard status cleanup dan alarm |
+| 6 | PostgreSQL backup/recovery drill | Technology | Resilience belum terverifikasi | High | Environment produksi | Restore time objective dan hasil uji |
+| 7 | Data reconciliation migration test | Data | Historis RPS/nilai | Medium | Snapshot fixture dan data test | Tidak ada nilai/lineage putus saat upgrade |
+| 8 | Architecture review eksternal | Governance | As-Is evidence | Medium | Stakeholder akademik | Proses As-Is terverifikasi |
+| 9 | Database append-only audit option | Audit | Integrity guard | Medium | Kebijakan data dan platform | Audit log terproteksi pada database |
 
-## Mid-Term
+## 11.2 Horizon
 
-- Normalisasi endpoint analytics berdasarkan snapshot attempt.
-- Tambahkan report capaian dengan source dan data availability.
-- Sediakan dashboard institusi berbasis virtual SQL views.
-- Tambahkan notifikasi workflow KRS/RPS bila diperlukan.
-- Dokumentasikan backup, restore, upgrade, dan migration procedure.
+### Short-term
 
-## Long-Term
+Role/rule validation, audit akses portal, dan CI test evidence.
 
-- Analisis pembelajaran lanjutan lintas angkatan dan prodi.
-- API integration terstandardisasi untuk sistem akademik lain bila ada kebutuhan.
-- Performance indexing and aggregation optimization untuk volume besar.
-- Governance data dan definisi MPL/target capaian yang terdokumentasi.
+### Medium-term
 
-# 17. Risk and Technical Considerations
+Monitoring cron, deployment documentation, migration reconciliation, dan append-only review.
 
-| Risk ID | Category | Description | Root Cause | Likelihood | Impact | Level | Mitigation | Component |
-|---|---|---|---|---|---|---|---|---|
-| R1 | OBE | CPL grade lintas attempt memilih tertinggi | Selection logic | Medium | Medium | High | Dokumentasikan dan berikan policy attempt | Grade CPL |
-| R2 | Data | Legacy grade unavailable | Tidak ada RPS/KRS lineage | Medium | High | High | Migrasi lineage atau status historical | Grade |
-| R3 | Security | Controller exposure via sudo | Public/sync controller | Medium | High | High | Safe fields and controller tests | Controllers |
-| R4 | Security | Record rules incomplete | Not every model rule visible | Medium | High | High | Model-rule inventory and negative tests | Security |
-| R5 | Computation | Bobot partial may be misleading | Draft values and denominator | Medium | Medium | High | UI badges and finalization lock | RPS/Weights |
-| R6 | Data | Simulated grades can affect reports | Simulation method | Medium | High | High | Label and filtering | Grade Komponen |
-| R7 | Operational | No deployment evidence | Environment not configured/repository | Medium | High | High | Deployment runbook | Infrastructure |
-| R8 | Performance | Computed recompute scans records | Multiple search and recompute loops | Medium | Medium | Medium | Add targeted recompute/batch testing | Grade |
-| R9 | Maintainability | Large addon with migration/fixture | 56 custom model names, multiple concerns | Medium | Medium | Medium | Module split or domain grouping | Addon |
+### Long-term
 
-# 18. Source Code Traceability
+Evaluasi integrasi ekosistem akademik hanya setelah kebutuhan dan interface disepakati, serta penguatan observability dan disaster recovery.
 
-| EA Component | Implementation File | Model/Class | Method/Field | Evidence |
-|---|---|---|---|---|
-| Manifest | `custom_module/erpobe/__manifest__.py` | addon manifest | `depends`, `assets`, `data`, `external_dependencies` | Implemented |
-| Group | `security/groups.xml` | `res.groups` | group_mahasiswa/dosen/admin/superadmin | Implemented |
-| ACL | `security/ir.model.access.csv` | model ACL | perm_read/write/create/unlink | Implemented |
-| Record Rules | `security/rules.xml` | `ir.rule` | prodi, mahasiswa own, global superadmin | Implemented |
-| Faculty/Prodi | `models/akademik_fakultas.py`, `models/master_prodi.py` | `erpobe.master.fakultas`, `erpobe.master.prodi` | relations/constraints | Implemented |
-| Course | `models/master_akademik.py` | `ErpObeMasterMataKuliah` | `_check_related_faculties`, CPMK, RPS, CPL | Implemented |
-| CPL | `models/akademik_cpl.py` | `erpobe.akademik.cpl` | target_nilai, cpmk/mk mappings | Implemented |
-| CPMK | `models/akademik_cpmk.py` | `erpobe.akademik.cpmk` | mk_id, target_nilai, cpl_mapping_ids | Implemented |
-| CPL-CPMK mapping | `models/akademik_cpl_mk_cpmk.py` | `erpobe.akademik.cpl.mk.cpmk` | unique mapping and prodi constraint | Implemented |
-| MK-CPL mapping | `models/akademik_cpl_mk_cpmk.py` | `erpobe.akademik.mk.cpl` | unique mapping and prodi constraint | Implemented |
-| RPS | `models/akademik_rps.py` | `erpobe.akademik.rps` | status, cpmk_ids, bobot_ids, action_finalize | Implemented |
-| RPS Lock | `models/rps_lock.py` | `erpobe.rps.lock.mixin` | write/unlink/final immutability | Implemented |
-| Component snapshot | `models/rps_komponen.py` | `erpobe.akademik.rps.komponen` | bobot, aktif, allocation_ids | Implemented |
-| Weight CPMK-MK | `models/bobot_cpmk_mk.py` | `erpobe.bobot.cpmk.mk` | bobot_cpmk_mk, `_compute_total_bobot` | Implemented |
-| Weight component-CPMK | `models/bobot_komponen_cpmk.py` | `erpobe.bobot.komponen.cpmk` | bobot_komponen_cpmk, validitas | Implemented |
-| Weight validation | `models/weight_validation.py` | `erpobe.weight.validation` | target 100, tolerance 0.01, `validate_rps` | Implemented |
-| KRS | `models/akademik_krs.py` | `erpobe.akademik.krs` | submit/approve/reject, max 24 SKS | Implemented |
-| Penawaran | `models/akademik_penawaran.py` | `erpobe.akademik.penawaran` | rombel, line, RPS status | Implemented |
-| Grade component | `models/grade.py` | `erpobe.grade.komponen` | nilai, origin, is_graded, audit | Implemented |
-| Grade CPMK | `models/grade_cpmk.py` | `erpobe.grade.cpmk` | `_compute_nilai_cpmk`, status | Implemented |
-| Grade MK | `models/grade_mk.py` | `erpobe.grade.mk` | `_compute_nilai_mk` | Implemented |
-| Grade CPL | `models/grade_cpl.py` | `erpobe.grade.cpl` | `_compute_nilai_cpl`, status | Implemented |
-| KHS | `models/report_khs.py` | `erpobe.report.khs` | action_generate, sync, statistic | Implemented |
-| SQL analytics | `models/report_summary.py` | `erpobe.summary.*` | `_auto=False`, `init()` SQL view | Implemented |
-| Teacher portal | `controllers/portal_dosen.py` | `TritonPortalDosen` | grades, RPS, analysis, perwalian | Implemented |
-| Student portal | `controllers/portal_mahasiswa.py` | `TritonPortalMahasiswa` | KRS, KHS, CPL, RPS | Implemented |
-| Public portal | `controllers/*.py` | Public controllers | public routes and safe list helper | Implemented |
-| PDF | `views/triton_reports.xml` | `ir.actions.report` | `triton_report_khs`, `triton_report_rps` | Implemented |
-| Import/export | `wizard/import_export_mixin.py` | `erpobe.import.export.mixin` | CSV/XLSX validate/export | Implemented |
-| Test | `tests/*.py` | Odoo test suite | weight, RPS, import, UI, workflow | Implemented source; runtime result Needs Verification |
+# 12. Architecture Governance
 
-# 19. Kesimpulan
+## 12.1 Governance Overview
 
-Project memiliki implementasi enterprise OBE yang substansial pada addon `erpobe`. Kunci arsitektur adalah pemisahan master, mapping, RPS snapshot, nilai komponen, computed grade, KHS, dan portal. Rantai OBE dapat ditelusuri langsung ke source code. Implementasi yang belum ditemukan secara nyata tidak ditambahkan sebagai aktual.
+Governance aktual memanfaatkan Odoo ACL, record rules, validation, test suite, dan audit trail. Mechanism target meliputi review architecture, security audit, and deployment evidence. Governance roadmap belum dinyatakan sebagai pelaksanaan.
 
-Fokus pengembangan pertama adalah keamanan lintas role/prodi, penanganan origin nilai, migrasi lineage legacy, pengujian runtime, dan dokumentasi operasi. Target architecture harus mempertahankan Odoo/PostgreSQL sebagai platform utama kecuali terdapat bukti kebutuhan integrasi atau skalabilitas yang mengharuskan perubahan.
+## 12.2 Data and Application Governance
 
-# 20. Glossary
+- Constraint dan computed field menjadi penjaga aturan domain.
+- Migrasi memiliki pre/post/rollback untuk versi tertentu.
+- Import/ekspor menggunakan validasi dan dry-run yang dapat diuji.
+- Perubahan model dan database seharusnya melalui proses upgrade serta regression test.
 
-- **ACL:** Access Control List model Odoo.
-- **CPL:** Capaian Pembelajaran Lulusan.
-- **CPMK:** Capaian Pembelajaran Mata Kuliah.
-- **KRS:** Kartu Rencana Studi.
-- **KHS:** Kartu Hasil Studi.
-- **OBE:** Outcome-Based Education.
-- **RPS:** Rencana Pembelajaran Semester.
-- **Rombel:** Rombongan belajar.
-- **Record Rule:** Aturan record-level Odoo.
-- **Snapshot:** Salinan komponen RPS untuk stabilitas penilaian lintas versi.
-- **TOGAF ADM:** Kerangka konseptual arsitektur enterprise.
+## 12.3 Security and Audit Governance
 
-# 21. Appendix
+- Admin, Dosen, Mahasiswa, dan Superadmin dibedakan.
+- Audit Manager memiliki akses khusus log.
+- Audit mixin dan log menggunakan role context serta guard mutasi.
+- Retention cron membedakan log ordinary dan critical.
 
-## A. Custom Model Inventory
+## 12.4 Change Management
 
-Model `_name` terverifikasi mencakup sekitar 56 identitas model custom dan abstract/mixin/report, termasuk:
+Perubahan arsitektur harus memeriksa dampak terhadap:
 
-- `erpobe.master.fakultas`, `.prodi`, `.dosen`, `.mahasiswa`, `.matakuliah`, `.rombel`
-- `erpobe.akademik.kurikulum`, `.cpl`, `.cpmk`, `.komponen`, `.tahunajaran`, `.penawaran`, `.krs`, `.rps`
-- `erpobe.akademik.rps.komponen`, `.kegiatan.perkuliahan`, `.metode.pembelajaran`, `.referensi`, `.rubrik.penilaian`, `.kriteria`
-- `erpobe.bobot.cpmk.mk`, `erpobe.bobot.komponen.cpmk`
-- `erpobe.input.nilai`, `erpobe.grade.komponen`, `.audit`, `.mk`, `.cpmk`, `.cpl`
-- `erpobe.report.khs` beserta line MK/CPMK/CPL/komponen
-- `erpobe.summary.mk/cpmk/cpl/komponen`
-- `erpobe.weight.validation`, `erpobe.weight.monitor`, serta line monitor
-- import/export transient wizard dan RPS copy wizard
+1. field dan relasi,
+2. constraint dan computed field,
+3. ACL dan record rules,
+4. RPS snapshot/version,
+5. KRS state,
+6. grade lineage,
+7. report and portal,
+8. audit events.
 
-Daftar lengkap dapat ditelusuri dari `models/__init__.py` dan file pada direktori `models/`. Jumlah tepat model/mixin tidak dijadikan angka total tunggal jika ada inherited model dan virtual model karena definisi nama dan `_auto` perlu konteks.
+## 12.5 Testing and Validation
 
-## B. Verification Status
+Test source mencakup ACL, faculty scope, RPS versioning, workflow, bobot, fixture, import/ekspor, UI, dan audit. Hasil eksekusi aktual tidak dapat diklaim tanpa test log.
 
-- Implemented: bukti source code dan konfigurasi tersedia.
-- Partially Implemented: model atau UI ada tetapi status keseluruhan memerlukan bukti runtime/lifecycle tambahan.
-- Not Implemented: tidak ditemukan pada addon.
-- Needs Verification: informasi dari konteks, workflow external, atau environment belum dapat dibuktikan sepenuhnya.
-- Proposed: rekomendasi roadmap, bukan kondisi aktual.
+# 13. Conclusion
+
+ERP OBE Odoo 19 saat ini merupakan aplikasi akademik modular yang menghubungkan master akademik, kurikulum, OBE, KRS, RPS, penilaian, KHS, portal, dan audit. Implementasi menawarkan keterlacakan dari komponen penilaian sampai CPL melalui CPMK dan MK, dengan gate RPS final dan KRS approved.
+
+TOGAF ADM digunakan untuk mengorganisasikan Preliminary, Architecture Vision, Business, Information Systems, Technology, dan Gap Analysis. BPMN digunakan sebagai notasi target untuk proses akademik; Mermaid hanya digunakan sebagai representasi pendukung yang harus dibaca sebagai flowchart.
+
+Audit Trail terimplementasi pada model mixin, log terpusat, auth, report, dashboard, retention, dan test. Gap utama terletak pada pemerataan record rules, bukti deployment/operasi produksi, pencatatan akses portal sensitif, dan governance perubahan. Rekomendasi tidak dinyatakan sebagai fitur yang telah dilaksanakan.
+
+# 14. Appendix
+
+## 14.1 Core Model Catalog
+
+| Domain | Models |
+|---|---|
+| Organization | `erpobe.master.fakultas`, `erpobe.master.prodi` |
+| Academic | `erpobe.master.matakuliah`, `erpobe.master.rombel`, `erpobe.akademik.tahunajaran`, `erpobe.akademik.komponen` |
+| User | `erpobe.master.dosen`, `erpobe.master.mahasiswa`, `res.users`, `res.partner` |
+| OBE | `erpobe.akademik.cpl`, `erpobe.akademik.cpmk`, `erpobe.akademik.cpl.mk.cpmk`, `erpobe.akademik.mk.cpl` |
+| RPS | `erpobe.akademik.rps`, `erpobe.akademik.rps.komponen`, bobot models |
+| Offering/KRS | `erpobe.akademik.penawaran`, line, `erpobe.akademik.krs`, line |
+| Grade | `erpobe.input.nilai`, `erpobe.grade.komponen`, `erpobe.grade.cpmk`, `erpobe.grade.mk`, `erpobe.grade.cpl` |
+| Reporting | `erpobe.report.khs`, `erpobe.summary.*` |
+| Audit | `erpobe.audit.log`, `erpobe.audit.dashboard`, `erpobe.audit.mixin` |
+
+## 14.2 Security Groups
+
+| Group | Scope |
+|---|---|
+| Mahasiswa | User portal dan data sendiri |
+| Dosen | User portal, prodi/fakultas, kelas, bimbingan |
+| Admin | Backend dan data dalam scope prodi |
+| Superadmin | Global dalam ERP OBE |
+| Audit Trail Manager | Akses khusus log audit |
+
+## 14.3 Glossary
+
+| Term | Meaning |
+|---|---|
+| CPL | Capaian Pembelajaran Lulusan |
+| CPMK | Capaian Pembelajaran Mata Kuliah |
+| RPS | Rencana Pembelajaran Semester |
+| KRS | Kartu Rencana Studi |
+| KHS | Kartu Hasil Studi |
+| As-Is | Kondisi aktual atau kondisi sebelum transformasi yang dapat dibuktikan |
+| To-Be | Kondisi target berdasarkan kebutuhan dan implementasi |
+| Gap | Kesenjangan As-Is terhadap To-Be |
+| Snapshot | Data RPS/komponen yang disalin agar tetap stabil |
+| `is_graded` | Penanda bahwa nilai komponen benar-benar tersedia untuk perhitungan |
+
+## 14.4 Verification Status
+
+| Status | Meaning |
+|---|---|
+| Implemented | Didukung model/view/security/controller/logic source |
+| Needs Verification | Adanya bukti parsial atau belum ada bukti runtime |
+| Recommendation | Belum dinyatakan sebagai implementasi |

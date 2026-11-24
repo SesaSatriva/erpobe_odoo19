@@ -125,7 +125,7 @@ def generate_fixture_loader():
     ElementTree.SubElement(
         root,
         "function",
-        {"model": "erpobe.fixture.seeder", "name": "load_2022_cohort"},
+        {"model": "erpobe.fixture.seeder", "name": "load_2022_cohort_if_enabled"},
     )
     return _xml_text(root)
 

@@ -2,6 +2,7 @@ from odoo import api, fields, models
 
 class ErpObeAkademikCpl(models.Model):
     _name = "erpobe.akademik.cpl"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Capaian Pembelajaran Lulusan (CPL)"
     _rec_name = "kode_cpl"  
 

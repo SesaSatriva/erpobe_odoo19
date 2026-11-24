@@ -5,7 +5,7 @@ from .weight_validation import _weight_status
 
 class ErpObeBobotKomponenCpmk(models.Model):
     _name = "erpobe.bobot.komponen.cpmk"
-    _inherit = ["erpobe.rps.lock.mixin"]
+    _inherit = ["erpobe.rps.lock.mixin", "erpobe.audit.mixin"]
     _description = "Bobot Komponen terhadap CPMK"
     _order = "komponen_penilaian, cpmk_id"
 

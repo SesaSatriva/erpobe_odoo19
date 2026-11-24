@@ -74,6 +74,18 @@ class TritonPortalDosen(TritonPortalBase):
             and teacher not in line.matakuliah_id.tim_pengampu_ids
         ):
             raise AccessError('RPS ini bukan bagian dari mata kuliah yang Anda ampu.')
+        request.env['erpobe.audit.log'].with_context(
+            audit_source='portal',
+            audit_actor_id=request.env.user.id,
+            audit_ip=request.httprequest.remote_addr,
+            audit_user_agent=request.httprequest.headers.get('User-Agent'),
+        ).log_event(
+            'SENSITIVE_ACCESS',
+            model_name='erpobe.akademik.rps',
+            record=rps,
+            description='Dosen mengakses RPS',
+            is_sensitive=True,
+        )
         return request.render('erpobe.triton_rps_detail_page', {'rps': rps})
 
     @http.route('/my/rps/<int:line_id>/create', type='http', auth='user', website=True, methods=['POST'])
@@ -362,7 +374,12 @@ class TritonPortalDosen(TritonPortalBase):
     @http.route('/my/perwalian/<int:krs_id>/putusan', type='http', auth='user', website=True, methods=['POST'])
     def triton_advising_decision(self, krs_id, **kwargs):
         teacher = self._require_teacher()
-        krs = request.env['erpobe.akademik.krs'].sudo().browse(krs_id)
+        krs = request.env['erpobe.akademik.krs'].sudo().with_context(
+            audit_source='portal',
+            audit_actor_id=request.env.user.id,
+            audit_ip=request.httprequest.remote_addr,
+            audit_user_agent=request.httprequest.headers.get('User-Agent'),
+        ).browse(krs_id)
         if not krs.exists() or krs.mahasiswa_id.dosen_wali_id != teacher:
             raise AccessError('KRS ini bukan milik mahasiswa bimbingan Anda.')
         action = request.httprequest.form.get('action')

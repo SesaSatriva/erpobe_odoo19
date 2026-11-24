@@ -169,6 +169,7 @@ SOURCE_KIND = {
 }
 FIXTURE_SEED_VERSION = "4"
 FIXTURE_SEED_VERSION_PARAM = "erpobe.fixture.2022_cohort_seed_version"
+FIXTURE_SEED_ENABLED_PARAM = "erpobe.fixture.seed_enabled"
 FIXTURE_COMPONENTS = (
     ("komponen_partisipatif", "Kehadiran", "attendance", 10.0),
     ("fixture_component_quiz", "Kuis", "quiz", 10.0),
@@ -200,6 +201,14 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         return self.env["res.users"].with_context(
             fixture_admins_only=True
         ).load_erpobe_fixture_users()
+
+    @api.model
+    def load_2022_cohort_if_enabled(self):
+        """Lifecycle hook: fixture academic is opt-in, not automatic."""
+        params = self.env["ir.config_parameter"].sudo()
+        if params.get_param(FIXTURE_SEED_ENABLED_PARAM) != "True":
+            return False
+        return self.load_2022_cohort()
 
     @api.model
     def load_2022_cohort(self):

@@ -3,6 +3,7 @@ from odoo.exceptions import ValidationError
 
 class ErpObeAkademikCplMkCpmk(models.Model):
     _name = "erpobe.akademik.cpl.mk.cpmk"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Mapping CPL - CPMK"
     _rec_name = "cpmk_id"
 
@@ -61,6 +62,7 @@ class ErpObeAkademikCplMkCpmk(models.Model):
 
 class ErpObeAkademikMkCpl(models.Model):
     _name = "erpobe.akademik.mk.cpl"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Matriks Pemetaan Mata Kuliah terhadap CPL"
     _rec_name = "cpl_id"
 

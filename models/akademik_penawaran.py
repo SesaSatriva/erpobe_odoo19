@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 class ErpObeAkademikPenawaran(models.Model):
     _name = "erpobe.akademik.penawaran"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Penawaran Mata Kuliah"
     _rec_name = "name"
     _order = "id desc"
@@ -189,6 +190,7 @@ class ErpObeAkademikPenawaran(models.Model):
 
 class ErpObeAkademikPenawaranLine(models.Model):
     _name = "erpobe.akademik.penawaran.line"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Detail Kelas Penawaran"
     _rec_name = "matakuliah_id"
     _order = "matakuliah_id asc"

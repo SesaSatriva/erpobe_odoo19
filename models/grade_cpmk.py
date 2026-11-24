@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 class ErpObeGradeCpmk(models.Model):
     _name = "erpobe.grade.cpmk"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Nilai CPMK Mahasiswa"
 
     mahasiswa_id = fields.Many2one("erpobe.master.mahasiswa", required=True, index=True)

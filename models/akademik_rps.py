@@ -5,7 +5,7 @@ class ErpObeAkademikRps(models.Model):
     _name = "erpobe.akademik.rps"
     _description = "Rencana Pembelajaran Semester (RPS)"
     _rec_name = "matakuliah_id"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "erpobe.audit.mixin"]
 
     # === 1. Header & Identitas MK ===
     matakuliah_id = fields.Many2one(
@@ -487,7 +487,7 @@ class ErpObeAkademikRps(models.Model):
 
 class ErpObeAkademikKegiatanPerkuliahan(models.Model):
     _name = "erpobe.akademik.kegiatan.perkuliahan"
-    _inherit = ["erpobe.rps.lock.mixin"]
+    _inherit = ["erpobe.rps.lock.mixin", "erpobe.audit.mixin"]
     _description = "Kegiatan Perkuliahan"
     _order = "minggu asc"
 
@@ -541,6 +541,7 @@ class ErpObeAkademikKegiatanPerkuliahan(models.Model):
 
 class ErpObeAkademikMetodePembelajaran(models.Model):
     _name = "erpobe.akademik.metode.pembelajaran"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Master Metode Pembelajaran"
     name = fields.Char(string="Nama Metode", required=True)
     kode = fields.Char(string="Kode", size=5)
@@ -557,6 +558,7 @@ class ErpObeAkademikMetodePembelajaran(models.Model):
 
 class ErpObeAkademikReferensi(models.Model):
     _name = "erpobe.akademik.referensi"  # Fix Typo
+    _inherit = ["erpobe.audit.mixin"]  # Fix Typo
     _description = "Master Referensi / Pustaka"
     _rec_name = "judul"
 
@@ -580,7 +582,7 @@ class ErpObeAkademikReferensi(models.Model):
 
 class ErpObeAkademikRubrikPenilaian(models.Model):
     _name = "erpobe.akademik.rubrik.penilaian"
-    _inherit = ["erpobe.rps.lock.mixin"]
+    _inherit = ["erpobe.rps.lock.mixin", "erpobe.audit.mixin"]
     _description = "Item Rubrik (Baris)"
     _order = "sequence, id"
 
@@ -628,7 +630,7 @@ class ErpObeAkademikRubrikPenilaian(models.Model):
 
 class ErpObeAkademikKriteria(models.Model):
     _name = "erpobe.akademik.kriteria"
-    _inherit = ["erpobe.rps.lock.mixin"]
+    _inherit = ["erpobe.rps.lock.mixin", "erpobe.audit.mixin"]
     _rps_link_field = "rubrik_id.rps_id"
     _description = "Kriteria Penilaian RPS"
 

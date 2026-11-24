@@ -116,6 +116,48 @@ class ResUsers(models.Model):
     _nim_unique = models.Constraint("UNIQUE (nim)", "NIM sudah digunakan.")
     _nip_unique = models.Constraint("UNIQUE (nip)", "NIP sudah digunakan.")
 
+    def authenticate(self, credential, user_agent_env):
+        login = credential.get("login") if isinstance(credential, dict) else False
+        try:
+            auth_info = super().authenticate(credential, user_agent_env)
+        except Exception:
+            self.env["erpobe.audit.log"].log_event_separate(
+                self.env.registry.db_name,
+                action_type="LOGIN_FAILED",
+                event_type="SECURITY",
+                severity="warning",
+                status="failed",
+                source="security",
+                description="Login gagal",
+                is_sensitive=True,
+                metadata={
+                    "login": str(login or "")[:128],
+                    "ip_address": (user_agent_env or {}).get("REMOTE_ADDR"),
+                },
+                ip_address=(user_agent_env or {}).get("REMOTE_ADDR"),
+                user_agent=(user_agent_env or {}).get("HTTP_USER_AGENT"),
+            )
+            raise
+
+        uid = auth_info.get("uid")
+        if uid:
+            self.env["erpobe.audit.log"].with_context(
+                audit_actor_id=uid,
+                audit_source="security",
+                audit_ip=(user_agent_env or {}).get("REMOTE_ADDR"),
+                audit_user_agent=(user_agent_env or {}).get("HTTP_USER_AGENT"),
+            ).log_event(
+                "LOGIN_SUCCESS",
+                event_type="SECURITY",
+                severity="info",
+                status="success",
+                source="security",
+                description="Login berhasil",
+                is_sensitive=True,
+                metadata={"login": str(login or "")[:128]},
+            )
+        return auth_info
+
     @api.model
     def _get_login_domain(self, login):
         return (
@@ -656,6 +698,7 @@ class ResUsers(models.Model):
 # DOSEN
 class ErpobeDosen(models.Model):
     _name = "erpobe.master.dosen"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Dosen"
     _inherits = {"res.partner": "partner_id"}
     _rec_name = "name"
@@ -780,6 +823,7 @@ class ErpobeDosen(models.Model):
 # MAHASISWA
 class ErpobeMahasiswa(models.Model):
     _name = "erpobe.master.mahasiswa"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Mahasiswa"
     _inherits = {"res.partner": "partner_id"}
     _rec_name = "name"

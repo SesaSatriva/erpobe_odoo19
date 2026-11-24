@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="erpobe_audit_log_manager_global" model="ir.rule">
+        <field name="name">erpobe.audit.log: administrator global</field>
+        <field name="model_id" ref="model_erpobe_audit_log"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('erpobe.group_audit_manager')), (4, ref('erpobe.group_superadmin')), (4, ref('base.group_system'))]"/>
+    </record>
     <record id="erpobe_master_prodi_scope" model="ir.rule">
         <field name="name">erpobe.master.prodi: cakupan prodi</field>
         <field name="model_id" ref="model_erpobe_master_prodi"/>

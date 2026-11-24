@@ -1,3 +1,5 @@
+from . import audit_log
+from . import report_audit
 from . import faculty_access
 from . import res_partner
 from . import akademik_fakultas

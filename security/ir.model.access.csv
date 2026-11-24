@@ -1,4 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_audit_log_manager,erpobe.audit.log manager,model_erpobe_audit_log,erpobe.group_audit_manager,1,0,1,0
+access_audit_log_superadmin,erpobe.audit.log superadmin,model_erpobe_audit_log,erpobe.group_superadmin,1,0,1,1
+access_audit_log_settings,erpobe.audit.log settings,model_erpobe_audit_log,base.group_system,1,0,1,1
+access_audit_dashboard_manager,erpobe.audit.dashboard manager,model_erpobe_audit_dashboard,erpobe.group_audit_manager,1,1,1,1
 access_curriculum_settings,erpobe.akademik.kurikulum settings,model_erpobe_akademik_kurikulum,base.group_system,1,1,1,1
 access_curriculum_admin,erpobe.akademik.kurikulum admin,model_erpobe_akademik_kurikulum,erpobe.group_admin,1,1,1,1
 access_curriculum_dosen,erpobe.akademik.kurikulum dosen,model_erpobe_akademik_kurikulum,erpobe.group_dosen,1,0,0,0

@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 class ErpObeMasterGrade(models.Model):
     _name = "erpobe.master.grade"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Master Grade (Global)"
     _rec_name = "name"
 

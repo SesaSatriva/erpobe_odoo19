@@ -1,6 +1,6 @@
 {
     "name": "OBE Management",
-    "version": "19.0.2.5.0",
+    "version": "19.0.2.8.0",
     "category": "Education",
     "author": "Sesa Nugroho Satriva",
     "license": "LGPL-3",
@@ -38,6 +38,7 @@
         "security/groups.xml",
         "security/ir.model.access.csv",
         "security/rules.xml",
+        "views/audit_log_views.xml",
         "views/akademik_fakultas_views.xml",
         "views/master_prodi_views.xml",
         "views/master_user_views.xml",
@@ -97,6 +98,7 @@
         "data/fixture_02_tahun_ajaran_rombels.xml",
         "data/fixture_05_komponen_bobot.xml",
         "data/fixture_12_academic_fixture.xml",
+        "data/audit_cron.xml",
     ],
     "demo": [],
     "installable": True,

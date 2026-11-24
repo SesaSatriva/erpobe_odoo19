@@ -7,3 +7,4 @@ from . import test_weight_validation
 from . import test_rps_versioning
 from . import test_triton_workflows
 from . import test_academic_assistant
+from . import test_audit_log

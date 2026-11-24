@@ -5,7 +5,7 @@ from .weight_validation import _weight_status
 
 class ErpObeBobotCpmkMk(models.Model):
     _name = "erpobe.bobot.cpmk.mk"
-    _inherit = ["erpobe.rps.lock.mixin"]
+    _inherit = ["erpobe.rps.lock.mixin", "erpobe.audit.mixin"]
     _description = "Bobot CPMK terhadap Mata Kuliah"
 
     rps_id = fields.Many2one(

@@ -52,7 +52,12 @@ class TritonPortalMahasiswa(TritonPortalBase):
     @http.route('/my/krs/<int:krs_id>/submit', type='http', auth='user', website=True, methods=['POST'])
     def triton_submit_krs(self, krs_id, **kwargs):
         student = self._require_student()
-        krs = request.env['erpobe.akademik.krs'].sudo().search([('id', '=', krs_id), ('mahasiswa_id', '=', student.id)], limit=1)
+        krs = request.env['erpobe.akademik.krs'].sudo().with_context(
+            audit_source='portal',
+            audit_actor_id=request.env.user.id,
+            audit_ip=request.httprequest.remote_addr,
+            audit_user_agent=request.httprequest.headers.get('User-Agent'),
+        ).search([('id', '=', krs_id), ('mahasiswa_id', '=', student.id)], limit=1)
         if not krs:
             raise AccessError('KRS tidak ditemukan.')
         try:
@@ -64,6 +69,17 @@ class TritonPortalMahasiswa(TritonPortalBase):
     @http.route('/my/khs', type='http', auth='user', website=True)
     def triton_student_khs(self, **kwargs):
         student = self._require_student()
+        request.env['erpobe.audit.log'].with_context(
+            audit_source='portal',
+            audit_actor_id=request.env.user.id,
+            audit_ip=request.httprequest.remote_addr,
+            audit_user_agent=request.httprequest.headers.get('User-Agent'),
+        ).log_event(
+            'SENSITIVE_ACCESS',
+            model_name='erpobe.report.khs',
+            description='Mahasiswa mengakses KHS',
+            is_sensitive=True,
+        )
         reports = request.env['erpobe.report.khs'].sudo().search([('mahasiswa_id', '=', student.id)], order='tahun_ajaran_id desc')
         course_lines, pagination = self._list_page(
             request.env['erpobe.report.khs.mk'].sudo(),
@@ -127,6 +143,18 @@ class TritonPortalMahasiswa(TritonPortalBase):
         ])
         if not authorized:
             raise AccessError('RPS ini tidak relevan dengan mata kuliah yang Anda ambil.')
+        request.env['erpobe.audit.log'].with_context(
+            audit_source='portal',
+            audit_actor_id=request.env.user.id,
+            audit_ip=request.httprequest.remote_addr,
+            audit_user_agent=request.httprequest.headers.get('User-Agent'),
+        ).log_event(
+            'SENSITIVE_ACCESS',
+            model_name='erpobe.akademik.rps',
+            record=rps,
+            description='Mahasiswa mengakses RPS',
+            is_sensitive=True,
+        )
         return request.render('erpobe.triton_rps_detail_page', {'rps': rps})
 
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)

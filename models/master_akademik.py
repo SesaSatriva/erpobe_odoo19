@@ -8,6 +8,7 @@ from .faculty_access import _check_prodi_write_access
 
 class ErpObeMasterMataKuliah(models.Model):
     _name = "erpobe.master.matakuliah"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Master Mata Kuliah"
     _rec_name = "name"
 
@@ -166,6 +167,7 @@ class ErpObeMasterMataKuliah(models.Model):
 
 class ErpObeMasterRombel(models.Model):
     _name = "erpobe.master.rombel"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Rombongan Belajar"
     _order = "angkatan desc, name asc"
 

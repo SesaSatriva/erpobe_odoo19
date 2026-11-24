@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 class ErpObeInputNilai(models.Model):
     _name = "erpobe.input.nilai"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Input Nilai Mata Kuliah"
     _rec_name = "penawaran_line_id"
 
@@ -317,6 +318,7 @@ class ErpObeInputNilai(models.Model):
 
 class ErpObeGradeKomponen(models.Model):
     _name = "erpobe.grade.komponen"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Nilai Komponen Mahasiswa"
 
     # Header Info

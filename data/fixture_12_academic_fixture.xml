@@ -1,2 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
-<odoo><function model="erpobe.fixture.seeder" name="load_2022_cohort" /></odoo>
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <function model="erpobe.fixture.seeder" name="load_2022_cohort_if_enabled"/>
+</odoo>

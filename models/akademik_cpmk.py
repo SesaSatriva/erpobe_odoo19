@@ -3,6 +3,7 @@ from odoo import models, fields, api
 
 class ErpObeAkademikCpmk(models.Model):
     _name = "erpobe.akademik.cpmk"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Capaian Pembelajaran Mata Kuliah"
     _rec_name = "kode_cpmk"
 

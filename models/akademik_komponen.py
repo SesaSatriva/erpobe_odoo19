@@ -17,6 +17,7 @@ ASSESSMENT_TYPE_SELECTION = [
 
 class ErpObeAkademikKomponen(models.Model):
     _name = "erpobe.akademik.komponen"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Komponen Penilaian"
     _rec_name = "name"
 

@@ -25,4 +25,7 @@
     <menuitem id="menu_erpobe_fixture_source" name="Sumber Data Fixture" parent="menu_erpobe_curriculum" action="action_erpobe_fixture_source" sequence="80" groups="erpobe.group_admin,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_tahunajaran" name="Tahun Ajaran" parent="menu_erpobe_academic_ops" action="action_erpobe_tahunajaran" sequence="10" groups="erpobe.group_admin,erpobe.group_superadmin"/>
     <menuitem id="menu_erpobe_penawaran" name="Penawaran Mata Kuliah" parent="menu_erpobe_academic_ops" action="action_erpobe_penawaran" sequence="20" groups="erpobe.group_admin,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_audit" name="Activity Tracking" parent="menu_erpobe_root" sequence="90" groups="erpobe.group_audit_manager,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_audit_dashboard" name="Dashboard" parent="menu_erpobe_audit" action="action_erpobe_audit_dashboard" sequence="10" groups="erpobe.group_audit_manager,erpobe.group_superadmin"/>
+    <menuitem id="menu_erpobe_audit_log" name="Audit Trail" parent="menu_erpobe_audit" action="action_erpobe_audit_log" sequence="20" groups="erpobe.group_audit_manager,erpobe.group_superadmin"/>
 </odoo>

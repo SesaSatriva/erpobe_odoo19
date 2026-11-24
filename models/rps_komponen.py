@@ -7,7 +7,7 @@ from .akademik_komponen import ASSESSMENT_TYPE_SELECTION
 class ErpObeAkademikRpsKomponen(models.Model):
     _name = "erpobe.akademik.rps.komponen"
     _description = "Snapshot Komponen Penilaian RPS"
-    _inherit = ["erpobe.rps.lock.mixin"]
+    _inherit = ["erpobe.rps.lock.mixin", "erpobe.audit.mixin"]
     _order = "sequence, id"
 
     rps_id = fields.Many2one(

@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 class ErpObeAkademikKrs(models.Model):
     _name = "erpobe.akademik.krs"
     _description = "Kartu Rencana Studi"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "erpobe.audit.mixin"]
     _rec_name = "mahasiswa_id"
     _order = "tahun_ajaran desc, id desc"
 
@@ -226,6 +226,7 @@ class ErpObeAkademikKrs(models.Model):
 
 class ErpObeAkademikKrsLine(models.Model):
     _name = "erpobe.akademik.krs.line"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Detail Mata Kuliah KRS"
     _rec_name = "matakuliah_id"
 

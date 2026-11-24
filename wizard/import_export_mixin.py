@@ -585,11 +585,57 @@ class ErpObeImportExportMixin(models.AbstractModel):
     def action_validate(self):
         self.ensure_one()
         self.dry_run = True
-        return self._action_import()
+        try:
+            result = self._action_import()
+            status = "success"
+        except Exception:
+            status = "failed"
+            raise
+        finally:
+            self.env["erpobe.audit.log"].with_context(
+                audit_source="import",
+                audit_actor_id=self.env.user.id,
+            ).log_event(
+                "VALIDATE",
+                model_name=self._import_export_model,
+                record=self,
+                description="Validasi impor %s" % (self.filename or self._safe_model_name()),
+                status=status,
+                metadata={
+                    "filename": self.filename,
+                    "format": self.format,
+                    "dry_run": True,
+                    "summary": (self.result_summary or "")[:4000],
+                },
+            )
+        return result
 
     def action_import(self):
         self.ensure_one()
-        return self._action_import()
+        try:
+            result = self._action_import()
+            status = "success"
+        except Exception:
+            status = "failed"
+            raise
+        finally:
+            self.env["erpobe.audit.log"].with_context(
+                audit_source="import",
+                audit_actor_id=self.env.user.id,
+            ).log_event(
+                "IMPORT",
+                model_name=self._import_export_model,
+                record=self,
+                description="Impor %s" % (self.filename or self._safe_model_name()),
+                status=status,
+                metadata={
+                    "filename": self.filename,
+                    "format": self.format,
+                    "dry_run": self.dry_run,
+                    "summary": (self.result_summary or "")[:4000],
+                },
+            )
+        return result
 
     def action_download_template(self):
         self.ensure_one()
@@ -764,6 +810,19 @@ class ErpObeImportExportMixin(models.AbstractModel):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         self.export_filename = (
             f"export_{self._safe_model_name()}_{timestamp}.{self.format}"
+        )
+        self.env["erpobe.audit.log"].with_context(
+            audit_source="export",
+            audit_actor_id=self.env.user.id,
+        ).log_event(
+            "EXPORT",
+            model_name=self._import_export_model,
+            record=self,
+            description="Ekspor %s record %s" % (len(records), self._safe_model_name()),
+            metadata={
+                "filename": self.export_filename,
+                "record_count": len(records),
+            },
         )
         return self._download_action("export_file", "export_filename")
 

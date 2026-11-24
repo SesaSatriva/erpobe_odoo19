@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 class ErpObeReportKhs(models.Model):
     _name = "erpobe.report.khs"
     _description = "Rekap Hasil Studi (Transkrip)"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "erpobe.audit.mixin"]
     _rec_name = "mahasiswa_id"
     _order = "angkatan desc, mahasiswa_id asc"
 

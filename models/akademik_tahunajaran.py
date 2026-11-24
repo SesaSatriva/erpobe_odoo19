@@ -4,6 +4,7 @@ from odoo import models, fields, api
 class ErpObeTahunAjaran(models.Model):
     # NAMA MODEL SESUAI PERMINTAAN ANDA (Tanpa titik)
     _name = "erpobe.akademik.tahunajaran"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Tahun Ajaran"
     _rec_name = "name"
     _order = "name desc"

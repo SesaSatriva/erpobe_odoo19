@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class ErpObeMasterProdi(models.Model):
     _name = "erpobe.master.prodi"
+    _inherit = ["erpobe.audit.mixin"]
     _description = "Master Program Studi"
     _order = "name"
 

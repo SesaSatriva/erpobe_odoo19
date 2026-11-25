@@ -341,41 +341,67 @@ class TritonPortalMahasiswa(TritonPortalBase):
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)
     def triton_student_cpl(self, **kwargs):
         student = self._require_student()
+        args = request.httprequest.args
+        jenis = args.get('jenis', '')
+        status = args.get('status', '')
+        filter_options = [
+            (
+                'jenis',
+                'Jenis CPL',
+                [('', 'Semua jenis')] + [
+                    (key, label) for key, label in _CPL_TYPES.items()
+                ],
+            ),
+            (
+                'status',
+                'Status',
+                [
+                    ('', 'Semua status'),
+                    ('tercapai', 'Tercapai'),
+                    ('belum', 'Belum tercapai'),
+                    ('dalam_proses', 'Dalam proses'),
+                    ('belum_tersedia', 'Belum tersedia'),
+                ],
+            ),
+        ]
+        domain = [('mahasiswa_id', '=', student.id)]
+        if jenis in _CPL_TYPES:
+            domain.append(('cpl_id.jenis_cpl', '=', jenis))
+        else:
+            jenis = ''
+        valid_statuses = {
+            'tercapai', 'belum', 'dalam_proses', 'belum_tersedia',
+        }
+        if status in valid_statuses:
+            domain.append(('status_capaian', '=', status))
+        else:
+            status = ''
         grades, pagination = self._list_page(
             request.env['erpobe.grade.cpl'].sudo(),
-            [('mahasiswa_id', '=', student.id)],
+            domain,
             '/my/capaian-cpl',
-            {'cpl': ('cpl_kode asc, id asc', 'Kode CPL A–Z'), 'score': ('nilai_cpl desc, cpl_kode asc', 'Nilai tertinggi')},
+            {
+                'cpl': ('cpl_kode asc, id asc', 'Kode CPL A–Z'),
+                'score': ('nilai_cpl desc, cpl_kode asc', 'Nilai tertinggi'),
+                'status': ('status_capaian asc, cpl_kode asc', 'Status'),
+            },
             'cpl_id asc, id asc',
             ('cpl_name', 'cpl_kode'),
+            filter_options,
         )
+        filter_names = {option[0] for option in filter_options}
+        pagination['filters'] = [
+            item for item in pagination['filters']
+            if item['name'] not in filter_names
+        ]
         values = []
         for grade in grades:
-            contributions = []
-            for mapping in grade.cpl_id.cpmk_mapping_ids:
-                cpmk = mapping.cpmk_id
-                cpmk_grade = request.env['erpobe.grade.cpmk'].sudo().search([
-                    ('mahasiswa_id', '=', student.id),
-                    ('cpmk_id', '=', cpmk.id),
-                    ('is_available', '=', True),
-                    ('rps_id.status', '=', 'final'),
-                    ('krs_line_id.krs_id.state', '=', 'approved'),
-                ], order='id desc', limit=1)
-                cpmk_weight = 0.0
-                if cpmk_grade:
-                    weight_line = cpmk_grade.rps_id.bobot_cpmk_mk_ids.filtered(
-                        lambda item: item.cpmk_id == cpmk
-                    )[:1]
-                    cpmk_weight = weight_line.bobot_cpmk_mk if weight_line else 0.0
-                contributions.append({
-                    'cpmk': cpmk.kode_cpmk,
-                    'description': cpmk.name,
-                    'score': cpmk_grade.nilai_cpmk if cpmk_grade else 0.0,
-                    'course': cpmk.mk_id.name,
-                    'course_code': cpmk.mk_id.kode_mk,
-                    'available': bool(cpmk_grade),
-                    'weight': cpmk_weight,
-                })
+            status_labels = {
+                'tercapai': 'Tercapai',
+                'belum': 'Belum tercapai',
+                'dalam_proses': 'Dalam proses',
+                'belum_tersedia': 'Belum tersedia',
+            }
             values.append({
                 'id': grade.cpl_id.id,
                 'name': grade.cpl_id.kode_cpl,
@@ -383,10 +409,18 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 'jenis': _CPL_TYPES.get(grade.cpl_id.jenis_cpl, 'Lainnya'),
                 'score': grade.nilai_cpl,
                 'target': grade.target_nilai,
+                'available': grade.is_available,
+                'status': grade.status_capaian,
+                'status_label': status_labels.get(
+                    grade.status_capaian, 'Belum tersedia'
+                ),
                 'met': grade.status_capaian == 'tercapai',
-                'contributions': contributions,
             })
-        return request.render('erpobe.triton_student_cpl_page', {'grades': values, 'pagination': pagination, 'list_action': '/my/capaian-cpl'})
+        return request.render('erpobe.triton_student_cpl_page', {
+            'grades': values,
+            'pagination': pagination,
+            'list_action': '/my/capaian-cpl',
+        })
 
     @http.route('/my/capaian-cpl/<int:cpl_id>', type='http', auth='user', website=True)
     def triton_student_cpl_detail(self, cpl_id, **kwargs):
@@ -398,30 +432,113 @@ class TritonPortalMahasiswa(TritonPortalBase):
         if not grade:
             raise AccessError('CPL tidak ditemukan atau bukan milik akun Anda.')
 
+        cpl = grade.cpl_id
+        status_labels = {
+            'tercapai': 'Tercapai',
+            'belum': 'Belum tercapai',
+            'dalam_proses': 'Dalam proses',
+            'belum_tersedia': 'Belum tersedia',
+        }
+        mappings = request.env['erpobe.akademik.cpl.mk.cpmk'].sudo().search(
+            [('cpl_id', '=', cpl.id)],
+            order='cpmk_id',
+        )
+        cpmks = mappings.mapped('cpmk_id')
+        mapped_course_ids = set(cpl.mk_mapping_ids.mapped('mk_id').ids)
+        cpmk_ids = cpmks.ids
+        cpmk_grades = request.env['erpobe.grade.cpmk'].sudo().search([
+            ('mahasiswa_id', '=', student.id),
+            ('cpmk_id', 'in', cpmk_ids),
+            ('is_available', '=', True),
+            ('rps_id.status', '=', 'final'),
+            ('krs_line_id.krs_id.state', '=', 'approved'),
+        ]) if cpmk_ids else request.env['erpobe.grade.cpmk']
+        best_grade_by_cpmk = {}
+        for cpmk_grade in cpmk_grades:
+            current = best_grade_by_cpmk.get(cpmk_grade.cpmk_id.id)
+            grade_rank = (
+                cpmk_grade.rps_id.id or 0,
+                cpmk_grade.krs_line_id.id or 0,
+                cpmk_grade.id,
+            )
+            current_rank = (
+                current.rps_id.id or 0,
+                current.krs_line_id.id or 0,
+                current.id,
+            ) if current else None
+            if (
+                not current
+                or cpmk_grade.nilai_cpmk > current.nilai_cpmk
+                or (
+                    cpmk_grade.nilai_cpmk == current.nilai_cpmk
+                    and grade_rank > current_rank
+                )
+            ):
+                best_grade_by_cpmk[cpmk_grade.cpmk_id.id] = cpmk_grade
+
+        selected_rps_ids = list({
+            cpmk_grade.rps_id.id
+            for cpmk_grade in best_grade_by_cpmk.values()
+        })
+        weight_lines = request.env['erpobe.bobot.cpmk.mk'].sudo().search(
+            [
+                ('rps_id', 'in', selected_rps_ids),
+                ('cpmk_id', 'in', cpmk_ids),
+            ],
+            order='id asc',
+        ) if selected_rps_ids else request.env['erpobe.bobot.cpmk.mk']
+        weight_by_rps_cpmk = {}
+        for weight_line in weight_lines:
+            weight_by_rps_cpmk.setdefault(
+                (weight_line.rps_id.id, weight_line.cpmk_id.id),
+                weight_line.bobot_cpmk_mk,
+            )
+
         contributions = []
         valid_cpmk_count = 0
         incomplete_cpmk_count = 0
-        course_ids = set()
-        for mapping in grade.cpl_id.cpmk_mapping_ids:
-            cpmk = mapping.cpmk_id
-            cpmk_grade = request.env['erpobe.grade.cpmk'].sudo().search([
-                ('mahasiswa_id', '=', student.id),
-                ('cpmk_id', '=', cpmk.id),
-                ('is_available', '=', True),
-                ('rps_id.status', '=', 'final'),
-                ('krs_line_id.krs_id.state', '=', 'approved'),
-            ], order='id desc', limit=1)
+        used_cpmk_count = 0
+        calculation_total_weight = 0.0
+        calculation_weighted_total = 0.0
+        course_rows = {}
+        for course in cpl.mk_mapping_ids.mapped('mk_id'):
+            course_rows[course.id] = {
+                'id': course.id,
+                'code': course.kode_mk,
+                'name': course.name,
+                'cpmks': [],
+            }
+        for cpmk in cpmks:
+            cpmk_grade = best_grade_by_cpmk.get(cpmk.id)
             if cpmk_grade:
                 valid_cpmk_count += 1
             else:
                 incomplete_cpmk_count += 1
-            course_ids.add(cpmk.mk_id.id)
             weight = 0.0
             if cpmk_grade:
-                weight_row = cpmk_grade.rps_id.bobot_cpmk_mk_ids.filtered(
-                    lambda item: item.cpmk_id == cpmk
-                )[:1]
-                weight = weight_row.bobot_cpmk_mk if weight_row else 0.0
+                weight = weight_by_rps_cpmk.get(
+                    (cpmk_grade.rps_id.id, cpmk.id), 0.0
+                )
+            included_in_mapping = (
+                cpmk.prodi_id == cpl.prodi_id
+                and (
+                    not mapped_course_ids
+                    or cpmk.mk_id.id in mapped_course_ids
+                )
+            )
+            used = bool(cpmk_grade and weight > 0 and included_in_mapping)
+            if used:
+                used_cpmk_count += 1
+                calculation_total_weight += weight
+                calculation_weighted_total += cpmk_grade.nilai_cpmk * weight
+            if not included_in_mapping:
+                calculation_status = 'Di luar pemetaan mata kuliah CPL'
+            elif not cpmk_grade:
+                calculation_status = 'Nilai belum tersedia'
+            elif weight <= 0:
+                calculation_status = 'Bobot tidak berkontribusi'
+            else:
+                calculation_status = 'Digunakan dalam perhitungan'
             contributions.append({
                 'id': cpmk.id,
                 'code': cpmk.kode_cpmk,
@@ -430,16 +547,53 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 'score': cpmk_grade.nilai_cpmk if cpmk_grade else 0.0,
                 'available': bool(cpmk_grade),
                 'weight': weight,
+                'used': used,
+                'status': calculation_status,
+                'weighted_score': (
+                    cpmk_grade.nilai_cpmk * weight if used else False
+                ),
                 'course_code': cpmk.mk_id.kode_mk,
                 'course': cpmk.mk_id.name,
             })
+            course_row = course_rows.setdefault(cpmk.mk_id.id, {
+                'id': cpmk.mk_id.id,
+                'code': cpmk.mk_id.kode_mk,
+                'name': cpmk.mk_id.name,
+                'cpmks': [],
+            })
+            course_row['cpmks'].append({
+                'code': cpmk.kode_cpmk,
+                'score': cpmk_grade.nilai_cpmk if cpmk_grade else False,
+                'available': bool(cpmk_grade),
+            })
+        course_rows = sorted(
+            course_rows.values(), key=lambda row: (row['code'] or '', row['id'])
+        )
         return request.render('erpobe.triton_student_cpl_detail_page', {
             'grade': grade,
-            'jenis_label': _CPL_TYPES.get(grade.cpl_id.jenis_cpl, 'Lainnya'),
+            'jenis_label': _CPL_TYPES.get(cpl.jenis_cpl, 'Lainnya'),
+            'status_label': status_labels.get(
+                grade.status_capaian, 'Belum tersedia'
+            ),
             'contributions': contributions,
-            'course_count': len(course_ids),
+            'courses': course_rows,
+            'course_count': len(course_rows),
             'valid_cpmk_count': valid_cpmk_count,
             'incomplete_cpmk_count': incomplete_cpmk_count,
+            'used_cpmk_count': used_cpmk_count,
+            'cpmk_count': len(contributions),
+            'calculation_total_weight': calculation_total_weight,
+            'calculation_weighted_total': calculation_weighted_total,
+            'calculated_score': (
+                max(
+                    0.0,
+                    min(
+                        100.0,
+                        calculation_weighted_total / calculation_total_weight,
+                    ),
+                )
+                if calculation_total_weight else 0.0
+            ),
         })
 
     @http.route('/my/profil', type='http', auth='user', website=True, methods=['GET', 'POST'])

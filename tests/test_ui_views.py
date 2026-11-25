@@ -63,6 +63,51 @@ class TestErpObeUiViews(TransactionCase):
             table_count = len(root.xpath("//table"))
             self.assertGreater(table_count, 0, relative_path)
 
+    def test_student_cpl_uses_compact_list_and_notebook_detail(self):
+        template_path = (
+            Path(__file__).resolve().parents[1]
+            / "views"
+            / "website"
+            / "portal"
+            / "student"
+            / "portal_cpl.xml"
+        )
+        arch = etree.parse(str(template_path))
+        list_template = arch.xpath(
+            "//template[@id='triton_student_cpl_page']"
+        )[0]
+        list_headers = [
+            " ".join(header.itertext()).strip()
+            for header in list_template.xpath(".//table/thead/tr/th")
+        ]
+        self.assertEqual(
+            list_headers,
+            ["CPL", "Jenis", "Capaian / Target", "Status", "Aksi"],
+        )
+        self.assertFalse(
+            list_template.xpath(
+                ".//th[contains(., 'CPMK kontributor') "
+                "or contains(., 'Mata kuliah dan keterlacakan')]"
+            )
+        )
+
+        detail_template = arch.xpath(
+            "//template[@id='triton_student_cpl_detail_page']"
+        )[0]
+        self.assertEqual(
+            detail_template.xpath("//ul[@role='tablist']/li/button/@data-bs-target"),
+            [
+                "#cpl-summary",
+                "#cpl-cpmk",
+                "#cpl-courses",
+                "#cpl-calculation",
+            ],
+        )
+        self.assertEqual(
+            detail_template.xpath("//div[contains(@class, 'tab-content')]/section/@id"),
+            ["cpl-summary", "cpl-cpmk", "cpl-courses", "cpl-calculation"],
+        )
+
     def test_portal_profile_exposes_native_security_route(self):
         profile_path = (
             Path(__file__).resolve().parents[1]

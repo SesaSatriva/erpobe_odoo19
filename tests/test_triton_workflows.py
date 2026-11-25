@@ -1,6 +1,7 @@
 import re
 import uuid
 
+from lxml import html
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, TransactionCase, tagged
@@ -482,6 +483,141 @@ class TestTritonKrsWorkflows(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestTritonPublicRoutes(HttpCase):
+    def test_student_cpl_detail_renders_notebook_and_enforces_ownership(self):
+        suffix = uuid.uuid4().hex[:8].upper()
+        faculty = self.env["erpobe.master.fakultas"].sudo().create(
+            {"name": f"CPL Portal Faculty {suffix}", "kode": f"CPF{suffix}"}
+        )
+        prodi = self.env["erpobe.master.prodi"].sudo().create(
+            {
+                "name": f"CPL Portal Program {suffix}",
+                "kode": f"CPP{suffix}",
+                "fakultas_id": faculty.id,
+            }
+        )
+        rombel = self.env["erpobe.master.rombel"].sudo().create(
+            {"name": f"Portal {suffix}", "angkatan": 2025, "prodi_id": prodi.id}
+        )
+        nim = f"CPL{suffix}"
+        partner = self.env["res.partner"].sudo().create(
+            {
+                "name": f"Mahasiswa CPL {suffix}",
+                "email": f"{nim.lower()}@example.test",
+            }
+        )
+        student = self.env["erpobe.master.mahasiswa"].sudo().create(
+            {
+                "partner_id": partner.id,
+                "nim": nim,
+                "rombel_id": rombel.id,
+            }
+        )
+        course = self.env["erpobe.master.matakuliah"].sudo().create(
+            {
+                "name": f"Mata Kuliah CPL {suffix}",
+                "kode_mk": f"MKCPL{suffix}",
+                "sks": 3,
+                "semester": 1,
+                "prodi_id": prodi.id,
+            }
+        )
+        cpl = self.env["erpobe.akademik.cpl"].sudo().create(
+            {
+                "name": f"Capaian uji portal {suffix}",
+                "kode_cpl": f"TEST-CPL-{suffix}",
+                "prodi_id": prodi.id,
+            }
+        )
+        cpmks = self.env["erpobe.akademik.cpmk"].sudo().create(
+            [
+                {
+                    "mk_id": course.id,
+                    "kode_cpmk": f"CPL{suffix}-01",
+                    "name": f"CPMK pertama {suffix}",
+                },
+                {
+                    "mk_id": course.id,
+                    "kode_cpmk": f"CPL{suffix}-02",
+                    "name": f"CPMK kedua {suffix}",
+                },
+            ]
+        )
+        self.env["erpobe.akademik.cpl.mk.cpmk"].sudo().create(
+            [
+                {"cpl_id": cpl.id, "cpmk_id": cpmk.id}
+                for cpmk in cpmks
+            ]
+        )
+        self.env["erpobe.akademik.mk.cpl"].sudo().create(
+            {"mk_id": course.id, "cpl_id": cpl.id}
+        )
+        self.env["erpobe.grade.cpl"].sudo().create(
+            {"mahasiswa_id": student.id, "cpl_id": cpl.id}
+        )
+
+        self.authenticate(student.user_id.login, student.nim)
+        list_response = self.url_open("/my/capaian-cpl")
+        self.assertEqual(list_response.status_code, 200)
+        self.assertIn(cpl.kode_cpl, list_response.text)
+        self.assertNotIn("CPMK Kontributor", list_response.text)
+        filtered_response = self.url_open(
+            "/my/capaian-cpl?jenis=lainnya&status=belum_tersedia"
+        )
+        self.assertEqual(filtered_response.status_code, 200)
+        self.assertIn(cpl.kode_cpl, filtered_response.text)
+        filtered_html = html.fromstring(filtered_response.text)
+        for filter_name in ("jenis", "status"):
+            self.assertEqual(
+                len(
+                    filtered_html.xpath(
+                        f"//form[contains(@class, 'o_triton_list-toolbar')]"
+                        f"//select[@name='{filter_name}']"
+                    )
+                ),
+                1,
+            )
+            self.assertFalse(
+                filtered_html.xpath(
+                    f"//form[contains(@class, 'o_triton_list-toolbar')]"
+                    f"//input[@type='hidden' and @name='{filter_name}']"
+                )
+            )
+        excluded_response = self.url_open("/my/capaian-cpl?jenis=sikap")
+        self.assertEqual(excluded_response.status_code, 200)
+        self.assertNotIn(cpl.kode_cpl, excluded_response.text)
+
+        detail_response = self.url_open(f"/my/capaian-cpl/{cpl.id}")
+        self.assertEqual(detail_response.status_code, 200)
+        for label in (
+            "Ringkasan",
+            "CPMK Kontributor",
+            "Mata Kuliah Kontributor",
+            "Detail Perhitungan",
+        ):
+            self.assertIn(label, detail_response.text)
+        detail_html = html.fromstring(detail_response.text)
+        self.assertEqual(
+            len(detail_html.xpath("//section[@id='cpl-cpmk']//tbody/tr")),
+            2,
+        )
+        self.assertEqual(
+            len(detail_html.xpath("//section[@id='cpl-courses']//tbody/tr")),
+            1,
+        )
+
+        unowned_cpl = self.env["erpobe.akademik.cpl"].sudo().create(
+            {
+                "name": f"Capaian privat uji {suffix}",
+                "kode_cpl": f"PRIVATE-CPL-{suffix}",
+                "prodi_id": student.prodi_id.id,
+            }
+        )
+        unowned_response = self.url_open(
+            f"/my/capaian-cpl/{unowned_cpl.id}",
+            allow_redirects=False,
+        )
+        self.assertEqual(unowned_response.status_code, 403)
+
     def test_program_detail_data_tabs_render_with_website_layout(self):
         prodi = self.env["erpobe.master.prodi"].search(
             [("active", "=", True)],

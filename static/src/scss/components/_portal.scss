@@ -664,7 +664,385 @@
   background: #fff;
 }
 
+.o_triton_cpl-page {
+  color: var(--triton-text);
+}
+
+.o_triton_cpl-list-wrap {
+  border: 1px solid var(--triton-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.o_triton_cpl-list {
+  min-width: 760px;
+  margin: 0;
+}
+
+.o_triton_portal-page .o_triton_cpl-list th,
+.o_triton_portal-page .o_triton_cpl-list td {
+  padding: 13px 14px;
+  vertical-align: middle;
+}
+
+.o_triton_cpl-identity {
+  min-width: 250px;
+}
+
+.o_triton_cpl-identity > a {
+  display: inline-block;
+  color: var(--triton-primary);
+  text-decoration: none;
+}
+
+.o_triton_cpl-description {
+  display: -webkit-box;
+  max-width: 420px;
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--triton-muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.o_triton_cpl-type {
+  background: rgba(18, 63, 89, 0.08);
+  color: var(--triton-primary);
+}
+
+.o_triton_cpl-score {
+  min-width: 145px;
+}
+
+.o_triton_cpl-score strong,
+.o_triton_cpl-score span {
+  display: block;
+}
+
+.o_triton_cpl-score strong {
+  color: var(--triton-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.o_triton_cpl-score span {
+  margin-top: 3px;
+  color: var(--triton-muted);
+  font-size: 0.8rem;
+}
+
+.o_triton_cpl-status--belum {
+  background: #fff4d6;
+  color: #795b00;
+}
+
+.o_triton_cpl-status--dalam_proses {
+  background: #e8f1f6;
+  color: #123f59;
+}
+
+.o_triton_cpl-status--belum_tersedia {
+  background: #edf0f2;
+  color: #52616b;
+}
+
+.o_triton_cpl-detail-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.o_triton_cpl-record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin: 18px 0 24px;
+}
+
+.o_triton_cpl-record-title {
+  min-width: 0;
+}
+
+.o_triton_cpl-record-title h1 {
+  margin: 6px 0 10px;
+  color: var(--triton-primary-dark);
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+}
+
+.o_triton_cpl-record-title > p {
+  max-width: 860px;
+  margin: 0;
+  color: var(--triton-text);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.o_triton_cpl-record-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.o_triton_cpl-smart-summary {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(140px, 1fr));
+  margin-bottom: 22px;
+  border: 1px solid var(--triton-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.o_triton_cpl-smart-card {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-height: 110px;
+  padding: 18px 20px;
+}
+
+.o_triton_cpl-smart-card + .o_triton_cpl-smart-card {
+  border-left: 1px solid var(--triton-border);
+}
+
+.o_triton_cpl-smart-card > span {
+  color: var(--triton-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.o_triton_cpl-smart-card > strong {
+  color: var(--triton-primary);
+  font-size: 1.55rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.o_triton_cpl-progress {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e8edf0;
+}
+
+.o_triton_cpl-progress .progress-bar {
+  border-radius: inherit;
+  background: var(--triton-primary);
+}
+
+.o_triton_cpl-notebook {
+  padding: 0;
+  overflow: hidden;
+}
+
+.o_triton_cpl-tabs {
+  flex-wrap: nowrap;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 12px 18px 0;
+  border-bottom-color: var(--triton-border);
+  scrollbar-width: thin;
+}
+
+.o_triton_cpl-tabs .nav-link {
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 5px 5px 0 0;
+  color: var(--triton-muted);
+  font-size: 0.88rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.o_triton_cpl-tabs .nav-link:hover {
+  color: var(--triton-primary);
+  background: rgba(18, 63, 89, 0.04);
+}
+
+.o_triton_cpl-tabs .nav-link.active {
+  border-bottom-color: var(--triton-primary);
+  background: #fff;
+  color: var(--triton-primary);
+}
+
+.o_triton_cpl-tab-content {
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.o_triton_cpl-tab-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.o_triton_cpl-tab-heading h2 {
+  margin: 4px 0 0;
+  color: var(--triton-primary-dark);
+  font-size: 1.24rem;
+}
+
+.o_triton_cpl-tab-heading h3 {
+  margin: 0;
+  color: var(--triton-text);
+  font-size: 0.98rem;
+}
+
+.o_triton_cpl-count {
+  flex: 0 0 auto;
+  color: var(--triton-muted);
+  font-size: 0.84rem;
+}
+
+.o_triton_cpl-fields,
+.o_triton_cpl-calculation-result {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--triton-border);
+}
+
+.o_triton_cpl-fields > div,
+.o_triton_cpl-calculation-result > div {
+  min-width: 0;
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--triton-border);
+}
+
+.o_triton_cpl-fields dt,
+.o_triton_cpl-calculation-result dt {
+  margin-bottom: 4px;
+  color: var(--triton-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.o_triton_cpl-fields dd,
+.o_triton_cpl-calculation-result dd {
+  margin: 0;
+  color: var(--triton-text);
+  overflow-wrap: anywhere;
+}
+
+.o_triton_cpl-fields .o_triton_cpl-field-description {
+  grid-column: 1 / -1;
+}
+
+.o_triton_cpl-summary-progress {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid var(--triton-border);
+  border-radius: 6px;
+  background: #fbfcfd;
+}
+
+.o_triton_cpl-summary-progress .o_triton_cpl-tab-heading {
+  margin-bottom: 12px;
+}
+
+.o_triton_cpl-summary-progress .o_triton_cpl-tab-heading strong {
+  color: var(--triton-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.o_triton_cpl-unavailable,
+.o_triton_cpl-empty-tab {
+  margin: 0;
+  color: var(--triton-muted);
+}
+
+.o_triton_cpl-detail-table {
+  min-width: 700px;
+  margin: 0;
+}
+
+.o_triton_portal-page .o_triton_cpl-detail-table th,
+.o_triton_portal-page .o_triton_cpl-detail-table td {
+  padding: 11px 10px;
+}
+
+.o_triton_cpl-related-cpmk,
+.o_triton_cpl-course-score {
+  display: block;
+  min-width: 120px;
+  margin: 2px 0;
+}
+
+.o_triton_cpl-course-score {
+  color: var(--triton-muted);
+  font-size: 0.84rem;
+}
+
+.o_triton_cpl-course-score strong {
+  color: var(--triton-text);
+}
+
+.o_triton_cpl-muted,
+.o_triton_cpl-cell-note {
+  display: block;
+  color: var(--triton-muted);
+  font-size: 0.82rem;
+}
+
+.o_triton_cpl-formula {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--triton-accent);
+  background: #fbfcfd;
+  color: var(--triton-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.o_triton_cpl-calculation-table {
+  min-width: 900px;
+}
+
+.o_triton_cpl-calculation-table tfoot th,
+.o_triton_cpl-calculation-table tfoot td {
+  background: #f7f9fa;
+  color: var(--triton-primary-dark);
+  font-weight: 700;
+}
+
+.o_triton_cpl-calculation-result {
+  margin-top: 20px;
+  border-bottom: 1px solid var(--triton-border);
+}
+
+.o_triton_cpl-calculation-result dd {
+  color: var(--triton-primary);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.o_triton_cpl-privacy {
+  margin-top: 16px;
+}
+
 @media (max-width: 980px) {
+  .o_triton_cpl-smart-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .o_triton_cpl-smart-card:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .o_triton_cpl-smart-card:nth-child(n + 3) {
+    border-top: 1px solid var(--triton-border);
+  }
+
   .o_triton_dashboard-metrics--teacher {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -689,6 +1067,55 @@
 }
 
 @media (max-width: 640px) {
+  .o_triton_cpl-record-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .o_triton_cpl-record-header > a {
+    align-self: flex-start;
+  }
+
+  .o_triton_cpl-smart-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .o_triton_cpl-smart-card {
+    min-height: 92px;
+    padding: 14px;
+  }
+
+  .o_triton_cpl-smart-card > strong {
+    font-size: 1.3rem;
+  }
+
+  .o_triton_cpl-fields,
+  .o_triton_cpl-calculation-result {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .o_triton_cpl-fields .o_triton_cpl-field-description {
+    grid-column: auto;
+  }
+
+  .o_triton_cpl-tab-content {
+    padding: 16px;
+  }
+
+  .o_triton_cpl-tabs {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .o_triton_cpl-tab-heading {
+    align-items: flex-start;
+  }
+
+  .o_triton_cpl-summary-progress {
+    padding: 14px;
+  }
+
   .o_triton_dashboard-header {
     align-items: flex-start;
     flex-direction: column;

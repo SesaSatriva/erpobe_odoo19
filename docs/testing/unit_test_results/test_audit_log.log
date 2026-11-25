@@ -1,0 +1,163 @@
+TEST_FILE=test_audit_log.py
+COMMAND=/home/sesa/odoo-dev/custom-odoo19/.venv/bin/python /home/sesa/odoo-dev/odoo19/odoo-bin -c /home/sesa/odoo-dev/odoo19/debian/odoo.conf --db_user=sesa -d erpobe_unittest -u erpobe --test-enable --test-file=/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/tests/test_audit_log.py --stop-after-init --http-port=8071 --log-level=test --addons-path=/home/sesa/odoo-dev/odoo19/odoo/addons,/home/sesa/odoo-dev/odoo19/addons,/home/sesa/odoo-dev/custom-odoo19/custom_module
+START=2026-11-26 01:10:08 +0700
+2026-11-25 18:10:08,785 47229 WARNING ? odoo.tools.config: option db_host reads 'False' in the config file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf but isn't a boolean option, skip 
+2026-11-25 18:10:08,785 47229 WARNING ? odoo.tools.config: option db_port reads 'False' in the config file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf but isn't a boolean option, skip 
+2026-11-25 18:10:08,785 47229 WARNING ? odoo.tools.config: option db_password reads 'False' in the config file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf but isn't a boolean option, skip 
+2026-11-25 18:10:08,785 47229 INFO ? odoo.tools.config: Transforming --test-file into --test-tags 
+2026-11-25 18:10:08,786 47229 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-11-25 18:10:08,786 47229 INFO ? odoo: Odoo version 19.0 
+2026-11-25 18:10:08,786 47229 INFO ? odoo: Using configuration file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf 
+2026-11-25 18:10:08,786 47229 INFO ? odoo: addons paths: _NamespacePath(['/home/sesa/odoo-dev/odoo19/odoo/addons', '/home/sesa/.local/share/Odoo/addons/19.0', '/home/sesa/odoo-dev/odoo19/addons', '/home/sesa/odoo-dev/custom-odoo19/custom_module']) 
+2026-11-25 18:10:08,786 47229 INFO ? odoo: database: sesa@default:default 
+2026-11-25 18:10:09,078 47229 INFO ? odoo.service.server: HTTP service (werkzeug) running on LAPTOP-KA1LGS6P.localdomain:8071 
+2026-11-25 18:10:09,094 47229 INFO erpobe_unittest odoo.tests.common: Importing test framework 
+2026-11-25 18:10:09,114 47229 INFO erpobe_unittest odoo.modules.loading: loading 1 modules... 
+2026-11-25 18:10:09,118 47229 INFO erpobe_unittest odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-11-25 18:10:09,145 47229 INFO erpobe_unittest odoo.modules.loading: updating modules list 
+2026-11-25 18:10:09,147 47229 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-11-25 18:10:09,959 47229 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['OBE Management'] to user __system__ #1 via n/a 
+2026-11-25 18:10:09,959 47229 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['OBE Management'] to user __system__ #1 via n/a 
+2026-11-25 18:10:10,652 47229 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-11-25 18:10:10,680 47229 INFO erpobe_unittest odoo.modules.loading: loading 67 modules... 
+2026-11-25 18:10:11,100 47229 INFO erpobe_unittest odoo.modules.loading: Loading module erpobe (52/67) 
+2026-11-25 18:10:11,222 47229 WARNING erpobe_unittest py.warnings: /home/sesa/odoo-dev/odoo19/odoo/osv/__init__.py:4: DeprecationWarning: Since 19.0, odoo.osv is deprecated use odoo.fields.Domain
+  File "/home/sesa/odoo-dev/odoo19/odoo-bin", line 6, in <module>
+    odoo.cli.main()
+  File "/home/sesa/odoo-dev/odoo19/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/server.py", line 1677, in start
+    rc = server.run(preload, stop)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/server.py", line 714, in run
+    rc = preload_registries(preload)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/server.py", line 1591, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/home/sesa/odoo-dev/odoo19/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/home/sesa/odoo-dev/odoo19/odoo/orm/registry.py", line 189, in new
+    load_modules(
+  File "/home/sesa/odoo-dev/odoo19/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/home/sesa/odoo-dev/odoo19/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/home/sesa/odoo-dev/odoo19/odoo/modules/module.py", line 506, in load_openerp_module
+    __import__(qualname)
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/__init__.py", line 1, in <module>
+    from . import controllers
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/__init__.py", line 2, in <module>
+    from . import helpers
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/helpers.py", line 15, in <module>
+    from .list_helpers import PAGE_SIZES, TritonListHelpers
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/list_helpers.py", line 6, in <module>
+    from odoo.osv import expression
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/__init__.py", line 4, in <module>
+    warnings.warn("Since 19.0, odoo.osv is deprecated use odoo.fields.Domain", DeprecationWarning)
+ 
+2026-11-25 18:10:11,395 47229 INFO erpobe_unittest odoo.registry: module erpobe: creating or updating database tables 
+2026-11-25 18:10:11,696 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/security/groups.xml 
+2026-11-25 18:10:11,750 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/security/ir.model.access.csv 
+2026-11-25 18:10:11,891 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/security/rules.xml 
+2026-11-25 18:10:12,439 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/audit_log_views.xml 
+2026-11-25 18:10:12,487 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_fakultas_views.xml 
+2026-11-25 18:10:12,521 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_prodi_views.xml 
+2026-11-25 18:10:12,557 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_user_views.xml 
+2026-11-25 18:10:12,628 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/triton_settings_views.xml 
+2026-11-25 18:10:12,671 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_akademik_views.xml 
+2026-11-25 18:10:12,714 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_angkatan_view_views.xml 
+2026-11-25 18:10:12,729 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_grade_views.xml 
+2026-11-25 18:10:12,755 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/website_navigation.xml 
+2026-11-25 18:10:12,772 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/portal_navigation.xml 
+2026-11-25 18:10:12,785 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/login_branding.xml 
+2026-11-25 18:10:12,813 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/list_management.xml 
+2026-11-25 18:10:12,823 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_about.xml 
+2026-11-25 18:10:12,833 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_comparison.xml 
+2026-11-25 18:10:12,847 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_contact.xml 
+2026-11-25 18:10:12,857 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_faculty_detail.xml 
+2026-11-25 18:10:12,866 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_faculty_list.xml 
+2026-11-25 18:10:12,872 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_faq.xml 
+2026-11-25 18:10:12,881 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_guide.xml 
+2026-11-25 18:10:12,889 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_home.xml 
+2026-11-25 18:10:12,899 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_methodology.xml 
+2026-11-25 18:10:12,908 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_person_profile.xml 
+2026-11-25 18:10:12,917 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_privacy.xml 
+2026-11-25 18:10:12,925 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_program_detail.xml 
+2026-11-25 18:10:12,937 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_search.xml 
+2026-11-25 18:10:12,946 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_tracking.xml 
+2026-11-25 18:10:12,956 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/portal_dashboard.xml 
+2026-11-25 18:10:12,970 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/portal_profile.xml 
+2026-11-25 18:10:12,979 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_courses.xml 
+2026-11-25 18:10:13,012 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_cpl.xml 
+2026-11-25 18:10:13,028 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_khs.xml 
+2026-11-25 18:10:13,036 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_krs.xml 
+2026-11-25 18:10:13,046 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_advising.xml 
+2026-11-25 18:10:13,053 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_analysis.xml 
+2026-11-25 18:10:13,089 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_classes.xml 
+2026-11-25 18:10:13,096 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_grades.xml 
+2026-11-25 18:10:13,110 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_rps.xml 
+2026-11-25 18:10:13,126 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_rps_edit.xml 
+2026-11-25 18:10:13,136 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/triton_reports.xml 
+2026-11-25 18:10:13,154 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_cpl_views.xml 
+2026-11-25 18:10:13,182 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_cpmk_views.xml 
+2026-11-25 18:10:13,205 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/academic_fixture_views.xml 
+2026-11-25 18:10:13,252 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_komponen_views.xml 
+2026-11-25 18:10:13,277 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_rps_views.xml 
+2026-11-25 18:10:13,357 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_tahunajaran_views.xml 
+2026-11-25 18:10:13,381 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_penawaran_views.xml 
+2026-11-25 18:10:13,408 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/weight_monitor_views.xml 
+2026-11-25 18:10:13,440 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_krs_views.xml 
+2026-11-25 18:10:13,468 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_views.xml 
+2026-11-25 18:10:13,494 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_mk_views.xml 
+2026-11-25 18:10:13,515 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_cpmk_views.xml 
+2026-11-25 18:10:13,538 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_cpl_views.xml 
+2026-11-25 18:10:13,558 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/report_khs_views.xml 
+2026-11-25 18:10:13,613 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/report_summary_views.xml 
+2026-11-25 18:10:13,734 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/menus.xml 
+2026-11-25 18:10:13,822 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/import_export_views.xml 
+2026-11-25 18:10:13,984 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_01_fakultas_prodi.xml 
+2026-11-25 18:10:13,988 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_02_tahun_ajaran_rombels.xml 
+2026-11-25 18:10:14,006 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_05_komponen_bobot.xml 
+2026-11-25 18:10:14,012 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_12_academic_fixture.xml 
+2026-11-25 18:10:14,013 47229 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/audit_cron.xml 
+2026-11-25 18:10:14,214 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_archive_restore_and_recent_dashboard ... 
+2026-11-25 18:10:14,240 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_authentication_success_and_failed ... 
+2026-11-25 18:10:14,332 47229 WARNING erpobe_unittest odoo.addons.base.models.res_users: _check_credentials without 'interactive' env key, assuming interactive login.                     Check calls and overrides to ensure the 'interactive' key is properly set in                     all _check_credentials environments 
+2026-11-25 18:10:14,334 47229 INFO erpobe_unittest odoo.addons.base.models.res_users: Login successful for login:audit.login@example.test from n/a 
+2026-11-25 18:10:14,347 47229 WARNING erpobe_unittest odoo.addons.base.models.res_users: _check_credentials without 'interactive' env key, assuming interactive login.                     Check calls and overrides to ensure the 'interactive' key is properly set in                     all _check_credentials environments 
+2026-11-25 18:10:14,348 47229 INFO erpobe_unittest odoo.addons.base.models.res_users: Login failed for login:audit.login@example.test from n/a 
+2026-11-25 18:10:14,357 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_create_update_delete_and_sudo_actor ... 
+2026-11-25 18:10:14,387 47229 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.master.fakultas records with IDs: [3] 
+2026-11-25 18:10:14,392 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_masking_and_immutability ... 
+2026-11-25 18:10:14,406 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_report_and_retention_monitoring ... 
+2026-11-25 18:10:14,515 47229 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.audit.log records with IDs: [69] 
+2026-11-25 18:10:14,518 47229 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.audit.log records with IDs: [70] 
+2026-11-25 18:10:14,520 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_role_security_for_audit_log ... 
+2026-11-25 18:10:14,808 47229 INFO erpobe_unittest odoo.addons.base.models.ir_model: Access Denied by ACLs for operation: read, uid: 7, model: erpobe.audit.log 
+2026-11-25 18:10:14,815 47229 INFO erpobe_unittest odoo.addons.base.models.ir_model: Access Denied by ACLs for operation: read, uid: 8, model: erpobe.audit.log 
+2026-11-25 18:10:14,819 47229 INFO erpobe_unittest odoo.addons.base.models.ir_model: Access Denied by ACLs for operation: read, uid: 9, model: erpobe.audit.log 
+2026-11-25 18:10:14,822 47229 INFO erpobe_unittest odoo.addons.base.models.ir_model: Access Denied by ACLs for operation: read, uid: 10, model: erpobe.audit.log 
+2026-11-25 18:10:14,827 47229 INFO erpobe_unittest odoo.addons.base.models.ir_model: Access Denied by ACLs for operation: read, uid: 3, model: erpobe.audit.log 
+2026-11-25 18:10:14,831 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_rollback_does_not_persist_log ... 
+2026-11-25 18:10:14,846 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_sudo_preserves_actor_context ... 
+2026-11-25 18:10:14,864 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_unchanged_update_not_logged ... 
+2026-11-25 18:10:14,878 47229 INFO erpobe_unittest odoo.addons.erpobe.tests.test_audit_log: Starting TestErpObeAuditLog.test_update_and_delete_roll_back_with_savepoint ... 
+2026-11-25 18:10:14,901 47229 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.master.fakultas records with IDs: [7] 
+2026-11-25 18:10:15,018 47229 INFO erpobe_unittest odoo.addons.base.models.ir_attachment: filestore gc 40 checked, 4 removed 
+2026-11-25 18:10:15,020 47229 INFO erpobe_unittest odoo.modules.loading: Module erpobe loaded in 3.92s (incl. 0.94s test), 4431 queries (+1100 test, +4431 other) 
+2026-11-25 18:10:15,044 47229 INFO erpobe_unittest odoo.modules.loading: 67 modules loaded in 4.36s, 4431 queries (+5531 extra) 
+2026-11-25 18:10:15,357 47229 INFO erpobe_unittest odoo.registry: verifying fields for every extended model 
+2026-11-25 18:10:15,731 47229 INFO erpobe_unittest odoo.modules.loading: Modules loaded. 
+2026-11-25 18:10:15,745 47229 INFO erpobe_unittest odoo.registry: Registry changed, signaling through the database 
+2026-11-25 18:10:15,747 47229 INFO erpobe_unittest odoo.registry: Registry loaded in 6.668s 
+2026-11-25 18:10:15,747 47229 INFO erpobe_unittest odoo.service.server: Starting post tests 
+2026-11-25 18:10:15,748 47229 INFO erpobe_unittest odoo.service.server: 0 post-tests in 0.00s, 0 queries 
+2026-11-25 18:10:15,749 47229 INFO erpobe_unittest odoo.tests.stats: erpobe: 12 tests 0.94s 1100 queries 
+2026-11-25 18:10:15,749 47229 INFO erpobe_unittest odoo.tests.result: 0 failed, 0 error(s) of 10 tests when loading database 'erpobe_unittest' 
+2026-11-25 18:10:15,749 47229 INFO erpobe_unittest odoo.service.server: Initiating shutdown 
+2026-11-25 18:10:15,749 47229 INFO erpobe_unittest odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-11-25 18:10:16,096 47229 INFO erpobe_unittest odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 3 connections  
+END=2026-11-26 01:10:16 +0700
+EXIT_CODE=0

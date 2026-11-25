@@ -1,0 +1,495 @@
+TEST_FILE=test_triton_workflows.py
+COMMAND=/home/sesa/odoo-dev/custom-odoo19/.venv/bin/python /home/sesa/odoo-dev/odoo19/odoo-bin -c /home/sesa/odoo-dev/odoo19/debian/odoo.conf --db_user=sesa -d erpobe_unittest -u erpobe --test-enable --test-file=/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/tests/test_triton_workflows.py --stop-after-init --http-port=8071 --log-level=test --addons-path=/home/sesa/odoo-dev/odoo19/odoo/addons,/home/sesa/odoo-dev/odoo19/addons,/home/sesa/odoo-dev/custom-odoo19/custom_module
+START=2026-11-26 01:10:47 +0700
+2026-11-25 18:10:47,708 47417 WARNING ? odoo.tools.config: option db_host reads 'False' in the config file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf but isn't a boolean option, skip 
+2026-11-25 18:10:47,708 47417 WARNING ? odoo.tools.config: option db_port reads 'False' in the config file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf but isn't a boolean option, skip 
+2026-11-25 18:10:47,708 47417 WARNING ? odoo.tools.config: option db_password reads 'False' in the config file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf but isn't a boolean option, skip 
+2026-11-25 18:10:47,708 47417 INFO ? odoo.tools.config: Transforming --test-file into --test-tags 
+2026-11-25 18:10:47,708 47417 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-11-25 18:10:47,708 47417 INFO ? odoo: Odoo version 19.0 
+2026-11-25 18:10:47,709 47417 INFO ? odoo: Using configuration file at /home/sesa/odoo-dev/odoo19/debian/odoo.conf 
+2026-11-25 18:10:47,709 47417 INFO ? odoo: addons paths: _NamespacePath(['/home/sesa/odoo-dev/odoo19/odoo/addons', '/home/sesa/.local/share/Odoo/addons/19.0', '/home/sesa/odoo-dev/odoo19/addons', '/home/sesa/odoo-dev/custom-odoo19/custom_module']) 
+2026-11-25 18:10:47,709 47417 INFO ? odoo: database: sesa@default:default 
+2026-11-25 18:10:47,963 47417 INFO ? odoo.service.server: HTTP service (werkzeug) running on LAPTOP-KA1LGS6P.localdomain:8071 
+2026-11-25 18:10:47,976 47417 INFO erpobe_unittest odoo.tests.common: Importing test framework 
+2026-11-25 18:10:47,992 47417 INFO erpobe_unittest odoo.modules.loading: loading 1 modules... 
+2026-11-25 18:10:47,995 47417 INFO erpobe_unittest odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-11-25 18:10:48,017 47417 INFO erpobe_unittest odoo.modules.loading: updating modules list 
+2026-11-25 18:10:48,019 47417 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-11-25 18:10:48,822 47417 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.button_upgrade on ['OBE Management'] to user __system__ #1 via n/a 
+2026-11-25 18:10:48,822 47417 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.update_list on ['OBE Management'] to user __system__ #1 via n/a 
+2026-11-25 18:10:49,445 47417 INFO erpobe_unittest odoo.addons.base.models.ir_module: ALLOW access to module.button_install on [] to user __system__ #1 via n/a 
+2026-11-25 18:10:49,474 47417 INFO erpobe_unittest odoo.modules.loading: loading 67 modules... 
+2026-11-25 18:10:49,876 47417 INFO erpobe_unittest odoo.modules.loading: Loading module erpobe (52/67) 
+2026-11-25 18:10:49,986 47417 WARNING erpobe_unittest py.warnings: /home/sesa/odoo-dev/odoo19/odoo/osv/__init__.py:4: DeprecationWarning: Since 19.0, odoo.osv is deprecated use odoo.fields.Domain
+  File "/home/sesa/odoo-dev/odoo19/odoo-bin", line 6, in <module>
+    odoo.cli.main()
+  File "/home/sesa/odoo-dev/odoo19/odoo/cli/command.py", line 133, in main
+    command().run(args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/cli/server.py", line 127, in run
+    main(args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/cli/server.py", line 118, in main
+    rc = server.start(preload=config['db_name'], stop=stop)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/server.py", line 1677, in start
+    rc = server.run(preload, stop)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/server.py", line 714, in run
+    rc = preload_registries(preload)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/server.py", line 1591, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+  File "/home/sesa/odoo-dev/odoo19/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+  File "/home/sesa/odoo-dev/odoo19/odoo/orm/registry.py", line 189, in new
+    load_modules(
+  File "/home/sesa/odoo-dev/odoo19/odoo/modules/loading.py", line 464, in load_modules
+    load_module_graph(
+  File "/home/sesa/odoo-dev/odoo19/odoo/modules/loading.py", line 178, in load_module_graph
+    load_openerp_module(package.name)
+  File "/home/sesa/odoo-dev/odoo19/odoo/modules/module.py", line 506, in load_openerp_module
+    __import__(qualname)
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/__init__.py", line 1, in <module>
+    from . import controllers
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/__init__.py", line 2, in <module>
+    from . import helpers
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/helpers.py", line 15, in <module>
+    from .list_helpers import PAGE_SIZES, TritonListHelpers
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/list_helpers.py", line 6, in <module>
+    from odoo.osv import expression
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/__init__.py", line 4, in <module>
+    warnings.warn("Since 19.0, odoo.osv is deprecated use odoo.fields.Domain", DeprecationWarning)
+ 
+2026-11-25 18:10:50,131 47417 INFO erpobe_unittest odoo.registry: module erpobe: creating or updating database tables 
+2026-11-25 18:10:50,413 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/security/groups.xml 
+2026-11-25 18:10:50,469 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/security/ir.model.access.csv 
+2026-11-25 18:10:50,617 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/security/rules.xml 
+2026-11-25 18:10:51,215 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/audit_log_views.xml 
+2026-11-25 18:10:51,267 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_fakultas_views.xml 
+2026-11-25 18:10:51,302 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_prodi_views.xml 
+2026-11-25 18:10:51,335 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_user_views.xml 
+2026-11-25 18:10:51,399 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/triton_settings_views.xml 
+2026-11-25 18:10:51,442 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_akademik_views.xml 
+2026-11-25 18:10:51,480 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_angkatan_view_views.xml 
+2026-11-25 18:10:51,495 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/master_grade_views.xml 
+2026-11-25 18:10:51,517 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/website_navigation.xml 
+2026-11-25 18:10:51,532 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/portal_navigation.xml 
+2026-11-25 18:10:51,538 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/login_branding.xml 
+2026-11-25 18:10:51,556 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/components/list_management.xml 
+2026-11-25 18:10:51,562 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_about.xml 
+2026-11-25 18:10:51,568 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_comparison.xml 
+2026-11-25 18:10:51,577 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_contact.xml 
+2026-11-25 18:10:51,583 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_faculty_detail.xml 
+2026-11-25 18:10:51,589 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_faculty_list.xml 
+2026-11-25 18:10:51,595 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_faq.xml 
+2026-11-25 18:10:51,600 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_guide.xml 
+2026-11-25 18:10:51,606 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_home.xml 
+2026-11-25 18:10:51,613 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_methodology.xml 
+2026-11-25 18:10:51,619 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_person_profile.xml 
+2026-11-25 18:10:51,625 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_privacy.xml 
+2026-11-25 18:10:51,631 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_program_detail.xml 
+2026-11-25 18:10:51,637 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_search.xml 
+2026-11-25 18:10:51,643 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/public/website_tracking.xml 
+2026-11-25 18:10:51,649 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/portal_dashboard.xml 
+2026-11-25 18:10:51,658 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/portal_profile.xml 
+2026-11-25 18:10:51,664 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_courses.xml 
+2026-11-25 18:10:51,687 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_cpl.xml 
+2026-11-25 18:10:51,698 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_khs.xml 
+2026-11-25 18:10:51,704 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/student/portal_krs.xml 
+2026-11-25 18:10:51,711 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_advising.xml 
+2026-11-25 18:10:51,717 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_analysis.xml 
+2026-11-25 18:10:51,746 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_classes.xml 
+2026-11-25 18:10:51,752 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_grades.xml 
+2026-11-25 18:10:51,764 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_rps.xml 
+2026-11-25 18:10:51,776 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/website/portal/teacher/portal_rps_edit.xml 
+2026-11-25 18:10:51,782 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/triton_reports.xml 
+2026-11-25 18:10:51,797 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_cpl_views.xml 
+2026-11-25 18:10:51,818 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_cpmk_views.xml 
+2026-11-25 18:10:51,835 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/academic_fixture_views.xml 
+2026-11-25 18:10:51,869 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_komponen_views.xml 
+2026-11-25 18:10:51,887 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_rps_views.xml 
+2026-11-25 18:10:51,949 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_tahunajaran_views.xml 
+2026-11-25 18:10:51,969 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_penawaran_views.xml 
+2026-11-25 18:10:51,991 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/weight_monitor_views.xml 
+2026-11-25 18:10:52,017 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/akademik_krs_views.xml 
+2026-11-25 18:10:52,039 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_views.xml 
+2026-11-25 18:10:52,059 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_mk_views.xml 
+2026-11-25 18:10:52,077 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_cpmk_views.xml 
+2026-11-25 18:10:52,095 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/grade_cpl_views.xml 
+2026-11-25 18:10:52,115 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/report_khs_views.xml 
+2026-11-25 18:10:52,144 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/report_summary_views.xml 
+2026-11-25 18:10:52,248 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/menus.xml 
+2026-11-25 18:10:52,337 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/views/import_export_views.xml 
+2026-11-25 18:10:52,507 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_01_fakultas_prodi.xml 
+2026-11-25 18:10:52,510 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_02_tahun_ajaran_rombels.xml 
+2026-11-25 18:10:52,529 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_05_komponen_bobot.xml 
+2026-11-25 18:10:52,536 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/fixture_12_academic_fixture.xml 
+2026-11-25 18:10:52,536 47417 INFO erpobe_unittest odoo.modules.loading: loading erpobe/data/audit_cron.xml 
+2026-11-25 18:10:52,606 47417 INFO erpobe_unittest odoo.modules.loading: Module erpobe loaded in 2.73s, 4429 queries (+4429 other) 
+2026-11-25 18:10:52,625 47417 INFO erpobe_unittest odoo.modules.loading: 67 modules loaded in 3.15s, 4429 queries (+4429 extra) 
+2026-11-25 18:10:52,952 47417 INFO erpobe_unittest odoo.registry: verifying fields for every extended model 
+2026-11-25 18:10:53,323 47417 INFO erpobe_unittest odoo.modules.loading: Modules loaded. 
+2026-11-25 18:10:53,336 47417 INFO erpobe_unittest odoo.registry: Registry changed, signaling through the database 
+2026-11-25 18:10:53,337 47417 INFO erpobe_unittest odoo.registry: Registry loaded in 5.373s 
+2026-11-25 18:10:53,337 47417 INFO erpobe_unittest odoo.service.server: Starting post tests 
+2026-11-25 18:10:53,339 47417 INFO erpobe_unittest odoo.addons.base.models.ir_qweb: Pregenerating assets bundles 
+2026-11-25 18:10:53,862 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/f574bff/api_doc.assets.min.js (id:362) 
+2026-11-25 18:10:53,876 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/58fef65/bus.websocket_worker_assets.min.js (id:363) 
+2026-11-25 18:10:53,885 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/26e08ba/html_editor.assets_history_diff.min.js (id:364) 
+2026-11-25 18:10:53,903 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/a56aaed/html_editor.assets_image_cropper.min.js (id:365) 
+2026-11-25 18:10:54,003 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/ec35364/mail.assets_discuss_public_test_tours.min.js (id:366) 
+2026-11-25 18:10:54,064 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/fa4333d/mail.assets_lamejs.min.js (id:367) 
+2026-11-25 18:10:54,191 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/02e06d6/mail.assets_odoo_sfu.min.js (id:368) 
+2026-11-25 18:10:55,466 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/efe7fb5/mail.assets_public.min.js (id:369) 
+2026-11-25 18:10:55,751 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/6656205/mass_mailing.assets_builder.min.js (id:370) 
+2026-11-25 18:10:55,781 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/fccd661/mass_mailing.mailing_assets.min.js (id:371) 
+2026-11-25 18:10:56,702 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/ace38b6/portal.assets_chatter.min.js (id:372) 
+2026-11-25 18:10:58,693 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/de770f6/project.webclient.min.js (id:373) 
+2026-11-25 18:10:58,715 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/snailmail.report_assets_snailmail.min.js (id:374) 
+2026-11-25 18:10:58,857 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/3bb1fde/survey.survey_assets.min.js (id:375) 
+2026-11-25 18:10:58,880 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/f4e5993/survey.survey_user_input_session_assets.min.js (id:376) 
+2026-11-25 18:10:59,198 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/c0ede33/web.__assets_tests_call__.min.js (id:377) 
+2026-11-25 18:10:59,238 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/a777ad6/web._assets_jquery.min.js (id:378) 
+2026-11-25 18:10:59,348 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/393e9b7/web.ace_lib.min.js (id:379) 
+2026-11-25 18:10:59,358 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/21f8d52/web.assets_clickbot.min.js (id:380) 
+2026-11-25 18:10:59,484 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/a2e10e6/web.assets_emoji.min.js (id:381) 
+2026-11-25 18:11:00,352 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/fc898ad/web.assets_frontend_lazy.min.js (id:382) 
+2026-11-25 18:11:00,369 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/028fce3/web.assets_frontend_minimal.min.js (id:383) 
+2026-11-25 18:11:00,629 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/9abeb31/web.assets_tests.min.js (id:384) 
+2026-11-25 18:11:04,698 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/7313ccc/web.assets_unit_tests.min.js (id:385) 
+2026-11-25 18:11:07,370 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/b2204d9/web.assets_unit_tests_setup.min.js (id:386) 
+2026-11-25 18:11:09,517 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/0d5b4aa/web.assets_web.min.js (id:387) 
+2026-11-25 18:11:09,598 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/bc3505c/web.chartjs_lib.min.js (id:388) 
+2026-11-25 18:11:09,675 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/fea3f0c/web.fullcalendar_lib.min.js (id:389) 
+2026-11-25 18:11:09,703 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/d38503b/web.qunit_suite_tests.min.js (id:390) 
+2026-11-25 18:11:09,793 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/33ed6dc/web.report_assets_common.min.js (id:391) 
+2026-11-25 18:11:09,802 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.report_assets_pdf.min.js (id:392) 
+2026-11-25 18:11:12,686 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/3a1bbf8/web.tests_assets.min.js (id:393) 
+2026-11-25 18:11:12,742 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/f8606f9/web_tour.interactive.min.js (id:394) 
+2026-11-25 18:11:12,770 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/4fb46a9/website.assets_all_wysiwyg.min.js (id:395) 
+2026-11-25 18:11:13,236 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/e9ef9a0/website.website_builder_assets.min.js (id:396) 
+2026-11-25 18:11:13,237 47417 INFO erpobe_unittest odoo.addons.base.models.ir_qweb: JS Assets bundles generated in 19.467081785202026 seconds 
+2026-11-25 18:11:13,675 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/f92cb42/api_doc.assets.min.css (id:397) 
+2026-11-25 18:11:13,678 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/bus.websocket_worker_assets.min.css (id:398) 
+2026-11-25 18:11:13,683 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/46b4808/html_editor.assets_history_diff.min.css (id:399) 
+2026-11-25 18:11:13,686 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/0870d08/html_editor.assets_image_cropper.min.css (id:400) 
+2026-11-25 18:11:13,687 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/mail.assets_discuss_public_test_tours.min.css (id:401) 
+2026-11-25 18:11:13,689 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/mail.assets_lamejs.min.css (id:402) 
+2026-11-25 18:11:13,690 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/mail.assets_odoo_sfu.min.css (id:403) 
+2026-11-25 18:11:14,316 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/ec32af7/mail.assets_public.min.css (id:404) 
+2026-11-25 18:11:14,609 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/a891061/mass_mailing.assets_builder.min.css (id:405) 
+2026-11-25 18:11:15,484 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/261e177/mass_mailing.assets_iframe_style.min.css (id:406) 
+2026-11-25 18:11:15,489 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/d8a4985/mass_mailing.mailing_assets.min.css (id:407) 
+2026-11-25 18:11:15,607 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/9bbaaf0/portal.assets_chatter.min.css (id:408) 
+2026-11-25 18:11:16,437 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/74058ea/project.webclient.min.css (id:409) 
+2026-11-25 18:11:16,524 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/69cdfe0/snailmail.report_assets_snailmail.min.css (id:410) 
+2026-11-25 18:11:16,636 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/141364e/survey.survey_assets.min.css (id:411) 
+2026-11-25 18:11:16,638 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/survey.survey_user_input_session_assets.min.css (id:412) 
+2026-11-25 18:11:16,641 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.__assets_tests_call__.min.css (id:413) 
+2026-11-25 18:11:16,642 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web._assets_jquery.min.css (id:414) 
+2026-11-25 18:11:16,644 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.ace_lib.min.css (id:415) 
+2026-11-25 18:11:16,646 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.assets_clickbot.min.css (id:416) 
+2026-11-25 18:11:16,648 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.assets_emoji.min.css (id:417) 
+2026-11-25 18:11:17,793 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/1d06e54/web.assets_frontend.min.css (id:418) 
+2026-11-25 18:11:18,906 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/1d06e54/web.assets_frontend_lazy.min.css (id:419) 
+2026-11-25 18:11:18,908 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.assets_frontend_minimal.min.css (id:420) 
+2026-11-25 18:11:18,910 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.assets_tests.min.css (id:421) 
+2026-11-25 18:11:19,212 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/78f7b6b/web.assets_unit_tests.min.css (id:422) 
+2026-11-25 18:11:20,359 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/97b5503/web.assets_unit_tests_setup.min.css (id:423) 
+2026-11-25 18:11:21,558 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/5db9896/web.assets_web.min.css (id:424) 
+2026-11-25 18:11:22,903 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/2fdf15a/web.assets_web_dark.min.css (id:425) 
+2026-11-25 18:11:24,149 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/4ad426d/web.assets_web_print.min.css (id:426) 
+2026-11-25 18:11:24,151 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.chartjs_lib.min.css (id:427) 
+2026-11-25 18:11:24,153 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.fullcalendar_lib.min.css (id:428) 
+2026-11-25 18:11:24,154 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web.qunit_suite_tests.min.css (id:429) 
+2026-11-25 18:11:24,707 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/a9ee093/web.report_assets_common.min.css (id:430) 
+2026-11-25 18:11:24,713 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cc110b1/web.report_assets_pdf.min.css (id:431) 
+2026-11-25 18:11:25,826 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/3970f3e/web.tests_assets.min.css (id:432) 
+2026-11-25 18:11:25,829 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/cf83e13/web_tour.interactive.min.css (id:433) 
+2026-11-25 18:11:25,918 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/bf68138/website.assets_all_wysiwyg.min.css (id:434) 
+2026-11-25 18:11:26,021 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/bf68138/website.assets_wysiwyg.min.css (id:435) 
+2026-11-25 18:11:26,289 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/457823c/website.website_builder_assets.min.css (id:436) 
+2026-11-25 18:11:26,290 47417 INFO erpobe_unittest odoo.addons.base.models.ir_qweb: CSS Assets bundles generated in 13.052302360534668 seconds 
+2026-11-25 18:11:26,551 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_advisor_approval_and_rejection_require_submission ... 
+2026-11-25 18:11:26,564 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:26,593 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:26,604 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:26,621 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:26,719 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:26,750 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:26,762 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:26,795 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:26,808 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_bulk_krs_line_change_moves_students_between_offer_lines ... 
+2026-11-25 18:11:26,915 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:26,932 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:26,957 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 2 students. 
+2026-11-25 18:11:26,975 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 2 students. 
+2026-11-25 18:11:26,986 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_bulk_krs_line_create_links_each_student_to_offer_line ... 
+2026-11-25 18:11:27,093 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:27,111 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:27,134 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 2 students. 
+2026-11-25 18:11:27,141 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_cpl_and_ipk_are_calculated_from_weighted_grade_data ... 
+2026-11-25 18:11:27,227 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:27,252 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,260 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,275 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,288 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,307 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [1] 
+2026-11-25 18:11:27,321 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,335 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [2] 
+2026-11-25 18:11:27,371 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [1] 
+2026-11-25 18:11:27,377 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [3] 
+2026-11-25 18:11:27,415 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,431 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [1] 
+2026-11-25 18:11:27,438 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [1] 
+2026-11-25 18:11:27,443 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [2] 
+2026-11-25 18:11:27,448 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [4] 
+2026-11-25 18:11:27,463 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,479 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [2] 
+2026-11-25 18:11:27,485 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [2] 
+2026-11-25 18:11:27,490 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [3] 
+2026-11-25 18:11:27,494 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [5] 
+2026-11-25 18:11:27,512 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,527 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [3] 
+2026-11-25 18:11:27,534 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [3] 
+2026-11-25 18:11:27,538 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [4] 
+2026-11-25 18:11:27,543 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [6] 
+2026-11-25 18:11:27,558 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,575 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [4] 
+2026-11-25 18:11:27,583 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [4] 
+2026-11-25 18:11:27,589 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [5] 
+2026-11-25 18:11:27,593 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [7] 
+2026-11-25 18:11:27,618 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [5] 
+2026-11-25 18:11:27,625 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [5] 
+2026-11-25 18:11:27,630 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [6] 
+2026-11-25 18:11:27,634 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [8] 
+2026-11-25 18:11:27,656 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [6] 
+2026-11-25 18:11:27,662 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [6] 
+2026-11-25 18:11:27,666 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [7] 
+2026-11-25 18:11:27,671 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [9] 
+2026-11-25 18:11:27,695 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [7] 
+2026-11-25 18:11:27,701 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [7] 
+2026-11-25 18:11:27,706 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [8] 
+2026-11-25 18:11:27,711 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [10] 
+2026-11-25 18:11:27,732 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [8] 
+2026-11-25 18:11:27,738 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [8] 
+2026-11-25 18:11:27,743 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [9] 
+2026-11-25 18:11:27,747 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [11] 
+2026-11-25 18:11:27,764 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,772 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [9] 
+2026-11-25 18:11:27,780 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [9] 
+2026-11-25 18:11:27,785 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [10] 
+2026-11-25 18:11:27,790 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [12] 
+2026-11-25 18:11:27,802 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,811 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [10] 
+2026-11-25 18:11:27,818 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [10] 
+2026-11-25 18:11:27,822 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [11] 
+2026-11-25 18:11:27,827 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [13] 
+2026-11-25 18:11:27,835 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,843 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [11] 
+2026-11-25 18:11:27,849 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpmk records with IDs: [11] 
+2026-11-25 18:11:27,854 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.cpl records with IDs: [12] 
+2026-11-25 18:11:27,858 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.komponen records with IDs: [14] 
+2026-11-25 18:11:27,871 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_prerequisite_passes_with_passing_grade ... 
+2026-11-25 18:11:27,908 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:27,929 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:27,938 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [13] 
+2026-11-25 18:11:27,948 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_schedule_conflict_is_rejected ... 
+2026-11-25 18:11:27,974 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:27,995 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:28,005 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_sks_limit_is_enforced ... 
+2026-11-25 18:11:28,029 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:28,049 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:28,054 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_students_cannot_read_other_students_krs ... 
+2026-11-25 18:11:28,072 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:28,170 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:28,193 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:28,207 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:28,231 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: ====================================================================== 
+2026-11-25 18:11:28,231 47417 ERROR erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: FAIL: TestTritonKrsWorkflows.test_students_cannot_read_other_students_krs
+Traceback (most recent call last):
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/tests/test_triton_workflows.py", line 305, in test_students_cannot_read_other_students_krs
+    self.assertIn(first_component_line.id, visible_component_line_ids)
+AssertionError: False not found in []
+ 
+2026-11-25 18:11:28,232 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_unavailable_grade_is_excluded_from_ipk_and_sks ... 
+2026-11-25 18:11:28,272 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [15] 
+2026-11-25 18:11:28,287 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [16] 
+2026-11-25 18:11:28,303 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [17] 
+2026-11-25 18:11:28,319 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [18] 
+2026-11-25 18:11:28,335 47417 INFO erpobe_unittest odoo.models.unlink: User #1 deleted erpobe.report.khs.mk records with IDs: [19] 
+2026-11-25 18:11:28,345 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonKrsWorkflows.test_unsatisfied_prerequisite_is_rejected ... 
+2026-11-25 18:11:28,373 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:28,396 47417 INFO erpobe_unittest odoo.addons.base.models.ir_attachment: filestore gc 55 checked, 0 removed 
+2026-11-25 18:11:28,401 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_comparison_filters_are_validated_and_limited ... 
+2026-11-25 18:11:28,406 47417 INFO erpobe_unittest odoo.addons.base.models.ir_http: Generating routing map for key 1 
+2026-11-25 18:11:28,498 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /triton/api/perbandingan-cpl?jenis_cpl=sikap&semester=invalid&prodi_id=1&prodi_id=2&prodi_id=3&prodi_id=4&prodi_id=5&prodi_id=6&prodi_id=7 HTTP/1.1" 200 - 25 0.006 0.087
+2026-11-25 18:11:28,505 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /triton/api/perbandingan-cpl?jenis_cpl=invalid HTTP/1.1" 200 - 6 0.001 0.004
+2026-11-25 18:11:28,507 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_portal_routes_require_authentication ... 
+2026-11-25 18:11:28,510 47417 INFO erpobe_unittest odoo.addons.base.models.ir_http: Generating routing map for key 1 
+2026-11-25 18:11:28,547 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,547 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my HTTP/1.1" 303 - 18 0.006 0.033
+2026-11-25 18:11:28,552 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,552 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/home HTTP/1.1" 303 - 0 0.000 0.002
+2026-11-25 18:11:28,556 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,556 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/triton HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,559 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,559 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/krs HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,562 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,562 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/khs HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,565 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,566 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/mata-kuliah HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,569 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,569 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/capaian-cpl HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,572 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,572 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/rps HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,575 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,576 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/kelas HTTP/1.1" 303 - 0 0.000 0.002
+2026-11-25 18:11:28,580 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,580 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/perwalian HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,583 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,583 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/analisis HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,586 47417 INFO erpobe_unittest odoo.http: Session expired 
+2026-11-25 18:11:28,586 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /my/profil HTTP/1.1" 303 - 0 0.000 0.001
+2026-11-25 18:11:28,588 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_program_detail_data_tabs_render_with_website_layout ... 
+2026-11-25 18:11:28,592 47417 INFO erpobe_unittest odoo.addons.base.models.ir_http: Generating routing map for key 1 
+2026-11-25 18:11:28,903 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /prodi/1?tab=cpl HTTP/1.1" 200 - 99 0.036 0.277
+2026-11-25 18:11:28,920 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /prodi/1?tab=mata-kuliah HTTP/1.1" 200 - 13 0.003 0.011
+2026-11-25 18:11:28,935 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /prodi/1?tab=mata-kuliah&sort=course HTTP/1.1" 200 - 13 0.003 0.010
+2026-11-25 18:11:28,946 47417 WARNING erpobe_unittest py.warnings: /home/sesa/odoo-dev/odoo19/odoo/osv/expression.py:248: DeprecationWarning: Since 19.0, use odoo.fields.Domain
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2852, in __call__
+    response = request._serve_db()
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2329, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/model.py", line 188, in retrying
+    result = func()
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2379, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2501, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+  File "/home/sesa/odoo-dev/odoo19/odoo/addons/base/models/ir_http.py", line 353, in _dispatch
+    result = endpoint(**request.params)
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 838, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/fakultas.py", line 105, in triton_prodi_detail
+    rps_records, data['pagination'] = self._list_page(
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/list_helpers.py", line 39, in _list_page
+    search_domain = expression.OR(
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/expression.py", line 248, in OR
+    warnings.warn("Since 19.0, use odoo.fields.Domain", DeprecationWarning)
+ 
+2026-11-25 18:11:28,946 47417 WARNING erpobe_unittest py.warnings: /home/sesa/odoo-dev/odoo19/odoo/osv/expression.py:173: DeprecationWarning: Since 19.0, use odoo.fields.Domain
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2852, in __call__
+    response = request._serve_db()
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2329, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/model.py", line 188, in retrying
+    result = func()
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2379, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2501, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+  File "/home/sesa/odoo-dev/odoo19/odoo/addons/base/models/ir_http.py", line 353, in _dispatch
+    result = endpoint(**request.params)
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 838, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/fakultas.py", line 105, in triton_prodi_detail
+    rps_records, data['pagination'] = self._list_page(
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/list_helpers.py", line 39, in _list_page
+    search_domain = expression.OR(
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/expression.py", line 249, in OR
+    return combine(OR_OPERATOR, [FALSE_LEAF], [TRUE_LEAF], domains)
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/expression.py", line 229, in combine
+    domain = normalize_domain(domain)
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/expression.py", line 173, in normalize_domain
+    warnings.warn("Since 19.0, use odoo.fields.Domain", DeprecationWarning)
+ 
+2026-11-25 18:11:28,946 47417 WARNING erpobe_unittest py.warnings: /home/sesa/odoo-dev/odoo19/odoo/osv/expression.py:242: DeprecationWarning: Since 19.0, use odoo.fields.Domain
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2852, in __call__
+    response = request._serve_db()
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2329, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+  File "/home/sesa/odoo-dev/odoo19/odoo/service/model.py", line 188, in retrying
+    result = func()
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2379, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 2501, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+  File "/home/sesa/odoo-dev/odoo19/odoo/addons/base/models/ir_http.py", line 353, in _dispatch
+    result = endpoint(**request.params)
+  File "/home/sesa/odoo-dev/odoo19/odoo/http.py", line 838, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/fakultas.py", line 105, in triton_prodi_detail
+    rps_records, data['pagination'] = self._list_page(
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/controllers/list_helpers.py", line 42, in _list_page
+    domain = expression.AND([domain, search_domain])
+  File "/home/sesa/odoo-dev/odoo19/odoo/osv/expression.py", line 242, in AND
+    warnings.warn("Since 19.0, use odoo.fields.Domain", DeprecationWarning)
+ 
+2026-11-25 18:11:28,955 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:28] "GET /prodi/1?tab=mata-kuliah&q=Pendidikan HTTP/1.1" 200 - 13 0.003 0.014
+2026-11-25 18:11:28,957 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_public_routes_and_frontend_asset_respond ... 
+2026-11-25 18:11:28,960 47417 INFO erpobe_unittest odoo.addons.base.models.ir_http: Generating routing map for key 1 
+2026-11-25 18:11:29,225 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET / HTTP/1.1" 200 - 107 0.029 0.238
+2026-11-25 18:11:29,283 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /cari?q=obe HTTP/1.1" 200 - 23 0.011 0.044
+2026-11-25 18:11:29,343 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /fakultas HTTP/1.1" 200 - 28 0.012 0.046
+2026-11-25 18:11:29,414 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /perbandingan-cpl HTTP/1.1" 200 - 28 0.012 0.057
+2026-11-25 18:11:29,421 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /triton/api/perbandingan-cpl HTTP/1.1" 200 - 6 0.001 0.003
+2026-11-25 18:11:29,426 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /perbandingan-cpl.csv HTTP/1.1" 200 - 6 0.001 0.003
+2026-11-25 18:11:29,482 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /tracking HTTP/1.1" 200 - 39 0.014 0.039
+2026-11-25 18:11:29,519 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /tentang HTTP/1.1" 200 - 19 0.010 0.025
+2026-11-25 18:11:29,562 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /panduan HTTP/1.1" 200 - 19 0.011 0.030
+2026-11-25 18:11:29,602 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /faq HTTP/1.1" 200 - 19 0.011 0.027
+2026-11-25 18:11:29,645 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /kontak HTTP/1.1" 200 - 19 0.012 0.029
+2026-11-25 18:11:29,686 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /privasi HTTP/1.1" 200 - 19 0.011 0.027
+2026-11-25 18:11:29,695 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /kebijakan-privasi HTTP/1.1" 200 - 4 0.001 0.006
+2026-11-25 18:11:29,731 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /metodologi HTTP/1.1" 200 - 19 0.010 0.024
+2026-11-25 18:11:29,739 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Found a similar attachment for /web/assets/1/1d06e54/web.assets_frontend.min.css, copying from /web/assets/1d06e54/web.assets_frontend.min.css 
+2026-11-25 18:11:29,760 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /web/assets/1/1d06e54/web.assets_frontend.min.css HTTP/1.1" 200 - 11 0.016 0.010
+2026-11-25 18:11:29,781 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Found a similar attachment for /web/assets/1/028fce3/web.assets_frontend_minimal.min.js, copying from /web/assets/028fce3/web.assets_frontend_minimal.min.js 
+2026-11-25 18:11:29,785 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /web/assets/1/028fce3/web.assets_frontend_minimal.min.js HTTP/1.1" 200 - 8 0.002 0.005
+2026-11-25 18:11:29,793 47417 INFO erpobe_unittest odoo.addons.base.models.assetsbundle: Found a similar attachment for /web/assets/1/fc898ad/web.assets_frontend_lazy.min.js, copying from /web/assets/fc898ad/web.assets_frontend_lazy.min.js 
+2026-11-25 18:11:29,801 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /web/assets/1/fc898ad/web.assets_frontend_lazy.min.js HTTP/1.1" 200 - 8 0.002 0.012
+2026-11-25 18:11:29,813 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_student_courses_route_renders_without_approved_krs ... 
+2026-11-25 18:11:29,946 47417 INFO erpobe_unittest odoo.addons.base.models.res_users: Login successful for login:student-courses-596fc29c@example.test from n/a 
+2026-11-25 18:11:29,954 47417 INFO erpobe_unittest odoo.addons.base.models.ir_http: Generating routing map for key 1 
+2026-11-25 18:11:29,983 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:29] "GET /my HTTP/1.1" 303 - 12 0.003 0.027
+2026-11-25 18:11:30,243 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:30] "GET /my/triton HTTP/1.1" 200 - 76 0.023 0.234
+2026-11-25 18:11:30,307 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:30] "GET /my/mata-kuliah HTTP/1.1" 200 - 24 0.012 0.050
+2026-11-25 18:11:30,309 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_student_khs_report_template_renders ... 
+2026-11-25 18:11:30,310 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: ====================================================================== 
+2026-11-25 18:11:30,310 47417 ERROR erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: FAIL: TestTritonPublicRoutes.test_student_khs_report_template_renders
+Traceback (most recent call last):
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/tests/test_triton_workflows.py", line 565, in test_student_khs_report_template_renders
+    self.assertTrue(khs, "The academic fixture should provide a student KHS")
+AssertionError: erpobe.report.khs() is not true : The academic fixture should provide a student KHS
+ 
+2026-11-25 18:11:30,311 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_teacher_analysis_shows_cpmk_cpl_and_cohort_filters ... 
+2026-11-25 18:11:30,513 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Creating reports for 1 students. 
+2026-11-25 18:11:30,535 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:30,590 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:30,598 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:30,605 47417 INFO erpobe_unittest odoo.addons.erpobe.models.report_khs: [KHS] Updating reports for 1 students. 
+2026-11-25 18:11:30,631 47417 INFO erpobe_unittest odoo.addons.base.models.res_users: Login successful for login:teacher-analysis-c8831aca from n/a 
+2026-11-25 18:11:30,641 47417 INFO erpobe_unittest odoo.addons.base.models.ir_http: Generating routing map for key 1 
+2026-11-25 18:11:30,940 47417 INFO erpobe_unittest werkzeug: 127.0.0.1 - - [25/Nov/2026 18:11:30] "GET /my/analisis?angkatan=2025&rombel_id=39 HTTP/1.1" 200 - 99 0.033 0.268
+2026-11-25 18:11:30,942 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: ====================================================================== 
+2026-11-25 18:11:30,942 47417 ERROR erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: FAIL: TestTritonPublicRoutes.test_teacher_analysis_shows_cpmk_cpl_and_cohort_filters
+Traceback (most recent call last):
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/tests/test_triton_workflows.py", line 788, in test_teacher_analysis_shows_cpmk_cpl_and_cohort_filters
+    self.assertRegex(
+AssertionError: Regex didn't match: 'CPL\\-AC8831ACA</strong>\\s*:\\s*Bertakwa\\ Analysis\\ C8831ACA' not found in '<!DOCTYPE html>\n<html lang="en-US" data-website-id="1" data-main-object="ir.ui.view(1368,)" data-can-optimize-seo="True" dir="ltr">\n    <head>\n        <meta charset="utf-8"/>\n        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>\n        <meta name="viewport" content="width=device-width, initial-scale=1"/>\n        <meta name="generator" content="Odoo"/>\n            \n        <meta property="og:type" content="website"/>\n        <meta property="og:title" content="Analisis Kelas Dosen | My Website"/>\n        <meta property="og:site_name" content="My Website"/>\n        <meta property="og:url" content="http://127.0.0.1:8071/my/analisis"/>\n        <meta property="og:image" content="http://127.0.0.1:8071/web/image/website/1/logo?unique=7b57617"/>\n            \n        <meta name="twitter:card" content="summary_large_image"/>\n        <meta name="twitter:title" content="Analisis Kelas Dosen | My Website"/>\n        <meta name="twitter:image" content="http://127.0.0.1:8071/web/image/website/1/logo/300x300?unique=7b57617"/>\n        \n        <link rel="canonical" href="http://127.0.0.1:8071/my/analisis"/>\n        \n        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>\n        <link rel="apple-touch-icon" href="/web/image/website/1/favicon?unique=7b57617"/>\n        <title>Analisis Kelas Dosen | My Website</title>\n        <link type="image/x-icon" rel="shortcut icon" href="/web/image/website/1/favicon?unique=7b57617"/>\n        <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>\n        <link type="text/css" rel="stylesheet" href="/web/assets/1/1d06e54/web.assets_frontend.min.css"/>\n        <script id="web.layout.odooscript" type="text/javascript">\n            var odoo = {\n                csrf_token: "72ca65503c70ef4570f23bf9871885ca60215df8o1827166290",\n                debug: "",\n            };\n        </script>\n        <script type="text/javascript">\n            odoo.__session_info__ = {"is_admin": false, "is_system": false, "is_public": false, "is_internal_user": false, "is_website_user": false, "uid": 32, "registry_hash": "12cc1bed5ebdfa6ce21e3b4973c732ac55ac4f90fe7332fb008337261ea9761d", "is_frontend": true, "profile_session": null, "profile_collectors": null, "profile_params": null, "show_effect": true, "currencies": {"1": {"name": "USD", "symbol": "$", "position": "before", "digits": [69, 2]}}, "quick_login": true, "bundle_params": {"lang": "en_US", "website_id": 1}, "test_mode": true, "server_version": "19.0", "server_version_info": [19, 0, 0, "final", 0, ""], "websocket_worker_version": "19.0-2", "translationURL": "/website/translations", "translation_hash": "", "tour_enabled": false, "geoip_country_code": null, "geoip_phone_code": null, "lang_url_code": "en"};\n            if (!/(^|;\\s)tz=/.test(document.cookie)) {\n                const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;\n                document.cookie = `tz=${userTZ}; path=/`;\n            }\n        </script>\n        <script type="text/javascript" defer="defer" src="/web/assets/1/028fce3/web.assets_frontend_minimal.min.js" onerror="__odooAssetError=1"></script>\n                \n                <script type="text/javascript" defer="defer" src="/web/assets/1/c0ede33/web.__assets_tests_call__.min.js" onerror="__odooAssetError=1"></script>\n        <script type="text/javascript" data-src="/web/assets/1/fc898ad/web.assets_frontend_lazy.min.js" onerror="__odooAssetError=1"></script>\n        \n        \n    </head>\n    <body>\n        \n\n\n\n        <div id="wrapwrap" class="   ">\n            <a class="o_skip_to_content btn btn-primary rounded-0 visually-hidden-focusable position-absolute start-0" href="#wrap">Skip to Content</a>\n                <main>\n                    \n            <main class="o_triton_page o_triton_portal-page">\n        <nav class="o_triton_portal-nav" aria-label="Navigasi portal">\n            <div class="o_triton_portal-nav-inner">\n                <a href="/my/triton" class="o_triton_brand" aria-label="TRITON, beranda portal">\n                    <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.png" alt="TRITON" loading="lazy"/>\n                </a>\n                <div class="o_triton_portal-links o_triton_portal-links--desktop">\n                    <a href="/my/triton" class="o_triton_portal-link">Beranda</a><a href="/my/rps" class="o_triton_portal-link">RPS</a><a href="/my/kelas" class="o_triton_portal-link">Kelas</a><a href="/my/perwalian" class="o_triton_portal-link">Perwalian</a><a href="/my/analisis" class="o_triton_portal-link is-active" aria-current="page">Analisis</a><a href="/my/riwayat-nilai" class="o_triton_portal-link">Riwayat nilai</a>\n                </div>\n                <details class="o_triton_portal-mobile-menu">\n                    <summary aria-label="Buka navigasi portal">Menu</summary>\n                    <div class="o_triton_portal-mobile-panel">\n                        <a href="/my/triton" class="o_triton_portal-link">Beranda</a><a href="/my/rps" class="o_triton_portal-link">RPS</a><a href="/my/kelas" class="o_triton_portal-link">Kelas</a><a href="/my/perwalian" class="o_triton_portal-link">Perwalian</a><a href="/my/analisis" class="o_triton_portal-link is-active" aria-current="page">Analisis</a><a href="/my/riwayat-nilai" class="o_triton_portal-link">Riwayat nilai</a>\n                        <span class="o_triton_portal-menu-divider" aria-hidden="true"></span>\n                        <a href="/my/profil">Profil dan pengaturan</a>\n                        <a href="/">Situs publik</a>\n                        <a href="/web/session/logout?redirect=/">Keluar</a>\n                    </div>\n                </details>\n                <div class="o_triton_portal-nav-actions">\n                    <a href="/" class="o_triton_portal-public-link">Situs publik</a>\n                    <details class="o_triton_user-menu">\n                        <summary aria-label="Menu akun Teacher Analysis C8831ACA">\n                            <span class="o_triton_user-avatar" aria-hidden="true">\n                                T\n                            </span>\n                            <span class="o_triton_user-name">Teacher Analysis C8831ACA</span>\n                            <span class="o_triton_user-chevron" aria-hidden="true">⌄</span>\n                        </summary>\n                        <div class="o_triton_user-menu-panel">\n                            <a href="/my/profil">Profil dan pengaturan</a>\n                            <a href="/web/session/logout?redirect=/">Keluar</a>\n                        </div>\n                    </details>\n                </div>\n            </div>\n        </nav>\n        <nav class="o_triton_breadcrumb o_triton_portal-breadcrumb" aria-label="Breadcrumb">\n            <ol>\n                <li><a href="/my/triton">Beranda</a></li>\n                <li><span>Pengajaran</span></li>\n                <li aria-current="page"><span>Analisis kelas</span></li>\n            </ol>\n        </nav>\n                <section class="o_triton_section">\n                    <div class="o_triton_container">\n                        <header class="o_triton_heading">\n                            <div>\n                                <span class="o_triton_eyebrow">Analisis kelas</span>\n                                <h1>Ringkasan capaian CPMK dan CPL</h1>\n                                <p class="o_triton_subtitle">Agregat dibatasi pada mahasiswa dalam kelas yang diampu akun ini.</p>\n                            </div>\n                        </header>\n        <div class="o_triton_list-management">\n            <form class="o_triton_list-toolbar" method="get" action="/my/analisis">\n                    <input type="hidden" name="angkatan" value="2025"/>\n                    <input type="hidden" name="rombel_id" value="39"/>\n                <label>\n                    Cari\n                    <input type="search" name="q" placeholder="Cari nama atau kata kunci" value=""/>\n                </label>\n                <label>\n                    Urutkan\n                    <select name="sort">\n                        <option value="">Default</option>\n                            <option value="course">Mata kuliah A–Z</option>\n                            <option value="term">Tahun ajaran terbaru</option>\n                    </select>\n                </label>\n                    <label>\n                        Angkatan\n                        <select name="angkatan">\n                                <option value="">Semua angkatan</option>\n                                <option value="2025" selected="True">2025</option>\n                        </select>\n                    </label>\n                    <label>\n                        Rombel\n                        <select name="rombel_id">\n                                <option value="">Semua rombel</option>\n                                <option value="39" selected="True">2025 - Rombel Analysis C8831ACA</option>\n                        </select>\n                    </label>\n                <label>\n                    Baris per halaman\n                    <select name="limit">\n                            <option value="10" selected="True">10</option>\n                            <option value="25">25</option>\n                            <option value="50">50</option>\n                            <option value="100">100</option>\n                    </select>\n                </label>\n                <button class="o_triton_btn" type="submit">Terapkan</button>\n            </form>\n            <div class="o_triton_list-summary">\n                <span>Menampilkan 1–1 dari 1 record</span>\n            </div>\n        </div>\n                        <section class="o_triton_section-heading">\n                            <h2>Capaian CPMK per mata kuliah</h2>\n                            <div class="o_triton_grid-three">\n                                    <article class="o_triton_panel">\n                                        <h3>CAC8831ACA: Course Analysis C8831ACA</h3>\n                                        <span class="o_triton_badge">2099/C8831ACA</span>\n                                        <p>Jumlah mahasiswa: <strong>1</strong></p>\n                                        <p>Rata-rata capaian CPMK: <strong>0.0</strong>%</p>\n                                        <p>Jumlah CPMK: <strong>0</strong></p>\n                                        <p>Status: <strong>0</strong> nilai tercapai</p>\n                                        <a class="o_triton_btn" href="/my/analisis/mata-kuliah/10">Lihat Detail Analisis</a>\n                                    </article>\n                            </div>\n                        </section>\n                        <section class="o_triton_section-heading">\n                            <h2>Capaian CPL</h2>\n                            <div class="o_triton_empty">\n                                <p>Belum ada nilai CPL tersedia untuk mahasiswa pada filter ini.</p>\n                            </div>\n                        </section>\n                    </div>\n                </section>\n        <footer class="o_triton_footer">\n            <div class="o_triton_container o_triton_footer-grid">\n                <div>\n                    <a class="o_triton_brand" href="/">\n                        <img class="o_triton_brand-logo" src="/erpobe/static/src/img/logo_triton.png" alt="TRITON" loading="lazy"/>\n                    </a>\n                    <p>Tracking, Reporting, and Integrated Technology for Outcome-based Education Network.</p>\n                </div>\n                <div>\n                    <h2>Jelajah</h2>\n                    <ul class="o_triton_list">\n                        <li><a href="/fakultas">Fakultas dan program studi</a></li>\n                        <li><a href="/perbandingan-cpl">Perbandingan CPL</a></li>\n                        <li><a href="/tracking">Tracking agregat</a></li>\n                    </ul>\n                </div>\n                <div>\n                    <h2>Bantuan</h2>\n                    <ul class="o_triton_list">\n                        <li><a href="/panduan">Panduan</a></li>\n                        <li><a href="/faq">FAQ</a></li>\n                        <li><a href="/kontak">Kontak</a></li>\n                    </ul>\n                </div>\n                <div>\n                    <h2>Informasi</h2>\n                    <ul class="o_triton_list">\n                        <li><a href="/metodologi">Metodologi</a></li>\n                        <li><a href="/kebijakan-privasi">Kebijakan privasi</a></li>\n                        <li><a href="/my">Portal pengguna</a></li>\n                    </ul>\n                </div>\n            </div>\n            <div class="o_triton_container">\n                <small>TRITON — pemantauan capaian pembelajaran berbasis OBE.</small>\n            </div>\n        </footer>\n            </main>\n        \n        <div id="o_shared_blocks" class="oe_unremovable"></div>\n                </main>\n            </div>\n        \n        </body>\n</html>'
+ 
+2026-11-25 18:11:30,943 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: Starting TestTritonPublicRoutes.test_teacher_listing_sorts_and_grade_detail_render ... 
+2026-11-25 18:11:30,945 47417 INFO erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: ====================================================================== 
+2026-11-25 18:11:30,945 47417 ERROR erpobe_unittest odoo.addons.erpobe.tests.test_triton_workflows: FAIL: TestTritonPublicRoutes.test_teacher_listing_sorts_and_grade_detail_render
+Traceback (most recent call last):
+  File "/home/sesa/odoo-dev/custom-odoo19/custom_module/erpobe/tests/test_triton_workflows.py", line 515, in test_teacher_listing_sorts_and_grade_detail_render
+    self.assertTrue(teacher, "The academic fixture should provide a teacher")
+AssertionError: erpobe.master.dosen() is not true : The academic fixture should provide a teacher
+ 
+2026-11-25 18:11:30,947 47417 INFO erpobe_unittest odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-11-25 18:11:30,949 47417 INFO erpobe_unittest odoo.service.server: 18 post-tests in 37.61s, 6022 queries 
+2026-11-25 18:11:30,949 47417 INFO erpobe_unittest odoo.tests.stats: erpobe: 22 tests 4.63s 5449 queries 
+2026-11-25 18:11:30,949 47417 ERROR erpobe_unittest odoo.tests.result: 4 failed, 0 error(s) of 18 tests when loading database 'erpobe_unittest' 
+2026-11-25 18:11:30,949 47417 INFO erpobe_unittest odoo.service.server: Initiating shutdown 
+2026-11-25 18:11:30,949 47417 INFO erpobe_unittest odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-11-25 18:11:31,140 47417 INFO erpobe_unittest odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  
+END=2026-11-26 01:11:31 +0700
+EXIT_CODE=1

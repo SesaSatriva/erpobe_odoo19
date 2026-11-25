@@ -1,7 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_student_cpl_page" name="Capaian CPL Pribadi">
-        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Capaian CPL pribadi</h1><p class="o_triton_subtitle">Jejak capaian CPL terhadap CPMK dan mata kuliah.</p></div></header><t t-call="erpobe.triton_portal_list_controls"/><div t-if="grades" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>CPL</th><th>Capaian</th><th>Status</th><th>CPMK kontributor</th><th>Mata kuliah</th></tr></thead><tbody><tr t-foreach="grades" t-as="grade"><td><strong t-out="grade['name']"/><br/><span class="o_triton_caption" t-out="grade['description']"/></td><td><strong><t t-out="grade['score']"/>%</strong><br/><span class="o_triton_caption">Target <t t-out="grade['target']"/>%</span></td><td><span t-if="grade['met']" class="o_triton_badge o_triton_badge-success">Tercapai</span><span t-else="" class="o_triton_badge o_triton_badge-warning">Belum tercapai</span></td><td><div t-foreach="grade['contributions']" t-as="item"><strong t-out="item['cpmk']"/></div></td><td><div t-foreach="grade['contributions']" t-as="item"><t t-out="item['course_code']"/> — <t t-out="item['course']"/>: <strong><t t-out="item['score']"/>%</strong><span t-if="not item['available']" class="o_triton_caption"> (belum tersedia)</span></div></td></tr></tbody></table></div><div t-else="" class="o_triton_empty"><h2>Belum ada capaian CPL</h2><p>Tidak ada CPL yang cocok dengan pencarian Anda.</p></div><aside class="o_triton_privacy-note o_triton_section-heading">Capaian individu merupakan data privat dan tidak ditampilkan dalam halaman publik.</aside></div></section><t t-call="erpobe.triton_footer"/></main></t>
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">Mahasiswa</span>
+                                <h1>Capaian CPL pribadi</h1>
+                                <p class="o_triton_subtitle">Jejak capaian CPL terhadap CPMK, bobot, dan mata kuliah.</p>
+                            </div>
+                        </header>
+                        <t t-call="erpobe.triton_portal_list_controls"/>
+                        <div t-if="grades" class="o_triton_table-wrap">
+                            <table class="o_triton_table">
+                                <thead><tr><th>CPL</th><th>Jenis</th><th>Capaian</th><th>Status</th><th>CPMK kontributor</th><th>Mata kuliah dan keterlacakan</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="grades" t-as="grade">
+                                        <td><a class="o_triton_link" t-att-href="'/my/capaian-cpl/%s' % grade['id']"><strong t-out="grade['name']"/></a><br/><span class="o_triton_caption" t-out="grade['description']"/></td>
+                                        <td t-out="grade['jenis']"/>
+                                        <td><strong><t t-out="grade['score']"/>%</strong><br/><span class="o_triton_caption">Target <t t-out="grade['target']"/>%</span></td>
+                                        <td><span t-if="grade['met']" class="o_triton_badge o_triton_badge-success">Tercapai</span><span t-else="" class="o_triton_badge o_triton_badge-warning">Belum tercapai</span></td>
+                                        <td><div t-foreach="grade['contributions']" t-as="item"><strong t-out="item['cpmk']"/> — <span class="o_triton_caption"><t t-out="item.get('weight', 0.0)"/>% bobot MK</span></div></td>
+                                        <td><div t-foreach="grade['contributions']" t-as="item"><t t-out="item['course_code']"/> — <t t-out="item['course']"/>: <strong><t t-out="item['score']"/>%</strong><span t-if="not item['available']" class="o_triton_caption"> (belum tersedia)</span></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div t-else="" class="o_triton_empty">
+                            <h2>Belum ada capaian CPL</h2>
+                            <p>Tidak ada CPL yang cocok dengan pencarian Anda.</p>
+                        </div>
+                        <aside class="o_triton_privacy-note o_triton_section-heading">Capaian individu merupakan data privat dan tidak ditampilkan dalam halaman publik.</aside>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+    <template id="triton_student_cpl_detail_page" name="Detail CPL Mahasiswa">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb"><a href="/my/capaian-cpl">Capaian CPL</a><span> / Detail CPL</span></nav>
+                        <header class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow" t-out="jenis_label"/><h1 t-out="grade.cpl_id.kode_cpl"/></div>
+                            <a class="o_triton_btn-ghost" href="/my/capaian-cpl">Kembali</a>
+                        </header>
+                        <article class="o_triton_panel">
+                            <h2>Identitas CPL</h2>
+                            <p t-out="grade.cpl_id.name"/>
+                            <section class="o_triton_dashboard-metrics">
+                                <article><span>Capaian aktual</span><strong t-if="grade.is_available"><t t-out="grade.nilai_cpl"/>%</strong><strong t-else="">Belum tersedia</strong></article>
+                                <article><span>Target</span><strong><t t-out="grade.target_nilai"/>%</strong></article>
+                                <article><span>Mata kuliah kontributor</span><strong t-out="course_count"/></article>
+                                <article><span>CPMK valid</span><strong t-out="valid_cpmk_count"/></article>
+                                <article><span>CPMK belum lengkap</span><strong t-out="incomplete_cpmk_count"/></article>
+                            </section>
+                            <h2>Mata kuliah dan CPMK kontributor</h2>
+                            <div t-if="contributions" class="o_triton_table-wrap">
+                                <table class="o_triton_table">
+                                    <thead><tr><th>Mata kuliah</th><th>CPMK</th><th>Bobot kontribusi</th><th>Capaian CPMK</th><th>Status</th></tr></thead>
+                                    <tbody>
+                                        <tr t-foreach="contributions" t-as="item">
+                                            <td><strong t-out="item['course_code']"/><br/><span class="o_triton_caption" t-out="item['course']"/></td>
+                                            <td><strong t-out="item['code']"/><br/><span class="o_triton_caption" t-out="item['name']"/></td>
+                                            <td><t t-out="item['weight']"/>%</td>
+                                            <td><t t-if="item['available']"><t t-out="item['score']"/>%</t><t t-else="">Belum tersedia</t></td>
+                                            <td><span t-if="item['available']" class="o_triton_badge o_triton_badge-success">Valid</span><span t-else="" class="o_triton_badge o_triton_badge-warning">Belum lengkap</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <aside class="o_triton_privacy-note"><strong>Formula existing:</strong> CPL dihitung dari CPMK terpetakan yang tersedia dengan bobot CPMK→mata kuliah pada RPS yang sama. CPMK tanpa data atau relasi CPL tidak dimasukkan.</aside>
+                        </article>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
     </template>
 
 </odoo>

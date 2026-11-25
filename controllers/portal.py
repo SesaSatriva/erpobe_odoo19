@@ -91,14 +91,6 @@ class TritonPortalHome(TritonPortalBase):
                     ('krs_id.state', '=', 'approved'),
                 ]
             )
-            grade_components = request.env['erpobe.grade.komponen'].sudo().search(
-                [('krs_line_id', 'in', krs_lines.ids)]
-            )
-            graded_components = {}
-            for grade in grade_components:
-                graded_components.setdefault(grade.krs_line_id.id, set()).add(
-                    grade.komponen_id.id
-                )
             student_ids = krs_lines.mapped('mahasiswa_id').ids
             course_ids = lines.mapped('matakuliah_id').ids
             course_grades = request.env['erpobe.grade.mk'].sudo().search(
@@ -111,17 +103,19 @@ class TritonPortalHome(TritonPortalBase):
             class_rows = []
             total_students = 0
             completed_students = 0
+            total_components = 0
+            total_records = 0
+            total_actual = 0
+            total_ungraded = 0
+            total_unlinked = 0
+            incomplete_students = 0
+            not_started_students = 0
             for line in lines:
-                enrolled_lines = krs_lines.filtered(
-                    lambda krs_line: krs_line.penawaran_line_id == line
-                )
-                component_ids = set(line.latest_rps_id.komponen_ids.ids) if line.latest_rps_id else set()
-                finished = sum(
-                    1
-                    for krs_line in enrolled_lines
-                    if component_ids
-                    and component_ids.issubset(graded_components.get(krs_line.id, set()))
-                )
+                summary = self._assessment_summary(line)
+                enrolled_lines = summary['krs_lines']
+                finished = len(summary['completed'])
+                incomplete = len(summary['incomplete'])
+                not_started = len(summary['not_started'])
                 scores = [
                     grade_by_student_course[(krs_line.mahasiswa_id.id, line.matakuliah_id.id)]
                     for krs_line in enrolled_lines
@@ -129,11 +123,23 @@ class TritonPortalHome(TritonPortalBase):
                 ]
                 total_students += len(enrolled_lines)
                 completed_students += finished
+                incomplete_students += incomplete
+                not_started_students += not_started
+                total_components += summary['component_count']
+                total_records += summary['record_count']
+                total_actual += summary['actual_count']
+                total_ungraded += summary['ungraded_count']
+                total_unlinked += summary['unlinked_count']
                 class_rows.append({
                     'name': line.matakuliah_id.name,
                     'code': line.matakuliah_id.kode_mk or '',
                     'term': line.tahun_ajaran_id.tahun_ajaran,
                     'students': len(enrolled_lines),
+                    'components': summary['component_count'],
+                    'records': summary['record_count'],
+                    'actual': summary['actual_count'],
+                    'incomplete': incomplete,
+                    'not_started': not_started,
                     'average': round(sum(scores) / len(scores), 2) if scores else None,
                     'graded': finished,
                     'line_id': line.id,
@@ -150,8 +156,14 @@ class TritonPortalHome(TritonPortalBase):
                 'course_count': len(lines.mapped('matakuliah_id')),
                 'class_count': len(lines),
                 'student_count': len(set(student_ids)),
-                'pending_assessments': max(total_students - completed_students, 0),
+                'component_count': total_components,
+                'record_count': total_records,
+                'actual_count': total_actual,
+                'ungraded_count': total_ungraded,
+                'unlinked_count': total_unlinked,
+                'pending_assessments': incomplete_students,
                 'completed_assessments': completed_students,
+                'not_started_assessments': not_started_students,
                 'classes': class_rows,
                 'class_averages_json': json.dumps([
                     row['average'] for row in classes_with_average

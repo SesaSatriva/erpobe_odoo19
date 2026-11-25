@@ -1,10 +1,13 @@
 from urllib.parse import quote
+import io
+import xlsxwriter
 
 from odoo import http
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 
 from .portal_base import TritonPortalBase
+from .const import _CPL_TYPES
 
 
 class TritonPortalMahasiswa(TritonPortalBase):
@@ -95,6 +98,59 @@ class TritonPortalMahasiswa(TritonPortalBase):
             data.append({'year': report.tahun_ajaran_id.display_name if report.tahun_ajaran_id else 'Transkrip', 'id': report.id, 'ipk': report.ipk, 'sks': report.total_sks_lulus, 'courses': [{'name': line.mk_id.name, 'kode': line.kode_mk, 'sks': line.sks, 'score': line.nilai_angka, 'grade': line.nilai_huruf} for line in selected_lines]})
         return request.render('erpobe.triton_khs_page', {'reports': data, 'pagination': pagination, 'list_action': '/my/khs'})
 
+    @http.route('/my/khs/<int:khs_id>/xlsx', type='http', auth='user', website=True)
+    def triton_student_khs_xlsx(self, khs_id, **kwargs):
+        student = self._require_student()
+        report = request.env['erpobe.report.khs'].sudo().search([
+            ('id', '=', khs_id),
+            ('mahasiswa_id', '=', student.id),
+        ], limit=1)
+        if not report:
+            raise AccessError('KHS tidak ditemukan untuk akun ini.')
+
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet('KHS')
+        title = workbook.add_format({'bold': True, 'font_size': 16})
+        header = workbook.add_format({'bold': True, 'bg_color': '#123F59', 'font_color': 'white', 'border': 1})
+        sheet.write('A1', 'Kartu Hasil Studi', title)
+        sheet.write_row('A3', ['NIM', 'Nama', 'Program Studi', 'Tahun Akademik', 'IPK', 'SKS Lulus'], header)
+        sheet.write_row('A4', [
+            report.nim,
+            report.mahasiswa_id.name,
+            report.prodi_id.name,
+            report.tahun_ajaran_id.tahun_ajaran if report.tahun_ajaran_id else '',
+            report.ipk,
+            report.total_sks_lulus,
+        ])
+        sheet.write_row('A6', ['Semester', 'Kode', 'Mata Kuliah', 'SKS', 'Nilai Angka', 'Nilai Huruf', 'Bobot'], header)
+        row = 6
+        for course in report.mk_line_ids:
+            sheet.write_row(row, 0, [
+                course.semester_mk,
+                course.kode_mk,
+                course.mk_id.name,
+                course.sks,
+                course.nilai_angka,
+                course.nilai_huruf,
+                course.bobot,
+            ])
+            row += 1
+        sheet.set_column('A:A', 12)
+        sheet.set_column('B:B', 14)
+        sheet.set_column('C:C', 48)
+        sheet.set_column('D:D', 8)
+        sheet.set_column('E:G', 14)
+        workbook.close()
+        response = request.make_response(
+            output.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', f'attachment; filename=KHS-{student.nim}.xlsx'),
+            ],
+        )
+        return response
+
     @http.route('/my/mata-kuliah', type='http', auth='user', website=True)
     def triton_student_courses(self, **kwargs):
         student = self._require_student()
@@ -117,6 +173,7 @@ class TritonPortalMahasiswa(TritonPortalBase):
             ]) if final_rps else request.env['erpobe.grade.cpmk'].sudo()
             cpmk_grade_map = {grade.cpmk_id.id: grade for grade in cpmk_grades}
             courses.append({
+                'line_id': line.id,
                 'name': line.matakuliah_id.name,
                 'code': line.matakuliah_id.kode_mk,
                 'sks': line.sks,
@@ -125,7 +182,23 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 'rps': bool(final_rps),
                 'rps_id': final_rps.id if final_rps else 0,
                 'components': [
-                    {'name': grade.komponen_id.name, 'score': grade.nilai}
+                    {
+                        'name': grade.komponen_id.name,
+                        'score': grade.nilai,
+                        'origin': grade.origin,
+                        'cpmks': [
+                            {
+                                'code': allocation.cpmk_id.kode_cpmk,
+                                'weight': allocation.bobot_komponen_cpmk,
+                            }
+                            for allocation in final_rps.bobot_komponen_cpmk_ids.filtered(
+                                lambda item:
+                                    item.rps_komponen_id
+                                    and item.komponen_penilaian == grade.komponen_id
+                                    and item.cpmk_id
+                            )
+                        ] if final_rps else [],
+                    }
                     for grade in component_grades.filtered(lambda item: item.is_graded)
                 ],
                 'cpmk': [{
@@ -138,6 +211,104 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 } for cpmk in (final_rps.cpmk_ids if final_rps else [])],
             })
         return request.render('erpobe.triton_student_courses_page', {'courses': courses, 'pagination': pagination, 'list_action': '/my/mata-kuliah'})
+
+    @http.route('/my/mata-kuliah/<int:krs_line_id>', type='http', auth='user', website=True)
+    def triton_student_course_detail(self, krs_line_id, **kwargs):
+        student = self._require_student()
+        line = request.env['erpobe.akademik.krs.line'].sudo().search([
+            ('id', '=', krs_line_id),
+            ('mahasiswa_id', '=', student.id),
+            ('krs_id.state', '=', 'approved'),
+        ], limit=1)
+        if not line:
+            raise AccessError('Mata kuliah tidak ditemukan atau bukan milik akun Anda.')
+
+        rps = line.penawaran_line_id.rps_ids.filtered(
+            lambda record: record.status == 'final'
+        ).sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]
+        cpmk_rows = request.env['erpobe.grade.cpmk'].sudo().search([
+            ('mahasiswa_id', '=', student.id),
+            ('krs_line_id', '=', line.id),
+            ('rps_id', '=', rps.id),
+        ]) if rps else request.env['erpobe.grade.cpmk'].sudo()
+        cpmk_data = []
+        valid_scores = []
+        for cpmk in (rps.cpmk_ids if rps else request.env['erpobe.akademik.cpmk']):
+            grade = cpmk_rows.filtered(lambda item: item.cpmk_id == cpmk)[:1]
+            available = bool(grade and grade.is_available)
+            if available:
+                valid_scores.append(grade.nilai_cpmk)
+            cpmk_data.append({
+                'id': cpmk.id,
+                'code': cpmk.kode_cpmk,
+                'name': cpmk.name,
+                'target': cpmk.target_nilai,
+                'score': grade.nilai_cpmk if grade else 0.0,
+                'available': available,
+                'met': bool(grade and grade.status_capaian == 'tercapai'),
+            })
+        return request.render('erpobe.triton_student_course_detail_page', {
+            'line': line,
+            'rps': rps,
+            'cpmks': cpmk_data,
+            'valid_count': len(valid_scores),
+            'valid_average': round(sum(valid_scores) / len(valid_scores), 2) if valid_scores else None,
+        })
+
+    @http.route('/my/mata-kuliah/<int:krs_line_id>/cpmk/<int:cpmk_id>', type='http', auth='user', website=True)
+    def triton_student_cpmk_detail(self, krs_line_id, cpmk_id, **kwargs):
+        student = self._require_student()
+        line = request.env['erpobe.akademik.krs.line'].sudo().search([
+            ('id', '=', krs_line_id),
+            ('mahasiswa_id', '=', student.id),
+            ('krs_id.state', '=', 'approved'),
+        ], limit=1)
+        if not line:
+            raise AccessError('Mata kuliah tidak ditemukan atau bukan milik akun Anda.')
+        rps = line.penawaran_line_id.rps_ids.filtered(
+            lambda record: record.status == 'final'
+        ).sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]
+        cpmk = request.env['erpobe.akademik.cpmk'].sudo().browse(cpmk_id)
+        if not rps or not cpmk.exists() or cpmk not in rps.cpmk_ids:
+            raise AccessError('CPMK tidak tersedia untuk mata kuliah ini.')
+
+        grade = request.env['erpobe.grade.cpmk'].sudo().search([
+            ('mahasiswa_id', '=', student.id),
+            ('krs_line_id', '=', line.id),
+            ('rps_id', '=', rps.id),
+            ('cpmk_id', '=', cpmk.id),
+        ], limit=1)
+        allocations = rps.bobot_komponen_cpmk_ids.filtered(
+            lambda item: item.cpmk_id == cpmk
+        )
+        component_rows = []
+        for allocation in allocations:
+            snapshot = allocation.rps_komponen_id
+            if not snapshot and allocation.komponen_penilaian:
+                snapshot = rps.rps_komponen_ids.filtered(
+                    lambda item: item.komponen_id == allocation.komponen_penilaian
+                )[:1]
+            grade_row = request.env['erpobe.grade.komponen'].sudo().search([
+                ('krs_line_id', '=', line.id),
+                ('rps_id', '=', rps.id),
+                ('rps_komponen_id', '=', snapshot.id),
+            ], limit=1) if snapshot else request.env['erpobe.grade.komponen'].sudo()
+            graded = bool(grade_row and grade_row.is_graded)
+            component_rows.append({
+                'name': snapshot.name if snapshot else allocation.komponen_penilaian.name,
+                'weight': allocation.bobot_komponen_cpmk,
+                'snapshot_weight': snapshot.bobot if snapshot else 0.0,
+                'score': grade_row.nilai if grade_row else None,
+                'graded': graded,
+                'origin': grade_row.origin if grade_row else '',
+            })
+        return request.render('erpobe.triton_student_cpmk_detail_page', {
+            'line': line,
+            'rps': rps,
+            'cpmk': cpmk,
+            'grade': grade,
+            'components': component_rows,
+        })
 
     @http.route('/my/rps/<int:rps_id>', type='http', auth='user', website=True)
     def triton_student_rps_detail(self, rps_id, **kwargs):
@@ -165,7 +336,7 @@ class TritonPortalMahasiswa(TritonPortalBase):
             description='Mahasiswa mengakses RPS',
             is_sensitive=True,
         )
-        return request.render('erpobe.triton_rps_detail_page', {'rps': rps})
+        return request.render('erpobe.triton_student_rps_detail_page', {'rps': rps})
 
     @http.route('/my/capaian-cpl', type='http', auth='user', website=True)
     def triton_student_cpl(self, **kwargs):
@@ -190,6 +361,12 @@ class TritonPortalMahasiswa(TritonPortalBase):
                     ('rps_id.status', '=', 'final'),
                     ('krs_line_id.krs_id.state', '=', 'approved'),
                 ], order='id desc', limit=1)
+                cpmk_weight = 0.0
+                if cpmk_grade:
+                    weight_line = cpmk_grade.rps_id.bobot_cpmk_mk_ids.filtered(
+                        lambda item: item.cpmk_id == cpmk
+                    )[:1]
+                    cpmk_weight = weight_line.bobot_cpmk_mk if weight_line else 0.0
                 contributions.append({
                     'cpmk': cpmk.kode_cpmk,
                     'description': cpmk.name,
@@ -197,16 +374,73 @@ class TritonPortalMahasiswa(TritonPortalBase):
                     'course': cpmk.mk_id.name,
                     'course_code': cpmk.mk_id.kode_mk,
                     'available': bool(cpmk_grade),
+                    'weight': cpmk_weight,
                 })
             values.append({
+                'id': grade.cpl_id.id,
                 'name': grade.cpl_id.kode_cpl,
                 'description': grade.cpl_id.name,
+                'jenis': _CPL_TYPES.get(grade.cpl_id.jenis_cpl, 'Lainnya'),
                 'score': grade.nilai_cpl,
                 'target': grade.target_nilai,
                 'met': grade.status_capaian == 'tercapai',
                 'contributions': contributions,
             })
         return request.render('erpobe.triton_student_cpl_page', {'grades': values, 'pagination': pagination, 'list_action': '/my/capaian-cpl'})
+
+    @http.route('/my/capaian-cpl/<int:cpl_id>', type='http', auth='user', website=True)
+    def triton_student_cpl_detail(self, cpl_id, **kwargs):
+        student = self._require_student()
+        grade = request.env['erpobe.grade.cpl'].sudo().search([
+            ('cpl_id', '=', cpl_id),
+            ('mahasiswa_id', '=', student.id),
+        ], limit=1)
+        if not grade:
+            raise AccessError('CPL tidak ditemukan atau bukan milik akun Anda.')
+
+        contributions = []
+        valid_cpmk_count = 0
+        incomplete_cpmk_count = 0
+        course_ids = set()
+        for mapping in grade.cpl_id.cpmk_mapping_ids:
+            cpmk = mapping.cpmk_id
+            cpmk_grade = request.env['erpobe.grade.cpmk'].sudo().search([
+                ('mahasiswa_id', '=', student.id),
+                ('cpmk_id', '=', cpmk.id),
+                ('is_available', '=', True),
+                ('rps_id.status', '=', 'final'),
+                ('krs_line_id.krs_id.state', '=', 'approved'),
+            ], order='id desc', limit=1)
+            if cpmk_grade:
+                valid_cpmk_count += 1
+            else:
+                incomplete_cpmk_count += 1
+            course_ids.add(cpmk.mk_id.id)
+            weight = 0.0
+            if cpmk_grade:
+                weight_row = cpmk_grade.rps_id.bobot_cpmk_mk_ids.filtered(
+                    lambda item: item.cpmk_id == cpmk
+                )[:1]
+                weight = weight_row.bobot_cpmk_mk if weight_row else 0.0
+            contributions.append({
+                'id': cpmk.id,
+                'code': cpmk.kode_cpmk,
+                'name': cpmk.name,
+                'target': cpmk.target_nilai,
+                'score': cpmk_grade.nilai_cpmk if cpmk_grade else 0.0,
+                'available': bool(cpmk_grade),
+                'weight': weight,
+                'course_code': cpmk.mk_id.kode_mk,
+                'course': cpmk.mk_id.name,
+            })
+        return request.render('erpobe.triton_student_cpl_detail_page', {
+            'grade': grade,
+            'jenis_label': _CPL_TYPES.get(grade.cpl_id.jenis_cpl, 'Lainnya'),
+            'contributions': contributions,
+            'course_count': len(course_ids),
+            'valid_cpmk_count': valid_cpmk_count,
+            'incomplete_cpmk_count': incomplete_cpmk_count,
+        })
 
     @http.route('/my/profil', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def triton_student_profile(self, **kwargs):

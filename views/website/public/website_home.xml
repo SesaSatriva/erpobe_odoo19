@@ -33,6 +33,9 @@
                                 <li><strong t-out="stats['prodis']"/> program studi terpantau</li>
                                 <li><strong t-out="stats['cpl_count']"/> CPL tercatat</li>
                                 <li><strong t-out="stats['rps_final']"/> RPS final tersimpan</li>
+                                <li t-if="stats['cpl_valid_count']"><strong t-out="stats['cpl_valid_count']"/> CPL dengan capaian valid</li>
+                                <li t-if="stats['cpl_valid_count']"><strong t-out="stats['cpl_met_count']"/> mencapai target • <strong t-out="stats['cpl_not_met_count']"/> belum mencapai target</li>
+                                <li t-else="">Capaian CPL valid belum tersedia</li>
                             </ul>
                         </aside>
                     </div>

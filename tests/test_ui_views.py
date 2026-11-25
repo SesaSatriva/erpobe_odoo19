@@ -7,6 +7,48 @@ from odoo.tests import TransactionCase, tagged
 
 @tagged("post_install", "-at_install")
 class TestErpObeUiViews(TransactionCase):
+    def test_public_home_exposes_cpl_valid_counts(self):
+        template_path = (
+            Path(__file__).resolve().parents[1]
+            / "views"
+            / "website"
+            / "public"
+            / "website_home.xml"
+        )
+        arch = etree.parse(str(template_path))
+        text = " ".join(arch.xpath("string(.)").split())
+        self.assertIn("Capaian CPL valid belum tersedia", text)
+
+    def test_public_and_student_rps_templates_remain_separate(self):
+        base = Path(__file__).resolve().parents[1]
+        home_arch = etree.parse(str(base / "views" / "website" / "public" / "website_home.xml"))
+        self.assertTrue(
+            home_arch.xpath(
+                "//*[contains(@t-if, 'institutional_average') "
+                "or contains(@t-att-value, 'institutional_average')]"
+            )
+        )
+        student_arch = etree.parse(
+            str(base / "views" / "website" / "portal" / "student" / "portal_courses.xml")
+        )
+        templates = student_arch.xpath("//template/@id")
+        self.assertIn("triton_student_rps_detail_page", templates)
+        self.assertNotIn("triton_rps_detail_page", templates)
+
+    def test_teacher_dashboard_links_assessment_detail_statuses(self):
+        template_path = (
+            Path(__file__).resolve().parents[1]
+            / "views"
+            / "website"
+            / "portal"
+            / "portal_dashboard.xml"
+        )
+        arch = etree.parse(str(template_path))
+        status_links = arch.xpath(
+            "//a[contains(@t-att-href, '/nilai?status=')]"
+        )
+        self.assertGreaterEqual(len(status_links), 3)
+
     def test_portal_monitoring_templates_use_professional_tables(self):
         template_files = (
             "views/website/portal/teacher/portal_rps.xml",

@@ -1,7 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_student_courses_page" name="Mata Kuliah Mahasiswa">
-        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Mahasiswa</span><h1>Mata kuliah saya</h1><p class="o_triton_subtitle">Daftar berasal dari KRS yang telah disetujui.</p></div></header><t t-call="erpobe.triton_portal_list_controls"/><div t-if="courses" class="o_triton_table-wrap"><table class="o_triton_table"><thead><tr><th>Mata kuliah</th><th>Tahun / Semester</th><th>CPMK dan CPL</th><th>Capaian CPMK</th><th>Nilai komponen</th><th>RPS</th></tr></thead><tbody><tr t-foreach="courses" t-as="course"><td><strong t-out="course['code']"/> — <t t-out="course['name']"/><br/><span class="o_triton_caption"><t t-out="course['sks']"/> SKS</span></td><td><t t-out="course['year']"/> • <t t-out="course['semester']"/></td><td><t t-if="course['cpmk']"><div t-foreach="course['cpmk']" t-as="cpmk"><strong t-out="cpmk['code']"/></div></t><t t-else="">-</t></td><td><div t-foreach="course['cpmk']" t-as="cpmk"><strong t-out="cpmk['code']"/>: <t t-out="cpmk['score']"/>% <span class="o_triton_caption">(target <t t-out="cpmk['target']"/>%)</span></div><span t-if="not course['cpmk']" class="o_triton_caption">Belum ada CPMK</span></td><td><div t-foreach="course['components']" t-as="component"><t t-out="component['name']"/>: <strong t-out="component['score']"/></div><span t-if="not course['components']" class="o_triton_caption">Belum dinilai</span></td><td><span t-if="course['rps']" class="o_triton_badge o_triton_badge-success">RPS Final</span><span t-else="" class="o_triton_badge o_triton_badge-warning">Belum tersedia</span><br/><a t-if="course['rps_id']" class="o_triton_link" t-att-href="'/my/rps/%s' % course['rps_id']">Lihat RPS</a></td></tr></tbody></table></div><div t-else="" class="o_triton_empty"><h2>Belum ada mata kuliah</h2><p>Tidak ada mata kuliah yang cocok dengan pencarian Anda.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">Mahasiswa</span>
+                                <h1>Mata kuliah saya</h1>
+                                <p class="o_triton_subtitle">Daftar berasal dari KRS yang telah disetujui.</p>
+                            </div>
+                        </header>
+                        <t t-call="erpobe.triton_portal_list_controls"/>
+                        <div t-if="courses" class="o_triton_table-wrap">
+                            <table class="o_triton_table">
+                                <thead>
+                                    <tr>
+                                        <th>Mata kuliah</th>
+                                        <th>Tahun / Semester</th>
+                                        <th>CPMK dan CPL</th>
+                                        <th>Capaian CPMK</th>
+                                        <th>Nilai komponen</th>
+                                        <th>RPS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="courses" t-as="course">
+                                        <td><strong t-out="course['code']"/> — <t t-out="course['name']"/><br/><span class="o_triton_caption"><t t-out="course['sks']"/> SKS</span></td>
+                                        <td><t t-out="course['year']"/> • <t t-out="course['semester']"/></td>
+                                        <td><div t-foreach="course['cpmk']" t-as="cpmk"><strong t-out="cpmk['code']"/></div></td>
+                                        <td><div t-foreach="course['cpmk']" t-as="cpmk"><strong t-out="cpmk['code']"/>: <t t-out="cpmk['score']"/>% <span class="o_triton_caption">(target <t t-out="cpmk['target']"/>%)</span></div><span t-if="not course['cpmk']" class="o_triton_caption">Belum ada CPMK</span></td>
+                                        <td>
+                                            <div t-foreach="course['components']" t-as="component">
+                                                <strong t-out="component['name']"/>: <t t-out="component['score']"/>
+                                                <span class="o_triton_caption">
+                                                    <t t-if="component.get('origin') == 'actual'">(nilai aktual)</t>
+                                                    <t t-elif="component.get('origin') == 'simulated'">(data simulasi)</t>
+                                                    <t t-else="">(legacy)</t>
+                                                </span>
+                                                <div t-foreach="component.get('cpmks', [])" t-as="cpmk" class="o_triton_caption"><t t-out="cpmk['code']"/> — <t t-out="cpmk['weight']"/>%</div>
+                                            </div>
+                                            <span t-if="not course['components']" class="o_triton_caption">Belum dinilai</span>
+                                        </td>
+                                        <td>
+                                            <span t-if="course['rps']" class="o_triton_badge o_triton_badge-success">RPS Final</span>
+                                            <span t-else="" class="o_triton_badge o_triton_badge-warning">Belum tersedia</span>
+                                            <div t-if="course['rps_id']">
+                                                <a class="o_triton_link" t-att-href="'/my/rps/%s' % course['rps_id']">Lihat RPS</a>
+                                                <a class="o_triton_link" t-att-href="'/my/rps/%s/xlsx' % course['rps_id']">Unduh XLSX</a>
+                                            </div>
+                                            <div><a class="o_triton_link" t-att-href="'/my/mata-kuliah/%s' % course['line_id']">Detail mata kuliah</a></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div t-else="" class="o_triton_empty">
+                            <h2>Belum ada mata kuliah</h2>
+                            <p>Tidak ada mata kuliah yang cocok dengan pencarian Anda.</p>
+                        </div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_student_course_detail_page" name="Detail Mata Kuliah Mahasiswa">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb"><a href="/my/mata-kuliah">Mata kuliah</a><span> / Detail mata kuliah</span></nav>
+                        <header class="o_triton_heading">
+                            <div><span class="o_triton_eyebrow">Mahasiswa</span><h1 t-out="line.matakuliah_id.name"/><p class="o_triton_subtitle"><t t-out="line.matakuliah_id.kode_mk"/> • <t t-out="line.sks"/> SKS</p></div>
+                            <div class="o_triton_hero-actions">
+                                <a t-if="rps" class="o_triton_btn-ghost" t-att-href="'/my/rps/%s' % rps.id">Lihat RPS final</a>
+                                <a t-if="rps" class="o_triton_btn-ghost" t-att-href="'/my/rps/%s/xlsx' % rps.id">Unduh XLSX</a>
+                                <a class="o_triton_btn-ghost" href="/my/mata-kuliah">Kembali</a>
+                            </div>
+                        </header>
+                        <dl class="o_triton_definition-list">
+                            <dt>Dosen pengampu</dt>
+                            <dd><t t-if="rps and rps.koordinator_id" t-out="rps.koordinator_id.name"/><t t-if="rps" t-foreach="rps.tim_pengampu_ids" t-as="lecturer"><t t-if="lecturer != rps.koordinator_id">; <t t-out="lecturer.name"/></t></t><t t-if="not rps">Belum tersedia</t></dd>
+                            <dt>Semester / Tahun</dt>
+                            <dd><t t-out="line.penawaran_line_id.tahun_ajaran_id.semester"/> • <t t-out="line.penawaran_line_id.tahun_ajaran_id.tahun_ajaran"/></dd>
+                            <dt>Status RPS</dt>
+                            <dd><span t-if="rps" class="o_triton_badge o_triton_badge-success">RPS final tersedia</span><span t-else="" class="o_triton_badge o_triton_badge-warning">RPS belum tersedia</span></dd>
+                        </dl>
+                        <section class="o_triton_dashboard-metrics" aria-label="Ringkasan CPMK">
+                            <article><span>Total CPMK</span><strong t-out="len(cpmks)"/></article>
+                            <article><span>CPMK capaian valid</span><strong t-out="valid_count"/></article>
+                            <article><span>CPMK belum lengkap</span><strong t-out="len(cpmks) - valid_count"/></article>
+                            <article><span>Rata-rata capaian valid</span><strong t-if="valid_average is not None"><t t-out="valid_average"/>%</strong><strong t-else="">Belum tersedia</strong></article>
+                        </section>
+                        <div t-if="cpmks" class="o_triton_table-wrap">
+                            <table class="o_triton_table">
+                                <thead><tr><th>CPMK</th><th>Deskripsi</th><th>Target</th><th>Capaian</th><th>Status</th><th>Aksi</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="cpmks" t-as="cpmk">
+                                        <td><strong t-out="cpmk['code']"/></td>
+                                        <td t-out="cpmk['name']"/>
+                                        <td><t t-out="cpmk['target']"/>%</td>
+                                        <td><t t-if="cpmk['available']"><t t-out="cpmk['score']"/>%</t><t t-else="">Belum tersedia</t></td>
+                                        <td><span t-if="cpmk['available'] and cpmk['met']" class="o_triton_badge o_triton_badge-success">Tercapai</span><span t-elif="cpmk['available']" class="o_triton_badge o_triton_badge-warning">Belum tercapai</span><span t-else="" class="o_triton_badge o_triton_badge-warning">Belum lengkap</span></td>
+                                        <td><a class="o_triton_link" t-att-href="'/my/mata-kuliah/%s/cpmk/%s' % (line.id, cpmk['id'])">Detail CPMK</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><h2>Belum ada CPMK</h2><p>CPMK akan tersedia setelah RPS final dipublikasikan.</p></div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_student_cpmk_detail_page" name="Detail CPMK Mahasiswa">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb"><a href="/my/mata-kuliah">Mata kuliah</a><span> / </span><a t-att-href="'/my/mata-kuliah/%s' % line.id">Detail mata kuliah</a><span> / CPMK</span></nav>
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow" t-out="cpmk.kode_cpmk"/><h1 t-out="cpmk.name"/></div><a class="o_triton_btn-ghost" t-att-href="'/my/mata-kuliah/%s' % line.id">Kembali</a></header>
+                        <section class="o_triton_dashboard-metrics">
+                            <article><span>Capaian aktual</span><strong t-if="grade and grade.is_available"><t t-out="grade.nilai_cpmk"/>%</strong><strong t-else="">Belum tersedia</strong></article>
+                            <article><span>Target</span><strong><t t-out="cpmk.target_nilai"/>%</strong></article>
+                            <article><span>Status</span><strong t-if="grade and grade.status_capaian == 'tercapai'">Tercapai</strong><strong t-elif="grade and grade.is_available">Belum tercapai</strong><strong t-else="">Belum lengkap</strong></article>
+                        </section>
+                        <h2>Komponen penilaian penyusun</h2>
+                        <div t-if="components" class="o_triton_table-wrap">
+                            <table class="o_triton_table">
+                                <thead><tr><th>Komponen</th><th>Bobot komponen</th><th>Bobot dalam snapshot RPS</th><th>Nilai mahasiswa</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="components" t-as="component">
+                                        <td t-out="component['name']"/>
+                                        <td><t t-out="component['weight']"/>%</td>
+                                        <td><t t-out="component['snapshot_weight']"/>%</td>
+                                        <td><t t-if="component['score'] is not None"><t t-out="component['score']"/></t><t t-else="">Belum dinilai</t></td>
+                                        <td><span t-if="component['graded']" class="o_triton_badge o_triton_badge-success"><t t-if="component['origin'] == 'actual'">Nilai aktual</t><t t-else="">Tersedia</t></span><span t-else="" class="o_triton_badge o_triton_badge-warning">Belum dinilai</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><p>RPS belum memiliki komponen yang berkontribusi pada CPMK ini.</p></div>
+                        <aside class="o_triton_privacy-note"><strong>Formula existing:</strong> Capaian CPMK dihitung sebagai rata-rata nilai komponen tertimbang dari alokasi komponen→CPMK dan bobot snapshot komponen pada RPS final. Komponen tanpa nilai tidak disertakan dalam denominator.</aside>
+                        <aside class="o_triton_privacy-note">Capaian CPMK menggunakan hasil compute RPS existing. Nilai 0 tetap dianggap dinilai jika record memiliki `is_graded = True`.</aside>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
+    </template>
+
+    <template id="triton_student_rps_detail_page" name="Detail RPS Mahasiswa">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <nav class="o_triton_breadcrumb" aria-label="Breadcrumb">
+                            <a href="/my/mata-kuliah">Mata kuliah</a><span> / Detail RPS</span>
+                        </nav>
+                        <header class="o_triton_heading">
+                            <div>
+                                <span class="o_triton_eyebrow">RPS final • Versi <t t-out="rps.version"/></span>
+                                <h1 t-out="rps.matakuliah_name"/>
+                                <p class="o_triton_subtitle"><t t-out="rps.kode_mk"/> • <t t-out="rps.sks"/> SKS • <t t-out="rps.tahun_ajaran_id.display_name"/></p>
+                            </div>
+                            <div class="o_triton_hero-actions">
+                                <a class="o_triton_btn-ghost" href="/my/mata-kuliah">Kembali</a>
+                                <a class="o_triton_btn-ghost" t-att-href="'/report/pdf/erpobe.action_report_rps/%s' % rps.id">Cetak PDF</a>
+                                <a class="o_triton_btn-ghost" t-att-href="'/my/rps/%s/xlsx' % rps.id">Unduh XLSX</a>
+                            </div>
+                        </header>
+                        <article class="o_triton_panel">
+                            <h2>Identitas mata kuliah</h2>
+                            <dl class="o_triton_definition-list">
+                                <dt>Program studi</dt><dd t-out="rps.prodi_id.display_name"/>
+                                <dt>Tahun ajaran / Semester</dt><dd><t t-out="rps.tahun_ajaran_id.display_name"/> / <t t-out="rps.semester"/></dd>
+                                <dt>Dosen pengampu</dt><dd><t t-if="rps.koordinator_id" t-out="rps.koordinator_id.name"/><t t-foreach="rps.tim_pengampu_ids" t-as="lecturer"><t t-if="lecturer != rps.koordinator_id">; <t t-out="lecturer.name"/></t></t></dd>
+                                <dt>Status RPS</dt><dd>Final • Versi <t t-out="rps.version"/></dd>
+                            </dl>
+
+                            <h2>Deskripsi dan capaian pembelajaran</h2>
+                            <h3>Deskripsi mata kuliah</h3><p t-out="rps.deskripsi_mk or '-'"/>
+                            <h3>CPL terkait</h3>
+                            <div class="o_triton_table-wrap">
+                                <table class="o_triton_table"><thead><tr><th>Kode CPL</th><th>Deskripsi</th></tr></thead><tbody><tr t-foreach="rps.cpl_ids" t-as="cpl"><td><strong t-out="cpl.kode_cpl"/></td><td t-out="cpl.name"/></tr></tbody></table>
+                            </div>
+                            <h3>CPMK</h3>
+                            <div class="o_triton_table-wrap">
+                                <table class="o_triton_table"><thead><tr><th>Kode CPMK</th><th>Deskripsi</th><th>CPL terkait</th></tr></thead><tbody><tr t-foreach="rps.cpmk_ids" t-as="cpmk"><td><strong t-out="cpmk.kode_cpmk"/></td><td t-out="cpmk.name"/><td><span t-foreach="cpmk.cpl_ids" t-as="cpl"><t t-out="cpl.kode_cpl"/> </span></td></tr></tbody></table>
+                            </div>
+
+                            <h2>Penilaian dan bobot</h2>
+                            <div class="o_triton_table-wrap">
+                                <table class="o_triton_table"><thead><tr><th>Komponen</th><th>Bobot mata kuliah</th></tr></thead><tbody><tr t-foreach="rps.rps_komponen_ids" t-as="component"><td t-out="component.name"/><td><t t-out="component.bobot"/>%</td></tr></tbody></table>
+                            </div>
+
+                            <h2>Rencana pembelajaran</h2>
+                            <div class="o_triton_table-wrap">
+                                <table class="o_triton_table"><thead><tr><th>Minggu</th><th>CPMK</th><th>Bahan kajian</th><th>Metode</th><th>Pengalaman belajar</th><th>Waktu</th><th>Penilaian</th></tr></thead><tbody><tr t-foreach="rps.kegiatan_perkuliahan_ids" t-as="activity"><td t-out="activity.minggu"/><td t-out="activity.cpmk_id.kode_cpmk"/><td t-out="activity.bahan_kajian"/><td t-out="activity.metode_pembelajaran_id.name"/><td t-out="activity.pengalaman_belajar"/><td><t t-out="activity.estimasi_waktu"/> menit</td><td t-out="activity.teknik_penilaian"/></tr></tbody></table>
+                            </div>
+
+                            <h2>Referensi</h2>
+                            <ul class="o_triton_list"><li t-foreach="rps.referensi_ids" t-as="reference"><strong t-out="reference.judul"/><t t-if="reference.penulis"> — <t t-out="reference.penulis"/></t><t t-if="reference.tahun"> (<t t-out="reference.tahun"/>)</t></li></ul>
+                        </article>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
     </template>
 
 </odoo>

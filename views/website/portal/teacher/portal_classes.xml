@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="triton_teacher_classes_page" name="Kelas Dosen">
-        <t t-call="website.layout"><t t-set="no_header" t-value="True"/><t t-set="no_footer" t-value="True"/><main class="o_triton_page o_triton_portal-page"><t t-call="erpobe.triton_portal_nav"/><section class="o_triton_section"><div class="o_triton_container"><header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>Kelas yang diampu</h1></div></header><t t-call="erpobe.triton_portal_list_controls"/><div t-if="classes" class="o_triton_grid-three"><t t-foreach="classes" t-as="class_item"><article class="o_triton_panel"><span class="o_triton_badge" t-out="class_item['year']"/><h2 t-out="class_item['course']"/><p t-out="class_item['code']"/><p><t t-out="class_item['student_count']"/> peserta</p><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai' % class_item['line_id']">Kelola penilaian</a></article></t></div><div t-else="" class="o_triton_empty"><p>Tidak ada kelas yang cocok dengan pencarian Anda.</p></div></div></section><t t-call="erpobe.triton_footer"/></main></t>
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <main class="o_triton_page o_triton_portal-page">
+                <t t-call="erpobe.triton_portal_nav"/>
+                <section class="o_triton_section">
+                    <div class="o_triton_container">
+                        <header class="o_triton_heading"><div><span class="o_triton_eyebrow">Dosen</span><h1>Kelas yang diampu</h1><p class="o_triton_subtitle">Ringkasan kelengkapan nilai menggunakan aturan RPS final dan nilai aktual yang sama dengan halaman penilaian.</p></div></header>
+                        <t t-call="erpobe.triton_portal_list_controls"/>
+                        <div t-if="classes" class="o_triton_table-wrap">
+                            <table class="o_triton_table">
+                                <thead><tr><th>Mata kuliah</th><th>Periode</th><th>Mahasiswa</th><th>Komponen</th><th>Lengkap</th><th>Belum lengkap</th><th>Belum dimulai</th><th>Aksi</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="classes" t-as="class_item">
+                                        <td><strong t-out="class_item['course']"/><br/><span class="o_triton_caption" t-out="class_item['code']"/></td>
+                                        <td t-out="class_item['year']"/>
+                                        <td t-out="class_item['student_count']"/>
+                                        <td t-out="class_item['component_count']"/>
+                                        <td><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai?status=complete' % class_item['line_id']" t-out="class_item['completed']"/></td>
+                                        <td><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai?status=incomplete' % class_item['line_id']" t-out="class_item['incomplete']"/></td>
+                                        <td><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai?status=not_started' % class_item['line_id']" t-out="class_item['not_started']"/></td>
+                                        <td><a class="o_triton_link" t-att-href="'/my/kelas/%s/nilai' % class_item['line_id']">Kelola penilaian</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div t-else="" class="o_triton_empty"><p>Tidak ada kelas yang cocok dengan pencarian atau filter Anda.</p></div>
+                    </div>
+                </section>
+                <t t-call="erpobe.triton_footer"/>
+            </main>
+        </t>
     </template>
 
 </odoo>

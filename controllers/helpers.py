@@ -47,7 +47,8 @@ class TritonPublicHelpers(TritonListHelpers):
         Cpmk = env['erpobe.akademik.cpmk'].sudo()
         Rps = env['erpobe.akademik.rps'].sudo()
         students_domain = [('active', '=', True), ('status_akademik', '=', 'aktif')]
-        return {'faculties': Faculty.search_count([('active', '=', True)]), 'prodis': Prodi.search_count([('active', '=', True)]), 'dosen': Dosen.search_count([('active', '=', True)]), 'mahasiswa_aktif': Student.search_count(students_domain), 'courses': Course.search_count([]), 'cpl_count': Cpl.search_count([]), 'cpmk_count': Cpmk.search_count([]), 'rps_final': Rps.search_count([('status', '=', 'final')]), 'institutional_average': self._institutional_average(comparison)}
+        summary = comparison['summary'] if comparison else {}
+        return {'faculties': Faculty.search_count([('active', '=', True)]), 'prodis': Prodi.search_count([('active', '=', True)]), 'dosen': Dosen.search_count([('active', '=', True)]), 'mahasiswa_aktif': Student.search_count(students_domain), 'courses': Course.search_count([]), 'cpl_count': Cpl.search_count([]), 'cpmk_count': Cpmk.search_count([]), 'rps_final': Rps.search_count([('status', '=', 'final')]), 'institutional_average': self._institutional_average(comparison), 'cpl_valid_count': summary.get('cpl_valid_count', 0), 'cpl_met_count': summary.get('cpl_met_count', 0), 'cpl_not_met_count': summary.get('cpl_not_met_count', 0)}
 
     def _comparison_params(self):
         args = request.httprequest.args
@@ -105,8 +106,8 @@ class TritonPublicHelpers(TritonListHelpers):
     def _institutional_average(self, comparison=None):
         if comparison is None:
             comparison = self._comparison_data(default_latest=True)
-        scores = [score for prodi in comparison['prodis'] for score in prodi['scores'] if score is not None]
-        return round(sum(scores) / len(scores), 1) if scores else False
+        overall_average = comparison['summary']['overall_average']
+        return round(overall_average, 1) if overall_average is not None else False
 
     def _comparison_data(self, year_start=None, year_end=None, semester=None, faculty_id=None, prodi_ids=None, jenis_cpl=None, default_latest=False):
         env = request.env
@@ -146,6 +147,7 @@ class TritonPublicHelpers(TritonListHelpers):
         accumulators = {prodi.id: {kind: [] for kind in _CPL_TYPES} for prodi in candidates}
         warnings = {prodi.id: False for prodi in candidates}
         year_accumulators = {}
+        institutional_cpl_scores = []
         offer_lines = OfferLine.search([('penawaran_id', 'in', offers.ids), ('prodi_id', 'in', candidates.ids)]) if offers and candidates else OfferLine
         eligible_lines = []
         for line in offer_lines:
@@ -179,6 +181,9 @@ class TritonPublicHelpers(TritonListHelpers):
         cpl_types = {row['id']: row['jenis_cpl'] for row in cpls.read(['jenis_cpl'])}
 
         seen_attempts = set()
+        cpl_valid_count = 0
+        cpl_met_count = 0
+        cpl_not_met_count = 0
         for line in eligible_lines:
             line_krs = krs_lines_by_offer.get(line.id, [])
             if not line_krs:
@@ -199,6 +204,12 @@ class TritonPublicHelpers(TritonListHelpers):
                     seen_attempts.add(attempt_key)
                     cpl_id = grade.cpl_id.id
                     score = grade.nilai_cpl
+                    institutional_cpl_scores.append(score)
+                    cpl_valid_count += 1
+                    if grade.status_capaian == 'tercapai':
+                        cpl_met_count += 1
+                    else:
+                        cpl_not_met_count += 1
                     kind = cpl_types.get(cpl_id) or 'lainnya'
                     if jenis_cpl and kind != jenis_cpl:
                         continue
@@ -249,13 +260,20 @@ class TritonPublicHelpers(TritonListHelpers):
             )
         target_values = cpl_grades.mapped('target_nilai')
         target = round(sum(target_values) / len(target_values), 2) if target_values else None
-        overall_average = round(sum(all_category_scores) / len(all_category_scores), 2) if all_category_scores else None
+        overall_average = (
+            round(sum(institutional_cpl_scores) / len(institutional_cpl_scores), 2)
+            if institutional_cpl_scores
+            else None
+        )
         summary = {
             'program_count': len(prodi_results),
             'category_count': len(categories),
             'overall_average': overall_average,
             'highest_category': highest_category,
             'attention_category': lowest_category,
+            'cpl_valid_count': cpl_valid_count,
+            'cpl_met_count': cpl_met_count,
+            'cpl_not_met_count': cpl_not_met_count,
         }
         trend = []
         for year in sorted(year_accumulators):

@@ -10,7 +10,7 @@ class TritonMain(http.Controller, TritonPublicHelpers):
     @http.route(['/', '/triton'], type='http', auth='public', website=True, sitemap=True)
     def triton_home(self, **kwargs):
         self._rate_limit()
-        comparison = self._comparison_data(default_latest=True)
+        comparison = self._comparison_data()
         stats = self._public_stats(comparison)
         faculties = request.env['erpobe.master.fakultas'].sudo().search([('active', '=', True)], order='name asc', limit=6)
         featured = request.env['erpobe.master.prodi'].sudo().search([('active', '=', True)], order='name asc', limit=6)

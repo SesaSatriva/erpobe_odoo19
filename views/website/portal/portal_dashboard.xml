@@ -131,8 +131,11 @@
                                 <article><span>Mata kuliah diampu</span><strong t-out="dashboard['course_count']"/></article>
                                 <article><span>Kelas/penawaran</span><strong t-out="dashboard['class_count']"/></article>
                                 <article><span>Mahasiswa terdaftar</span><strong t-out="dashboard['student_count']"/></article>
-                                <article><span>Penilaian selesai</span><strong t-out="dashboard['completed_assessments']"/></article>
-                                <article><span>Penilaian belum lengkap</span><strong t-out="dashboard['pending_assessments']"/></article>
+                                <article><span>Total komponen</span><strong t-out="dashboard['component_count']"/></article>
+                                <article><span>Record nilai wajib</span><strong t-out="dashboard['record_count']"/></article>
+                                <article><a href="/my/kelas?status=complete"><span>Penilaian selesai</span><strong t-out="dashboard['completed_assessments']"/></a></article>
+                                <article><a href="/my/kelas?status=incomplete"><span>Penilaian belum lengkap</span><strong t-out="dashboard['pending_assessments']"/></a></article>
+                                <article><a href="/my/kelas?status=not_started"><span>Belum dimulai</span><strong t-out="dashboard['not_started_assessments']"/></a></article>
                             </section>
                             <div class="o_triton_dashboard-grid o_triton_dashboard-grid--teacher">
                                 <section class="o_triton_dashboard-panel o_triton_dashboard-courses">
@@ -142,13 +145,16 @@
                                     </header>
                                     <div t-if="dashboard['classes']" class="o_triton_table-wrap">
                                         <table class="o_triton_table o_triton_dashboard-teacher-table">
-                                            <thead><tr><th>Mata kuliah</th><th>Periode</th><th>Mahasiswa</th><th>Nilai lengkap</th><th>Rata-rata</th><th>Aksi</th></tr></thead>
+                                            <thead><tr><th>Mata kuliah</th><th>Periode</th><th>Mahasiswa</th><th>Komponen</th><th>Nilai lengkap</th><th>Belum lengkap</th><th>Belum dimulai</th><th>Rata-rata</th><th>Aksi</th></tr></thead>
                                             <tbody>
                                                 <tr t-foreach="dashboard['classes']" t-as="class_row">
                                                     <td><strong t-out="class_row['name']"/><small t-out="class_row['code']"/></td>
                                                     <td t-out="class_row['term']"/>
                                                     <td t-out="class_row['students']"/>
-                                                    <td><t t-out="class_row['graded']"/> / <t t-out="class_row['students']"/></td>
+                                                    <td t-out="class_row['components']"/>
+                                                    <td><a t-att-href="'/my/kelas/%s/nilai?status=complete' % class_row['line_id']"><t t-out="class_row['graded']"/> / <t t-out="class_row['students']"/></a></td>
+                                                    <td><a t-att-href="'/my/kelas/%s/nilai?status=incomplete' % class_row['line_id']" t-out="class_row['incomplete']"/></td>
+                                                    <td><a t-att-href="'/my/kelas/%s/nilai?status=not_started' % class_row['line_id']" t-out="class_row['not_started']"/></td>
                                                     <td t-if="class_row['average'] is not None" t-out="'%.1f' % class_row['average']"/>
                                                     <td t-else="">Belum ada nilai</td>
                                                     <td><a t-if="class_row['can_grade']" t-att-href="'/my/kelas/%s/nilai' % class_row['line_id']">Input nilai</a><a t-else="" t-att-href="'/my/kelas/%s/nilai' % class_row['line_id']">Buka kelas</a></td>

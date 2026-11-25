@@ -1,4 +1,6 @@
 from urllib.parse import quote
+import io
+import xlsxwriter
 
 from odoo import http
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -130,6 +132,97 @@ class TritonPortalDosen(TritonPortalBase):
         )
         return request.render('erpobe.triton_rps_detail_page', {'rps': rps})
 
+    @http.route('/my/rps/<int:rps_id>/xlsx', type='http', auth='user', website=True)
+    def triton_rps_xlsx(self, rps_id, **kwargs):
+        rps = request.env['erpobe.akademik.rps'].sudo().browse(rps_id)
+        if not rps.exists():
+            raise UserError('RPS tidak ditemukan.')
+
+        student = self._student()
+        teacher = self._teacher()
+        if student:
+            authorized = request.env['erpobe.akademik.krs.line'].sudo().search_count([
+                ('mahasiswa_id', '=', student.id),
+                ('krs_id.state', '=', 'approved'),
+                ('matakuliah_id', '=', rps.matakuliah_id.id),
+                ('penawaran_line_id', '=', rps.penawaran_line_id.id),
+            ])
+            if not authorized or rps.status != 'final':
+                raise AccessError('RPS tidak tersedia untuk akun mahasiswa ini.')
+        elif teacher:
+            line = rps.penawaran_line_id
+            if not line or (
+                line.matakuliah_id.koordinator_id != teacher
+                and teacher not in line.matakuliah_id.tim_pengampu_ids
+            ):
+                raise AccessError('RPS bukan bagian dari mata kuliah yang Anda ampu.')
+        else:
+            raise AccessError('Akun tidak memiliki kewenangan akademik untuk RPS ini.')
+
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet('RPS')
+        title = workbook.add_format({'bold': True, 'font_size': 16})
+        header = workbook.add_format({'bold': True, 'bg_color': '#123F59', 'font_color': 'white', 'border': 1})
+        sheet.write('A1', 'Rencana Pembelajaran Semester', title)
+        sheet.write_row('A3', ['Kode', 'Mata Kuliah', 'Program Studi', 'Tahun Akademik', 'Semester', 'SKS', 'Status', 'Versi'], header)
+        sheet.write_row('A4', [
+            rps.kode_mk,
+            rps.matakuliah_name,
+            rps.prodi_id.name,
+            rps.tahun_ajaran_id.tahun_ajaran,
+            rps.semester_akademik,
+            rps.sks,
+            rps.status,
+            rps.version,
+        ])
+
+        sheet.write('A6', 'CPMK / CPL', header)
+        row = 6
+        for cpmk in rps.cpmk_ids:
+            cpl_codes = ', '.join(cpmk.cpl_ids.mapped('kode_cpl'))
+            sheet.write_row(row, 0, [cpmk.kode_cpmk, cpmk.name, cpl_codes])
+            row += 1
+
+        row += 2
+        sheet.write(row, 0, 'Komponen Penilaian', header)
+        row += 1
+        sheet.write_row(row, 0, ['Komponen', 'Bobot'], header)
+        row += 1
+        for component in rps.rps_komponen_ids:
+            sheet.write_row(row, 0, [component.name, component.bobot])
+            row += 1
+
+        row += 2
+        sheet.write(row, 0, 'Rencana Pembelajaran', header)
+        row += 1
+        sheet.write_row(row, 0, ['Minggu', 'CPMK', 'Bahan Kajian', 'Metode', 'Pengalaman Belajar', 'Waktu (menit)', 'Penilaian'], header)
+        row += 1
+        for activity in rps.kegiatan_perkuliahan_ids:
+            sheet.write_row(row, 0, [
+                activity.minggu,
+                activity.cpmk_id.kode_cpmk,
+                activity.bahan_kajian,
+                activity.metode_pembelajaran_id.name,
+                activity.pengalaman_belajar,
+                activity.estimasi_waktu,
+                activity.teknik_penilaian,
+            ])
+            row += 1
+
+        sheet.set_column('A:A', 12)
+        sheet.set_column('B:B', 34)
+        sheet.set_column('C:C', 24)
+        sheet.set_column('D:G', 18)
+        workbook.close()
+        return request.make_response(
+            output.getvalue(),
+            headers=[
+                ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+                ('Content-Disposition', f'attachment; filename=RPS-{rps.kode_mk}-v{rps.version}.xlsx'),
+            ],
+        )
+
     @http.route('/my/rps/<int:line_id>/create', type='http', auth='user', website=True, methods=['POST'])
     def triton_create_rps(self, line_id, **kwargs):
         _, line = self._authorized_teacher_line(line_id)
@@ -238,17 +331,52 @@ class TritonPortalDosen(TritonPortalBase):
     @http.route('/my/kelas', type='http', auth='user', website=True)
     def triton_teacher_classes(self, **kwargs):
         teacher = self._require_teacher()
+        line_domain = [
+            '|',
+            ('matakuliah_id.koordinator_id', '=', teacher.id),
+            ('matakuliah_id.tim_pengampu_ids', 'in', teacher.id),
+        ]
+        status = request.httprequest.args.get('status', '')
+        if status in ('complete', 'incomplete', 'not_started'):
+            teacher_lines = request.env['erpobe.akademik.penawaran.line'].sudo().search(line_domain)
+            matching_ids = []
+            for line in teacher_lines:
+                summary = self._assessment_summary(line)
+                if status == 'complete' and summary['completed']:
+                    matching_ids.append(line.id)
+                elif status == 'incomplete' and summary['incomplete']:
+                    matching_ids.append(line.id)
+                elif status == 'not_started' and summary['not_started']:
+                    matching_ids.append(line.id)
+            line_domain.append(('id', 'in', matching_ids))
         lines, pagination = self._list_page(
             request.env['erpobe.akademik.penawaran.line'].sudo(),
-            ['|', ('matakuliah_id.koordinator_id', '=', teacher.id), ('matakuliah_id.tim_pengampu_ids', 'in', teacher.id)],
+            line_domain,
             '/my/kelas',
             {'course': ('matakuliah_name asc, id asc', 'Mata kuliah A–Z'), 'term': ('tahun_ajaran_id desc, matakuliah_name asc, id asc', 'Tahun ajaran terbaru')},
             'tahun_ajaran_id desc, matakuliah_id asc, id asc',
             ('matakuliah_name', 'matakuliah_kode'),
+            (('status', 'Status penilaian', (
+                ('', 'Semua status'),
+                ('complete', 'Ada mahasiswa lengkap'),
+                ('incomplete', 'Ada mahasiswa belum lengkap'),
+                ('not_started', 'Ada mahasiswa belum dimulai'),
+            )),),
         )
         classes = []
         for line in lines:
-            classes.append({'course': line.matakuliah_id.name, 'code': line.matakuliah_id.kode_mk, 'year': line.tahun_ajaran_id.tahun_ajaran, 'student_count': len(line.mahasiswa_ids), 'line_id': line.id})
+            summary = self._assessment_summary(line)
+            classes.append({
+                'course': line.matakuliah_id.name,
+                'code': line.matakuliah_id.kode_mk,
+                'year': line.tahun_ajaran_id.tahun_ajaran,
+                'student_count': len(summary['krs_lines']),
+                'component_count': summary['component_count'],
+                'completed': len(summary['completed']),
+                'incomplete': len(summary['incomplete']),
+                'not_started': len(summary['not_started']),
+                'line_id': line.id,
+            })
         return request.render('erpobe.triton_teacher_classes_page', {'classes': classes, 'pagination': pagination, 'list_action': '/my/kelas'})
 
     @http.route('/my/kelas/<int:line_id>/nilai', type='http', auth='user', website=True, methods=['GET', 'POST'])
@@ -260,26 +388,18 @@ class TritonPortalDosen(TritonPortalBase):
         components = rps.komponen_ids
         grade_domain = [('penawaran_line_id', '=', line.id), ('krs_id.state', '=', 'approved')]
         completeness = request.httprequest.args.get('status', '')
-        if completeness in ('complete', 'incomplete'):
-            all_line_ids = request.env['erpobe.akademik.krs.line'].sudo().search(grade_domain).ids
-            all_grade_rows = request.env['erpobe.grade.komponen'].sudo().search([
-                ('krs_line_id', 'in', all_line_ids),
-                ('rps_id', '=', rps.id),
-                ('komponen_id', 'in', components.ids),
-                ('is_graded', '=', True),
-                ('origin', '=', 'actual'),
-            ])
-            component_ids_by_line = {}
-            for grade in all_grade_rows:
-                component_ids_by_line.setdefault(grade.krs_line_id.id, set()).add(grade.komponen_id.id)
-            complete_ids = [
-                line_id for line_id in all_line_ids
-                if components and component_ids_by_line.get(line_id, set()) >= set(components.ids)
-            ]
+        summary = self._assessment_summary(line)
+        if completeness in ('complete', 'incomplete', 'not_started', 'ungraded'):
+            selected = {
+                'complete': summary['completed'],
+                'incomplete': summary['incomplete'],
+                'not_started': summary['not_started'],
+                'ungraded': summary['ungraded'],
+            }[completeness]
             if completeness == 'complete':
-                grade_domain.append(('id', 'in', complete_ids))
+                grade_domain.append(('id', 'in', selected.ids))
             else:
-                grade_domain.append(('id', 'not in', complete_ids))
+                grade_domain.append(('id', 'in', selected.ids))
         allocations = rps.bobot_komponen_cpmk_ids.filtered("rps_komponen_id")
         component_details = []
         for component in components:
@@ -309,6 +429,8 @@ class TritonPortalDosen(TritonPortalBase):
                 ('', 'Semua status'),
                 ('incomplete', 'Belum lengkap'),
                 ('complete', 'Lengkap'),
+                ('not_started', 'Belum dimulai'),
+                ('ungraded', 'Belum dinilai'),
             )),),
         )
         error = ''

@@ -44,6 +44,15 @@ class TritonPortalDosen(TritonPortalBase):
         status = request.httprequest.args.get('status', '')
         if status in ('missing', 'draft', 'review', 'final'):
             line_domain.append(('rps_status', '=', status))
+        prodi_id = request.httprequest.args.get('prodi', '')
+        year_id = request.httprequest.args.get('year', '')
+        semester = request.httprequest.args.get('semester', '')
+        if prodi_id.isdigit():
+            line_domain.append(('prodi_id', '=', int(prodi_id)))
+        if year_id.isdigit():
+            line_domain.append(('tahun_ajaran_id', '=', int(year_id)))
+        if semester in ('ganjil', 'genap'):
+            line_domain.append(('tahun_ajaran_id.semester', '=', semester))
         lines, pagination = self._list_page(
             request.env['erpobe.akademik.penawaran.line'].sudo(),
             line_domain,
@@ -57,9 +66,42 @@ class TritonPortalDosen(TritonPortalBase):
                 ('draft', 'Draft'),
                 ('review', 'Perlu ditinjau'),
                 ('final', 'Final'),
-            )),),
+            )),
+             ('prodi', 'Program Studi', (
+                 ('', 'Semua prodi'),
+                 *[(str(prodi.id), prodi.name) for prodi in request.env['erpobe.master.prodi'].sudo().search([], order='name asc')],
+             )),
+             ('year', 'Tahun Akademik', (
+                 ('', 'Semua tahun'),
+                 *[(str(year.id), year.tahun_ajaran) for year in request.env['erpobe.akademik.tahunajaran'].sudo().search([], order='tahun_ajaran desc')],
+             )),
+             ('semester', 'Semester', (
+                 ('', 'Semua semester'),
+                 ('ganjil', 'Ganjil'),
+                 ('genap', 'Genap'),
+             )),
+            ),
         )
-        data = [{'id': line.id, 'course': line.matakuliah_id.name, 'code': line.matakuliah_id.kode_mk, 'year': line.tahun_ajaran_id.tahun_ajaran, 'semester': line.tahun_ajaran_id.semester, 'status': line.latest_rps_id.status if line.latest_rps_id else 'missing', 'weights': line.latest_rps_id.weight_status if line.latest_rps_id else 'missing', 'rps_id': line.latest_rps_id.id if line.latest_rps_id else 0, 'sources': [{'id': source.id, 'name': source.display_name} for source in request.env['erpobe.akademik.rps'].sudo().search([('matakuliah_id', '=', line.matakuliah_id.id), ('prodi_id', '=', line.prodi_id.id), ('status', '=', 'final'), ('penawaran_line_id', '!=', line.id)], order='tahun_ajaran_id desc, version desc')]} for line in lines]
+        data = [{
+            'id': line.id,
+            'course': line.matakuliah_id.name,
+            'code': line.matakuliah_id.kode_mk,
+            'prodi': line.prodi_id.name if line.prodi_id else '-',
+            'year': line.tahun_ajaran_id.tahun_ajaran,
+            'semester': line.tahun_ajaran_id.semester,
+            'status': line.latest_rps_id.status if line.latest_rps_id else 'missing',
+            'version': line.latest_rps_id.version if line.latest_rps_id else '-',
+            'updated': line.latest_rps_id.write_date if line.latest_rps_id else False,
+            'weights': line.latest_rps_id.weight_status if line.latest_rps_id else 'missing',
+            'sks': line.matakuliah_id.sks,
+            'rps_id': line.latest_rps_id.id if line.latest_rps_id else 0,
+            'sources': [{'id': source.id, 'name': source.display_name} for source in request.env['erpobe.akademik.rps'].sudo().search([
+                ('matakuliah_id', '=', line.matakuliah_id.id),
+                ('prodi_id', '=', line.prodi_id.id),
+                ('status', '=', 'final'),
+                ('penawaran_line_id', '!=', line.id),
+            ], order='tahun_ajaran_id desc, version desc')],
+        } for line in lines]
         return request.render('erpobe.triton_teacher_rps_page', {'lines': data, 'message': request.httprequest.args.get('message', ''), 'pagination': pagination, 'list_action': '/my/rps'})
 
     @http.route('/my/rps/detail/<int:rps_id>', type='http', auth='user', website=True)
@@ -105,6 +147,8 @@ class TritonPortalDosen(TritonPortalBase):
             form = request.httprequest.form
             try:
                 with request.env.cr.savepoint():
+                    if rps.status == 'final':
+                        raise UserError('RPS final bersifat read-only. Salin RPS untuk membuat revisi.')
                     selected_components = []
                     for component_id in form.getlist('komponen_ids'):
                         if component_id.isdigit():
@@ -112,7 +156,23 @@ class TritonPortalDosen(TritonPortalBase):
                     components = request.env['erpobe.akademik.komponen'].sudo().browse(selected_components).exists()
                     if len(components) != len(set(selected_components)):
                         raise ValidationError('Komponen penilaian tidak valid.')
-                    rps.write({'deskripsi_mk': form.get('deskripsi_mk', ''), 'media_software': form.get('media_software', ''), 'media_hardware': form.get('media_hardware', ''), 'komponen_ids': [(6, 0, components.ids)]})
+                    selected_references = []
+                    for reference_id in form.getlist('referensi_ids'):
+                        if reference_id.isdigit():
+                            selected_references.append(int(reference_id))
+                    references = request.env['erpobe.akademik.referensi'].sudo().browse(selected_references).exists()
+                    if len(references) != len(set(selected_references)):
+                        raise ValidationError('Referensi tidak valid.')
+                    rps.write({
+                        'deskripsi_mk': form.get('deskripsi_mk', ''),
+                        'tujuan_pembelajaran': form.get('tujuan_pembelajaran', ''),
+                        'materi_pembelajaran': form.get('materi_pembelajaran', ''),
+                        'sumber_belajar': form.get('sumber_belajar', ''),
+                        'media_software': form.get('media_software', ''),
+                        'media_hardware': form.get('media_hardware', ''),
+                        'komponen_ids': [(6, 0, components.ids)],
+                        'referensi_ids': [(6, 0, references.ids)],
+                    })
                     weight_fields = (('bobot_mk_', 'bobot_cpmk_mk_ids', 'bobot_cpmk_mk'), ('bobot_komponen_', 'bobot_komponen_cpmk_ids', 'bobot_komponen_cpmk'))
                     for prefix, relation, field_name in weight_fields:
                         rows = getattr(rps, relation)
@@ -124,11 +184,31 @@ class TritonPortalDosen(TritonPortalBase):
                             if value < 0 or value > 100:
                                 raise ValidationError('Bobot harus berada pada rentang 0–100.')
                             row.write({field_name: value})
+                    for activity in rps.kegiatan_perkuliahan_ids:
+                        raw_time = form.get(f'waktu_{activity.id}', activity.estimasi_waktu or 0)
+                        try:
+                            activity_time = int(raw_time)
+                        except (TypeError, ValueError):
+                            raise ValidationError('Alokasi waktu harus berupa angka.')
+                        activity.write({
+                            'bahan_kajian': form.get(f'bahan_{activity.id}', activity.bahan_kajian or ''),
+                            'pengalaman_belajar': form.get(f'pengalaman_{activity.id}', activity.pengalaman_belajar or ''),
+                            'estimasi_waktu': activity_time,
+                            'teknik_penilaian': form.get(f'penilaian_{activity.id}', activity.teknik_penilaian or ''),
+                        })
                     if form.get('operation') == 'review':
                         rps.action_mark_for_review()
             except (ValidationError, UserError, ValueError) as exc:
                 error = str(exc)
-        return request.render('erpobe.triton_rps_edit_page', {'line': line, 'rps': rps, 'components': request.env['erpobe.akademik.komponen'].sudo().search([], order='name asc'), 'error': error, 'message': request.httprequest.args.get('message', '')})
+        return request.render('erpobe.triton_rps_edit_page', {
+            'line': line,
+            'rps': rps,
+            'components': request.env['erpobe.akademik.komponen'].sudo().search([], order='name asc'),
+            'references': request.env['erpobe.akademik.referensi'].sudo().search([], order='judul asc'),
+            'methods': request.env['erpobe.akademik.metode.pembelajaran'].sudo().search([], order='name asc'),
+            'error': error,
+            'message': request.httprequest.args.get('message', ''),
+        })
 
     @http.route('/my/rps/<int:rps_id>/finalize', type='http', auth='user', website=True, methods=['POST'])
     def triton_finalize_rps(self, rps_id, **kwargs):

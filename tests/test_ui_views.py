@@ -7,6 +7,20 @@ from odoo.tests import TransactionCase, tagged
 
 @tagged("post_install", "-at_install")
 class TestErpObeUiViews(TransactionCase):
+    def test_portal_monitoring_templates_use_professional_tables(self):
+        template_files = (
+            "views/website/portal/teacher/portal_rps.xml",
+            "views/website/portal/teacher/portal_rps_edit.xml",
+            "views/website/portal/student/portal_courses.xml",
+            "views/website/portal/student/portal_cpl.xml",
+        )
+        base = Path(__file__).resolve().parents[1]
+        for relative_path in template_files:
+            arch = etree.parse(str(base / relative_path))
+            root = arch.getroot()
+            table_count = len(root.xpath("//table"))
+            self.assertGreater(table_count, 0, relative_path)
+
     def test_portal_profile_exposes_native_security_route(self):
         profile_path = (
             Path(__file__).resolve().parents[1]

@@ -110,6 +110,12 @@ class TritonPortalMahasiswa(TritonPortalBase):
         for line in krs_lines:
             final_rps = line.penawaran_line_id.rps_ids.filtered(lambda record: record.status == 'final').sorted(key=lambda record: (record.version, record.id), reverse=True)[:1]
             component_grades = request.env['erpobe.grade.komponen'].sudo().search([('krs_line_id', '=', line.id)])
+            cpmk_grades = request.env['erpobe.grade.cpmk'].sudo().search([
+                ('mahasiswa_id', '=', student.id),
+                ('krs_line_id', '=', line.id),
+                ('rps_id', '=', final_rps.id),
+            ]) if final_rps else request.env['erpobe.grade.cpmk'].sudo()
+            cpmk_grade_map = {grade.cpmk_id.id: grade for grade in cpmk_grades}
             courses.append({
                 'name': line.matakuliah_id.name,
                 'code': line.matakuliah_id.kode_mk,
@@ -120,12 +126,16 @@ class TritonPortalMahasiswa(TritonPortalBase):
                 'rps_id': final_rps.id if final_rps else 0,
                 'components': [
                     {'name': grade.komponen_id.name, 'score': grade.nilai}
-                    for grade in component_grades
+                    for grade in component_grades.filtered(lambda item: item.is_graded)
                 ],
-                'cpmk': [
-                    {'name': cpmk.kode_cpmk, 'description': cpmk.name}
-                    for cpmk in (final_rps.cpmk_ids if final_rps else [])
-                ],
+                'cpmk': [{
+                    'code': cpmk.kode_cpmk,
+                    'name': cpmk.name,
+                    'score': cpmk_grade_map[cpmk.id].nilai_cpmk if cpmk.id in cpmk_grade_map else 0.0,
+                    'available': cpmk.id in cpmk_grade_map and cpmk_grade_map[cpmk.id].is_available,
+                    'target': cpmk.target_nilai,
+                    'cpl': [mapping.cpl_id.kode_cpl for mapping in cpmk.cpl_mapping_ids],
+                } for cpmk in (final_rps.cpmk_ids if final_rps else [])],
             })
         return request.render('erpobe.triton_student_courses_page', {'courses': courses, 'pagination': pagination, 'list_action': '/my/mata-kuliah'})
 
@@ -168,7 +178,34 @@ class TritonPortalMahasiswa(TritonPortalBase):
             'cpl_id asc, id asc',
             ('cpl_name', 'cpl_kode'),
         )
-        values = [{'name': grade.cpl_id.kode_cpl, 'description': grade.cpl_id.name, 'score': grade.nilai_cpl, 'target': grade.target_nilai, 'met': grade.status_capaian == 'tercapai'} for grade in grades]
+        values = []
+        for grade in grades:
+            contributions = []
+            for mapping in grade.cpl_id.cpmk_mapping_ids:
+                cpmk = mapping.cpmk_id
+                cpmk_grade = request.env['erpobe.grade.cpmk'].sudo().search([
+                    ('mahasiswa_id', '=', student.id),
+                    ('cpmk_id', '=', cpmk.id),
+                    ('is_available', '=', True),
+                    ('rps_id.status', '=', 'final'),
+                    ('krs_line_id.krs_id.state', '=', 'approved'),
+                ], order='id desc', limit=1)
+                contributions.append({
+                    'cpmk': cpmk.kode_cpmk,
+                    'description': cpmk.name,
+                    'score': cpmk_grade.nilai_cpmk if cpmk_grade else 0.0,
+                    'course': cpmk.mk_id.name,
+                    'course_code': cpmk.mk_id.kode_mk,
+                    'available': bool(cpmk_grade),
+                })
+            values.append({
+                'name': grade.cpl_id.kode_cpl,
+                'description': grade.cpl_id.name,
+                'score': grade.nilai_cpl,
+                'target': grade.target_nilai,
+                'met': grade.status_capaian == 'tercapai',
+                'contributions': contributions,
+            })
         return request.render('erpobe.triton_student_cpl_page', {'grades': values, 'pagination': pagination, 'list_action': '/my/capaian-cpl'})
 
     @http.route('/my/profil', type='http', auth='user', website=True, methods=['GET', 'POST'])

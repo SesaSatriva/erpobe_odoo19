@@ -1,8 +1,10 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 from lxml import etree
 
 from odoo.tests import TransactionCase, tagged
+from odoo.tools.safe_eval import safe_eval
 
 
 @tagged("post_install", "-at_install")
@@ -107,6 +109,38 @@ class TestErpObeUiViews(TransactionCase):
             detail_template.xpath("//div[contains(@class, 'tab-content')]/section/@id"),
             ["cpl-summary", "cpl-cpmk", "cpl-courses", "cpl-calculation"],
         )
+
+    def test_student_cpl_progress_styles_format_percent_and_handle_empty_scores(self):
+        template_path = (
+            Path(__file__).resolve().parents[1]
+            / "views"
+            / "website"
+            / "portal"
+            / "student"
+            / "portal_cpl.xml"
+        )
+        source_arch = etree.parse(str(template_path))
+        source_styles = source_arch.xpath(
+            "//template[@id='triton_student_cpl_detail_page']"
+            "//div[contains(@class, 'progress-bar')]/@t-att-style"
+        )
+        view = self.env.ref("erpobe.triton_student_cpl_detail_page")
+        active_arch = etree.fromstring(view.arch_db.encode())
+        styles = active_arch.xpath(
+            "//div[contains(@class, 'progress-bar')]/@t-att-style"
+        )
+        self.assertEqual(len(source_styles), 2)
+        self.assertEqual(len(styles), 2)
+
+        for style in styles:
+            self.assertEqual(
+                safe_eval(style, {"grade": SimpleNamespace(nilai_cpl=96.27)}),
+                "width: 96.27%",
+            )
+            self.assertEqual(
+                safe_eval(style, {"grade": SimpleNamespace(nilai_cpl=False)}),
+                "width: 0%",
+            )
 
     def test_portal_profile_exposes_native_security_route(self):
         profile_path = (

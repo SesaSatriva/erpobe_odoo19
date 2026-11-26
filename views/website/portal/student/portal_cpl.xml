@@ -100,7 +100,7 @@
                                 <strong t-if="grade.is_available"><t t-out="'%.2f' % grade.nilai_cpl"/>%</strong>
                                 <strong t-else="">Belum tersedia</strong>
                                 <div t-if="grade.is_available" class="progress o_triton_cpl-progress" role="progressbar" aria-label="Persentase capaian CPL" aria-valuemin="0" aria-valuemax="100" t-att-aria-valuenow="grade.nilai_cpl">
-                                    <div class="progress-bar" t-att-style="'width: %s%%' % grade.nilai_cpl"/>
+                                    <div class="progress-bar" t-att-style="'width: %s%%%%' % (grade.nilai_cpl or 0)"/>
                                 </div>
                             </article>
                             <article class="o_triton_cpl-smart-card">
@@ -151,7 +151,7 @@
                                     <div class="o_triton_cpl-summary-progress">
                                         <div class="o_triton_cpl-tab-heading"><h3>Progress capaian terhadap skala 100%</h3><strong t-if="grade.is_available"><t t-out="'%.2f' % grade.nilai_cpl"/>%</strong></div>
                                         <div t-if="grade.is_available" class="progress o_triton_cpl-progress" role="progressbar" aria-label="Progress capaian CPL" aria-valuemin="0" aria-valuemax="100" t-att-aria-valuenow="grade.nilai_cpl">
-                                            <div class="progress-bar" t-att-style="'width: %s%%' % grade.nilai_cpl"/>
+                                            <div class="progress-bar" t-att-style="'width: %s%%%%' % (grade.nilai_cpl or 0)"/>
                                         </div>
                                         <p t-else="" class="o_triton_cpl-unavailable">Nilai capaian belum tersedia karena belum ada komponen CPMK yang memenuhi syarat perhitungan.</p>
                                     </div>

@@ -103,11 +103,11 @@ class ErpObeAkademikKrs(models.Model):
     def create(self, vals_list):
         records = super().create(vals_list)
         records._check_student_owner()
-        records._trigger_khs_sync()
         return records
 
     def write(self, vals):
         self._check_student_owner()
+        previous_student_ids = set(self.mapped("mahasiswa_id").ids)
         if (
             self.env.user.has_group("erpobe.group_mahasiswa")
             and "state" in vals
@@ -124,16 +124,28 @@ class ErpObeAkademikKrs(models.Model):
             raise ValidationError(
                 "KRS yang sudah diajukan tidak dapat diubah sebelum dikembalikan."
             )
-        result = super().write(vals)
-        if {"state", "penawaran_id", "line_ids"} & set(vals):
-            self._trigger_khs_sync()
+        result = super(
+            ErpObeAkademikKrs,
+            self.with_context(defer_khs_refresh=True),
+        ).write(vals)
+        if {"state", "penawaran_id", "line_ids", "mahasiswa_id"} & set(vals):
+            affected_student_ids = set(self.mapped("mahasiswa_id").ids)
+            if "mahasiswa_id" in vals:
+                affected_student_ids.update(previous_student_ids)
+            self._trigger_khs_sync(sorted(affected_student_ids))
         return result
 
-    def _trigger_khs_sync(self):
-        if "erpobe.report.khs" not in self.env:
+    def _trigger_khs_sync(self, student_ids=None):
+        if (
+            "erpobe.report.khs" not in self.env
+            or self.env.context.get("skip_khs_refresh")
+            or self.env.context.get("defer_khs_refresh")
+        ):
             return
         report_model = self.env["erpobe.report.khs"].sudo()
-        report_model.action_generate_khs(self.mapped("mahasiswa_id.id"))
+        report_model.action_generate_khs(
+            student_ids or self.mapped("mahasiswa_id.id")
+        )
 
     def action_submit(self):
         self._check_student_owner()
@@ -370,7 +382,11 @@ class ErpObeAkademikKrsLine(models.Model):
                         ]
                     }
                 )
-        if "erpobe.report.khs" in self.env:
+        if (
+            "erpobe.report.khs" in self.env
+            and not self.env.context.get("skip_khs_refresh")
+            and not self.env.context.get("defer_khs_refresh")
+        ):
             self.env["erpobe.report.khs"].sudo().action_generate_khs(
                 records.mapped("mahasiswa_id.id")
             )
@@ -382,37 +398,39 @@ class ErpObeAkademikKrsLine(models.Model):
                 raise ValidationError("Anda hanya dapat mengubah KRS milik sendiri.")
             if any(record.krs_id.state not in ("draft", "rejected") for record in self):
                 raise ValidationError("KRS yang sudah diajukan tidak dapat diubah.")
-        # Snapshot kelas lama sebelum update
-        old_kelas_map = {}
-        if "penawaran_line_id" in vals:
+        old_enrollment_map = {}
+        if {"krs_id", "penawaran_line_id"} & set(vals):
             for rec in self:
-                old_kelas_map[rec.id] = rec.penawaran_line_id
-
-        res = super().write(vals)
-        if {"penawaran_line_id", "status_pengambilan"} & set(vals):
-            if "erpobe.report.khs" in self.env:
-                self.env["erpobe.report.khs"].sudo().action_generate_khs(
-                    self.mapped("mahasiswa_id.id")
+                old_enrollment_map[rec.id] = (
+                    rec.penawaran_line_id,
+                    rec.mahasiswa_id,
                 )
 
-        if "penawaran_line_id" in vals:
+        res = super().write(vals)
+        if {"krs_id", "penawaran_line_id"} & set(vals):
             kelas_by_id = {}
             students_to_unlink = {}
             students_to_link = {}
             for rec in self:
-                old_kelas = old_kelas_map.get(rec.id)
+                old_kelas, old_student = old_enrollment_map.get(
+                    rec.id, (False, False)
+                )
                 new_kelas = rec.penawaran_line_id
-                if old_kelas == new_kelas or not rec.mahasiswa_id:
+                new_student = rec.mahasiswa_id
+                if old_kelas == new_kelas and old_student == new_student:
                     continue
 
-                student_id = rec.mahasiswa_id.id
-                if old_kelas:
+                if old_kelas and old_student:
                     kelas_by_id[old_kelas.id] = old_kelas
-                    students_to_unlink.setdefault(old_kelas.id, set()).add(student_id)
+                    students_to_unlink.setdefault(old_kelas.id, set()).add(
+                        old_student.id
+                    )
 
-                if new_kelas:
+                if new_kelas and new_student:
                     kelas_by_id[new_kelas.id] = new_kelas
-                    students_to_link.setdefault(new_kelas.id, set()).add(student_id)
+                    students_to_link.setdefault(new_kelas.id, set()).add(
+                        new_student.id
+                    )
 
             for kelas_id, student_ids in students_to_unlink.items():
                 kelas_by_id[kelas_id].write(
@@ -433,6 +451,24 @@ class ErpObeAkademikKrsLine(models.Model):
                     }
                 )
 
+        if (
+            {"krs_id", "penawaran_line_id", "status_pengambilan"} & set(vals)
+            and not self.env.context.get("skip_khs_refresh")
+            and not self.env.context.get("defer_khs_refresh")
+            and "erpobe.report.khs" in self.env
+        ):
+            affected_student_ids = set(self.mapped("mahasiswa_id").ids)
+            if {"krs_id", "penawaran_line_id"} & set(vals):
+                affected_student_ids.update(
+                    student.id
+                    for _offer_line, student in old_enrollment_map.values()
+                    if student
+                )
+            if affected_student_ids:
+                self.env["erpobe.report.khs"].sudo().action_generate_khs(
+                    sorted(affected_student_ids)
+                )
+
         return res
 
     def unlink(self):
@@ -448,6 +484,10 @@ class ErpObeAkademikKrsLine(models.Model):
                     {"mahasiswa_ids": [Command.unlink(rec.mahasiswa_id.id)]}
                 )
         result = super().unlink()
-        if "erpobe.report.khs" in self.env:
+        if (
+            "erpobe.report.khs" in self.env
+            and not self.env.context.get("skip_khs_refresh")
+            and not self.env.context.get("defer_khs_refresh")
+        ):
             self.env["erpobe.report.khs"].sudo().action_generate_khs(student_ids)
         return result

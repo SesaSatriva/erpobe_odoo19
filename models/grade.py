@@ -1,4 +1,5 @@
 from odoo import models, fields, api, Command, _
+from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 import logging
 
@@ -39,6 +40,12 @@ class ErpObeInputNilai(models.Model):
     )
 
     def action_generate_simulated_component_grades(self):
+        defer_khs_refresh = self.env.context.get("defer_khs_refresh")
+        GradeKomponen = self.env["erpobe.grade.komponen"].with_context(
+            defer_academic_recompute=True,
+            defer_khs_refresh=True,
+        )
+        students_to_refresh = set()
         for input_record in self:
             rps = input_record.penawaran_line_id.latest_rps_id
             if not rps:
@@ -87,19 +94,36 @@ class ErpObeInputNilai(models.Model):
                         "is_graded": True,
                     }
                     if grade:
-                        grade.with_context(skip_simulation_confirm=True).write(vals)
+                        GradeKomponen.browse(grade.id).with_context(
+                            skip_simulation_confirm=True
+                        ).write(vals)
                     else:
                         vals["input_nilai_id"] = input_record.id
-                        self.env["erpobe.grade.komponen"].create(vals)
-            input_record.action_calculate_grades_and_khs(krs_lines)
+                        GradeKomponen.create(vals)
+            students_to_refresh.update(krs_lines.mapped("mahasiswa_id").ids)
+            input_record.with_context(defer_khs_refresh=True).action_calculate_grades_and_khs(
+                krs_lines
+            )
+        if (
+            students_to_refresh
+            and not defer_khs_refresh
+            and not self.env.context.get("skip_khs_refresh")
+        ):
+            self.env["erpobe.report.khs"].sudo().action_generate_khs(
+                sorted(students_to_refresh)
+            )
         return True
 
     def action_calculate_grades_and_khs(self, krs_lines=None):
         """
         Orchestrator: Memastikan record Grade tersedia & MEMAKSA hitung ulang (Recompute).
         """
-        GradeCpmk = self.env["erpobe.grade.cpmk"]
-        GradeMk = self.env["erpobe.grade.mk"]
+        GradeCpmk = self.env["erpobe.grade.cpmk"].with_context(
+            defer_khs_refresh=True
+        )
+        GradeMk = self.env["erpobe.grade.mk"].with_context(
+            defer_khs_refresh=True
+        )
         GradeCpl = self.env["erpobe.grade.cpl"]
         Rps = self.env["erpobe.akademik.rps"]
 
@@ -202,21 +226,12 @@ class ErpObeInputNilai(models.Model):
 
             # c. Ensure Grade CPL
             for cpl in relevant_cpls:
-                g_cpl = GradeCpl.search(
-                    [
-                        ("mahasiswa_id", "=", mahasiswa.id),
-                        ("cpl_id", "=", cpl.id),
-                    ],
-                    limit=1,
-                )
-                if not g_cpl:
-                    g_cpl = GradeCpl.create(
-                        {
-                            "mahasiswa_id": mahasiswa.id,
-                            "cpl_id": cpl.id,
-                        }
-                    )
-                recompute_cpl += g_cpl  # Kumpulkan record
+                g_cpl = GradeCpl.search([
+                    ("mahasiswa_id", "=", mahasiswa.id),
+                    ("cpl_id", "=", cpl.id),
+                ], limit=1)
+                if g_cpl:
+                    recompute_cpl += g_cpl
 
         # === FORCE RECOMPUTE (SOLUSI UTAMA) ===
         # Memaksa Odoo menghitung ulang nilai berdasarkan input komponen terbaru
@@ -229,12 +244,77 @@ class ErpObeInputNilai(models.Model):
             recompute_cpl._compute_nilai_cpl()
 
         # 5. Trigger Update Report KHS
-        if mahasiswa_to_update and not self.env.context.get("skip_khs_refresh"):
+        if (
+            mahasiswa_to_update
+            and not self.env.context.get("skip_khs_refresh")
+            and not self.env.context.get("defer_khs_refresh")
+        ):
             mhs_ids_list = list(mahasiswa_to_update)
             if "erpobe.report.khs" in self.env:
                 self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids_list)
             else:
                 _logger.warning("Modul erpobe.report.khs belum terinstall.")
+
+    def action_regenerate_dummy_grades(self):
+        grades_to_recompute = self.env["erpobe.grade.komponen"]
+        for input_record in self:
+            rps = input_record.penawaran_line_id.latest_rps_id
+            if not rps or rps.status != "final":
+                raise ValidationError(
+                    _("RPS final untuk kelas ini belum tersedia.")
+                )
+            grades = input_record.grade_komponen_ids.filtered(
+                lambda grade: grade.origin == "simulated"
+            )
+            if not grades:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": "Regenerasi Nilai Dummy",
+                        "message": "Tidak ada nilai simulasi pada penawaran ini.",
+                        "type": "warning",
+                        "sticky": False,
+                    },
+                }
+            import random
+            rng = random.SystemRandom()
+            for grade in grades.with_context(
+                defer_academic_recompute=True,
+                defer_khs_refresh=True,
+            ):
+                student_index = grade.mahasiswa_id.id
+                course_index = grade.rps_id.matakuliah_id.id
+                component_index = grade.komponen_id.id
+                band = rng.choice((93, 82, 72, 61))
+                score = max(
+                    55,
+                    min(
+                        98,
+                        round(
+                            band
+                            + rng.randint(-10, 10)
+                            + ((student_index + course_index + component_index) % 5),
+                            2,
+                        ),
+                    ),
+                )
+                grade.write({"nilai": score})
+            grades_to_recompute |= self.env[
+                "erpobe.grade.komponen"
+            ].browse(grades.ids)
+        if grades_to_recompute:
+            grades_to_recompute._trigger_academic_recompute()
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Regenerasi Nilai Dummy",
+                "message": "Nilai simulasi berhasil diacak ulang. Nilai aktual tetap aman.",
+                "type": "success",
+                "sticky": False,
+            },
+        }
 
     @api.constrains("penawaran_id", "penawaran_line_id")
     def _check_input_faculty(self):
@@ -373,28 +453,44 @@ class ErpObeGradeKomponen(models.Model):
     )
 
     def _trigger_academic_recompute(self):
-        cpmk_records = self.env["erpobe.grade.cpmk"]
-        mk_records = self.env["erpobe.grade.mk"]
-        cpl_records = self.env["erpobe.grade.cpl"]
-        student_ids = set()
-
-        for grade in self:
-            if not grade.krs_line_id or not grade.rps_id:
-                continue
-            student_ids.add(grade.mahasiswa_id.id)
-            cpmk_records += self.env["erpobe.grade.cpmk"].search([
-                ("mahasiswa_id", "=", grade.mahasiswa_id.id),
-                ("krs_line_id", "=", grade.krs_line_id.id),
-                ("rps_id", "=", grade.rps_id.id),
+        cpmk_model = self.env["erpobe.grade.cpmk"].with_context(
+            defer_khs_refresh=True
+        )
+        mk_model = self.env["erpobe.grade.mk"].with_context(
+            defer_khs_refresh=True
+        )
+        cpl_model = self.env["erpobe.grade.cpl"].with_context(
+            defer_khs_refresh=True
+        )
+        grade_keys = {
+            (grade.mahasiswa_id.id, grade.krs_line_id.id, grade.rps_id.id)
+            for grade in self
+            if grade.krs_line_id and grade.rps_id
+        }
+        student_ids = {student_id for student_id, _krs_id, _rps_id in grade_keys}
+        grade_domain = (
+            Domain.OR([
+                [
+                    ("mahasiswa_id", "=", student_id),
+                    ("krs_line_id", "=", krs_id),
+                    ("rps_id", "=", rps_id),
+                ]
+                for student_id, krs_id, rps_id in sorted(grade_keys)
             ])
-            mk_records += self.env["erpobe.grade.mk"].search([
-                ("mahasiswa_id", "=", grade.mahasiswa_id.id),
-                ("krs_line_id", "=", grade.krs_line_id.id),
-                ("rps_id", "=", grade.rps_id.id),
-            ])
-            cpl_records += self.env["erpobe.grade.cpl"].search([
-                ("mahasiswa_id", "=", grade.mahasiswa_id.id),
-            ])
+            if grade_keys
+            else []
+        )
+        cpmk_records = (
+            cpmk_model.search(grade_domain) if grade_keys else cpmk_model.browse()
+        )
+        mk_records = (
+            mk_model.search(grade_domain) if grade_keys else mk_model.browse()
+        )
+        cpl_records = (
+            cpl_model.search([("mahasiswa_id", "in", list(student_ids))])
+            if student_ids
+            else cpl_model.browse()
+        )
 
         if cpmk_records:
             cpmk_records._compute_nilai_cpmk()
@@ -402,7 +498,11 @@ class ErpObeGradeKomponen(models.Model):
             mk_records._compute_nilai_mk()
         if cpl_records:
             cpl_records._compute_nilai_cpl()
-        if student_ids:
+        if (
+            student_ids
+            and not self.env.context.get("skip_khs_refresh")
+            and not self.env.context.get("defer_khs_refresh")
+        ):
             self.env["erpobe.report.khs"].sudo().action_generate_khs(
                 list(student_ids)
             )
@@ -427,7 +527,11 @@ class ErpObeGradeKomponen(models.Model):
                     })
         vals.pop("audit_reason", None)
         result = super().write(vals)
-        if {"nilai", "is_graded", "rps_id", "rps_komponen_id", "krs_line_id"} & set(vals):
+        if (
+            {"nilai", "is_graded", "rps_id", "rps_komponen_id", "krs_line_id"}
+            & set(vals)
+            and not self.env.context.get("defer_academic_recompute")
+        ):
             self._trigger_academic_recompute()
         return result
 
@@ -450,7 +554,8 @@ class ErpObeGradeKomponen(models.Model):
                     "new_value": grade.nilai,
                     "reason": reason or "Initial grade entry",
                 })
-        records._trigger_academic_recompute()
+        if not self.env.context.get("defer_academic_recompute"):
+            records._trigger_academic_recompute()
         return records
 
 
@@ -487,3 +592,33 @@ class ErpObeGradeKomponenAudit(models.Model):
 
     def unlink(self):
         raise ValidationError("Riwayat penilaian tidak boleh dihapus.")
+
+    def _unlink_fixture_generated_simulation(self):
+        grades = self.mapped("grade_id")
+        if any(
+            grade.origin != "simulated"
+            or grade.krs_line_id.matakuliah_id.identity_key
+            or grade.krs_line_id.matakuliah_id.semester != 6
+            for grade in grades
+        ):
+            raise ValidationError(
+                "Hanya audit nilai simulasi awal untuk MK fixture semester 6 "
+                "yang dapat dibersihkan."
+            )
+
+        course_ids = grades.mapped("krs_line_id.matakuliah_id").ids
+        sources = self.env["erpobe.akademik.fixture.source"].sudo().search([
+            ("record_model", "=", "erpobe.master.matakuliah"),
+            ("record_id", "in", course_ids),
+            ("source_type", "in", ("dummy", "mixed")),
+        ])
+        if set(sources.mapped("record_id")) != set(course_ids) or any(
+            audit.reason != "Initial grade entry"
+            or audit.old_value != 0
+            or audit.new_value != audit.grade_id.nilai
+            for audit in self
+        ):
+            raise ValidationError(
+                "Riwayat nilai bukan nilai simulasi awal fixture; tidak dihapus."
+            )
+        return super().unlink()

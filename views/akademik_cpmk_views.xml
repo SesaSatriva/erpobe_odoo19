@@ -56,6 +56,7 @@
                         <list editable="bottom">
                             <field name="cpl_id" domain="[('prodi_id', '=', parent.prodi_id)]"/>
                             <field name="mk_id" readonly="1"/>
+                            <field name="bobot_cpl_cpmk"/>
                         </list>
                     </field>
                 </sheet>

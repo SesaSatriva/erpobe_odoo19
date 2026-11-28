@@ -209,8 +209,8 @@ def generate_fixture_files():
         ('ta_2024_2025_ganjil', '2024/2025', 'ganjil', False),
         ('ta_2024_2025_genap', '2024/2025', 'genap', False),
         ('ta_2025_2026_ganjil', '2025/2026', 'ganjil', False),
-        ('ta_2025_2026_genap', '2025/2026', 'genap', False),
-        ('ta_2026_2027_ganjil', '2026/2027', 'ganjil', True),
+        ('ta_2025_2026_genap', '2025/2026', 'genap', True),
+        ('ta_2026_2027_ganjil', '2026/2027', 'ganjil', False),
         ('ta_2026_2027_genap', '2026/2027', 'genap', False),
     ]
     for xml_id, tahun, semester, aktif in years:
@@ -361,7 +361,7 @@ def generate_fixture_files():
 
     # 07: offerings for active year and some previous years
     offer_records = []
-    active_year = 'ta_2026_2027_ganjil'
+    active_year = 'ta_2025_2026_genap'
     active_year_ref = f'erpobe.{active_year}'
     for key, cfg in PRODIS.items():
         offer_id = f'penawaran_{key}_{active_year}'

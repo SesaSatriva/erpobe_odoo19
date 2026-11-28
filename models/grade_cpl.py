@@ -67,6 +67,11 @@ class ErpObeGradeCpl(models.Model):
         return result
 
     def _trigger_report_sync(self):
+        if (
+            self.env.context.get("skip_khs_refresh")
+            or self.env.context.get("defer_khs_refresh")
+        ):
+            return
         mhs_ids = self.mapped("mahasiswa_id.id")
         if mhs_ids and "erpobe.report.khs" in self.env:
             self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids)
@@ -191,11 +196,12 @@ class ErpObeGradeCpl(models.Model):
                 grade = grade_map.get((rec.mahasiswa_id.id, cpmk.id))
                 if not grade:
                     continue
-                weight = 0.0
-                for weight_line in grade.rps_id.bobot_cpmk_mk_ids:
-                    if weight_line.cpmk_id == cpmk:
-                        weight = weight_line.bobot_cpmk_mk
-                        break
+                weight = mapping.bobot_cpl_cpmk
+                if weight <= 0:
+                    for weight_line in grade.rps_id.bobot_cpmk_mk_ids:
+                        if weight_line.cpmk_id == cpmk:
+                            weight = weight_line.bobot_cpmk_mk
+                            break
                 if weight <= 0:
                     continue
                 weighted_total += grade.nilai_cpmk * weight

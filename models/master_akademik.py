@@ -14,7 +14,15 @@ class ErpObeMasterMataKuliah(models.Model):
 
     name = fields.Char(string="Nama Mata Kuliah", required=True)
     kode_mk = fields.Char(string="Kode MK", required=True, index=True)
+    identity_key = fields.Char(
+        string="Kunci Identitas MK",
+        index=True,
+        help="Kunci stabil untuk membedakan mata kuliah pilihan dengan kode placeholder yang sama.",
+    )
     sks = fields.Integer(required=True)
+    sks_teori = fields.Integer(string="SKS Teori", default=0)
+    sks_praktik = fields.Integer(string="SKS Praktik", default=0)
+    status_mk = fields.Char(string="Status Mata Kuliah")
     semester = fields.Integer(required=True)
     active = fields.Boolean(default=True)
     kurikulum_id = fields.Many2one(
@@ -61,7 +69,8 @@ class ErpObeMasterMataKuliah(models.Model):
     )
 
     _kode_mk_unique = models.Constraint(
-        "UNIQUE (prodi_id, kode_mk)", "Kode Mata Kuliah harus unik dalam prodi."
+        "UNIQUE (prodi_id, identity_key)",
+        "Kunci identitas mata kuliah harus unik dalam prodi.",
     )
     rombel_ids = fields.Many2many(
         "erpobe.master.rombel",
@@ -153,14 +162,18 @@ class ErpObeMasterMataKuliah(models.Model):
         seen_codes = set()
         for vals in vals_list:
             code = vals.get("kode_mk")
-            pair = (code, vals.get("prodi_id"))
-            if code and (
-                pair in seen_codes
-                or self.search_count(
-                    [("kode_mk", "=", code), ("prodi_id", "=", pair[1])]
-                )
-            ):
-                raise ValidationError("Kode Mata Kuliah harus unik dalam prodi.")
+            identity = vals.get("identity_key")
+            pair = (identity or code, vals.get("prodi_id"))
+            if identity:
+                if pair in seen_codes or self.search_count(
+                    [("identity_key", "=", identity), ("prodi_id", "=", pair[1])]
+                ):
+                    raise ValidationError("Kunci identitas mata kuliah harus unik dalam prodi.")
+            elif code:
+                if pair in seen_codes or self.search_count(
+                    [("identity_key", "=", False), ("kode_mk", "=", code), ("prodi_id", "=", pair[1])]
+                ):
+                    raise ValidationError("Kode Mata Kuliah harus unik dalam prodi.")
             seen_codes.add(pair)
         return super().create(vals_list)
 

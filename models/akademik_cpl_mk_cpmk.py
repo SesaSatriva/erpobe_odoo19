@@ -10,6 +10,11 @@ class ErpObeAkademikCplMkCpmk(models.Model):
     # PERBAIKAN: Hapus akhiran _ids pada Many2one
     cpl_id = fields.Many2one("erpobe.akademik.cpl", required=True, ondelete="cascade")
     cpmk_id = fields.Many2one("erpobe.akademik.cpmk", required=True, ondelete="cascade")
+    bobot_cpl_cpmk = fields.Float(
+        string="Bobot CPL-CPMK (%)",
+        default=0.0,
+        help="Bobot kontribusi CPMK terhadap CPL sesuai dokumen kurikulum.",
+    )
 
     # Field MK diambil via related dari CPMK untuk mencegah inkonsistensi
     mk_id = fields.Many2one(

@@ -129,7 +129,8 @@
                             Program studi tanpa data valid tidak ditampilkan dalam nilai perbandingan.
                         </div>
 
-                        <div t-if="comparison['prodis']" class="o_triton_comparison-results">
+                        <t t-if="comparison['prodis']">
+                        <div class="o_triton_comparison-results">
                             <div class="o_triton_analysis-toolbar">
                                 <a class="o_triton_btn-ghost" t-att-href="csv_url">Unduh CSV agregat</a>
                                 <button class="o_triton_btn-ghost o_triton_print" type="button">Cetak / Simpan PDF</button>
@@ -216,7 +217,15 @@
                                             <tr>
                                                 <th>Program studi</th>
                                                 <t t-foreach="comparison['categories']" t-as="category">
-                                                    <th t-out="category['name']"/>
+                                                    <th>
+                                                        <span t-out="category['name']"/>
+                                                        <button type="button"
+                                                                class="o_triton_detail-button"
+                                                                t-att-data-category="category['key']"
+                                                                t-att-aria-label="'Lihat detail ' + category['name']">
+                                                            Lihat Detail
+                                                        </button>
+                                                    </th>
                                                 </t>
                                             </tr>
                                         </thead>
@@ -240,11 +249,30 @@
                                 </div>
                             </article>
                         </div>
+                        <dialog id="o_triton_cpl-detail-dialog" class="o_triton_detail-dialog" aria-labelledby="o_triton_detail-title">
+                            <div class="o_triton_detail-dialog__header">
+                                <div>
+                                    <span class="o_triton_section-kicker">Drill-down CPL</span>
+                                    <h2 id="o_triton_detail-title">Detail capaian CPL</h2>
+                                </div>
+                                <button type="button" class="o_triton_detail-close" aria-label="Tutup detail">×</button>
+                            </div>
+                            <div class="o_triton_detail-status" aria-live="polite"></div>
+                            <div class="o_triton_table-wrap">
+                                <table class="o_triton_table o_triton_detail-table">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </dialog>
 
-                        <div t-else="" class="o_triton_empty">
-                            <h2>Belum ada hasil perbandingan</h2>
-                            <p>Pastikan terdapat penawaran pada periode yang dipilih, RPS final dengan bobot lengkap, nilai komponen, serta KRS yang telah disetujui.</p>
-                        </div>
+                        </t>
+                        <t t-else="">
+                            <div class="o_triton_empty">
+                                <h2>Belum ada hasil perbandingan</h2>
+                                <p>Pastikan terdapat penawaran pada periode yang dipilih, RPS final dengan bobot lengkap, nilai komponen, serta KRS yang telah disetujui.</p>
+                            </div>
+                        </t>
 
                         <aside class="o_triton_methodology-note">
                             <strong>Metodologi:</strong>
@@ -307,6 +335,115 @@
                                 button.disabled = true;
                                 button.textContent = 'Memproses…';
                             }
+                        });
+                    });
+                })();
+            </script>
+            <script type="text/javascript">
+                (function() {
+                    var dialog = document.getElementById('o_triton_cpl-detail-dialog');
+                    if (!dialog) {
+                        return;
+                    }
+                    var title = dialog.querySelector('#o_triton_detail-title');
+                    var status = dialog.querySelector('.o_triton_detail-status');
+                    var table = dialog.querySelector('.o_triton_detail-table');
+                    var closeButton = dialog.querySelector('.o_triton_detail-close');
+
+                    var closeDialog = function() {
+                        if (typeof dialog.close === 'function') {
+                            dialog.close();
+                        } else {
+                            dialog.removeAttribute('open');
+                        }
+                    };
+                    closeButton.addEventListener('click', closeDialog);
+                    dialog.addEventListener('click', function(event) {
+                        if (event.target === dialog) {
+                            closeDialog();
+                        }
+                    });
+
+                    document.querySelectorAll('.o_triton_detail-button').forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            var category = button.dataset.category;
+                            var categoryLabel = button.closest('th').querySelector('span').textContent;
+                            title.textContent = 'Detail ' + categoryLabel;
+                            status.textContent = 'Memuat data CPL…';
+                            table.querySelector('thead').replaceChildren();
+                            table.querySelector('tbody').replaceChildren();
+                            if (typeof dialog.showModal === 'function') {
+                                dialog.showModal();
+                            } else {
+                                dialog.setAttribute('open', 'open');
+                            }
+
+                            var query = new URLSearchParams(window.location.search);
+                            query.set('jenis_cpl', category);
+                            fetch('/triton/api/perbandingan-cpl/detail?' + query.toString(), {
+                                headers: {'Accept': 'application/json'}
+                            }).then(function(response) {
+                                if (!response.ok) {
+                                    throw new Error('Permintaan detail gagal.');
+                                }
+                                return response.json();
+                            }).then(function(payload) {
+                                status.textContent = '';
+                                var detail = payload.category;
+                                var prodis = payload.prodis || [];
+                                var thead = table.querySelector('thead');
+                                var headerRow = document.createElement('tr');
+                                ['Kode CPL', 'Nama / Deskripsi CPL'].concat(
+                                    prodis.map(function(prodi) { return prodi.name; })
+                                ).forEach(function(label) {
+                                    var th = document.createElement('th');
+                                    th.textContent = label;
+                                    headerRow.appendChild(th);
+                                });
+                                thead.appendChild(headerRow);
+
+                                var tbody = table.querySelector('tbody');
+                                if (!detail || !detail.rows || detail.rows.length === 0) {
+                                    var emptyRow = document.createElement('tr');
+                                    var emptyCell = document.createElement('td');
+                                    emptyCell.colSpan = prodis.length + 2;
+                                    emptyCell.className = 'o_triton_detail-empty';
+                                    emptyCell.textContent = 'Belum ada CPL pada kategori ini.';
+                                    emptyRow.appendChild(emptyCell);
+                                    tbody.appendChild(emptyRow);
+                                    return;
+                                }
+                                detail.rows.forEach(function(row) {
+                                    var tr = document.createElement('tr');
+                                    var code = document.createElement('th');
+                                    code.textContent = row.kode;
+                                    tr.appendChild(code);
+                                    var description = document.createElement('td');
+                                    description.textContent = row.description || row.name;
+                                    tr.appendChild(description);
+                                    row.scores.forEach(function(score) {
+                                        var td = document.createElement('td');
+                                        if (score === null || typeof score === 'undefined') {
+                                            td.className = 'o_triton_table-empty';
+                                            td.textContent = 'Belum tersedia';
+                                        } else {
+                                            var strong = document.createElement('strong');
+                                            strong.textContent = score + '%';
+                                            td.appendChild(strong);
+                                            var track = document.createElement('div');
+                                            track.className = 'o_triton_detail-progress';
+                                            var fill = document.createElement('span');
+                                            fill.style.width = Math.max(0, Math.min(100, score)) + '%';
+                                            track.appendChild(fill);
+                                            td.appendChild(track);
+                                        }
+                                        tr.appendChild(td);
+                                    });
+                                    tbody.appendChild(tr);
+                                });
+                            }).catch(function(error) {
+                                status.textContent = error.message;
+                            });
                         });
                     });
                 })();

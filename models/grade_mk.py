@@ -66,23 +66,17 @@ class ErpObeGradeMk(models.Model):
         Memaksa Report KHS untuk refresh saat ada nilai MK baru/berubah.
         Ini memastikan mata kuliah baru langsung muncul di transkrip.
         """
-        if self.env.context.get("skip_khs_refresh"):
+        if (
+            self.env.context.get("skip_khs_refresh")
+            or self.env.context.get("defer_khs_refresh")
+        ):
             return
 
-        # Cari Report KHS milik mahasiswa yang terdampak
         mhs_ids = records.mapped("mahasiswa_id.id")
         if not mhs_ids:
             return
 
-        reports = (
-            self.env["erpobe.report.khs"]
-            .sudo()
-            .search([("mahasiswa_id", "in", mhs_ids)])
-        )
-
-        for report in reports:
-            # Panggil method sync yang sudah kita buat di erpobe.report.khs
-            report._sync_from_grades()
+        self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids)
 
     # === COMPUTE LOGIC ===
     @api.depends(

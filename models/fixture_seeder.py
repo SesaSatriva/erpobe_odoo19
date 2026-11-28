@@ -167,9 +167,8 @@ SOURCE_KIND = {
     "dummy": "dummy",
     "derived": "derived",
 }
-FIXTURE_SEED_VERSION = "4"
+FIXTURE_SEED_VERSION = "5"
 FIXTURE_SEED_VERSION_PARAM = "erpobe.fixture.2022_cohort_seed_version"
-FIXTURE_SEED_ENABLED_PARAM = "erpobe.fixture.seed_enabled"
 FIXTURE_COMPONENTS = (
     ("komponen_partisipatif", "Kehadiran", "attendance", 10.0),
     ("fixture_component_quiz", "Kuis", "quiz", 10.0),
@@ -192,11 +191,6 @@ class ErpObeFixtureSeeder(models.AbstractModel):
     _description = "Pemuat Fixture Akademik OBE"
 
     @api.model
-    def _fixture_cpl_type(self, code, description, aspect=None):
-        cpl_model = self.env["erpobe.akademik.cpl"].sudo()
-        return cpl_model.classify_type(code, description, aspect)
-
-    @api.model
     def _ensure_fixture_admin_accounts(self):
         return self.env["res.users"].with_context(
             fixture_admins_only=True
@@ -204,20 +198,67 @@ class ErpObeFixtureSeeder(models.AbstractModel):
 
     @api.model
     def load_2022_cohort_if_enabled(self):
-        """Lifecycle hook: fixture academic is opt-in, not automatic."""
-        params = self.env["ir.config_parameter"].sudo()
-        if params.get_param(FIXTURE_SEED_ENABLED_PARAM) != "True":
-            return False
-        return self.load_2022_cohort()
+        """Muatan utama fixture akademik angkatan 2022."""
+        affected_student_ids = set()
+        deferred_seeder = self.with_context(defer_khs_refresh=True)
+        deferred_seeder._load_2022_cohort(affected_student_ids)
+        importer = self.env["erpobe.official.curriculum"].sudo().with_context(
+            defer_khs_refresh=True
+        )
+        importer._load_all(affected_student_ids)
+        importer._sync_khs_batch(affected_student_ids)
+        return True
+
+    @api.model
+    def _fixture_cohort_is_complete(self):
+        imd_model = self.env["ir.model.data"].sudo()
+        for config in PROGRAMS:
+            prodi = self.env.ref("erpobe.%s" % config["xmlid"])
+            data = imd_model.search([
+                ("module", "=", "erpobe"),
+                ("model", "=", "erpobe.master.mahasiswa"),
+                ("name", "=like", "fixture_student_%s_2022_%%" % config["slug"]),
+            ])
+            students = self.env["erpobe.master.mahasiswa"].sudo().browse(
+                data.mapped("res_id")
+            ).exists()
+            for letter in ("a", "b"):
+                rombel = self.env.ref(
+                    "erpobe.rombel_%s_2022_%s"
+                    % (config["code"].lower(), letter)
+                )
+                count = len(students.filtered(
+                    lambda student: (
+                        student.prodi_id == prodi
+                        and student.rombel_id == rombel
+                    )
+                ))
+                if count < 30:
+                    return False
+        return True
 
     @api.model
     def load_2022_cohort(self):
+        """Defer hook-level KHS refreshes until the final student batch."""
+        affected_student_ids = set()
+        result = self.with_context(defer_khs_refresh=True)._load_2022_cohort(
+            affected_student_ids
+        )
+        if affected_student_ids:
+            self.env["erpobe.report.khs"].sudo().action_generate_khs(
+                sorted(affected_student_ids)
+            )
+        return result
+
+    @api.model
+    def _load_2022_cohort(self, affected_student_ids):
         params = self.env["ir.config_parameter"].sudo()
         force_seed = self.env.context.get("force_fixture_seed")
         if not force_seed:
             if params.get_param(FIXTURE_SEED_VERSION_PARAM) == FIXTURE_SEED_VERSION:
-                self._ensure_fixture_admin_accounts()
-                return True
+                if self._fixture_cohort_is_complete():
+                    self._ensure_fixture_admin_accounts()
+                    return True
 
             imd_model = self.env["ir.model.data"].sudo()
             final_grade = imd_model.search(
@@ -278,11 +319,8 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             all_students.extend(program["students"])
 
         self._ensure_fixture_admin_accounts()
-        self._create_enrollments(programs, component_ids)
         self._create_cpl_results(programs)
-        self.env["erpobe.report.khs"].sudo().action_generate_khs(
-            [student.id for student in all_students]
-        )
+        affected_student_ids.update(student.id for student in all_students)
         params.set_param(FIXTURE_SEED_VERSION_PARAM, FIXTURE_SEED_VERSION)
         return True
 
@@ -627,6 +665,32 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         return self._upsert_many(model_name, [(key, values)])[key]
 
     @api.model
+    def _preserve_existing_fixture_values(self, model_name, items):
+        keys = [key for key, _values in items]
+        data = self.env["ir.model.data"].sudo().search([
+            ("module", "=", "erpobe"),
+            ("name", "in", keys),
+        ])
+        data_by_key = {record.name: record for record in data}
+        model = self.env[model_name].sudo()
+        for key, values in items:
+            external_id = data_by_key.get(key)
+            if not external_id or external_id.model != model_name:
+                continue
+            record = model.browse(external_id.res_id).exists()
+            if not record:
+                continue
+            for field_name in values:
+                field = record._fields[field_name]
+                current = record[field_name]
+                if field.type == "many2one":
+                    values[field_name] = current.id or False
+                elif field.type in ("many2many", "one2many"):
+                    values[field_name] = [Command.set(current.ids)]
+                else:
+                    values[field_name] = current
+
+    @api.model
     def _mark_source(self, record, source_type, note, source_url=None):
         self._mark_sources([(record, source_type, note, source_url)])
 
@@ -688,7 +752,7 @@ class ErpObeFixtureSeeder(models.AbstractModel):
 
     @api.model
     def _ensure_methods(self):
-        methods = []
+        items = []
         for index, name in enumerate(
             (
                 "Case Method",
@@ -698,14 +762,19 @@ class ErpObeFixtureSeeder(models.AbstractModel):
             ),
             start=1,
         ):
-            methods.append(
-                self._upsert(
-                    "erpobe.akademik.metode.pembelajaran",
+            items.append(
+                (
                     f"fixture_method_{index:02d}",
                     {"name": name, "kode": f"F{index:02d}", "active": True},
                 )
             )
-        return methods
+        self._preserve_existing_fixture_values(
+            "erpobe.akademik.metode.pembelajaran", items
+        )
+        records = self._upsert_many(
+            "erpobe.akademik.metode.pembelajaran", items
+        )
+        return [records[key] for key, _values in items]
 
     @api.model
     def _ensure_grades(self):
@@ -780,6 +849,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                     },
                 )
             )
+        self._preserve_existing_fixture_values(
+            "erpobe.master.dosen", items
+        )
         teachers = self._upsert_many("erpobe.master.dosen", items)
         result = {}
         source_items = []
@@ -877,13 +949,16 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         for course in courses:
             course["offer_line"] = offers[course["code"]]["line"]
             course["input_nilai"] = offers[course["code"]]["input"]
-            course["rps"] = self._ensure_rps(
-                config,
-                course,
-                component_ids,
-                methods,
-                grades,
-            )
+            if course["spec"]["semester"] == 6:
+                course["rps"] = self._ensure_rps(
+                    config,
+                    course,
+                    component_ids,
+                    methods,
+                    grades,
+                )
+            else:
+                course["rps"] = False
         return {
             "config": config,
             "prodi": prodi,
@@ -897,43 +972,38 @@ class ErpObeFixtureSeeder(models.AbstractModel):
     @api.model
     def _ensure_cpls(self, config, cpl_specs, prodi):
         items = []
-        for index, (description, aspect) in enumerate(cpl_specs, start=1):
-            code = f"{config['code']}-CPL-{index:02d}"
+        for index, (description, category) in enumerate(cpl_specs, start=1):
             items.append(
                 (
-                    f"fixture_cpl_{config['slug']}_{index:02d}",
+                    "fixture_cpl_%s_%02d" % (config["slug"], index),
                     {
                         "prodi_id": prodi.id,
-                        "kode_cpl": code,
+                        "kode_cpl": "%s-CPL-%02d" % (config["code"], index),
+                        "nama_cpl": "Capaian Pembelajaran %02d" % index,
                         "name": description,
-                        "indikator_capaian": (
-                            f"Aspek: {aspect}. Bukti simulasi: mahasiswa menunjukkan "
-                            f"capaian untuk {description.lower()}."
-                            if aspect
-                            else f"Indikator simulasi: mahasiswa menunjukkan bukti capaian untuk {description.lower()}."
-                        ),
-                        "target_nilai": 70.0,
-                        "jenis_cpl": self._fixture_cpl_type(
-                            code, description, aspect
-                        ),
+                        "indikator_capaian": category
+                        or "Indikator simulasi untuk CPL-%02d." % index,
                     },
                 )
             )
+        self._preserve_existing_fixture_values(
+            "erpobe.akademik.cpl", items
+        )
         records = self._upsert_many("erpobe.akademik.cpl", items)
-        result = []
-        source_items = []
-        for index, (description, aspect) in enumerate(cpl_specs, start=1):
-            record = records[f"fixture_cpl_{config['slug']}_{index:02d}"]
-            kind = "dummy" if config["slug"] == "si" else "mixed"
-            note = (
-                "Rumusan CPL dibuat untuk simulasi karena teks resmi tidak tersedia pada sumber yang dibaca."
-                if kind == "dummy"
-                else "Rumusan merupakan parafrase pada docs/data_prodi.md, bukan teks CPL resmi. "
-                "Indikator dan target nilai adalah simulasi."
+        if not records:
+            raise ValidationError(
+                "Data CPL simulasi kosong untuk prodi %s." % prodi.display_name
             )
-            source_items.append((record, kind, note, config["source_url"]))
-            result.append(record)
-        self._mark_sources(source_items)
+        result = list(records.values())
+        self._mark_sources([
+            (
+                cpl,
+                "dummy",
+                "CPL dibuat untuk data simulasi; bukan rumusan resmi prodi.",
+                None,
+            )
+            for cpl in result
+        ])
         return result
 
     @api.model
@@ -941,11 +1011,15 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         program_teacher_keys = [row[0] for row in config["teachers"]]
         advisors = [teacher_map[key] for key in program_teacher_keys]
         items = []
-        for index in range(1, 26):
+        for index in range(1, 61):
             student_code = f"{config['code']}22{index:03d}"
             first = FIRST_NAMES[(index - 1) % len(FIRST_NAMES)]
             last = LAST_NAMES[(index * 7 - 1) % len(LAST_NAMES)]
-            rombel = rombels[0] if index <= 13 else rombels[1]
+            rombel = (
+                rombels[0]
+                if index <= 15 or 31 <= index <= 45
+                else rombels[1]
+            )
             items.append(
                 (
                     f"fixture_student_{config['slug']}_2022_{index:03d}",
@@ -956,15 +1030,18 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                         "rombel_id": rombel.id,
                         "dosen_wali_id": advisors[(index - 1) % len(advisors)].id,
                         "kurikulum_id": curriculum.id,
-                        "semester_saat_ini": 9,
+                        "semester_saat_ini": 6,
                         "status_akademik": "aktif",
                     },
                 )
             )
+        self._preserve_existing_fixture_values(
+            "erpobe.master.mahasiswa", items
+        )
         records = self._upsert_many("erpobe.master.mahasiswa", items)
         students = []
         source_items = []
-        for index in range(1, 26):
+        for index in range(1, 61):
             student = records[
                 f"fixture_student_{config['slug']}_2022_{index:03d}"
             ]
@@ -1431,195 +1508,6 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         return rps
 
     @api.model
-    def _create_enrollments(self, programs, component_ids):
-        component_ids = list(component_ids)
-        students_by_offer_line = {}
-        course_krs_lines = {}
-
-        for slug, program in programs.items():
-            courses_by_semester = {}
-            for course in program["courses"]:
-                courses_by_semester.setdefault(course["spec"]["semester"], []).append(
-                    course
-                )
-
-            for student_index, student in enumerate(program["students"]):
-                student_key = f"{slug}_2022_{student_index + 1:03d}"
-                semester_selections = []
-                krs_items = []
-                for semester in range(1, 9):
-                    selected_courses = self._select_courses(
-                        courses_by_semester.get(semester, []),
-                        student_index,
-                    )
-                    if not selected_courses:
-                        continue
-                    total_sks = sum(
-                        course["spec"]["sks"] for course in selected_courses
-                    )
-                    if total_sks > 24:
-                        raise ValidationError(
-                            f"KRS fixture {student.nim} semester {semester} "
-                            f"melebihi 24 SKS ({total_sks})."
-                        )
-                    year = self._year_for_semester(semester)
-                    semester_key = f"s{semester:02d}"
-                    krs_key = f"fixture_krs_{student_key}_{semester_key}"
-                    krs_items.append(
-                        (
-                            krs_key,
-                            {
-                                "mahasiswa_id": student.id,
-                                "penawaran_id": self._offer_for_course(
-                                    selected_courses[0], year
-                                ).id,
-                                "state": "approved",
-                                "max_sks_allowed": 24,
-                                "advisor_note": "KRS simulasi; persetujuan otomatis untuk data uji.",
-                            },
-                        )
-                    )
-                    semester_selections.append(
-                        {
-                            "krs_key": krs_key,
-                            "courses": selected_courses,
-                        }
-                    )
-
-                krs_records = self._upsert_many("erpobe.akademik.krs", krs_items)
-                line_items = []
-                course_line_keys = {}
-                selected_courses = []
-                for selection in semester_selections:
-                    krs = krs_records[selection["krs_key"]]
-                    for course in selection["courses"]:
-                        line_key = (
-                            f"fixture_krsline_{student_key}_{course['spec']['key']}"
-                        )
-                        course_line_keys[course["code"]] = line_key
-                        selected_courses.append(course)
-                        students_by_offer_line.setdefault(
-                            course["offer_line"].id, set()
-                        ).add(student.id)
-                        line_items.append(
-                            (
-                                line_key,
-                                {
-                                    "krs_id": krs.id,
-                                    "penawaran_line_id": course["offer_line"].id,
-                                    "status_pengambilan": "baru",
-                                },
-                            )
-                        )
-                lines = self._upsert_many("erpobe.akademik.krs.line", line_items)
-
-                component_items = []
-                for course in selected_courses:
-                    line = lines[course_line_keys[course["code"]]]
-                    course_krs_lines.setdefault(course["code"], self.env[
-                        "erpobe.akademik.krs.line"
-                    ])
-                    course_krs_lines[course["code"]] |= line
-                    for component_index, component in enumerate(component_ids):
-                        snapshot = course["rps"].rps_komponen_ids.filtered(
-                            lambda item: item.komponen_id == component and item.aktif
-                        )[:1]
-                        component_items.append(
-                            (
-                                f"fixture_grade_{student_key}_{course['spec']['key']}_"
-                                f"{component_index + 1:02d}",
-                                {
-                                    "input_nilai_id": course["input_nilai"].id,
-                                    "krs_line_id": line.id,
-                                    "komponen_id": component.id,
-                                    "rps_id": course["rps"].id,
-                                    "rps_komponen_id": snapshot.id,
-                                    "origin": "simulated",
-                                    "is_graded": True,
-                                    "nilai": self._simulated_score(
-                                        student_index,
-                                        course["spec"]["sequence"],
-                                        component_index,
-                                        program["config"]["slug"],
-                                    ),
-                                },
-                            )
-                        )
-                self._upsert_component_grades(component_items)
-
-        offer_line_model = self.env["erpobe.akademik.penawaran.line"].sudo()
-        for offer_line_id, student_ids in students_by_offer_line.items():
-            offer_line_model.browse(offer_line_id).write(
-                {
-                    "mahasiswa_ids": [
-                        Command.link(student_id) for student_id in sorted(student_ids)
-                    ]
-                }
-            )
-
-        for program in programs.values():
-            for course in program["courses"]:
-                enrolled_lines = course_krs_lines.get(course["code"])
-                if enrolled_lines:
-                    course["input_nilai"].with_context(
-                        skip_khs_refresh=True
-                    ).action_calculate_grades_and_khs(enrolled_lines)
-
-    @api.model
-    def _upsert_component_grades(self, items):
-        items = list(items)
-        if not items:
-            return
-
-        Grade = self.env["erpobe.grade.komponen"].sudo()
-        relational_fields = {
-            "input_nilai_id",
-            "krs_line_id",
-            "komponen_id",
-            "rps_id",
-            "rps_komponen_id",
-        }
-        existing_grades = Grade.search([
-            (
-                "krs_line_id",
-                "in",
-                sorted({values["krs_line_id"] for _, values in items}),
-            ),
-            (
-                "komponen_id",
-                "in",
-                sorted({values["komponen_id"] for _, values in items}),
-            ),
-        ])
-        grades_by_key = {
-            (grade.krs_line_id.id, grade.komponen_id.id): grade
-            for grade in existing_grades
-        }
-        create_values = []
-        for _key, values in items:
-            grade = grades_by_key.get(
-                (values["krs_line_id"], values["komponen_id"])
-            )
-            if grade:
-                if grade.origin != "simulated":
-                    continue
-                if all(
-                    (
-                        grade[field].id == value
-                        if field in relational_fields
-                        else grade[field] == value
-                    )
-                    for field, value in values.items()
-                ):
-                    continue
-                grade.write(values)
-            else:
-                create_values.append(values)
-        if create_values:
-            for start in range(0, len(create_values), 1000):
-                Grade.create(create_values[start : start + 1000])
-
-    @api.model
     def _create_cpl_results(self, programs):
         items = []
         for program in programs.values():
@@ -1635,7 +1523,9 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         self._upsert_many("erpobe.grade.cpl", items)
 
     @api.model
-    def _select_courses(self, offered, student_index):
+    def _select_courses(
+        self, offered, student_index, student=None, program_name=None
+    ):
         core = [course for course in offered if not course["spec"].get("group")]
         groups = {}
         for course in offered:
@@ -1644,6 +1534,21 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 groups.setdefault(group, []).append(course)
 
         selected = list(core)
+        total_sks = sum(course["course"].sks for course in core)
+        if total_sks > 24:
+            student_label = f" untuk mahasiswa {student.nim}" if student else ""
+            program_label = f" ({program_name})" if program_name else ""
+            courses = ", ".join(
+                f"{course['course'].kode_mk} {course['course'].name} "
+                f"({course['course'].sks} SKS)"
+                for course in core
+            )
+            raise ValidationError(
+                f"Konflik kurikulum: mata kuliah wajib semester 6{program_label}"
+                f"{student_label} berjumlah {total_sks} SKS, melebihi batas 24 SKS. "
+                f"Periksa kurikulum sebelum membuat KRS. Rincian: {courses}."
+            )
+
         for group, choices in groups.items():
             count = choices[0]["spec"].get("choice_count", 1)
             if group.startswith("el_sistem_"):
@@ -1653,8 +1558,20 @@ class ErpObeFixtureSeeder(models.AbstractModel):
                 if group != track:
                     continue
             count = min(count, len(choices))
+            if count <= 0:
+                continue
             offset = (student_index * count) % len(choices)
-            selected.extend(choices[(offset + index) % len(choices)] for index in range(count))
+            selected_count = 0
+            for index in range(len(choices)):
+                choice = choices[(offset + index) % len(choices)]
+                choice_sks = choice["course"].sks
+                if total_sks + choice_sks > 24:
+                    continue
+                selected.append(choice)
+                total_sks += choice_sks
+                selected_count += 1
+                if selected_count == count:
+                    break
         return selected
 
     @api.model
@@ -1665,6 +1582,13 @@ class ErpObeFixtureSeeder(models.AbstractModel):
 
     @api.model
     def _year_for_semester(self, semester):
+        if semester == 6:
+            period = self.env["erpobe.akademik.tahunajaran"].sudo().search([
+                ("tahun_ajaran", "=", "2025/2026"),
+                ("semester", "=", "genap"),
+            ], limit=1)
+            if period:
+                return period
         year_start = 2022 + (semester - 1) // 2
         term = "ganjil" if semester % 2 else "genap"
         xmlid = f"ta_{year_start}_{year_start + 1}_{term}"
@@ -1712,22 +1636,6 @@ class ErpObeFixtureSeeder(models.AbstractModel):
         if "praktik" in normalized or "praktikum" in normalized:
             return "P"
         return "T"
-
-    @api.model
-    def _simulated_score(
-        self, student_index, course_sequence, component_index, program_slug=None
-    ):
-        bands = (93, 88, 83, 79, 75, 71, 68, 64, 59, 54)
-        base = bands[student_index % len(bands)]
-        variation = ((course_sequence * 3 + component_index * 7 + student_index) % 11) - 5
-        program_offsets = {
-            "ti": -2,
-            "el": 4,
-            "mf": 1,
-            "si": -5,
-        }
-        program_offset = program_offsets.get(program_slug, 0)
-        return float(max(40, min(99, base + variation + program_offset)))
 
     @api.model
     def _slug(self, value):

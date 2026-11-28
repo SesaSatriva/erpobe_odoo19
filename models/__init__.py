@@ -21,6 +21,7 @@ from . import rps_komponen
 from . import akademik_tahunajaran
 from . import academic_fixture
 from . import fixture_seeder
+from . import official_curriculum
 
 from . import bobot_cpmk_mk
 from . import bobot_komponen_cpmk

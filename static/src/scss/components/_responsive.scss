@@ -43,6 +43,24 @@
 }
 
 @media (max-width: 640px) {
+  .o_triton_profile-row {
+    grid-template-columns: minmax(0, 1fr) 68px;
+  }
+  .o_triton_profile-label {
+    grid-column: 1 / -1;
+  }
+  .o_triton_profile-track {
+    grid-column: 1;
+  }
+  .o_triton_profile-row > strong,
+  .o_triton_profile-value-empty {
+    grid-column: 2;
+  }
+  .o_triton_detail-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px);
+    padding: 14px;
+  }
   .o_triton_prodi-options {
     grid-template-columns: minmax(0, 1fr);
   }

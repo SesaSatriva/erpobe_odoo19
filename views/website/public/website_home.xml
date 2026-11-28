@@ -55,13 +55,20 @@
                             <div class="o_triton_two-col">
                                 <article class="o_triton_panel">
                                     <h3>Profil capaian CPL</h3>
-                                    <div class="o_triton_chart-bars" role="img" aria-label="Diagram batang rata-rata capaian CPL">
+                                    <div class="o_triton_profile-chart" role="img" aria-label="Diagram batang horizontal rata-rata capaian CPL">
                                         <t t-foreach="comparison['categories']" t-as="category">
-                                            <div class="o_triton_chart-bar">
-                                                <meter class="o_triton_chart_fill" min="0" max="100" t-att-value="comparison['prodis'][0]['scores'][category_index] or 0" t-att-aria-label="category['name']"/>
-                                                <span t-out="category['name']"/>
-                                                <strong t-if="comparison['prodis'][0]['scores'][category_index]"><t t-out="comparison['prodis'][0]['scores'][category_index]"/>%</strong>
-                                                <strong t-else="">—</strong>
+                                            <div class="o_triton_profile-row">
+                                                <span class="o_triton_profile-label" t-out="category['name']"/>
+                                                <div class="o_triton_profile-track">
+                                                    <meter t-if="category['average'] is not None"
+                                                           class="o_triton_profile-meter"
+                                                           min="0" max="100"
+                                                           t-att-value="category['average']"
+                                                           t-att-aria-label="category['name']"/>
+                                                    <span t-else="" class="o_triton_profile-empty">Belum tersedia</span>
+                                                </div>
+                                                <strong t-if="category['average'] is not None"><t t-out="category['average']"/>%</strong>
+                                                <strong t-else="" class="o_triton_profile-value-empty">Belum tersedia</strong>
                                             </div>
                                         </t>
                                     </div>

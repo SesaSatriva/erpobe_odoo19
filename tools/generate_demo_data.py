@@ -16,7 +16,7 @@ PROGRAMS = (
 )
 
 YEARS = tuple(
-    (f"{start}/{start + 1}", term, start == 2026 and term == "ganjil")
+    (f"{start}/{start + 1}", term, start == 2025 and term == "genap")
     for start in range(2022, 2027)
     for term in ("ganjil", "genap")
 )

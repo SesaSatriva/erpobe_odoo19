@@ -34,6 +34,7 @@
                 <header>
                     <button name="action_calculate_grades_and_khs" type="object" string="Hitung Nilai dan Perbarui KHS" class="oe_highlight"/>
                     <button name="action_generate_simulated_component_grades" type="object" string="Generate Nilai Simulasi" confirm="Generate hanya mengisi komponen penilaian aktif; nilai aktual tidak akan ditimpa."/>
+                    <button name="action_regenerate_dummy_grades" type="object" string="Regenerasi Nilai Dummy" confirm="Hanya nilai ber-origin simulasi pada penawaran ini yang akan diacak ulang. Nilai aktual tidak akan ditimpa."/>
                 </header>
                 <sheet>
                     <group>

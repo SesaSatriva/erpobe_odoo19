@@ -67,6 +67,11 @@ class ErpObeGradeCpmk(models.Model):
         return result
 
     def _trigger_report_sync(self):
+        if (
+            self.env.context.get("skip_khs_refresh")
+            or self.env.context.get("defer_khs_refresh")
+        ):
+            return
         mhs_ids = self.mapped("mahasiswa_id.id")
         if mhs_ids and "erpobe.report.khs" in self.env:
             self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids)

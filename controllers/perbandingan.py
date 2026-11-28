@@ -41,6 +41,36 @@ class TritonPerbandingan(http.Controller, TritonPublicHelpers):
         self._rate_limit()
         return request.make_json_response(self._comparison_data(**self._comparison_params()))
 
+    @http.route('/triton/api/perbandingan-cpl/detail', type='http', auth='public', website=True, methods=['GET'])
+    def triton_comparison_detail_json(self, **kwargs):
+        self._rate_limit()
+        params = self._comparison_params()
+        category_key = params['jenis_cpl']
+        if not category_key:
+            category_key = kwargs.get('jenis_cpl')
+        if category_key not in _CPL_TYPES:
+            category_key = None
+        params['jenis_cpl'] = category_key
+        comparison = self._comparison_data(**params)
+        detail = next(
+            (item for item in comparison['details'] if item['key'] == category_key),
+            None,
+        )
+        return request.make_json_response({
+            'category': detail,
+            'prodis': [
+                {'id': prodi['id'], 'name': prodi['name'], 'kode': prodi['kode']}
+                for prodi in comparison['prodis']
+            ],
+            'params': {
+                'year_start': comparison['year_start'],
+                'year_end': comparison['year_end'],
+                'semester': comparison['semester'],
+                'prodi_ids': comparison['prodi_ids'],
+            },
+            'methodology': comparison['methodology'],
+        })
+
     @http.route('/perbandingan-cpl.csv', type='http', auth='public', website=True, methods=['GET'])
     def triton_comparison_csv(self, **kwargs):
         self._rate_limit()

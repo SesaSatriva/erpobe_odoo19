@@ -1,4 +1,4 @@
-from odoo import models, fields, api, Command, _
+from odoo import models, fields, api, _
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -77,8 +77,8 @@ class ErpObeReportKhs(models.Model):
     def create(self, vals_list):
         """Override create untuk otomatis fetch nilai saat record dibuat."""
         records = super().create(vals_list)
-        for rec in records:
-            rec._sync_from_grades()
+        if not self.env.context.get("defer_khs_sync"):
+            records._sync_from_grades()
         return records
 
     @api.model
@@ -90,26 +90,27 @@ class ErpObeReportKhs(models.Model):
         if not mahasiswa_ids:
             return
 
-        # 1. Pisahkan Existing vs New
+        mahasiswa_ids = list(dict.fromkeys(mahasiswa_ids))
         existing_reports = self.search([("mahasiswa_id", "in", mahasiswa_ids)])
         existing_mhs_ids = existing_reports.mapped("mahasiswa_id.id")
-
-        all_mhs_set = set(mahasiswa_ids)
         existing_mhs_set = set(existing_mhs_ids)
-        new_mhs_ids = list(all_mhs_set - existing_mhs_set)
-
-        # 2. CREATE (Otomatis trigger _sync_from_grades via override create)
+        new_mhs_ids = [
+            mahasiswa_id
+            for mahasiswa_id in mahasiswa_ids
+            if mahasiswa_id not in existing_mhs_set
+        ]
+        new_reports = self.browse()
         if new_mhs_ids:
             _logger.info(f"[KHS] Creating reports for {len(new_mhs_ids)} students.")
-            self.create([{"mahasiswa_id": mid} for mid in new_mhs_ids])
+            new_reports = self.with_context(defer_khs_sync=True).create(
+                [{"mahasiswa_id": mahasiswa_id} for mahasiswa_id in new_mhs_ids]
+            )
 
-        # 3. UPDATE (Force sync manual untuk data lama)
         if existing_reports:
             _logger.info(
                 f"[KHS] Updating reports for {len(existing_reports)} students."
             )
-            for report in existing_reports:
-                report._sync_from_grades()
+        (existing_reports | new_reports)._sync_from_grades()
 
         return True
 
@@ -122,13 +123,19 @@ class ErpObeReportKhs(models.Model):
         Engine utama sinkronisasi.
         Mengambil data dari model erpobe.grade.* dan mengisi line report.
         """
-        self.ensure_one()
-        mhs_id = self.mahasiswa_id.id
+        reports = self.exists()
+        if not reports:
+            return False
+        reports_by_student = {
+            report.mahasiswa_id.id: report
+            for report in reports
+        }
+        student_ids = list(reports_by_student)
 
-        # A. Fetch Grade MK (Urut Semester & Kode)
         GradeMk = self.env["erpobe.grade.mk"].sudo()
         source_mk = GradeMk.search(
-            [("mahasiswa_id", "=", mhs_id)], order="semester asc, kode_mk asc"
+            [("mahasiswa_id", "in", student_ids)],
+            order="semester asc, kode_mk asc",
         )
         source_mk = source_mk.filtered(
             lambda grade: (
@@ -138,7 +145,7 @@ class ErpObeReportKhs(models.Model):
         )
         best_mk = {}
         for grade in source_mk:
-            key = grade.mk_id.id
+            key = (grade.mahasiswa_id.id, grade.mk_id.id)
             current = best_mk.get(key)
             if (
                 not current
@@ -150,22 +157,25 @@ class ErpObeReportKhs(models.Model):
                 )
             ):
                 best_mk[key] = grade
-        source_mk = self.env["erpobe.grade.mk"].browse(
-            [grade.id for grade in best_mk.values()]
-        ).sorted(lambda grade: (grade.semester, grade.kode_mk or ""))
+        source_mk_by_student = {}
+        mk_ids_by_student = {}
+        for (student_id, _mk_id), grade in best_mk.items():
+            source_mk_by_student.setdefault(student_id, []).append(grade)
+            mk_ids_by_student.setdefault(student_id, set()).add(grade.mk_id.id)
+        for student_id, grades in source_mk_by_student.items():
+            source_mk_by_student[student_id] = sorted(
+                grades,
+                key=lambda grade: (grade.semester, grade.kode_mk or ""),
+            )
 
-        # Gunakan Command.clear() untuk menghapus data lama dan insert baru (Snapshot)
-        mk_cmds = [Command.clear()] + [
-            Command.create({"mk_id": g.mk_id.id, "grade_id": g.id}) for g in source_mk
-        ]
-
-        # Simpan ID MK yang diambil untuk filter CPMK
-        mk_ids_taken = source_mk.mapped("mk_id.id")
-
-        # B. Fetch Grade CPMK (Hanya untuk MK yang diambil)
+        # Match the previous per-student course filter while searching in one batch.
+        mk_ids_taken = set().union(*mk_ids_by_student.values()) if mk_ids_by_student else set()
         GradeCpmk = self.env["erpobe.grade.cpmk"].sudo()
         source_cpmk = GradeCpmk.search(
-            [("mahasiswa_id", "=", mhs_id), ("mk_id", "in", mk_ids_taken)]
+            [
+                ("mahasiswa_id", "in", student_ids),
+                ("mk_id", "in", list(mk_ids_taken)),
+            ]
         )
         source_cpmk = source_cpmk.filtered(
             lambda grade: (
@@ -175,7 +185,10 @@ class ErpObeReportKhs(models.Model):
         )
         best_cpmk = {}
         for grade in source_cpmk:
-            key = grade.cpmk_id.id
+            student_id = grade.mahasiswa_id.id
+            if grade.mk_id.id not in mk_ids_by_student.get(student_id, set()):
+                continue
+            key = (student_id, grade.cpmk_id.id)
             current = best_cpmk.get(key)
             if (
                 not current
@@ -187,47 +200,84 @@ class ErpObeReportKhs(models.Model):
                 )
             ):
                 best_cpmk[key] = grade
-        source_cpmk = self.env["erpobe.grade.cpmk"].browse(
-            [grade.id for grade in best_cpmk.values()]
-        )
-        cpmk_cmds = [Command.clear()] + [
-            Command.create({"cpmk_id": g.cpmk_id.id, "grade_id": g.id})
-            for g in source_cpmk
-        ]
+        source_cpmk_by_student = {}
+        for (student_id, _cpmk_id), grade in best_cpmk.items():
+            source_cpmk_by_student.setdefault(student_id, []).append(grade)
 
-        # C. Fetch Grade CPL
         GradeCpl = self.env["erpobe.grade.cpl"].sudo()
-        source_cpl = GradeCpl.search([("mahasiswa_id", "=", mhs_id)])
-        cpl_cmds = [Command.clear()] + [
-            Command.create({"cpl_id": g.cpl_id.id, "grade_id": g.id})
-            for g in source_cpl
-        ]
+        source_cpl = GradeCpl.search([("mahasiswa_id", "in", student_ids)])
+        source_cpl_by_student = {}
+        for grade in source_cpl:
+            source_cpl_by_student.setdefault(grade.mahasiswa_id.id, []).append(grade)
 
-        # D. Fetch graded assessment component scores.
         GradeKomponen = self.env["erpobe.grade.komponen"].sudo()
         source_komponen = GradeKomponen.search(
             [
-                ("mahasiswa_id", "=", mhs_id),
+                ("mahasiswa_id", "in", student_ids),
                 ("is_graded", "=", True),
                 ("krs_line_id.krs_id.state", "=", "approved"),
                 ("rps_id.status", "=", "final"),
             ],
             order="id asc",
         )
-        komponen_cmds = [Command.clear()] + [
-            Command.create({"grade_id": g.id}) for g in source_komponen
-        ]
+        source_komponen_by_student = {}
+        for grade in source_komponen:
+            source_komponen_by_student.setdefault(
+                grade.mahasiswa_id.id, []
+            ).append(grade)
 
-        # E. Execute Write
-        self.write(
-            {
-                "mk_line_ids": mk_cmds,
-                "cpmk_line_ids": cpmk_cmds,
-                "cpl_line_ids": cpl_cmds,
-                "komponen_line_ids": komponen_cmds,
-                "tanggal_cetak": fields.Date.context_today(self),
-            }
+        self._sync_detail_lines(
+            "erpobe.report.khs.mk", source_mk_by_student
         )
+        self._sync_detail_lines(
+            "erpobe.report.khs.cpmk", source_cpmk_by_student
+        )
+        self._sync_detail_lines(
+            "erpobe.report.khs.cpl", source_cpl_by_student
+        )
+        self._sync_detail_lines(
+            "erpobe.report.khs.komponen", source_komponen_by_student
+        )
+
+        today = fields.Date.context_today(self)
+        reports_to_stamp = reports.filtered(
+            lambda report: report.tanggal_cetak != today
+        )
+        if reports_to_stamp:
+            reports_to_stamp.write({"tanggal_cetak": today})
+        return True
+
+    def _sync_detail_lines(self, line_model_name, source_by_student):
+        line_model = self.env[line_model_name]
+        report_by_student = {
+            report.mahasiswa_id.id: report
+            for report in self
+        }
+        desired_pairs = {
+            (report_by_student[student_id].id, source.id)
+            for student_id, sources in source_by_student.items()
+            if student_id in report_by_student
+            for source in sources
+        }
+        existing_lines = line_model.search([("khs_id", "in", self.ids)])
+        existing_pairs = set()
+        stale_ids = []
+        for line in existing_lines:
+            pair = (line.khs_id.id, line.grade_id.id)
+            if pair not in desired_pairs or pair in existing_pairs:
+                stale_ids.append(line.id)
+            else:
+                existing_pairs.add(pair)
+
+        if stale_ids:
+            line_model.browse(stale_ids).unlink()
+
+        missing_pairs = desired_pairs - existing_pairs
+        if missing_pairs:
+            line_model.create([
+                {"khs_id": khs_id, "grade_id": grade_id}
+                for khs_id, grade_id in sorted(missing_pairs)
+            ])
 
     @api.depends(
         "mk_line_ids.bobot",

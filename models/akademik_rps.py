@@ -389,13 +389,19 @@ class ErpObeAkademikRps(models.Model):
             self._sync_bobot_tables()
         if "status" in vals:
             rps_ids = self.ids
-            grade_cpmk = self.env["erpobe.grade.cpmk"].sudo().search([
+            grade_cpmk = self.env["erpobe.grade.cpmk"].sudo().with_context(
+                defer_khs_refresh=True
+            ).search([
                 ("rps_id", "in", rps_ids),
             ])
-            grade_mk = self.env["erpobe.grade.mk"].sudo().search([
+            grade_mk = self.env["erpobe.grade.mk"].sudo().with_context(
+                defer_khs_refresh=True
+            ).search([
                 ("rps_id", "in", rps_ids),
             ])
-            grade_cpl = self.env["erpobe.grade.cpl"].sudo().search([
+            grade_cpl = self.env["erpobe.grade.cpl"].sudo().with_context(
+                defer_khs_refresh=True
+            ).search([
                 ("mahasiswa_id", "in", grade_cpmk.mapped("mahasiswa_id").ids),
             ])
             if grade_cpmk:
@@ -405,9 +411,18 @@ class ErpObeAkademikRps(models.Model):
             if grade_cpl:
                 grade_cpl._compute_nilai_cpl()
                 grade_cpl._compute_status_capaian()
-            if grade_cpmk or grade_mk or grade_cpl:
-                mhs_ids = (grade_cpmk.mapped("mahasiswa_id") | grade_mk.mapped("mahasiswa_id") | grade_cpl.mapped("mahasiswa_id")).ids
-                if "erpobe.report.khs" in self.env:
+            if (
+                (grade_cpmk or grade_mk or grade_cpl)
+                and "erpobe.report.khs" in self.env
+                and not self.env.context.get("skip_khs_refresh")
+                and not self.env.context.get("defer_khs_refresh")
+            ):
+                mhs_ids = (
+                    grade_cpmk.mapped("mahasiswa_id")
+                    | grade_mk.mapped("mahasiswa_id")
+                    | grade_cpl.mapped("mahasiswa_id")
+                ).ids
+                if mhs_ids:
                     self.env["erpobe.report.khs"].sudo().action_generate_khs(mhs_ids)
         return res
 

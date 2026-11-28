@@ -1,5 +1,6 @@
 import re
 import uuid
+from unittest.mock import patch
 
 from lxml import html
 from odoo import Command
@@ -137,19 +138,30 @@ class TestTritonKrsWorkflows(TransactionCase):
         first_krs = self._new_krs()
         second_krs = self._new_krs(second_student)
 
-        self.KrsLine.create(
-            [
-                {
-                    "krs_id": first_krs.id,
-                    "penawaran_line_id": self.offer_line.id,
-                },
-                {
-                    "krs_id": second_krs.id,
-                    "penawaran_line_id": self.offer_line.id,
-                },
-            ]
-        )
+        report_model_class = type(self.env["erpobe.report.khs"])
+        original_sync = report_model_class._sync_from_grades
+        sync_batches = []
 
+        def count_sync(reports):
+            sync_batches.append(tuple(reports.mapped("mahasiswa_id").ids))
+            return original_sync(reports)
+
+        with patch.object(report_model_class, "_sync_from_grades", count_sync):
+            self.KrsLine.create(
+                [
+                    {
+                        "krs_id": first_krs.id,
+                        "penawaran_line_id": self.offer_line.id,
+                    },
+                    {
+                        "krs_id": second_krs.id,
+                        "penawaran_line_id": self.offer_line.id,
+                    },
+                ]
+            )
+
+        self.assertEqual(len(sync_batches), 1)
+        self.assertEqual(set(sync_batches[0]), {self.student.id, second_student.id})
         self.assertEqual(
             self.offer_line.mahasiswa_ids,
             self.student | second_student,
@@ -178,8 +190,19 @@ class TestTritonKrsWorkflows(TransactionCase):
         )
         second_offer_line = self._create_offer_line(second_course)
 
-        lines.write({"penawaran_line_id": second_offer_line.id})
+        report_model_class = type(self.env["erpobe.report.khs"])
+        original_sync = report_model_class._sync_from_grades
+        sync_batches = []
 
+        def count_sync(reports):
+            sync_batches.append(tuple(reports.mapped("mahasiswa_id").ids))
+            return original_sync(reports)
+
+        with patch.object(report_model_class, "_sync_from_grades", count_sync):
+            lines.write({"penawaran_line_id": second_offer_line.id})
+
+        self.assertEqual(len(sync_batches), 1)
+        self.assertEqual(set(sync_batches[0]), {self.student.id, second_student.id})
         self.assertFalse(
             self.offer_line.mahasiswa_ids & (self.student | second_student)
         )
@@ -187,6 +210,53 @@ class TestTritonKrsWorkflows(TransactionCase):
             second_offer_line.mahasiswa_ids,
             self.student | second_student,
         )
+
+    def test_krs_line_reassignment_refreshes_previous_and_current_students(self):
+        second_student = self._create_student(
+            "Mahasiswa KRS Baru", f"NK{self.suffix}", self.rombel
+        )
+        first_krs = self._new_krs()
+        second_krs = self._new_krs(second_student)
+        line = self.KrsLine.create(
+            {"krs_id": first_krs.id, "penawaran_line_id": self.offer_line.id}
+        )
+
+        report_model_class = type(self.env["erpobe.report.khs"])
+        original_sync = report_model_class._sync_from_grades
+        sync_batches = []
+
+        def count_sync(reports):
+            sync_batches.append(tuple(reports.mapped("mahasiswa_id").ids))
+            return original_sync(reports)
+
+        with patch.object(report_model_class, "_sync_from_grades", count_sync):
+            line.write({"krs_id": second_krs.id})
+
+        self.assertEqual(len(sync_batches), 1)
+        self.assertEqual(set(sync_batches[0]), {self.student.id, second_student.id})
+        self.assertEqual(line.mahasiswa_id, second_student)
+        self.assertNotIn(self.student, self.offer_line.mahasiswa_ids)
+        self.assertIn(second_student, self.offer_line.mahasiswa_ids)
+
+    def test_krs_student_reassignment_refreshes_previous_and_current_students(self):
+        second_student = self._create_student(
+            "Mahasiswa Pemilik Baru", f"NO{self.suffix}", self.rombel
+        )
+        krs = self._new_krs()
+
+        report_model_class = type(self.env["erpobe.report.khs"])
+        original_sync = report_model_class._sync_from_grades
+        sync_batches = []
+
+        def count_sync(reports):
+            sync_batches.append(tuple(reports.mapped("mahasiswa_id").ids))
+            return original_sync(reports)
+
+        with patch.object(report_model_class, "_sync_from_grades", count_sync):
+            krs.write({"mahasiswa_id": second_student.id})
+
+        self.assertEqual(len(sync_batches), 1)
+        self.assertEqual(set(sync_batches[0]), {self.student.id, second_student.id})
 
     def test_schedule_conflict_is_rejected(self):
         other_course = self._create_course(
@@ -280,12 +350,18 @@ class TestTritonKrsWorkflows(TransactionCase):
         second_report = report_model.search(
             [("mahasiswa_id", "=", second_student.id)], limit=1
         ) or report_model.create({"mahasiswa_id": second_student.id})
+        component_line_model = self.env["erpobe.report.khs.komponen"]
+        component_line_model.create(
+            [
+                {"khs_id": first_report.id, "grade_id": first_grade.id},
+                {"khs_id": second_report.id, "grade_id": second_grade.id},
+            ]
+        )
         visible_report_ids = report_model.with_user(self.student.user_id).search(
             [("id", "in", [first_report.id, second_report.id])]
         ).ids
         self.assertIn(first_report.id, visible_report_ids)
         self.assertNotIn(second_report.id, visible_report_ids)
-        component_line_model = self.env["erpobe.report.khs.komponen"]
         first_component_line = first_report.komponen_line_ids.filtered(
             lambda line: line.grade_id == first_grade
         )
@@ -353,6 +429,27 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertEqual(line.nilai_tampil, "Belum tersedia")
         self.assertEqual(report.ipk, 0.0)
         self.assertEqual(report.total_sks_lulus, 0)
+
+    def test_khs_generation_batches_students_in_one_sync(self):
+        second_student = self._create_student(
+            "Mahasiswa Batch", f"NB{self.suffix}", self.rombel
+        )
+        report_model = self.env["erpobe.report.khs"]
+        report_model_class = type(report_model)
+        original_sync = report_model_class._sync_from_grades
+        sync_batches = []
+
+        def count_sync(reports):
+            sync_batches.append(tuple(reports.mapped("mahasiswa_id").ids))
+            return original_sync(reports)
+
+        with patch.object(report_model_class, "_sync_from_grades", count_sync):
+            report_model.action_generate_khs(
+                [self.student.id, second_student.id, self.student.id]
+            )
+
+        self.assertEqual(len(sync_batches), 1)
+        self.assertEqual(set(sync_batches[0]), {self.student.id, second_student.id})
 
     def test_cpl_and_ipk_are_calculated_from_weighted_grade_data(self):
         cpl = self.env["erpobe.akademik.cpl"].create(
@@ -446,10 +543,44 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertEqual(grade_cpmk.nilai_cpmk, 80.0)
         self.assertEqual(grade_cpl.nilai_cpl, 80.0)
         self.assertEqual(grade_mk.nilai_mk, 80.0)
-        grade_component.write({"nilai": 75.0, "audit_reason": "Verified correction"})
+        report_before_change = self.env["erpobe.report.khs"].search(
+            [("mahasiswa_id", "=", self.student.id)], limit=1
+        )
+        self.assertTrue(report_before_change)
+        initial_line_ids = {
+            "mk": set(report_before_change.mk_line_ids.ids),
+            "cpmk": set(report_before_change.cpmk_line_ids.ids),
+            "cpl": set(report_before_change.cpl_line_ids.ids),
+            "komponen": set(report_before_change.komponen_line_ids.ids),
+        }
+        report_model_class = type(self.env["erpobe.report.khs"])
+        original_sync = report_model_class._sync_from_grades
+        sync_batches = []
+
+        def count_sync(reports):
+            sync_batches.append(tuple(reports.mapped("mahasiswa_id").ids))
+            return original_sync(reports)
+
+        with patch.object(report_model_class, "_sync_from_grades", count_sync):
+            grade_component.write(
+                {"nilai": 75.0, "audit_reason": "Verified correction"}
+            )
+        self.assertEqual(len(sync_batches), 1)
         self.assertEqual(grade_cpmk.nilai_cpmk, 75.0)
         self.assertEqual(grade_cpl.nilai_cpl, 75.0)
         self.assertEqual(grade_mk.nilai_mk, 75.0)
+        report_before_change.invalidate_recordset()
+        self.assertEqual(set(report_before_change.mk_line_ids.ids), initial_line_ids["mk"])
+        self.assertEqual(
+            set(report_before_change.cpmk_line_ids.ids), initial_line_ids["cpmk"]
+        )
+        self.assertEqual(
+            set(report_before_change.cpl_line_ids.ids), initial_line_ids["cpl"]
+        )
+        self.assertEqual(
+            set(report_before_change.komponen_line_ids.ids),
+            initial_line_ids["komponen"],
+        )
         correction = audit_model.search(
             [("grade_id", "=", grade_component.id)],
             order="create_date desc, id desc",
@@ -479,6 +610,20 @@ class TestTritonKrsWorkflows(TransactionCase):
         self.assertEqual(component_line.tipe, "assignment")
         self.assertEqual(component_line.nilai_angka, 75.0)
         self.assertEqual(len(report.komponen_line_ids), 1)
+
+        line_ids = {
+            "mk": set(report.mk_line_ids.ids),
+            "cpmk": set(report.cpmk_line_ids.ids),
+            "cpl": set(report.cpl_line_ids.ids),
+            "komponen": set(report.komponen_line_ids.ids),
+        }
+        report._sync_from_grades()
+        report._sync_from_grades()
+        self.assertEqual(set(report.mk_line_ids.ids), line_ids["mk"])
+        self.assertEqual(set(report.cpmk_line_ids.ids), line_ids["cpmk"])
+        self.assertEqual(set(report.cpl_line_ids.ids), line_ids["cpl"])
+        self.assertEqual(set(report.komponen_line_ids.ids), line_ids["komponen"])
+        self.assertEqual(component_line.exists().nilai_angka, 75.0)
 
 
 @tagged("post_install", "-at_install")
@@ -715,6 +860,7 @@ class TestTritonPublicRoutes(HttpCase):
             "/fakultas",
             "/perbandingan-cpl",
             "/triton/api/perbandingan-cpl",
+            "/triton/api/perbandingan-cpl/detail?jenis_cpl=sikap",
             "/perbandingan-cpl.csv",
             "/tracking",
             "/tentang",
@@ -753,6 +899,11 @@ class TestTritonPublicRoutes(HttpCase):
             "/triton/api/perbandingan-cpl?jenis_cpl=invalid"
         ).json()
         self.assertEqual(len(invalid["categories"]), 5)
+        detail = self.url_open(
+            "/triton/api/perbandingan-cpl/detail?jenis_cpl=sikap"
+        ).json()
+        self.assertEqual(detail["category"]["key"], "sikap")
+        self.assertIn("rows", detail["category"])
 
     def test_portal_routes_require_authentication(self):
         for route in (

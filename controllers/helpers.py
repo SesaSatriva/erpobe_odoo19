@@ -145,6 +145,7 @@ class TritonPublicHelpers(TritonListHelpers):
         else:
             candidates = candidates[:6]
         accumulators = {prodi.id: {kind: [] for kind in _CPL_TYPES} for prodi in candidates}
+        detail_accumulators = {}
         warnings = {prodi.id: False for prodi in candidates}
         year_accumulators = {}
         institutional_cpl_scores = []
@@ -214,6 +215,7 @@ class TritonPublicHelpers(TritonListHelpers):
                     if jenis_cpl and kind != jenis_cpl:
                         continue
                     accumulators[prodi_id][kind].append(score)
+                    detail_accumulators.setdefault((prodi_id, cpl_id), []).append(score)
                     year_accumulators[year_name].setdefault((prodi_id, kind), []).append(score)
         prodi_results = []
         all_category_scores = []
@@ -251,6 +253,8 @@ class TritonPublicHelpers(TritonListHelpers):
             for kind, values in category_totals.items()
             if values
         }
+        for category in categories:
+            category['average'] = category_averages.get(category['key'])
         if category_averages:
             highest_category = available_category_names.get(
                 max(category_averages, key=category_averages.get)
@@ -280,9 +284,38 @@ class TritonPublicHelpers(TritonListHelpers):
             year_values = [score for (prodi_id, kind), values in year_accumulators[year].items() if prodi_id in candidates.ids and (not jenis_cpl or kind == jenis_cpl) for score in values]
             if year_values:
                 trend.append({'year': year, 'average': round(sum(year_values) / len(year_values), 2)})
+        Cpl = env['erpobe.akademik.cpl'].sudo()
+        detail_categories = []
+        for category in categories:
+            cpls = Cpl.search(
+                [('prodi_id', 'in', candidates.ids), ('jenis_cpl', '=', category['key'])],
+                order='kode_cpl asc, id asc',
+            )
+            rows = []
+            for cpl in cpls:
+                scores = []
+                for prodi in candidates:
+                    values = detail_accumulators.get((prodi.id, cpl.id), [])
+                    scores.append(
+                        round(sum(values) / len(values), 2) if values else None
+                    )
+                rows.append({
+                    'id': cpl.id,
+                    'kode': cpl.kode_cpl,
+                    'name': cpl.nama_cpl or cpl.name,
+                    'description': cpl.name,
+                    'jenis_cpl': category['key'],
+                    'scores': scores,
+                })
+            detail_categories.append({
+                'key': category['key'],
+                'name': category['name'],
+                'rows': rows,
+            })
         return {
             'prodis': prodi_results,
             'categories': categories,
+            'details': detail_categories,
             'summary': summary,
             'warnings': [result['name'] for result in prodi_results if result['warning']],
             'years': available_years,
